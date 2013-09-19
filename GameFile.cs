@@ -79,16 +79,16 @@ namespace Libgame
 			get { return new DependecyCollection(this.dependencies); }
 		}
 
-		public void SetFormat(string formatType, params Object[] parameters)
+		public void SetFormat(string formatType)
 		{
 			if (!string.IsNullOrEmpty(formatType))
 				return;
 
 			Type t = Type.GetType(formatType, true, false);
-			this.SetFormat(t, parameters);
+			this.SetFormat(t);
 		}
 
-		public void SetFormat(Type formatType, params Object[] parameters)
+		public void SetFormat(Type formatType)
 		{
 			if (formatType == null)
 				return;
@@ -97,13 +97,9 @@ namespace Libgame
 			if (!formatType.IsSubclassOf(typeof(Format)))
 				throw new ArgumentException("Invalid type. Must inherit from Format.");
 
-			// Add this file as parameter
-			Object[] newParams = new object[parameters.Length + 1];
-			newParams[0] = this;
-			Array.Copy(parameters, 0, newParams, 1, parameters.Length);
-
 			// Create instance
-			this.Format = (Format)Activator.CreateInstance(formatType, newParams);
+			this.Format = (Format)Activator.CreateInstance(formatType);
+			this.Format.File = this;
 		}
 
 		public void ChangeStream(DataStream newStream)

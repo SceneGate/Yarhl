@@ -22,9 +22,11 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Mono.Addins;
 
 namespace Libgame
 {
+	[TypeExtensionPoint]
 	public abstract class FormatValidation
 	{
 		protected enum ValidationResult
@@ -36,13 +38,11 @@ namespace Libgame
 			Sure     = 100,
 		}
 
-		private GameFile file;
 		protected List<string> dependencies = new List<string>();
 
-		protected FormatValidation(GameFile file)
+		public FormatValidation()
 		{
-			this.file = file;
-			this.RunTests();
+			this.AutosetFormat = false;
 		}
 
 		/// <summary>
@@ -62,18 +62,33 @@ namespace Libgame
 			private set;
 		}
 
-		private void RunTests()
+		public bool AutosetFormat {
+			get;
+			set;
+		}
+
+		public void RunTests(GameFile file)
 		{
+			if (file.Format != null)
+				throw new Exception("The file already has a format.");
+
 			double result = 0;
 
-			result += (int)this.TestByTags(this.file.Tags) * 0.75;
-			result += (int)this.TestByData(this.file.Stream) * 0.50;
-			result += (int)this.TestByRegexp(this.file.Path, this.file.Name) * 0.25;
+			result += (int)this.TestByTags(file.Tags) * 0.75;
+			result += (int)this.TestByData(file.Stream) * 0.50;
+			result += (int)this.TestByRegexp(file.Path, file.Name) * 0.25;
 
 			this.Result = (result >= 50) ? true : false;
 
-			if (this.Result)
+			if (this.Result) {
 				this.GuessDependencies(file);
+
+				if (this.AutosetFormat) {
+					file.SetFormat(this.FormatType);
+					file.Format.IsGuessed = true;
+					file.Format.File = file;
+				}
+			}
 		}
 
 		protected abstract ValidationResult TestByTags(IDictionary<string, string> tags);

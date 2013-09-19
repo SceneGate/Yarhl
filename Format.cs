@@ -22,7 +22,9 @@
 namespace Libgame
 {
     using System;
+	using Mono.Addins;
     
+	[TypeExtensionPoint]
     /// <summary>
     /// Description of IFormat.
     /// </summary>
@@ -30,18 +32,13 @@ namespace Libgame
     {
 		private bool isRead = false;
 
-		protected Format(GameFile file)
-		{
-			this.File = file;
-		}
-
         public abstract string FormatName {
             get;
         }
         
-		protected GameFile File {
+		public GameFile File {
 			get;
-			private set;
+			set;
 		}
 
 		public bool IsGuessed {
@@ -51,6 +48,9 @@ namespace Libgame
 
 		public void Read()
 		{
+			if (this.File == null)
+				throw new Exception("No GameFile has been given.");
+
 			if (this.isRead)
 				return;
 
@@ -60,6 +60,9 @@ namespace Libgame
 
 		public void Write()
 		{
+			if (this.File == null)
+				throw new Exception("No GameFile has been given.");
+
 			DataStream newStream = new DataStream(new System.IO.MemoryStream(), 0, -1);
 			this.File.ChangeStream(newStream);
 			this.Write(newStream);

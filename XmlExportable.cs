@@ -23,17 +23,14 @@ namespace Libgame
 {
     using System;
     using System.Xml.Linq;
-    
+	using Mono.Addins;
+
+	[TypeExtensionPoint]
     /// <summary>
     /// Description of XmlExportable.
     /// </summary>
     public abstract class XmlExportable : Format
-    {
-		protected XmlExportable(GameFile file)
-			: base(file)
-		{
-		}
-               
+    {              
         public override void Import(DataStream strIn)
         {
             XDocument doc = XDocument.Load(strIn.BaseStream);
