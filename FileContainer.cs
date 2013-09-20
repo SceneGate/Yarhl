@@ -153,9 +153,24 @@ namespace Libgame
 
 		private void AddContainer(FileContainer element, List<FileContainer> list)
 		{
-			element.Path = this.Path + PathSeparator + element.Name;
+			string elementPath = this.Path + PathSeparator + element.Name;
 			element.previousContainer = this;
 
+			// For each child, update it's path variable
+			Queue<FileContainer> queue = new Queue<FileContainer>();
+			queue.Enqueue(element);
+			while (queue.Count > 0) {
+				FileContainer child = queue.Dequeue();
+				child.Path = elementPath + child.Path;
+
+				foreach (FileContainer subchild in child.files)
+					queue.Enqueue(subchild);
+
+				foreach (FileContainer subchild in child.folders)
+					queue.Enqueue(subchild);
+			}
+
+			// If the name matches, replace
 			for (int i = 0; i < list.Count; i++) {
 				if (list[i].Name == element.Name) {
 					list[i] = element;

@@ -27,6 +27,7 @@ namespace Libgame
 {
 	public enum SeekMode
 	{
+		Absolute,
 		Origin,
 		Current,
 		End
@@ -52,6 +53,7 @@ namespace Libgame
 			this.BaseStream = stream;
 			this.Length = (length != -1) ? length : stream.Length;
 			this.Offset = offset;
+			this.Position = this.Offset;
 		}
 
 		public DataStream(string filePath, FileMode mode, FileAccess access)
@@ -115,6 +117,8 @@ namespace Libgame
 				this.Position = this.Offset + shift;
 			else if (mode == SeekMode.End)
 				this.Position = this.Offset + this.Length - shift;
+			else if (mode == SeekMode.Absolute)
+				this.Position = shift;
 
 			if (this.Position < this.Offset)
 				this.Position = this.Offset;
@@ -128,7 +132,7 @@ namespace Libgame
 				throw new EndOfStreamException();
 
 			// DEBUG IT!
-			this.BaseStream.Position = ++this.Position;
+			this.BaseStream.Position = this.Position++;
 			return (byte)this.BaseStream.ReadByte();
 		}
 
@@ -154,7 +158,7 @@ namespace Libgame
 				this.Length++;
 
 			// DEBUG IT!
-			this.BaseStream.Position = ++this.Position;
+			this.BaseStream.Position = this.Position++;
 			this.BaseStream.WriteByte(val);
 		}
 

@@ -27,7 +27,7 @@ namespace Libgame
 	{
 		public static string GetPreviousPath(this string path)
 		{
-			return path.Substring(path.LastIndexOf(FileContainer.PathSeparator));
+			return path.Substring(0, path.LastIndexOf(FileContainer.PathSeparator));
 		}
 	}
 }

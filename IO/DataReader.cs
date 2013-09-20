@@ -123,11 +123,17 @@ namespace Libgame
 
 		public char[] ReadChars(int count)
 		{
+			long pos1 = this.Stream.Position;
 			int charLength = this.Encoding.GetMaxByteCount(count);
 			byte[] buffer = this.ReadBytes(charLength);
 
 			char[] charArray = this.Encoding.GetChars(buffer);
 			Array.Resize(ref charArray, count);	// In case we get more chars than asked
+
+			// Adjust position
+			charLength = this.Encoding.GetByteCount(charArray);
+			this.Stream.Seek(pos1 + charLength, SeekMode.Absolute);
+
 			return charArray;
 		}
 

@@ -39,24 +39,28 @@ namespace Libgame
         {
         }
 
+		public GameFile(string name, Stream stream, long offset, long length, Format format, FileContainer parent)
+			: this(name, new DataStream(stream, offset, length))
+		{
+		}
+
 		public GameFile(string name, DataStream stream)
 			: base(name)
 		{
 			this.Stream = stream;
 		}
 
-		public GameFile(string name, Stream stream, long offset, long length, Format format, FileContainer parent)
-			: this(name, new DataStream(stream, offset, length))
+		public GameFile(string name, DataStream stream, Format format, FileContainer parent)
+			: this(name, stream, format)
 		{
+			parent.AddFile(this);
 		}
 
-		public GameFile(string name, DataStream stream, Format format, FileContainer parent)
+		public GameFile(string name, DataStream stream, Format format)
 			: base(name)
 		{
 			this.Stream = stream;
 			this.Format = format;
-
-			parent.AddFile(this);
 		}
                                                
         public long Length
@@ -72,7 +76,7 @@ namespace Libgame
 
         public Format Format {
 			get;
-			private set;
+			set;
         }
 
 		public DependecyCollection Dependencies {
