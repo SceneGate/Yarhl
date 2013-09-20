@@ -86,7 +86,6 @@ namespace Libgame
 				if (this.AutosetFormat) {
 					file.SetFormat(this.FormatType);
 					file.Format.IsGuessed = true;
-					file.Format.File = file;
 				}
 			}
 		}

@@ -9,6 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Libgame</RootNamespace>
     <AssemblyName>libgame</AssemblyName>
+    <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,6 +49,7 @@
     <Compile Include="GameFolder.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="XmlExportable.cs" />
+    <Compile Include="DataWriter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

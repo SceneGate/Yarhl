@@ -39,8 +39,8 @@ namespace Libgame
         {
         }
 
-		public GameFile(string Name, DataStream stream)
-			: base(Name)
+		public GameFile(string name, DataStream stream)
+			: base(name)
 		{
 			this.Stream = stream;
 		}
@@ -67,7 +67,7 @@ namespace Libgame
 		public DataStream Stream
 		{
 			get;
-			private set;
+			protected set;
 		}
 
         public Format Format {
@@ -79,16 +79,16 @@ namespace Libgame
 			get { return new DependecyCollection(this.dependencies); }
 		}
 
-		public void SetFormat(string formatType)
+		public void SetFormat(string formatType, params Object[] parameters)
 		{
 			if (!string.IsNullOrEmpty(formatType))
 				return;
 
 			Type t = Type.GetType(formatType, true, false);
-			this.SetFormat(t);
+			this.SetFormat(t, parameters);
 		}
 
-		public void SetFormat(Type formatType)
+		public void SetFormat(Type formatType, params Object[] parameters)
 		{
 			if (formatType == null)
 				return;
@@ -99,7 +99,7 @@ namespace Libgame
 
 			// Create instance
 			this.Format = (Format)Activator.CreateInstance(formatType);
-			this.Format.File = this;
+			this.Format.Initialize(this, parameters);
 		}
 
 		public void ChangeStream(DataStream newStream)

@@ -31,6 +31,8 @@ namespace Libgame
     public abstract class Format
     {
 		private bool isRead = false;
+		private bool isInitialized = false;
+		protected Object[] parameters;
 
         public abstract string FormatName {
             get;
@@ -38,7 +40,7 @@ namespace Libgame
         
 		public GameFile File {
 			get;
-			set;
+			private set;
 		}
 
 		public bool IsGuessed {
@@ -46,10 +48,17 @@ namespace Libgame
 			get;
 		}
 
+		public virtual void Initialize(GameFile file, params Object[] parameters)
+		{
+			this.File = file;
+			this.isInitialized = true;
+			this.parameters = parameters;
+		}
+
 		public void Read()
 		{
-			if (this.File == null)
-				throw new Exception("No GameFile has been given.");
+			if (!this.isInitialized)
+				throw new Exception("The format has not been initialized.");
 
 			if (this.isRead)
 				return;
@@ -60,8 +69,8 @@ namespace Libgame
 
 		public void Write()
 		{
-			if (this.File == null)
-				throw new Exception("No GameFile has been given.");
+			if (!this.isInitialized)
+				throw new Exception("The format has not been initialized.");
 
 			DataStream newStream = new DataStream(new System.IO.MemoryStream(), 0, -1);
 			this.File.ChangeStream(newStream);
@@ -75,14 +84,12 @@ namespace Libgame
 			stream.Dispose();
 		}
 
-        protected abstract void Read(DataStream strIn);
+		public abstract void Read(DataStream strIn);
         
         public abstract void Write(DataStream strOut);
         
         public abstract void Import(DataStream strIn);
         
         public abstract void Export(DataStream strOut);
-        
-        public abstract bool Disposable();
     }
 }

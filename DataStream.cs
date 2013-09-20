@@ -32,6 +32,12 @@ namespace Libgame
 		End
 	}
 
+	public enum EndiannessMode 
+	{
+		LittleEndian,
+		BigEndian
+	}
+
 	public class DataStream : IDisposable
 	{
 		private static Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
@@ -50,6 +56,11 @@ namespace Libgame
 
 		public DataStream(string filePath, FileMode mode, FileAccess access)
 			: this(File.Open(filePath, mode, access), 0, -1)
+		{
+		}
+
+		public DataStream(DataStream stream, long offset, long length)
+			: this(stream.BaseStream, offset, length)
 		{
 		}
 
@@ -91,7 +102,12 @@ namespace Libgame
 			}
 		}
 
-		public void Seek(int shift, SeekMode mode)
+		public void Flush()
+		{
+			this.BaseStream.Flush();
+		}
+
+		public void Seek(long shift, SeekMode mode)
 		{
 			if (mode == SeekMode.Current)
 				this.Position += shift;
@@ -111,8 +127,22 @@ namespace Libgame
 			if (this.Position >= this.Offset + this.Length)
 				throw new EndOfStreamException();
 
-			this.BaseStream.Position = this.Position++;
+			// DEBUG IT!
+			this.BaseStream.Position = ++this.Position;
 			return (byte)this.BaseStream.ReadByte();
+		}
+
+		public int Read(byte[] buffer, int index, int count)
+		{
+			if (this.Position > this.Offset + this.Length + count)
+				throw new EndOfStreamException();
+
+			// DEBUG IT!
+			this.BaseStream.Position = this.Position;
+			int read = this.BaseStream.Read(buffer, index, count);
+			this.Position += count;
+
+			return read;
 		}
 
 		public void WriteByte(byte val)
@@ -123,8 +153,57 @@ namespace Libgame
 			if (this.Position == this.Offset + this.Length)
 				this.Length++;
 
-			this.BaseStream.Position = this.Position++;
+			// DEBUG IT!
+			this.BaseStream.Position = ++this.Position;
 			this.BaseStream.WriteByte(val);
+		}
+
+		public void Write(byte[] buffer, int index, int count)
+		{
+			// If we're trying to write out the stream
+			if (this.Position > this.Offset + this.Length)
+				throw new EndOfStreamException();
+
+			// If it's in the end the file, increment it
+			if (this.Position == this.Offset + this.Length)
+				this.Length += count;
+
+			// DEBUG IT!
+			this.BaseStream.Position = this.Position;
+			this.BaseStream.Write(buffer, index, count);
+			this.Position += count;
+		}
+
+		public void WriteTo(DataStream stream)
+		{
+			this.WriteTo(stream, this.Length);
+		}
+
+		public void WriteTo(DataStream stream, long count)
+		{
+			// If we're trying to write out the stream
+			if (stream.Position > stream.Offset + stream.Length)
+				throw new EndOfStreamException();
+
+			this.BaseStream.Position = this.Position;
+
+			// DEBUG IT
+			const int BufferSize = 5 * 1024;
+			byte[] buffer = new byte[BufferSize];
+
+			int written = 0;
+			int toRead = 0;
+			do {
+				if (written + BufferSize > count)
+					toRead = (int)(count - written);
+				else
+					toRead = BufferSize;
+
+				written += stream.Read(buffer, 0, toRead);
+				this.Write(buffer, 0, toRead);
+			} while (written != count);
+
+			this.Position += count;
 		}
 	}
 }

@@ -20,19 +20,138 @@
 // <date>11/06/2013</date>
 //-----------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Libgame
 {
 	public class DataReader
 	{
 		public DataReader(DataStream stream)
+			: this(stream, EndiannessMode.LittleEndian, Encoding.UTF8)
 		{
-			this.Stream = stream;
+		}
+
+		public DataReader(DataStream stream, EndiannessMode endiannes, Encoding encoding)
+		{
+			this.Stream    = stream;
+			this.Endiannes = endiannes;
+			this.Encoding  = encoding;
 		}
 
 		public DataStream Stream {
 			get;
 			private set;
+		}
+
+		public EndiannessMode Endiannes {
+			get;
+			private set;
+		}
+
+		public Encoding Encoding {
+			get;
+			private set;
+		}
+
+		public byte ReadByte()
+		{
+			return this.Stream.ReadByte();
+		}
+
+		public sbyte ReadSByte()
+		{
+			return (sbyte)this.Stream.ReadByte();
+		}
+
+		public ushort ReadUInt16()
+		{
+			if (this.Endiannes == EndiannessMode.LittleEndian)
+				return (ushort)((this.ReadByte() << 0) | (this.ReadByte() << 8));
+			else if (this.Endiannes == EndiannessMode.BigEndian)
+				return (ushort)((this.ReadByte() << 8) | (this.ReadByte() << 0));
+
+			return 0xFFFF;
+		}
+
+		public short ReadInt16()
+		{
+			return (short)this.ReadUInt16();
+		}
+
+		public uint ReadUInt32()
+		{
+			if (this.Endiannes == EndiannessMode.LittleEndian)
+				return (uint)((this.ReadUInt16() << 00) | (this.ReadUInt16() << 16));
+			else if (this.Endiannes == EndiannessMode.BigEndian)
+				return (uint)((this.ReadUInt16() << 16) | (this.ReadUInt16() << 00));
+
+			return 0xFFFFFFFF;
+		}
+
+		public int ReadInt32()
+		{
+			return (int)this.ReadUInt32();
+		}
+
+		public ulong ReadUInt64()
+		{
+			if (this.Endiannes == EndiannessMode.LittleEndian)
+				return (ulong)((this.ReadUInt32() << 00) | (this.ReadUInt32() << 32));
+			else if (this.Endiannes == EndiannessMode.BigEndian)
+				return (ulong)((this.ReadUInt32() << 32) | (this.ReadUInt32() << 00));
+
+			return 0xFFFFFFFFFFFFFFFF;
+		}
+
+		public long ReadInt64()
+		{
+			return (long)this.ReadUInt64();
+		}
+
+		public byte[] ReadBytes(int count)
+		{
+			byte[] buffer = new byte[count];
+			this.Stream.Read(buffer, 0, count);
+			return buffer;
+		}
+
+		public char ReadChar()
+		{
+			return this.ReadChars(1)[0];
+		}
+
+		public char[] ReadChars(int count)
+		{
+			int charLength = this.Encoding.GetMaxByteCount(count);
+			byte[] buffer = this.ReadBytes(charLength);
+
+			char[] charArray = this.Encoding.GetChars(buffer);
+			Array.Resize(ref charArray, count);	// In case we get more chars than asked
+			return charArray;
+		}
+
+		/// <summary>
+		/// Read until 0x00 byte reached
+		/// </summary>
+		/// <returns>The string.</returns>
+		public string ReadString()
+		{
+			List<byte> list = new List<byte>();
+
+			byte b = this.ReadByte();
+			while (b != 0x00)
+				list.Add(b);
+
+			return this.Encoding.GetString(list.ToArray()).Replace("\0", "");
+		}
+
+		public string ReadString(int bytesCount)
+		{
+			byte[] buffer = this.ReadBytes(bytesCount);
+			string s = this.Encoding.GetString(buffer);
+			s = s.Replace("\0", "");
+			return s;
 		}
 	}
 }

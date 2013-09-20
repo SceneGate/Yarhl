@@ -64,7 +64,7 @@ namespace Libgame
         public string Name
         {
             get;
-            private set;
+            set;
         }
         
 		/// <summary>
@@ -144,7 +144,7 @@ namespace Libgame
 		/// Add a list of subfolders to the folder.
 		/// </summary>
 		/// <param name="folders">List of folders to add.</param>
-		public void AddFolders(IEnumerable<GameFolder> folders)
+		public void AddFolders(IEnumerable<FileContainer> folders)
 		{
 			foreach (FileContainer folder in folders) {
 				this.AddFolder(folder);
@@ -199,5 +199,21 @@ namespace Libgame
             this.files.Clear();
             this.folders.Clear();
         }
+
+		public FileContainer[] GetFilesRecursive()
+		{
+			List<FileContainer> list = new List<FileContainer>();
+
+			foreach (FileContainer f in this.files) {
+				list.Add(f);
+				list.AddRange(f.GetFilesRecursive());
+			}
+
+			foreach (FileContainer f in this.folders) {
+				list.AddRange(f.GetFilesRecursive());
+			}
+
+			return list.ToArray();
+		}
     }
 }
