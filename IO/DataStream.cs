@@ -174,6 +174,29 @@ namespace Libgame
 			this.Position += count;
 		}
 
+		public void WriteTimes(byte val, long times)
+		{
+			// TODO: this should be split into small buffers
+			byte[] buffer = new byte[times];
+			for (int i = 0; i < times; i++)
+				buffer[i] = val;
+
+			this.Write(buffer, 0, (int)times);
+		}
+
+		public void WriteUntilLength(byte val, long length)
+		{
+			long times = length - this.Length;
+			this.Seek(0, SeekMode.End);
+			this.WriteTimes(val, times);
+		}
+
+		public void WritePadding(byte val, int padding)
+		{
+			int times = (int)(padding - (this.Position % padding));
+			this.WriteTimes(val, times);
+		}
+
 		public void WriteTo(DataStream stream)
 		{
 			this.WriteTo(stream, this.Length);
