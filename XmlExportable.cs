@@ -31,9 +31,9 @@ namespace Libgame
     /// </summary>
     public abstract class XmlExportable : Format
     {              
-        public override void Import(DataStream strIn)
+		public override void Import(params DataStream[] strIn)
         {
-            XDocument doc = XDocument.Load(strIn.BaseStream);
+			XDocument doc = XDocument.Load(strIn[0].BaseStream);
             
             if (doc.Root.Name.LocalName != this.FormatName)
                 throw new FormatException();
@@ -41,7 +41,7 @@ namespace Libgame
             this.Import(doc.Root);
         }
         
-		public override void Export(DataStream strOut)
+		public override void Export(params DataStream[] strOut)
 		{
 			XDocument doc = new XDocument();
 			doc.Declaration = new XDeclaration("1.0", "utf-8", "yes");
@@ -50,7 +50,7 @@ namespace Libgame
 			this.Export(root);
 			doc.Add(root);
 
-			doc.Save(strOut.BaseStream, SaveOptions.None);
+			doc.Save(strOut[0].BaseStream, SaveOptions.None);
 		}
 
         protected abstract void Import(XElement root);

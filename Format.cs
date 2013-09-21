@@ -89,19 +89,38 @@ namespace Libgame
 			outStream.Dispose();
 		}
 
-		public void Import(string filePath)
+		public void Import(params string[] filesPath)
 		{
-			DataStream stream = new DataStream(filePath, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-			this.Import(stream);
-			stream.Dispose();
+			DataStream[] streams = new DataStream[filesPath.Length];
+			for (int i = 0; i < filesPath.Length; i++)
+				streams[i] = new DataStream(filesPath[i], System.IO.FileMode.Open, System.IO.FileAccess.Read);
+
+			this.Import(streams);
+
+			foreach (DataStream stream in streams)
+				stream.Dispose();
+		}
+
+		public void Export(params string[] filesPath)
+		{
+			DataStream[] streams = new DataStream[filesPath.Length];
+			for (int i = 0; i < filesPath.Length; i++)
+				streams[i] = new DataStream(filesPath[i], System.IO.FileMode.Create, System.IO.FileAccess.Write);
+
+			this.Export(streams);
+
+			foreach (DataStream stream in streams) {
+				stream.Flush();
+				stream.Dispose();
+			}
 		}
 
 		public abstract void Read(DataStream strIn);
         
         public abstract void Write(DataStream strOut);
         
-        public abstract void Import(DataStream strIn);
+		public abstract void Import(params DataStream[] strIn);
         
-        public abstract void Export(DataStream strOut);
+		public abstract void Export(params DataStream[] strOut);
     }
 }
