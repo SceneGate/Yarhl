@@ -33,7 +33,7 @@ namespace Libgame
 		private FileContainer previousContainer;
         private List<FileContainer> files;
         private List<FileContainer> folders;
-		private Dictionary<string, string> tags = new Dictionary<string, string>();
+		private Dictionary<string, object> tags = new Dictionary<string, object>();
         
         /// <summary>
         /// Initializes a new instance of the <see cref="GameFolder" /> class.
@@ -105,7 +105,7 @@ namespace Libgame
 		/// Gets the tags of this container.
 		/// </summary>
 		/// <value>The tags.</value>
-		public IDictionary<string, string> Tags {
+		public IDictionary<string, object> Tags {
 			get { return this.tags; }
 		}
 
@@ -229,6 +229,18 @@ namespace Libgame
 			}
 
 			return list.ToArray();
+		}
+
+		public void AssignTagsRecursive(IDictionary<string, object> tags)
+		{
+			foreach (KeyValuePair<string, object> entry in tags)
+				this.Tags.Add(entry);
+
+			foreach (FileContainer subfile in this.files)
+				this.AssignTagsRecursive(tags);
+
+			foreach (FileContainer subfolder in this.folders)
+				this.AssignTagsRecursive(tags);
 		}
     }
 }

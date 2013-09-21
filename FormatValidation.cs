@@ -91,7 +91,7 @@ namespace Libgame
 			}
 		}
 
-		protected abstract ValidationResult TestByTags(IDictionary<string, string> tags);
+		protected abstract ValidationResult TestByTags(IDictionary<string, object> tags);
 		protected abstract ValidationResult TestByData(DataStream stream);
 		protected abstract ValidationResult TestByRegexp(string filepath, string filename);
 
