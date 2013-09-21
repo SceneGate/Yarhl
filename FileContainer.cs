@@ -24,6 +24,7 @@ namespace Libgame
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+	using System.Linq;
     
     /// <summary>
     /// Description of FileContainer.
@@ -156,12 +157,20 @@ namespace Libgame
 			string elementPath = this.Path + PathSeparator + element.Name;
 			element.previousContainer = this;
 
-			// For each child, update it's path variable
+			// Get tags that will be added recursively (_key_)
+			List<KeyValuePair<string, object>> commonTags = new List<KeyValuePair<string, object>>();
+			foreach (KeyValuePair<string, object> entry in this.Tags) {
+				if (entry.Key.StartsWith("_") && entry.Key.EndsWith("_"))
+					commonTags.Add(entry);
+			}
+
+			// For each child, update it's path variable and add common tags
 			Queue<FileContainer> queue = new Queue<FileContainer>();
 			queue.Enqueue(element);
 			while (queue.Count > 0) {
 				FileContainer child = queue.Dequeue();
-				child.Path = elementPath + child.Path;
+				child.Path = elementPath + child.Path;					// Update path
+				commonTags.ForEach(e => child.Tags[e.Key] = e.Value);	// Add common tags
 
 				foreach (FileContainer subchild in child.files)
 					queue.Enqueue(subchild);
