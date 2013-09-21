@@ -23,6 +23,7 @@ namespace Libgame
 {
     using System;
 	using Mono.Addins;
+	using Libgame.IO;
     
 	[TypeExtensionPoint]
     /// <summary>

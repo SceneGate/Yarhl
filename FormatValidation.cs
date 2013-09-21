@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Mono.Addins;
+using Libgame.IO;
 
 namespace Libgame
 {

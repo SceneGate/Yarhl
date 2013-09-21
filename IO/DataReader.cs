@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Libgame
+namespace Libgame.IO
 {
 	public class DataReader
 	{

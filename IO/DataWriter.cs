@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace Libgame
+namespace Libgame.IO
 {
 	public class DataWriter
 	{

@@ -24,8 +24,8 @@ namespace Libgame
     using System;
 	using System.Collections.Generic;
 	using System.Collections.ObjectModel;
-	using System.IO;
 	using System.Reflection;
+	using Libgame.IO;
     
     /// <summary>
     /// Description of GameFile.
@@ -34,13 +34,14 @@ namespace Libgame
     {
 		private List<GameFile> dependencies = new List<GameFile>();
 
-        public GameFile(string name, Stream stream, long offset, long length)
+		public GameFile(string name, System.IO.Stream stream, long offset, long length)
 			: this(name, new DataStream(stream, offset, length))
         {
         }
 
-		public GameFile(string name, Stream stream, long offset, long length, Format format, FileContainer parent)
-			: this(name, new DataStream(stream, offset, length))
+		public GameFile(string name, System.IO.Stream stream, long offset,
+			 long length, Format format, FileContainer parent)
+			: this(name, new DataStream(stream, offset, length), format)
 		{
 		}
 

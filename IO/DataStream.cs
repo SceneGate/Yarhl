@@ -23,7 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace Libgame
+namespace Libgame.IO
 {
 	public enum SeekMode
 	{
