@@ -27,17 +27,26 @@ namespace Libgame
 	{
 		public static ushort Pad(this ushort num, int padding)
 		{
-			return (ushort)(padding - (num % padding));
+			if (num % padding == 0)
+				return num;
+			else
+				return (ushort)(num + (padding - (num % padding)));
 		}
 
 		public static uint Pad(this uint num, int padding)
 		{
-			return (uint)(padding - (num % padding));
+			if (num % padding == 0)
+				return num;
+			else
+				return (uint)(num + (padding - (num % padding)));
 		}
 
-		public static ulong Pad(this ulong num, int padding)
+		public static ulong Pad(this ulong num, ulong padding)
 		{
-			return (ulong)padding - (num % (ulong)padding);
+			if (num % padding == 0)
+				return num;
+			else
+				return (ulong)(num + (padding - (num % padding)));
 		}
 	}
 }

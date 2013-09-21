@@ -95,6 +95,22 @@ namespace Libgame
 			}
 		}
 
+		public static bool Compare(DataStream ds1, DataStream ds2)
+		{
+			if (ds1.Length != ds2.Length)
+				return false;
+
+			ds1.Seek(0, SeekMode.Origin);
+			ds2.Seek(0, SeekMode.Origin);
+
+			while (!ds1.EOF) {
+				if (ds1.ReadByte() != ds2.ReadByte())
+					return false;
+			}
+
+			return true;
+		}
+
 		public void Dispose()
 		{
 			Instances[this.BaseStream] -= 1;
@@ -198,7 +214,16 @@ namespace Libgame
 		public void WritePadding(byte val, int padding)
 		{
 			int times = (int)(padding - (this.Position % padding));
-			this.WriteTimes(val, times);
+			if (times != padding)	// Else it's already padded
+				this.WriteTimes(val, times);
+		}
+
+		public void WriteTo(string fileOut)
+		{
+			DataStream stream = new DataStream(fileOut, FileMode.Create, FileAccess.Write);
+			this.WriteTo(stream);
+			stream.Flush();
+			stream.Dispose();
 		}
 
 		public void WriteTo(DataStream stream)
@@ -208,10 +233,9 @@ namespace Libgame
 
 		public void WriteTo(DataStream stream, long count)
 		{
-			// If we're trying to write out the stream
-			if (stream.Position > stream.Offset + stream.Length)
-				throw new EndOfStreamException();
+			long currPos = this.Position;
 
+			this.Seek(0, SeekMode.Origin);
 			this.BaseStream.Position = this.Position;
 
 			// DEBUG IT
@@ -226,11 +250,12 @@ namespace Libgame
 				else
 					toRead = BufferSize;
 
-				written += stream.Read(buffer, 0, toRead);
-				this.Write(buffer, 0, toRead);
+				written += this.Read(buffer, 0, toRead);
+				stream.Write(buffer, 0, toRead);
+				stream.Flush();
 			} while (written != count);
 
-			this.Position += count;
+			this.Seek(currPos, SeekMode.Absolute);
 		}
 	}
 }

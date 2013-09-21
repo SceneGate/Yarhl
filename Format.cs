@@ -77,6 +77,17 @@ namespace Libgame
 			this.Write(newStream);
 		}
 
+		public void Write(string outfile)
+		{
+			DataStream outStream = new DataStream(
+				outfile,
+				System.IO.FileMode.Create,
+				System.IO.FileAccess.Write);
+			this.Write(outStream);
+			outStream.Flush();
+			outStream.Dispose();
+		}
+
 		public void Import(string filePath)
 		{
 			DataStream stream = new DataStream(filePath, System.IO.FileMode.Open, System.IO.FileAccess.Read);

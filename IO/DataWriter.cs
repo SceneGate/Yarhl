@@ -50,11 +50,11 @@ namespace Libgame
 		public void Write(ushort val)
 		{
 			if (this.Endiannes == EndiannessMode.LittleEndian) {
-				this.Write((byte)((val >> 8) & 0xFF));
 				this.Write((byte)((val >> 0) & 0xFF));
+				this.Write((byte)((val >> 8) & 0xFF));
 			} else if (this.Endiannes == EndiannessMode.BigEndian) {
-				this.Write((byte)((val >> 0) & 0xFF));
 				this.Write((byte)((val >> 8) & 0xFF));
+				this.Write((byte)((val >> 0) & 0xFF));
 			}
 		}
 
@@ -66,11 +66,11 @@ namespace Libgame
 		public void Write(uint val)
 		{
 			if (this.Endiannes == EndiannessMode.LittleEndian) {
-				this.Write((ushort)((val >> 16) & 0xFFFF));
 				this.Write((ushort)((val >> 00) & 0xFFFF));
+				this.Write((ushort)((val >> 16) & 0xFFFF));
 			} else if (this.Endiannes == EndiannessMode.BigEndian) {
-				this.Write((ushort)((val >> 00) & 0xFFFF));
 				this.Write((ushort)((val >> 16) & 0xFFFF));
+				this.Write((ushort)((val >> 00) & 0xFFFF));
 			}
 		}
 
@@ -82,11 +82,11 @@ namespace Libgame
 		public void Write(ulong val)
 		{
 			if (this.Endiannes == EndiannessMode.LittleEndian) {
-				this.Write((uint)((val >> 32) & 0xFFFFFFFF));
 				this.Write((uint)((val >> 00) & 0xFFFFFFFF));
+				this.Write((uint)((val >> 32) & 0xFFFFFFFF));
 			} else if (this.Endiannes == EndiannessMode.BigEndian) {
-				this.Write((uint)((val >> 00) & 0xFFFFFFFF));
 				this.Write((uint)((val >> 32) & 0xFFFFFFFF));
+				this.Write((uint)((val >> 00) & 0xFFFFFFFF));
 			}
 		}
 
@@ -103,6 +103,13 @@ namespace Libgame
 		public void Write(char[] chs)
 		{
 			this.Write(this.Encoding.GetBytes(chs));
+		}
+
+		public void Write(string s, int byteCount)
+		{
+			byte[] buffer = this.Encoding.GetBytes(s);
+			Array.Resize(ref buffer, byteCount);
+			this.Write(buffer);
 		}
 
 		public void Write(string s)

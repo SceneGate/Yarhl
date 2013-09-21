@@ -24,8 +24,7 @@ namespace Libgame
     using System;
     using System.Xml.Linq;
 	using Mono.Addins;
-
-	[TypeExtensionPoint]
+	
     /// <summary>
     /// Description of XmlExportable.
     /// </summary>
