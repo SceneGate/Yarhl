@@ -147,7 +147,6 @@ namespace Libgame.IO
 			if (this.Position >= this.Offset + this.Length)
 				throw new EndOfStreamException();
 
-			// DEBUG IT!
 			this.BaseStream.Position = this.Position++;
 			return (byte)this.BaseStream.ReadByte();
 		}
@@ -157,7 +156,6 @@ namespace Libgame.IO
 			if (this.Position > this.Offset + this.Length + count)
 				throw new EndOfStreamException();
 
-			// DEBUG IT!
 			this.BaseStream.Position = this.Position;
 			int read = this.BaseStream.Read(buffer, index, count);
 			this.Position += count;
@@ -173,7 +171,6 @@ namespace Libgame.IO
 			if (this.Position == this.Offset + this.Length)
 				this.Length++;
 
-			// DEBUG IT!
 			this.BaseStream.Position = this.Position++;
 			this.BaseStream.WriteByte(val);
 		}
@@ -188,7 +185,6 @@ namespace Libgame.IO
 			if (this.Position == this.Offset + this.Length)
 				this.Length += count;
 
-			// DEBUG IT!
 			this.BaseStream.Position = this.Position;
 			this.BaseStream.Write(buffer, index, count);
 			this.Position += count;
@@ -196,12 +192,23 @@ namespace Libgame.IO
 
 		public void WriteTimes(byte val, long times)
 		{
-			// TODO: this should be split into small buffers
-			byte[] buffer = new byte[times];
-			for (int i = 0; i < times; i++)
+			const int BufferSize = 5 * 1024;
+			byte[] buffer = new byte[BufferSize];
+			for (int i = 0; i < BufferSize; i++)
 				buffer[i] = val;
 
-			this.Write(buffer, 0, (int)times);
+			int written = 0;
+			int toWrite = 0;
+			do {
+				if (written + BufferSize > times)
+					toWrite = (int)(times - written);
+				else
+					toWrite = BufferSize;
+
+				written += toWrite;
+				this.Write(buffer, 0, toWrite);
+				this.Flush();
+			} while (written != times);
 		}
 
 		public void WriteUntilLength(byte val, long length)
@@ -238,7 +245,6 @@ namespace Libgame.IO
 			this.Seek(0, SeekMode.Origin);
 			this.BaseStream.Position = this.Position;
 
-			// DEBUG IT
 			const int BufferSize = 5 * 1024;
 			byte[] buffer = new byte[BufferSize];
 
