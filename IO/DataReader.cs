@@ -138,7 +138,7 @@ namespace Libgame.IO
 		}
 
 		/// <summary>
-		/// Read until 0x00 byte reached
+		/// Read until 0x00 byte or EOF reached
 		/// </summary>
 		/// <returns>The string.</returns>
 		public string ReadString()
@@ -146,8 +146,13 @@ namespace Libgame.IO
 			List<byte> list = new List<byte>();
 
 			byte b = this.ReadByte();
-			while (b != 0x00)
+			while (b != 0x00) {
 				list.Add(b);
+
+				if (this.Stream.EOF)
+					break;
+				b = this.ReadByte();
+			}
 
 			return this.Encoding.GetString(list.ToArray()).Replace("\0", "");
 		}
