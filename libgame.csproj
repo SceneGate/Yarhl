@@ -52,6 +52,9 @@
     <Compile Include="IO\DataReader.cs" />
     <Compile Include="IO\DataStream.cs" />
     <Compile Include="IO\DataWriter.cs" />
+    <Compile Include="FileManager.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="ReadOnlyDictionary.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
