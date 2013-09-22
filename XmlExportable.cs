@@ -35,7 +35,7 @@ namespace Libgame
         {
 			XDocument doc = XDocument.Load(strIn[0].BaseStream);
             
-			string rootName = this.FormatName.Substring(this.FormatName.LastIndexOf("."));
+			string rootName = this.FormatName.Substring(this.FormatName.LastIndexOf(".") + 1);
 			if (doc.Root.Name.LocalName != rootName)
                 throw new FormatException();
             
@@ -47,7 +47,7 @@ namespace Libgame
 			XDocument doc = new XDocument();
 			doc.Declaration = new XDeclaration("1.0", "utf-8", "yes");
 
-			string rootName = this.FormatName.Substring(this.FormatName.LastIndexOf("."));
+			string rootName = this.FormatName.Substring(this.FormatName.LastIndexOf(".") + 1);
 			XElement root = new XElement(rootName);
 			this.Export(root);
 			doc.Add(root);
