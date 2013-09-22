@@ -52,6 +52,8 @@ namespace Libgame
 		public virtual void Initialize(GameFile file, params Object[] parameters)
 		{
 			this.File = file;
+			if (file != null)
+				this.File.Format = this;
 			this.isInitialized = true;
 			this.parameters = parameters;
 		}

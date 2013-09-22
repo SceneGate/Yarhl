@@ -20,6 +20,7 @@
 // <date>22/09/2013</date>
 //-----------------------------------------------------------------------
 using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
 namespace Libgame
@@ -35,6 +36,23 @@ namespace Libgame
 
 		public TValue this[TKey key] {
 			get { return this.dict[key]; }
+		}
+
+		public Dictionary<TKey, TValue>.KeyCollection Keys {
+			get { return dict.Keys; }
+		}
+
+		public Dictionary<TKey, TValue>.ValueCollection Values {
+			get { return dict.Values; }
+		}
+
+		public bool ContainsKey(TKey key)
+		{
+			foreach (TKey k in this.Keys)
+				if (k.Equals(key))
+					return true;
+
+			return false;
 		}
 	}
 }

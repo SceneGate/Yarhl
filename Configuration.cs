@@ -38,6 +38,7 @@ namespace Libgame
 		private Dictionary<string, char[,]> tables;
 		private string ellipsis;
 		private char[] quotes;
+		private char[] furigana;
 
 		private Configuration(XDocument xmlEdit)
 		{
@@ -57,8 +58,12 @@ namespace Libgame
 			get { return this.ellipsis; }
 		}
 
-		public char[] Quotes {
+		public char[] QuoteMarks {
 			get { return this.quotes; }
+		}
+
+		public char[] FuriganaMarks {
+			get { return this.furigana; }
 		}
 
 		public static Configuration GetInstance()
@@ -133,6 +138,10 @@ namespace Libgame
 				xSpecialChars.Element("QuoteOpen").Value[0],
 				xSpecialChars.Element("QuoteClose").Value[0]
 			 };
+			this.furigana = new char[2] {
+				xSpecialChars.Element("FuriganaOpen").Value[0],
+				xSpecialChars.Element("FuriganaClose").Value[0]
+			};
 		}
 	}
 }
