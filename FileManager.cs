@@ -21,6 +21,7 @@
 //-----------------------------------------------------------------------
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 using Mono.Addins;
 
@@ -139,12 +140,12 @@ namespace Libgame
 			// Add dependencies
 			file.AddDependencies(depends.ToArray());
 
-			// Get type of dependency from info
-			Type t = Type.GetType(fileInfo.Element("Type").Value, true, false);
-
-			// Set type
-			if (file.Format == null)
-				file.SetFormat(t);
+			// Get type from info
+			string typeName = fileInfo.Element("Type").Value;
+			Format romFormat = AddinManager.GetExtensionObjects<Format>().
+			                   Where(f => f.FormatName == typeName).
+			                   ToArray()[0];
+			romFormat.Initialize(file);
 
 			return file;
 		}
