@@ -30,7 +30,9 @@ namespace Libgame
     /// Description of FileContainer.
     /// </summary>
     public abstract class FileContainer
-    {      
+    {    
+		private string name;
+		  
 		private FileContainer previousContainer;
         private List<FileContainer> files;
         private List<FileContainer> folders;
@@ -43,6 +45,7 @@ namespace Libgame
         /// <param name="id">Folder ID</param>
         public FileContainer(string name)
         {
+			this.Path = PathSeparator + name;	// Until is added to a file container is a root container
             this.Name = name;
             
             this.files   = new List<FileContainer>();
@@ -64,8 +67,13 @@ namespace Libgame
         /// </summary>
         public string Name
         {
-            get;
-            set;
+			get { return this.name; }
+			set {
+				this.name = value;
+
+				// Update path
+				this.Path = this.Path.GetPreviousPath() + PathSeparator + this.name;
+			}
         }
         
 		/// <summary>
@@ -154,7 +162,6 @@ namespace Libgame
 
 		private void AddContainer(FileContainer element, List<FileContainer> list)
 		{
-			string elementPath = this.Path + PathSeparator + element.Name;
 			element.previousContainer = this;
 
 			// Get tags that will be added recursively (_key_)
@@ -169,7 +176,7 @@ namespace Libgame
 			queue.Enqueue(element);
 			while (queue.Count > 0) {
 				FileContainer child = queue.Dequeue();
-				child.Path = elementPath + child.Path;					// Update path
+				child.Path = this.Path + child.Path;					// Update path
 				commonTags.ForEach(e => child.Tags[e.Key] = e.Value);	// Add common tags
 
 				foreach (FileContainer subchild in child.files)
