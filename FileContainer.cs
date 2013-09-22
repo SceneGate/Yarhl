@@ -224,18 +224,18 @@ namespace Libgame
             this.folders.Clear();
         }
 
-		public FileContainer[] GetFilesRecursive()
+		public FileContainer[] GetFilesRecursive(bool returnsFileChildren)
 		{
 			List<FileContainer> list = new List<FileContainer>();
+			list.AddRange(this.files);
 
-			foreach (FileContainer f in this.files) {
-				list.Add(f);
-				list.AddRange(f.GetFilesRecursive());
+			if (returnsFileChildren) {
+				foreach (FileContainer f in this.files)
+					list.AddRange(f.GetFilesRecursive(returnsFileChildren));
 			}
 
-			foreach (FileContainer f in this.folders) {
-				list.AddRange(f.GetFilesRecursive());
-			}
+			foreach (FileContainer f in this.folders)
+				list.AddRange(f.GetFilesRecursive(returnsFileChildren));
 
 			return list.ToArray();
 		}
