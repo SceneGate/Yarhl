@@ -85,7 +85,7 @@ namespace Libgame
 				this.GuessDependencies(file);
 
 				if (this.AutosetFormat) {
-					file.SetFormat(this.FormatType);
+					file.SetFormat(this.FormatType, this.GuessParameters(file));
 					file.Format.IsGuessed = true;
 				}
 			}
@@ -96,6 +96,8 @@ namespace Libgame
 		protected abstract ValidationResult TestByRegexp(string filepath, string filename);
 
 		protected abstract void GuessDependencies(GameFile file);
+
+		protected abstract string[] GuessParameters(GameFile file);
 	}
 }
 

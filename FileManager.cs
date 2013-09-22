@@ -140,12 +140,21 @@ namespace Libgame
 			// Add dependencies
 			file.AddDependencies(depends.ToArray());
 
-			// Get type from info
-			string typeName = fileInfo.Element("Type").Value;
-			Format romFormat = AddinManager.GetExtensionObjects<Format>().
+
+			if (file.Format == null) {
+				// Get "Initialize" parameters
+				string[] parameters = fileInfo.Elements("Arguments").
+				                      Select(x => x.Value).
+				                      ToArray();
+
+				// Get type from info
+				string typeName = fileInfo.Element("Type").Value;
+				Format romFormat = AddinManager.GetExtensionObjects<Format>().
 			                   Where(f => f.FormatName == typeName).
 			                   ToArray()[0];
-			romFormat.Initialize(file);
+
+				romFormat.Initialize(file, parameters);
+			}
 
 			return file;
 		}
