@@ -143,9 +143,7 @@ namespace Libgame
 
 			if (file.Format == null) {
 				// Get "Initialize" parameters
-				string[] parameters = fileInfo.Elements("Arguments").
-				                      Select(x => x.Value).
-				                      ToArray();
+				XElement parameters = fileInfo.Element("Parameters");
 
 				// Get type from info
 				string typeName = fileInfo.Element("Type").Value;
