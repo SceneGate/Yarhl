@@ -29,11 +29,16 @@ namespace Libgame
     /// <summary>
     /// Description of IFormat.
     /// </summary>
-    public abstract class Format
+	public abstract class Format : IDisposable
     {
 		private bool isRead = false;
 		private bool isInitialized = false;
 		protected Object[] parameters;
+
+		~Format()
+		{
+			this.Dispose(false);
+		}
 
         public abstract string FormatName {
             get;
@@ -56,6 +61,12 @@ namespace Libgame
 				this.File.Format = this;
 			this.isInitialized = true;
 			this.parameters = parameters;
+		}
+
+		public void Dispose()
+		{
+			this.Dispose(true);			// Dispose me everything (L)
+			GC.SuppressFinalize(this);	// Don't dispose again!
 		}
 
 		public void Read()
@@ -124,5 +135,7 @@ namespace Libgame
 		public abstract void Import(params DataStream[] strIn);
         
 		public abstract void Export(params DataStream[] strOut);
+
+		protected abstract void Dispose(bool freeManagedResourcesAlso);
     }
 }
