@@ -55,6 +55,13 @@ namespace Libgame
 			Instance = new FileManager(rootDir, xmlGame);
 		}
 
+		public Format GetFormat(string name)
+		{
+			return AddinManager.GetExtensionObjects<Format>().
+				Where(f => f.FormatName == name).
+			    ToArray()[0];
+		}
+
 		public GameFile RescueFile(string gameFilePath)
 		{
 			XElement fileInfo = this.GetFileInfo(gameFilePath);
@@ -142,16 +149,11 @@ namespace Libgame
 
 
 			if (file.Format == null) {
-				// Get "Initialize" parameters
-				XElement parameters = fileInfo.Element("Parameters");
+				string typeName = fileInfo.Element("Type").Value;		// Get type from info
+				XElement parameters = fileInfo.Element("Parameters");	// Get "Initialize" parameters
 
-				// Get type from info
-				string typeName = fileInfo.Element("Type").Value;
-				Format romFormat = AddinManager.GetExtensionObjects<Format>().
-			                   Where(f => f.FormatName == typeName).
-			                   ToArray()[0];
-
-				romFormat.Initialize(file, parameters);
+				file.Format = this.GetFormat(typeName);
+				file.Format.Initialize(file, parameters);
 			}
 
 			return file;
