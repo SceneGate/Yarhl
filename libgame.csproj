@@ -55,10 +55,12 @@
     <Compile Include="FileManager.cs" />
     <Compile Include="Configuration.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
+    <Compile Include="Utils\Checksums.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="IO\" />
+    <Folder Include="Utils\" />
   </ItemGroup>
 </Project>
