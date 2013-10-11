@@ -57,7 +57,7 @@ namespace Libgame
 
 		public Format GetFormat(string name)
 		{
-			return AddinManager.GetExtensionObjects<Format>().
+			return AddinManager.GetExtensionObjects<Format>(false).
 				Where(f => f.FormatName == name).
 			    ToArray()[0];
 		}
@@ -105,8 +105,7 @@ namespace Libgame
 			// 1.2.- Gets dependencies to be able to parse data.
 			// It will try to guess the file type using FormatValidation classes.
 			// If one of the matches, it will provide the dependencies.
-			foreach (TypeExtensionNode node in AddinManager.GetExtensionNodes(typeof(FormatValidation))) {
-				FormatValidation validation = (FormatValidation)node.CreateInstance();
+			foreach (FormatValidation validation in AddinManager.GetExtensionObjects<FormatValidation>(false)) {
 				validation.AutosetFormat = true;	// If it matches set format to the file.
 				validation.RunTests(file);
 
