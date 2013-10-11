@@ -76,6 +76,10 @@ namespace Libgame.IO
 			private set;
 		}
 
+		public long RelativePosition {
+			get { return this.Position - this.Offset; }
+		}
+
 		public long Length {
 			get;
 			private set;
