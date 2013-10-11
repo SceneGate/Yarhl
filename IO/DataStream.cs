@@ -66,6 +66,11 @@ namespace Libgame.IO
 		{
 		}
 
+		~DataStream()
+		{
+			this.Dispose(false);
+		}
+
 		public long Offset {
 			get;
 			private set;
@@ -116,6 +121,12 @@ namespace Libgame.IO
 		}
 
 		public void Dispose()
+		{
+			this.Dispose(true);
+			GC.SuppressFinalize(this);
+		}
+
+		private void Dispose(bool freeManagedResourcesAlso)
 		{
 			Instances[this.BaseStream] -= 1;
 
