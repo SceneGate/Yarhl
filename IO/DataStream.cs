@@ -157,6 +157,19 @@ namespace Libgame.IO
 				this.Position = this.Offset + this.Length;
 		}
 
+		public void SetLength(long length)
+		{
+			if (length > this.BaseStream.Length)
+				throw new ArgumentOutOfRangeException("length", length, "Length is bigger than BaseStream");
+			if (length < 0)
+				throw new ArgumentOutOfRangeException("length", length, "Length can not be negative");
+
+			this.Length = length;
+
+			if (this.RelativePosition > this.Length)
+				this.Seek(0, SeekMode.End);
+		}
+
 		public byte ReadByte()
 		{
 			if (this.Position >= this.Offset + this.Length)
