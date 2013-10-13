@@ -117,9 +117,57 @@ namespace Libgame.IO
 			this.Write(buffer);
 		}
 
+		public void Write(string s, int bytesCount, string tableName, bool originalToNew)
+		{
+			this.Write(s.ApplyTable(tableName, originalToNew), bytesCount);
+		}
+
 		public void Write(string s)
 		{
 			this.Write(this.Encoding.GetBytes(s));
+		}
+
+		public void Write(string s, string tableName, bool originalToNew)
+		{
+			this.Write(s.ApplyTable(tableName, originalToNew));
+		}
+
+		public void Write(string s, Type sizeType)
+		{
+			byte[] data = this.Encoding.GetBytes(s);
+			this.Write(data.Length, sizeType);
+			this.Write(data);
+		}
+
+		public void Write(string s, Type sizeType, string tableName, bool originalToNew)
+		{
+			this.Write(s.ApplyTable(tableName, originalToNew), sizeType);
+		}
+
+		public void Write(object o, Type type)
+		{
+			o = Convert.ChangeType(o, type);
+
+			if (type == typeof(long))
+				this.Write((long)o);
+			else if (type == typeof(ulong))
+				this.Write((ulong)o);
+			else if (type == typeof(int))
+				this.Write((int)o);
+			else if (type == typeof(uint))
+				this.Write((uint)o);
+			else if (type == typeof(short))
+				this.Write((short)o);
+			else if (type == typeof(ushort))
+				this.Write((ushort)o);
+			else if (type == typeof(byte))
+				this.Write((byte)o);
+			else if (type == typeof(sbyte))
+				this.Write((sbyte)o);
+			else if (type == typeof(char))
+				this.Write((char)o);
+			else if (type == typeof(string))
+				this.Write((string)o);
 		}
 
 		public void Flush()

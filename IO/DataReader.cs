@@ -164,6 +164,47 @@ namespace Libgame.IO
 			s = s.Replace("\0", "");
 			return s;
 		}
+
+		public string ReadString(int bytesCount, string tableName, bool originalToNew)
+		{
+			return this.ReadString(bytesCount).ApplyTable(tableName, originalToNew);
+		}
+
+		public string ReadString(Type sizeType)
+		{
+			object size = this.Read(sizeType);
+			size = Convert.ChangeType(size, typeof(int));
+			return this.ReadString((int)size);
+		}
+
+		public string ReadString(Type sizeType, string tableName, bool originalToNew)
+		{
+			return this.ReadString(sizeType).ApplyTable(tableName, originalToNew);
+		}
+
+		public object Read(Type type)
+		{
+			if (type == typeof(long))
+				return this.ReadInt64();
+			else if (type == typeof(ulong))
+				return this.ReadUInt64();
+			else if (type == typeof(int))
+				return this.ReadInt32();
+			else if (type == typeof(uint))
+				return this.ReadUInt32();
+			else if (type == typeof(short))
+				return this.ReadInt16();
+			else if (type == typeof(ushort))
+				return this.ReadUInt16();
+			else if (type == typeof(byte))
+				return this.ReadByte();
+			else if (type == typeof(sbyte))
+				return this.ReadSByte();
+			else if (type == typeof(char))
+				return this.ReadChar();
+
+			return null;
+		}
 	}
 }
 
