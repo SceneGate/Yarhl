@@ -108,8 +108,10 @@ namespace Libgame.IO
 		public void Write(string s, int byteCount)
 		{
 			byte[] buffer = this.Encoding.GetBytes(s);
-			if (buffer.Length > byteCount)
-				throw new ArgumentOutOfRangeException("s", s, "Text is so big");
+			if (buffer.Length > byteCount) {
+				// TODO: Give warning instead of error
+				//throw new ArgumentOutOfRangeException("s", s, "Text is so big");
+			}
 
 			Array.Resize(ref buffer, byteCount);
 			this.Write(buffer);

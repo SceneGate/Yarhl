@@ -66,8 +66,10 @@ namespace Libgame
 				}
 			}
 
-			if (startQuote)
-				throw new System.IO.EndOfStreamException("No ending quote found.");
+			if (startQuote) {
+				// TODO: It should give a warning instead of an error.
+				//throw new System.IO.EndOfStreamException("No ending quote found.");
+			}
 
 			return str.ToString();
 		}

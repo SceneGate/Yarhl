@@ -97,7 +97,7 @@ namespace Libgame
 
 		protected abstract void GuessDependencies(GameFile file);
 
-		protected abstract string[] GuessParameters(GameFile file);
+		protected abstract object[] GuessParameters(GameFile file);
 	}
 }
 
