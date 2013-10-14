@@ -20,6 +20,8 @@
 // <date>18/09/2013</date>
 // -----------------------------------------------------------------------
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Libgame
@@ -130,11 +132,9 @@ namespace Libgame
 		/// <param name="furiStart">Char that indicates the start of furigana.</param>
 		/// <param name="furiEnd">Char that indicates the end of furigana.</param>
 		/// <returns>Original string.</returns>
-		public static string FromXmlString(this string s, int level, char furiOpen, char furiClose)
+		public static string FromXmlString(this string s, char furiOpen, char furiClose)
 		{
 			Configuration config = Configuration.GetInstance();
-			int indenSize = level * XmlSpacesPerLevel;
-			string indentation = new string(' ', indenSize);
 
 			s = s.ApplySpecialChars();
 			StringBuilder str = new StringBuilder(s);
@@ -144,18 +144,32 @@ namespace Libgame
 			str.Replace(config.FuriganaMarks[1], furiClose);
 
 			// Remove indentation
+			str.Replace("\r", "");
+			str.Replace("\t", "  ");	// Replace tab by 2 white space. Later will be removed any extra spaces.
+			str.RemoveExtraWhiteSpaces();
 			if (s.Contains("\n")) {
-				// Remove: '\n' + indentation at the start
-				str.Remove(0, 1 + indenSize);     
-
-				// Remove: '\n' + (indentation of one less level)  at the end
-				int startIndex = str.Length - (1 + indenSize - XmlSpacesPerLevel);
-				str.Remove(startIndex, str.Length - startIndex);
-
-				str.Replace("\n" + indentation, "\n");
+				str.Replace("\n ", "\n");		// Remove spaces after
+				str.Replace(" \n", "\n");		// and before new line
+				str.Remove(0, 1);				// Remove first new line char
+				str.Remove(str.Length - 1, 1);	// Remove last new line char
 			}
 
 			return str.ToString();
+		}
+
+		public static string RemoveExtraWhiteSpaces(this string s)
+		{
+			StringBuilder sb = new StringBuilder(s);
+			sb.RemoveExtraWhiteSpaces();
+			return sb.ToString();
+		}
+
+		public static void RemoveExtraWhiteSpaces(this StringBuilder sb)
+		{
+			for (int i = sb.Length - 1; i > 0; i--) {
+				if (sb[i] == ' ' && sb[i - 1] == ' ')
+					sb.Remove(i, 1);
+			}
 		}
 	}
 }
