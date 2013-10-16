@@ -149,7 +149,7 @@ namespace Libgame
 			str.RemoveExtraWhiteSpaces();
 			if (s.Contains("\n")) {
 				str.Replace("\n ", "\n");		// Remove spaces after
-				str.Replace(" \n", "\n");		// and before new line
+				//str.Replace(" \n", "\n");		// and before new line
 				str.Remove(0, 1);				// Remove first new line char
 				str.Remove(str.Length - 1, 1);	// Remove last new line char
 			}
