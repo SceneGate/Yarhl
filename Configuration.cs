@@ -87,8 +87,6 @@ namespace Libgame
 			if (!path.Contains("{$") || string.IsNullOrEmpty(path))
 				return path;
 
-			Console.WriteLine("Original   -> {0}", path);
-
 			int pos = path.IndexOf('{');
 			while (pos != -1) {
 				// Get variable
@@ -103,11 +101,7 @@ namespace Libgame
 					path = Path.Combine(Environment.CurrentDirectory, path.Substring(2));
 
 				path = path.Replace('/', '\\');
-
 			}
-
-			Console.WriteLine("Translated -> {0}", path);
-			Console.ReadKey(true);
 
 			return path;
 		}
