@@ -70,6 +70,10 @@ namespace Libgame
 			get { return this.furigana; }
 		}
 
+		public string OsName {
+			get { return this.osName;  }
+		}
+
 		public static Configuration GetInstance()
 		{
 			if (Instance == null)
