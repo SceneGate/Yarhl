@@ -44,10 +44,10 @@ namespace Libgame
 
 		private Configuration(XDocument xmlEdit)
 		{
+			this.osName = Environment.OSVersion.Platform.ToString();
+
 			this.xmlEdit = xmlEdit;
 			this.ReadConfig();
-
-			this.osName = Environment.OSVersion.Platform.ToString();
 		}
 
 		public XElement XEdit {
