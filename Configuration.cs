@@ -40,10 +40,14 @@ namespace Libgame
 		private char[] quotes;
 		private char[] furigana;
 
+		private string osName;
+
 		private Configuration(XDocument xmlEdit)
 		{
 			this.xmlEdit = xmlEdit;
 			this.ReadConfig();
+
+			this.osName = Environment.OSVersion.Platform.ToString();
 		}
 
 		public XElement XEdit {
@@ -83,6 +87,8 @@ namespace Libgame
 			if (!path.Contains("{$") || string.IsNullOrEmpty(path))
 				return path;
 
+			Console.WriteLine("Original   -> {0}", path);
+
 			int pos = path.IndexOf('{');
 			while (pos != -1) {
 				// Get variable
@@ -91,6 +97,17 @@ namespace Libgame
 
 				pos = path.IndexOf('{', pos);
 			}
+
+			if (this.osName != "Unix") {
+				if (path.StartsWith("./"))
+					path = Path.Combine(Environment.CurrentDirectory, path.Substring(2));
+
+				path = path.Replace('/', '\\');
+
+			}
+
+			Console.WriteLine("Translated -> {0}", path);
+			Console.ReadKey(true);
 
 			return path;
 		}
