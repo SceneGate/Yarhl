@@ -86,6 +86,32 @@ namespace Libgame
 			Instance = new Configuration(xmlEdit);
 		}
 
+		public string ResolvePathInVariable(string path)
+		{
+			if (string.IsNullOrEmpty(path) || !path.Contains("{$PATH:"))
+				return path;
+
+			int pos = path.IndexOf("{$PATH:");
+			while (pos != -1) {
+				int endPos = GetEndVariablePosition(path, pos);
+				if (endPos == -1)
+					break;
+
+				// Get path to resolve
+				pos += 7;	// Jump tag chars
+				string toResolve = path.Substring(pos, endPos - pos);
+				string resolved = this.ResolvePath(toResolve);
+
+				// Replace
+				path = path.Replace("{$PATH:" + toResolve + "}", resolved);
+
+				// Get new position
+				pos = path.IndexOf("{$PATH:", pos);
+			}
+
+			return path;
+		}
+
 		public string ResolvePath(string path)
 		{
 			if (!path.Contains("{$") || string.IsNullOrEmpty(path))
@@ -157,6 +183,28 @@ namespace Libgame
 				xSpecialChars.Element("FuriganaOpen").Value[0],
 				xSpecialChars.Element("FuriganaClose").Value[0]
 			};
+		}
+
+		private static int GetEndVariablePosition(string path, int startPos)
+		{
+			int endPos;
+			bool skip = false;
+
+			for (endPos = startPos; endPos < path.Length; endPos++) {
+				if (path[endPos] == '{') {
+					skip = true;
+				} else if (path[endPos] == '}') {
+					if (skip)
+						skip = false;
+					else
+						break;
+				}
+			}
+
+			if (path[endPos] != '}')
+				return -1;
+			else
+				return endPos;
 		}
 	}
 }
