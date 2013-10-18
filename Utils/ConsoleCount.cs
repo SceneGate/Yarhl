@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="NumericExtensions.cs" company="none">
+// <copyright file="ConsoleCount.cs" company="none">
 // Copyright (C) 2013
 //
 //   This program is free software: you can redistribute it and/or modify
@@ -21,32 +21,40 @@
 //-----------------------------------------------------------------------
 using System;
 
-namespace Libgame
+namespace Libgame.Utils
 {
-	public static class NumericExtensions
+	public class ConsoleCount
 	{
-		public static ushort Pad(this ushort num, int padding)
+		private int index;
+		private int x;
+		private int y;
+		private int updX;
+		private int updY;
+		private int total;
+		private string message;
+
+		public ConsoleCount(string msg, int total)
 		{
-			if (num % padding == 0)
-				return num;
-			else
-				return (ushort)(num + (padding - (num % padding)));
+			this.index = 1;
+			this.x = Console.CursorLeft;
+			this.y = Console.CursorTop;
+			this.updX = this.x;
+			this.updY = this.y + 1;
+			this.total = total;
+			this.message = msg;
 		}
 
-		public static uint Pad(this uint num, int padding)
+		public void Show()
 		{
-			if (num % padding == 0)
-				return num;
-			else
-				return (uint)(num + (padding - (num % padding)));
+			Console.SetCursorPosition(this.x, this.y);
+			Console.WriteLine(this.message, this.index++, this.total);
+			Console.SetCursorPosition(this.updX, this.updY);
 		}
 
-		public static ulong Pad(this ulong num, ulong padding)
+		public void UpdateCoordinates()
 		{
-			if (num % padding == 0)
-				return num;
-			else
-				return (ulong)(num + (padding - (num % padding)));
+			this.updX = Console.CursorLeft;
+			this.updY = Console.CursorTop;
 		}
 	}
 }
