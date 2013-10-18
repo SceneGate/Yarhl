@@ -93,7 +93,7 @@ namespace Libgame
 
 			int pos = path.IndexOf("{$PATH:");
 			while (pos != -1) {
-				int endPos = GetEndVariablePosition(path, pos);
+				int endPos = GetEndVariablePosition(path, pos + 1);
 				if (endPos == -1)
 					break;
 
@@ -114,7 +114,7 @@ namespace Libgame
 
 		public string ResolvePath(string path)
 		{
-			if (!path.Contains("{$") || string.IsNullOrEmpty(path))
+			if (string.IsNullOrEmpty(path))
 				return path;
 
 			int pos = path.IndexOf('{');
@@ -192,6 +192,8 @@ namespace Libgame
 
 			for (endPos = startPos; endPos < path.Length; endPos++) {
 				if (path[endPos] == '{') {
+					if (skip)
+						throw new FormatException("Error getting end tag.");
 					skip = true;
 				} else if (path[endPos] == '}') {
 					if (skip)
@@ -201,7 +203,7 @@ namespace Libgame
 				}
 			}
 
-			if (path[endPos] != '}')
+			if (path[endPos] == path.Length)
 				return -1;
 			else
 				return endPos;
