@@ -41,10 +41,12 @@ namespace Libgame
 		private char[] furigana;
 
 		private string osName;
+		private string appPath;
 
 		private Configuration(XDocument xmlEdit)
 		{
-			this.osName = Environment.OSVersion.Platform.ToString();
+			this.osName  = Environment.OSVersion.Platform.ToString();
+			this.appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
 			this.xmlEdit = xmlEdit;
 			this.ReadConfig();
@@ -128,7 +130,7 @@ namespace Libgame
 
 			if (this.osName != "Unix") {
 				if (path.StartsWith("./"))
-					path = Path.Combine(Environment.CurrentDirectory, path.Substring(2));
+					path = Path.Combine(this.appPath, path.Substring(2));
 
 				path = path.Replace('/', '\\');
 			}
