@@ -128,10 +128,10 @@ namespace Libgame
 				pos = path.IndexOf('{', pos);
 			}
 
-			if (this.osName != "Unix") {
-				if (path.StartsWith("./"))
-					path = Path.Combine(this.appPath, path.Substring(2));
+			if (path.StartsWith("./"))
+				path = Path.Combine(this.appPath, path.Substring(2));
 
+			if (this.osName != "Unix") {
 				path = path.Replace('/', '\\');
 			}
 
