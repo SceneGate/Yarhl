@@ -57,7 +57,12 @@ namespace Libgame.IO
 		}
 
 		public DataStream(string filePath, FileMode mode, FileAccess access)
-			: this(File.Open(filePath, mode, access), 0, -1)
+			: this(new FileStream(filePath, mode, access), 0, -1)
+		{
+		}
+
+		public DataStream(string filePath, FileMode mode, FileAccess access, FileShare share)
+			: this(new FileStream(filePath, mode, access, share), 0, -1)
 		{
 		}
 
