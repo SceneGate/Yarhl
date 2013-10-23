@@ -76,6 +76,10 @@ namespace Libgame
 			get { return this.osName;  }
 		}
 
+		public string AppPath {
+			get { return this.appPath; }
+		}
+
 		public static Configuration GetInstance()
 		{
 			if (Instance == null)
