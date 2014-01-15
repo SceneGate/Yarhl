@@ -36,6 +36,11 @@ namespace Libgame
 		{
 			this.Root = root;
 			this.xmlGame = xmlGame;
+
+			if (!AddinManager.IsInitialized) {
+				AddinManager.Initialize();
+				AddinManager.Registry.Update();
+			}
 		}
 
 		public FileContainer Root {
@@ -55,8 +60,13 @@ namespace Libgame
 			Instance = new FileManager(rootDir, xmlGame);
 		}
 
-		public Format GetFormat(string name)
+		public static Format GetFormat(string name)
 		{
+			if (!AddinManager.IsInitialized) {
+				AddinManager.Initialize();
+				AddinManager.Registry.Update();
+			}
+
 			return AddinManager.GetExtensionObjects<Format>(false).
 				Where(f => f.FormatName == name).
 			    ToArray()[0];
@@ -151,7 +161,7 @@ namespace Libgame
 				string typeName = fileInfo.Element("Type").Value;		// Get type from info
 				XElement parameters = fileInfo.Element("Parameters");	// Get "Initialize" parameters
 
-				file.Format = this.GetFormat(typeName);
+				file.Format = FileManager.GetFormat(typeName);
 				file.Format.Initialize(file, parameters);
 			}
 
