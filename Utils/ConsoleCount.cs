@@ -42,6 +42,12 @@ namespace Libgame.Utils
 			this.updY = this.y + 1;
 			this.total = total;
 			this.message = msg;
+
+			if (this.updY == Console.BufferHeight) {
+				Console.WriteLine();
+				this.updY--;
+				this.y--;
+			}
 		}
 
 		public void Show()
