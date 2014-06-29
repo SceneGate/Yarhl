@@ -3,8 +3,6 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>10.0.0</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Libgame</RootNamespace>
