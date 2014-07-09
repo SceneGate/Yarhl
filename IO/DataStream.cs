@@ -136,7 +136,7 @@ namespace Libgame.IO
 			Instances[this.BaseStream] -= 1;
 
 			if (Instances[this.BaseStream] == 0) {
-				this.BaseStream.Close();
+				this.BaseStream.Dispose();
 			}
 		}
 
@@ -240,7 +240,6 @@ namespace Libgame.IO
 
 				written += toWrite;
 				this.Write(buffer, 0, toWrite);
-				this.Flush();
 			} while (written != times);
 		}
 
@@ -260,10 +259,8 @@ namespace Libgame.IO
 
 		public void WriteTo(string fileOut)
 		{
-			DataStream stream = new DataStream(fileOut, FileMode.Create, FileAccess.Write);
-			this.WriteTo(stream);
-			stream.Flush();
-			stream.Dispose();
+			using (DataStream stream = new DataStream(fileOut, FileMode.Create, FileAccess.Write))
+				this.WriteTo(stream);
 		}
 
 		public void WriteTo(DataStream stream)
@@ -291,7 +288,6 @@ namespace Libgame.IO
 
 				written += this.Read(buffer, 0, toRead);
 				stream.Write(buffer, 0, toRead);
-				stream.Flush();
 			} while (written != count);
 
 			this.Seek(currPos, SeekMode.Absolute);

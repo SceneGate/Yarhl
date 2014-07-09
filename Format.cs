@@ -93,13 +93,9 @@ namespace Libgame
 
 		public void Write(string outfile)
 		{
-			DataStream outStream = new DataStream(
-				outfile,
-				System.IO.FileMode.Create,
-				System.IO.FileAccess.Write);
-			this.Write(outStream);
-			outStream.Flush();
-			outStream.Dispose();
+			using (DataStream outStream = new DataStream(outfile, System.IO.FileMode.Create,
+														System.IO.FileAccess.Write))
+				this.Write(outStream);
 		}
 
 		public void Import(params string[] filesPath)
@@ -122,10 +118,8 @@ namespace Libgame
 
 			this.Export(streams);
 
-			foreach (DataStream stream in streams) {
-				stream.Flush();
+			foreach (DataStream stream in streams)
 				stream.Dispose();
-			}
 		}
 
 		public abstract void Read(DataStream strIn);
