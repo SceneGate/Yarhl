@@ -105,11 +105,19 @@ namespace Libgame.IO
 			this.Write(this.Encoding.GetBytes(chs));
 		}
 
-		public void Write(string s, int byteCount)
+		public void Write(string s, int byteCount, bool nullTerminator = true)
 		{
+			int maxBytes = nullTerminator ? byteCount - 1 : byteCount;
 			byte[] buffer = this.Encoding.GetBytes(s);
-			if (buffer.Length >= byteCount) {
-				buffer[byteCount - 1] = 0x00;	// Null terminator
+
+			if (buffer.Length > maxBytes) {
+				System.IO.File.AppendAllText(
+					"fallo bytes.txt",
+					byteCount.ToString() + ": " + s + "\r\n\r\n");
+
+				if (nullTerminator)
+					buffer[byteCount - 1] = 0x00;	// Null terminator
+
 				// TODO: Give warning instead of error
 				//throw new ArgumentOutOfRangeException("s", s, "Text is so big");
 			}
