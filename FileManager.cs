@@ -38,8 +38,10 @@ namespace Libgame
 			this.xmlGame = xmlGame;
 
 			if (!AddinManager.IsInitialized) {
-				AddinManager.Initialize();
+				AddinManager.Initialize(".addins");
 				AddinManager.Registry.Update();
+
+				new System.IO.DirectoryInfo(".addins").Attributes |= System.IO.FileAttributes.Hidden;
 			}
 		}
 
