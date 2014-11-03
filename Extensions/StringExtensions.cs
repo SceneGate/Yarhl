@@ -71,6 +71,7 @@ namespace Libgame
 			if (startQuote) {
 				// TODO: It should give a warning instead of an error.
 				//throw new System.IO.EndOfStreamException("No ending quote found.");
+				System.IO.File.AppendAllText("bad quotes.txt", "Unknown:\r\n" + s + "\r\n\r\n");
 			}
 
 			return str.ToString();
