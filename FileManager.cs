@@ -30,12 +30,11 @@ namespace Libgame
 	public class FileManager
 	{
 		private static FileManager Instance;
-		private XDocument xmlGame;
 
-		private FileManager(FileContainer root, XDocument xmlGame)
+		private FileManager(FileContainer root, FileInfoCollection infoCollection)
 		{
 			this.Root = root;
-			this.xmlGame = xmlGame;
+			this.InfoCollection = infoCollection;
 
 			if (!AddinManager.IsInitialized) {
 				AddinManager.Initialize(".addins");
@@ -50,6 +49,11 @@ namespace Libgame
 			private set;
 		}
 
+		public FileInfoCollection InfoCollection {
+			get;
+			private set;
+		}
+
 		public static FileManager GetInstance()
 		 {
 			if (Instance == null)
@@ -57,9 +61,9 @@ namespace Libgame
 			return Instance;
 		}
 
-		public static void Initialize(FileContainer rootDir, XDocument xmlGame)
+		public static void Initialize(FileContainer rootDir, FileInfoCollection infoCollection)
 		{
-			Instance = new FileManager(rootDir, xmlGame);
+			Instance = new FileManager(rootDir, infoCollection);
 		}
 
 		public static Format GetFormat(string name)
@@ -76,9 +80,8 @@ namespace Libgame
 
 		public GameFile RescueFile(string gameFilePath)
 		{
-			XElement fileInfo = this.GetFileInfo(gameFilePath);
-			if (fileInfo != null)
-				return this.RescueFileInfo(gameFilePath, fileInfo);
+			if (this.InfoCollection.Contains(gameFilePath))
+				return this.RescueFileInfo(gameFilePath);
 			else
 				return this.RescueFileNoInfo(gameFilePath);
 		}
@@ -137,13 +140,15 @@ namespace Libgame
 			return file;
 		}
 
-		private GameFile RescueFileInfo(string gameFilePath, XElement fileInfo)
+		private GameFile RescueFileInfo(string gameFilePath)
 		{
+			FileInfo info = this.InfoCollection[gameFilePath];
+
 			// Resolve dependencies
 			List<GameFile> depends = new List<GameFile>();
 
-			foreach (XElement xmlDepend in fileInfo.Elements("DependsOn")) {
-				GameFile dependency = this.RescueFile(xmlDepend.Value);
+			foreach (string dependencyPath in info.Dependencies) {
+				GameFile dependency = this.RescueFile(dependencyPath);
 				depends.Add(dependency);
 				dependency.Format.Read();
 			}
@@ -160,25 +165,14 @@ namespace Libgame
 
 
 			if (file.Format == null) {
-				string typeName = fileInfo.Element("Type").Value;		// Get type from info
-				XElement parameters = fileInfo.Element("Parameters");	// Get "Initialize" parameters
+				string typeName = info.Type;	// Get type from info
+				XElement parameters = info.Parameters;	// Get "Initialize" parameters
 
 				file.Format = FileManager.GetFormat(typeName);
 				file.Format.Initialize(file, parameters);
 			}
 
 			return file;
-		}
-
-		private XElement GetFileInfo(string path)
-		{
-			XElement files = xmlGame.Root.Element("Files");
-			foreach (XElement fileInfo in files.Elements("FileInfo")) {
-				if (fileInfo.Element("Path").Value == path)
-					return fileInfo;
-			}
-
-			return null;
 		}
 	}
 }

@@ -57,6 +57,8 @@
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="Utils\Checksums.cs" />
     <Compile Include="Utils\ConsoleCount.cs" />
+    <Compile Include="FileInfo.cs" />
+    <Compile Include="FileInfoCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
