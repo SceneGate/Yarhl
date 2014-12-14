@@ -36,7 +36,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Addins">
-      <HintPath>..\Mono.Addins.dll</HintPath>
+      <HintPath>libs\mono-addins\bin\Mono.Addins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

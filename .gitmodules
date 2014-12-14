@@ -1,0 +1,3 @@
+[submodule "libs/mono-addins"]
+	path = libs/mono-addins
+	url = http://github.com/mono/mono-addins
