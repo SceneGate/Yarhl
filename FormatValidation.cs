@@ -39,7 +39,7 @@ namespace Libgame
 			Sure     = 100,
 		}
 
-		protected List<string> dependencies = new List<string>();
+		private List<string> dependencies = new List<string>();
 
 		public FormatValidation()
 		{
@@ -58,7 +58,12 @@ namespace Libgame
 			get { return new ReadOnlyCollection<String>(this.dependencies); }
 		}
 
-		public bool Result {
+		public bool IsValid {
+			get;
+			private set;
+		}
+
+		public double Result {
 			get;
 			private set;
 		}
@@ -73,17 +78,20 @@ namespace Libgame
 			if (file.Format != null)
 				throw new Exception("The file already has a format.");
 
-			double result = 0;
+			this.dependencies.Clear();
+			this.Result = 0;
 
-			result += ((int)this.TestByTags(file.Tags) * 0.75);
-			result += ((int)this.TestByData(file.Stream) * 0.50);
-			result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
+			this.Result += ((int)this.TestByTags(file.Tags) * 0.75);
+			this.Result += ((int)this.TestByData(file.Stream) * 0.50);
+			this.Result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
 			file.Stream.Seek(0, SeekMode.Origin);
 
-			this.Result = (result >= 50) ? true : false;
+			this.IsValid = (this.Result >= 50) ? true : false;
 
-			if (this.Result) {
-				this.GuessDependencies(file);
+			if (this.IsValid) {
+				string[] depend = this.GuessDependencies(file);
+				if (depend != null)
+					this.dependencies.AddRange(depend);
 
 				if (this.AutosetFormat) {
 					file.SetFormat(this.FormatType, this.GuessParameters(file));
@@ -96,7 +104,7 @@ namespace Libgame
 		protected abstract ValidationResult TestByData(DataStream stream);
 		protected abstract ValidationResult TestByRegexp(string filepath, string filename);
 
-		protected abstract void GuessDependencies(GameFile file);
+		protected abstract string[] GuessDependencies(GameFile file);
 
 		protected abstract object[] GuessParameters(GameFile file);
 	}

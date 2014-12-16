@@ -78,6 +78,23 @@ namespace Libgame
 			    ToArray()[0];
 		}
 
+		public static FormatValidation AssignBestFormat(GameFile file)
+		{
+			if (file.Format != null)
+				return null;
+
+			FormatValidation validation = AddinManager.GetExtensionObjects<FormatValidation>(false)
+				.OrderByDescending((validat) => {validat.RunTests(file); return validat.Result;})
+				.FirstOrDefault();
+
+			if (validation != null) {
+				validation.AutosetFormat = true;
+				validation.RunTests(file);
+			}
+
+			return validation;
+		}
+
 		public GameFile RescueFile(string gameFilePath)
 		{
 			if (this.InfoCollection.Contains(gameFilePath))
@@ -116,25 +133,16 @@ namespace Libgame
 			} else if (file == null) {
 				throw new Exception("File not found.");
 			}
-
-			// If the file has format, don't try to use FormatValidation
-			if (file.Format == null) {
-				// 1.2.- Gets dependencies to be able to parse data.
-				// It will try to guess the file type using FormatValidation classes.
-				// If one of the matches, it will provide the dependencies.
-				foreach (FormatValidation validation in
-					AddinManager.GetExtensionObjects<FormatValidation>(false)) {
-					validation.AutosetFormat = true;	// If it matches set format to the file.
-					validation.RunTests(file);
-
-					if (validation.Result) {
-						foreach (string dependencyPath in validation.Dependencies) {
-							GameFile dependency = this.RescueFile(dependencyPath);
-							depends.Add(dependency);
-							dependency.Format.Read();
-						}
-						break;
-					}
+				
+			// 1.2.- Gets dependencies to be able to parse data.
+			// It will try to guess the file type using FormatValidation classes.
+			// If one of the matches, it will provide the dependencies.
+			FormatValidation validation = AssignBestFormat(file);
+			if (validation != null) {
+				foreach (string dependencyPath in validation.Dependencies) {
+					GameFile dependency = this.RescueFile(dependencyPath);
+					depends.Add(dependency);
+					dependency.Format.Read();
 				}
 			}
 
