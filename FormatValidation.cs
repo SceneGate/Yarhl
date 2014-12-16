@@ -78,6 +78,7 @@ namespace Libgame
 			result += ((int)this.TestByTags(file.Tags) * 0.75);
 			result += ((int)this.TestByData(file.Stream) * 0.50);
 			result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
+			file.Stream.Seek(0, SeekMode.Origin);
 
 			this.Result = (result >= 50) ? true : false;
 
