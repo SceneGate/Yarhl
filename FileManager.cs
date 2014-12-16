@@ -117,20 +117,24 @@ namespace Libgame
 				throw new Exception("File not found.");
 			}
 
-			// 1.2.- Gets dependencies to be able to parse data.
-			// It will try to guess the file type using FormatValidation classes.
-			// If one of the matches, it will provide the dependencies.
-			foreach (FormatValidation validation in AddinManager.GetExtensionObjects<FormatValidation>(false)) {
-				validation.AutosetFormat = true;	// If it matches set format to the file.
-				validation.RunTests(file);
+			// If the file has format, don't try to use FormatValidation
+			if (file.Format == null) {
+				// 1.2.- Gets dependencies to be able to parse data.
+				// It will try to guess the file type using FormatValidation classes.
+				// If one of the matches, it will provide the dependencies.
+				foreach (FormatValidation validation in
+					AddinManager.GetExtensionObjects<FormatValidation>(false)) {
+					validation.AutosetFormat = true;	// If it matches set format to the file.
+					validation.RunTests(file);
 
-				if (validation.Result) {
-					foreach (string dependencyPath in validation.Dependencies) {
-						GameFile dependency = this.RescueFile(dependencyPath);
-						depends.Add(dependency);
-						dependency.Format.Read();
+					if (validation.Result) {
+						foreach (string dependencyPath in validation.Dependencies) {
+							GameFile dependency = this.RescueFile(dependencyPath);
+							depends.Add(dependency);
+							dependency.Format.Read();
+						}
+						break;
 					}
-					break;
 				}
 			}
 
