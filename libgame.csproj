@@ -57,6 +57,7 @@
     <Compile Include="Utils\ConsoleCount.cs" />
     <Compile Include="FileInfo.cs" />
     <Compile Include="FileInfoCollection.cs" />
+    <Compile Include="GameFolderFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
