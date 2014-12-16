@@ -35,15 +35,9 @@ namespace Libgame
 		{
 			this.Root = root;
 			this.InfoCollection = infoCollection;
-
-			if (!AddinManager.IsInitialized) {
-				AddinManager.Initialize(".addins");
-				AddinManager.Registry.Update();
-
-				new System.IO.DirectoryInfo(".addins").Attributes |= System.IO.FileAttributes.Hidden;
-			}
+			InitializeAddins();
 		}
-
+			
 		public FileContainer Root {
 			get;
 			private set;
@@ -61,6 +55,15 @@ namespace Libgame
 			return Instance;
 		}
 
+		private static void InitializeAddins()
+		{
+			if (!AddinManager.IsInitialized) {
+				AddinManager.Initialize(".addins");
+				AddinManager.Registry.Update();
+				new System.IO.DirectoryInfo(".addins").Attributes |= System.IO.FileAttributes.Hidden;
+			}
+		}
+
 		public static void Initialize(FileContainer rootDir, FileInfoCollection infoCollection)
 		{
 			Instance = new FileManager(rootDir, infoCollection);
@@ -68,11 +71,7 @@ namespace Libgame
 
 		public static Format GetFormat(string name)
 		{
-			if (!AddinManager.IsInitialized) {
-				AddinManager.Initialize();
-				AddinManager.Registry.Update();
-			}
-
+			InitializeAddins();
 			return AddinManager.GetExtensionObjects<Format>(false).
 				Where(f => f.FormatName == name).
 			    ToArray()[0];
@@ -83,6 +82,7 @@ namespace Libgame
 			if (file.Format != null)
 				return null;
 
+			InitializeAddins();
 			FormatValidation validation = AddinManager.GetExtensionObjects<FormatValidation>(false)
 				.OrderByDescending((validat) => {validat.RunTests(file); return validat.Result;})
 				.FirstOrDefault();
