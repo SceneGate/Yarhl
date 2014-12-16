@@ -250,13 +250,14 @@ namespace Libgame
 		public void AssignTagsRecursive(IDictionary<string, object> tags)
 		{
 			foreach (KeyValuePair<string, object> entry in tags)
-				this.Tags.Add(entry);
+				if (!this.tags.ContainsKey(entry.Key))
+					this.Tags.Add(entry);
 
 			foreach (FileContainer subfile in this.files)
-				this.AssignTagsRecursive(tags);
+				subfile.AssignTagsRecursive(tags);
 
 			foreach (FileContainer subfolder in this.folders)
-				this.AssignTagsRecursive(tags);
+				subfolder.AssignTagsRecursive(tags);
 		}
     }
 }
