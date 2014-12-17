@@ -67,7 +67,7 @@ namespace Libgame.IO
 		}
 
 		public DataStream(DataStream stream, long offset, long length)
-			: this(stream.BaseStream, offset, length)
+			: this(stream.BaseStream, offset + stream.Offset, length)
 		{
 		}
 
@@ -160,6 +160,8 @@ namespace Libgame.IO
 				this.Position = this.Offset;
 			if (this.Position > this.Offset + this.Length)
 				this.Position = this.Offset + this.Length;
+
+			this.BaseStream.Position = this.Position;
 		}
 
 		public void SetLength(long length)
