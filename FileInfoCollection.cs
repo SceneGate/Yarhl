@@ -43,6 +43,7 @@ namespace Libgame
 				info.Path = fileInfo.Element("Path").Value;
 				info.Type = fileInfo.Element("Type").Value;
 				info.Parameters = fileInfo.Element("Parameters");
+				collection.AddFileInfo(info);
 			}
 
 			return collection;
