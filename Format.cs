@@ -54,6 +54,11 @@ namespace Libgame
 			get;
 		}
 
+		public string[] ImportedPaths {
+			get;
+			private set;
+		}
+
 		public virtual void Initialize(GameFile file, params Object[] parameters)
 		{
 			this.File = file;
@@ -100,6 +105,8 @@ namespace Libgame
 
 		public void Import(params string[] filesPath)
 		{
+			this.ImportedPaths = filesPath;
+
 			DataStream[] streams = new DataStream[filesPath.Length];
 			for (int i = 0; i < filesPath.Length; i++)
 				streams[i] = new DataStream(filesPath[i], System.IO.FileMode.Open, System.IO.FileAccess.Read);
