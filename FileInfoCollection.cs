@@ -18,31 +18,34 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Xml.Linq;
 
 namespace Libgame
 {
 	public class FileInfoCollection
 	{
-		private Dictionary<string, FileInfo> treasureMap;
+		readonly Dictionary<string, FileInfo> treasureMap;
 
 		public FileInfoCollection()
 		{
-			this.treasureMap = new Dictionary<string, FileInfo>();
+			treasureMap = new Dictionary<string, FileInfo>();
 		}
 
 		public static FileInfoCollection FromXml(XDocument xmlGame)
 		{
-			FileInfoCollection collection = new FileInfoCollection();
+			var collection = new FileInfoCollection();
 			XElement files = xmlGame.Root.Element("Files");
 
 			foreach (XElement fileInfo in files.Elements("FileInfo")) {
-				FileInfo info = new FileInfo();
+				var info = new FileInfo();
 				info.Path = fileInfo.Element("Path").Value;
 				info.Type = fileInfo.Element("Type").Value;
 				info.Parameters = fileInfo.Element("Parameters");
+				fileInfo.Elements("DependsOn")
+					.InDocumentOrder()
+					.All(d => { info.AddDependency(d.Value); return true; });
 				collection.AddFileInfo(info);
 			}
 
@@ -51,26 +54,26 @@ namespace Libgame
 
 		public bool Contains(string path)
 		{
-			return this.treasureMap.ContainsKey(path);
+			return treasureMap.ContainsKey(path);
 		}
 
 		public void AddFileInfo(FileInfo info)
 		{
-			this.treasureMap.Add(info.Path, info);
+			treasureMap.Add(info.Path, info);
 		}
 
 		public FileInfo GetFileInfo(string path)
 		{
-			return this.treasureMap[path];
+			return treasureMap[path];
 		}
 
 		public FileInfo this[string path] {
 			get {
-				return this.treasureMap[path];
+				return treasureMap[path];
 			}
 
 			set {
-				this.treasureMap.Add(path, value);
+				treasureMap.Add(path, value);
 			}
 		}
 	}
