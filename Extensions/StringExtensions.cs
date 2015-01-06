@@ -20,8 +20,6 @@
 // <date>18/09/2013</date>
 // -----------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace Libgame
@@ -87,7 +85,8 @@ namespace Libgame
 			for (int i = 0; i < table.GetLength(0); i++) {
 				if (originalToNew && table[i, 0] == ch)
 					return table[i, 1];
-				else if (!originalToNew && table[i, 1] == ch)
+
+				if (!originalToNew && table[i, 1] == ch)
 					return table[i, 0];
 			}
 
@@ -97,10 +96,10 @@ namespace Libgame
 		/// <summary>
 		/// Formats a string to make it more XML read-able (to XML).
 		/// </summary>
-		/// <param name="text">String to format.</param>
+		/// <param name="s">String to format.</param>
 		/// <param name="level">Number of XML node levels.</param>
-		/// <param name="furiStart">Char that indicates the start of furigana.</param>
-		/// <param name="furiEnd">Char that indicates the end of furigana.</param>
+		/// <param name="furiOpen">Char that indicates the start of furigana.</param>
+		/// <param name="furiClose">Char that indicates the end of furigana.</param>
 		/// <returns>String formatted.</returns>
 		public static string ToXmlString(this string s, int level, char furiOpen, char furiClose)
 		{
@@ -128,10 +127,9 @@ namespace Libgame
 		/// <summary>
 		/// Gets the original formatted string (from XML).
 		/// </summary>
-		/// <param name="text">Formatted string.</param>
-		/// <param name="level">Number of XML node levels.</param>
-		/// <param name="furiStart">Char that indicates the start of furigana.</param>
-		/// <param name="furiEnd">Char that indicates the end of furigana.</param>
+		/// <param name="s">Formatted string.</param>
+		/// <param name="furiOpen">Char that indicates the start of furigana.</param>
+		/// <param name="furiClose">Char that indicates the end of furigana.</param>
 		/// <returns>Original string.</returns>
 		public static string FromXmlString(this string s, char furiOpen, char furiClose)
 		{
@@ -146,14 +144,20 @@ namespace Libgame
 
 			// Remove indentation
 			str.Replace("\r", "");
-			str.Replace("\t", "  ");	// Replace tab by 2 white space. Later will be removed any extra spaces.
+			str.Replace("\t", " ");	// Extra spaces are removed
 			str.RemoveExtraWhiteSpaces();
+
 			if (s.Contains("\n")) {
 				str.Replace("\n ", "\n");		// Remove spaces after
-				//str.Replace(" \n", "\n");		// and before new line
+				str.Replace(" \n", "\n");		// and before new line
 				str.Remove(0, 1);				// Remove first new line char
 				str.Remove(str.Length - 1, 1);	// Remove last new line char
 			}
+
+			// Replace special spaces
+			str.Replace("{!SP}", " ");
+			str.Replace("\\!", "!");
+			str.Replace("\\\\", "\\");
 
 			return str.ToString();
 		}
