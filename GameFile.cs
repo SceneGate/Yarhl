@@ -86,7 +86,7 @@ namespace Libgame
 
 		public void SetFormat(string formatType, params Object[] parameters)
 		{
-			if (!string.IsNullOrEmpty(formatType))
+			if (string.IsNullOrEmpty(formatType))
 				return;
 
 			Type t = Type.GetType(formatType, true, false);
