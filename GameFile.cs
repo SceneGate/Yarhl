@@ -84,13 +84,10 @@ namespace Libgame
 			get { return new DependecyCollection(this.dependencies); }
 		}
 
-		public void SetFormat(string formatType, params Object[] parameters)
+		public void SetFormat<T>(params Object[] parameters)
+			where T : Format, new()
 		{
-			if (string.IsNullOrEmpty(formatType))
-				return;
-
-			Type t = Type.GetType(formatType, true, false);
-			this.SetFormat(t, parameters);
+			SetFormat(typeof(T), parameters);
 		}
 
 		public void SetFormat(Type formatType, params Object[] parameters)
