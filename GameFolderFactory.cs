@@ -29,7 +29,7 @@ namespace Libgame
 	{
 		public static GameFolder FromPath(string dir)
 		{
-			return FromPath(Path.GetDirectoryName(dir));
+			return FromPath(dir, Path.GetDirectoryName(dir));
 		}
 
 		public static GameFolder FromPath(string dir, string dirName)
