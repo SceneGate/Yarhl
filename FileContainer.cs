@@ -88,17 +88,17 @@ namespace Libgame
         /// <summary>
         /// Gets the list of files.
         /// </summary>
-        public ReadOnlyCollection<FileContainer> Files 
+		public FileContainerCollection Files 
         {
-            get { return new ReadOnlyCollection<FileContainer>(this.files); }
+			get { return new FileContainerCollection(this.files); }
         }
         
         /// <summary>
         /// Gets the list of folders.
         /// </summary>
-        public ReadOnlyCollection<FileContainer> Folders
+		public FileContainerCollection Folders
         {
-            get { return new ReadOnlyCollection<FileContainer>(this.folders); }
+			get { return new FileContainerCollection(this.folders); }
         }
         
 		/// <summary>
@@ -258,6 +258,24 @@ namespace Libgame
 
 			foreach (FileContainer subfolder in this.folders)
 				subfolder.AssignTagsRecursive(tags);
+		}
+
+		public class FileContainerCollection : ReadOnlyCollection<FileContainer>
+		{
+			public FileContainerCollection(IList<FileContainer> list)
+				: base(list)
+			{
+			}
+
+			public FileContainer this[string name] {
+				get {
+					foreach (var cont  in this)
+						if (cont.Name == name)
+							return cont;
+
+					return null;
+				}
+			}
 		}
     }
 }
