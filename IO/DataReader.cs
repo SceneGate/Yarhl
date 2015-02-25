@@ -143,18 +143,26 @@ namespace Libgame.IO
 		/// <returns>The string.</returns>
 		public string ReadString()
 		{
-			List<byte> list = new List<byte>();
+			StringBuilder str = new StringBuilder();
 
-			byte b = this.ReadByte();
-			while (b != 0x00) {
-				list.Add(b);
+			int maxBytes = this.Encoding.GetMaxByteCount(1);
+			long bytesLeft = this.Stream.Length - this.Stream.RelativePosition;
+			int bytesToRead = (bytesLeft < maxBytes) ? (int)bytesLeft : maxBytes;
 
-				if (this.Stream.EOF)
-					break;
-				b = this.ReadByte();
-			}
+			char ch;
+			do {
+				byte[] data = this.ReadBytes((int)bytesToRead);
+				ch = this.Encoding.GetString(data)[0];
 
-			return this.Encoding.GetString(list.ToArray()).Replace("\0", "");
+				int bytesRead = this.Encoding.GetByteCount(ch.ToString());
+				int bytesNotRead = bytesToRead - bytesRead;
+				Stream.Seek(-bytesNotRead, SeekMode.Current);
+
+				if (ch != '\0')
+					str.Append(ch);
+			} while (ch != '\0' && !this.Stream.EOF);
+
+			return str.ToString();
 		}
 
 		public string ReadString(int bytesCount)
