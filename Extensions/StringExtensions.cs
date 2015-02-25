@@ -114,6 +114,17 @@ namespace Libgame
 			str.Replace(furiOpen,  config.FuriganaMarks[0]);
 			str.Replace(furiClose, config.FuriganaMarks[1]);
 
+			// Control chars like furigana
+			foreach (char ch in s) {
+				if (ch < ' ' && ch != '\r' && ch != '\n') {
+					string controlCharFormatted = string.Format("{0}{0}0x{1:x2}{2}",
+						config.FuriganaMarks[0],
+						(int)ch,
+						config.FuriganaMarks[1]);
+					str.Replace(ch.ToString(), controlCharFormatted);
+				}
+			}
+
 			// Add indentation to view it better
 			str.Replace("\n", "\n" + indentation);
 			if (s.Contains("\n")) {
@@ -137,6 +148,16 @@ namespace Libgame
 
 			s = s.ApplySpecialChars();
 			StringBuilder str = new StringBuilder(s);
+
+			// Control chars
+			int pos = s.IndexOf(config.FuriganaMarks[0].ToString() + config.FuriganaMarks[0]);
+			while (pos != -1) {
+				string controlFormatted = s.Substring(pos, 7);
+				int controlChar = Convert.ToByte(controlFormatted.Substring(4, 2), 16);
+				str.Replace(controlFormatted, Char.ConvertFromUtf32(controlChar));
+
+				pos = s.IndexOf(config.FuriganaMarks[0].ToString() + config.FuriganaMarks[0], pos);
+			}
 
 			// Furigana marks
 			str.Replace(config.FuriganaMarks[0], furiOpen);
