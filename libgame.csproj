@@ -8,7 +8,9 @@
     <RootNamespace>Libgame</RootNamespace>
     <AssemblyName>libgame</AssemblyName>
     <SynchReleaseVersion>false</SynchReleaseVersion>
-    <ReleaseVersion>0.4</ReleaseVersion>
+    <ReleaseVersion>0.5</ReleaseVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
