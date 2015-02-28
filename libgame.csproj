@@ -44,7 +44,7 @@
     <Compile Include="FileContainer.cs" />
     <Compile Include="GameFile.cs" />
     <Compile Include="GameFolder.cs" />
-    <Compile Include="XmlExportable.cs" />
+    <Compile Include="FileFormat\XmlExportable.cs" />
     <Compile Include="Extensions\NumericExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="IO\DataReader.cs" />

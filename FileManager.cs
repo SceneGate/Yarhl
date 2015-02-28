@@ -19,14 +19,15 @@
 // <email>benito356@gmail.com</email>
 // <date>22/09/2013</date>
 //-----------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using Mono.Addins;
-
 namespace Libgame
 {
+	using System;
+	using System.Collections.Generic;
+	using System.Linq;
+	using System.Xml.Linq;
+	using Mono.Addins;
+	using Libgame.FileFormat;
+
 	public class FileManager
 	{
 		private static FileManager Instance;

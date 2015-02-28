@@ -26,6 +26,7 @@ namespace Libgame
 	using System.Collections.ObjectModel;
 	using System.Reflection;
 	using Libgame.IO;
+	using Libgame.FileFormat;
     
     /// <summary>
     /// Description of GameFile.
