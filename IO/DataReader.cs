@@ -146,14 +146,18 @@ namespace Libgame.IO
 			StringBuilder str = new StringBuilder();
 
 			int maxBytes = this.Encoding.GetMaxByteCount(1);
-			long bytesLeft = this.Stream.Length - this.Stream.RelativePosition;
-			int bytesToRead = (bytesLeft < maxBytes) ? (int)bytesLeft : maxBytes;
-
 			char ch;
-			do {
-				byte[] data = this.ReadBytes((int)bytesToRead);
-				ch = this.Encoding.GetString(data)[0];
 
+			do {
+				long bytesLeft = this.Stream.Length - this.Stream.RelativePosition;
+				int bytesToRead = (bytesLeft < maxBytes) ? (int)bytesLeft : maxBytes;
+
+				byte[] data = this.ReadBytes((int)bytesToRead);
+				string decodedString = this.Encoding.GetString(data);
+				if (decodedString.Length == 0)
+					break;
+
+				ch = decodedString[0];
 				int bytesRead = this.Encoding.GetByteCount(ch.ToString());
 				int bytesNotRead = bytesToRead - bytesRead;
 				Stream.Seek(-bytesNotRead, SeekMode.Current);
