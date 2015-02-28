@@ -25,6 +25,8 @@ namespace Libgame.FileFormat
 
 	[TypeExtensionPoint]
 	public abstract class Converter<TSrc, TDst>
+		where TSrc : Format
+		where TDst : Format
 	{
 		public Type From {
 			get { return typeof(TSrc); }
