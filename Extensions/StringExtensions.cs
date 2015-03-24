@@ -171,8 +171,10 @@ namespace Libgame
 			if (s.Contains("\n")) {
 				str.Replace("\n ", "\n");		// Remove spaces after
 				str.Replace(" \n", "\n");		// and before new line
-				str.Remove(0, 1);				// Remove first new line char
-				str.Remove(str.Length - 1, 1);	// Remove last new line char
+				if (str[0] == '\n')				// Remove first new line char
+					str.Remove(0, 1);
+				if (str[str.Length - 1] == '\n') // Remove last new line char
+					str.Remove(str.Length - 1, 1);
 			}
 
 			// Replace special spaces
