@@ -92,6 +92,11 @@ namespace Libgame
 			Instance = new Configuration(xmlEdit);
 		}
 
+        public static bool IsInitialized()
+        {
+            return Instance != null;
+        }
+
 		public string ResolvePathInVariable(string path)
 		{
 			if (string.IsNullOrEmpty(path) || !path.Contains("{$PATH:"))
