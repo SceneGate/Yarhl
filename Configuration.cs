@@ -84,7 +84,7 @@ namespace Libgame
 		}
 
         public Dictionary<string, dynamic> Extras {
-            get;
+            get { return extras; }
         }
 
 		public static Configuration GetInstance()
