@@ -102,7 +102,7 @@ namespace Libgame
 
 			// Create instance
 			this.Format = (Format)Activator.CreateInstance(formatType);
-			this.Format.Initialize(this, parameters);
+			// TODO: this.Format.Initialize(this, parameters);
 		}
 
 		public void ChangeStream(DataStream newStream)

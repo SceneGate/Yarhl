@@ -117,7 +117,7 @@ namespace Libgame
 			if (!string.IsNullOrEmpty(prevContainer)) {
 				GameFile dependency = this.RescueFile(prevContainer);
 				if (dependency != null) {
-					dependency.Format.Read();
+					// TODO: dependency.Format.Read();
 					depends.Add(dependency);
 				}
 			}
@@ -143,7 +143,7 @@ namespace Libgame
 				foreach (string dependencyPath in validation.Dependencies) {
 					GameFile dependency = this.RescueFile(dependencyPath);
 					depends.Add(dependency);
-					dependency.Format.Read();
+					// TODO: dependency.Format.Read();
 				}
 			}
 
@@ -163,7 +163,7 @@ namespace Libgame
 			foreach (string dependencyPath in info.Dependencies) {
 				GameFile dependency = this.RescueFile(dependencyPath);
 				depends.Add(dependency);
-				dependency.Format.Read();
+				// TODO: dependency.Format.Read();
 			}
 
 			// Get file
@@ -182,7 +182,7 @@ namespace Libgame
 				XElement parameters = info.Parameters;	// Get "Initialize" parameters
 
 				file.Format = FileManager.GetFormat(typeName);
-				file.Format.Initialize(file, parameters);
+				// TODO: file.Format.Initialize(file, parameters);
 			}
 
 			return file;

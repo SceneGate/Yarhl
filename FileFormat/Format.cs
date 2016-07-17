@@ -1,142 +1,100 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="IFormat.cs" company="none">
-// Copyright (C) 2013
+﻿//
+//  Format.cs
 //
-//   This program is free software: you can redistribute it and/or modify
-//   it under the terms of the GNU General Public License as published by 
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
+//  Author:
+//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//   This program is distributed in the hope that it will be useful, 
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details. 
+//  Copyright (c) 2016 Benito Palacios Sánchez
 //
-//   You should have received a copy of the GNU General Public License
-//   along with this program.  If not, see "http://www.gnu.org/licenses/". 
-// </copyright>
-// <author>pleoNeX</author>
-// <email>benito356@gmail.com</email>
-// <date>11/06/2013</date>
-//-----------------------------------------------------------------------
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame.FileFormat
 {
     using System;
-	using Mono.Addins;
-	using Libgame.IO;
-    
-	[TypeExtensionPoint]
-    /// <summary>
-    /// Description of IFormat.
-    /// </summary>
-	public abstract class Format : IDisposable
-    {
-		private bool isRead = false;
-		private bool isInitialized = false;
-		protected Object[] parameters;
+    using System.Linq;
+    using System.Reflection;
+    using Mono.Addins;
 
-		~Format()
-		{
-			this.Dispose(false);
-		}
+    [TypeExtensionPoint]
+    /// <summary>
+    /// Abstract format.
+    /// </summary>
+    public abstract class Format : IDisposable
+    {
+        ~Format()
+        {
+            this.Dispose(false);
+        }
 
         public abstract string FormatName {
             get;
         }
-        
-		public GameFile File {
-			get;
-			private set;
-		}
 
-		public bool IsGuessed {
-			set;
-			get;
-		}
+        public void Dispose()
+        {
+            this.Dispose(true);         // Dispose me everything (L)
+            GC.SuppressFinalize(this);  // Don't dispose again!
+        }
 
-		public string[] ImportedPaths {
-			get;
-			private set;
-		}
+        protected abstract void Dispose(bool freeManagedResourcesAlso);
 
-		public virtual void Initialize(GameFile file, params Object[] parameters)
-		{
-			this.File = file;
-			if (file != null)
-				this.File.Format = this;
-			this.isInitialized = true;
-			this.parameters = parameters;
-		}
+        public static dynamic ConvertFrom<TSrc>(TSrc source, Type dstType)
+        {
+            return Convert(typeof(TSrc), source, dstType);
+        }
 
-		public void Dispose()
-		{
-			this.Dispose(true);			// Dispose me everything (L)
-			GC.SuppressFinalize(this);	// Don't dispose again!
-		}
+        public static TDst ConvertTo<TDst>(dynamic source)
+        {
+            return Convert(source.GetType(), source, typeof(TDst));
+        }
 
-		public void Read()
-		{
-			if (!this.isInitialized)
-				throw new Exception("The format has not been initialized.");
+        public static TDst Convert<TSrc, TDst>(TSrc source)
+        {
+            return Convert(typeof(TSrc), source, typeof(TDst));
+        }
 
-			if (this.isRead)
-				return;
+        public static dynamic Convert(Type srcType, dynamic src, Type dstType)
+        {
+            var converterType = Assembly.GetExecutingAssembly().GetTypes()
+                .Single(type =>               
+                    type.IsClass &&
+                    type.GetInterfaces().Any(inter =>
+                        inter.IsGenericType &&
+                        inter.GetGenericTypeDefinition().Equals(typeof(IConverter<,>)) &&
+                        inter.GenericTypeArguments[0] == srcType &&
+                        inter.GenericTypeArguments[1] == dstType));
 
-			this.Read(this.File.Stream);
-			this.isRead = true;
-		}
+            dynamic converter = Activator.CreateInstance(converterType);
+            return converter.Convert(src);
+        }
 
-		public void Write()
-		{
-			if (!this.isInitialized)
-				throw new Exception("The format has not been initialized.");
+        public T ConvertTo<T>()
+        {
+            return Format.ConvertTo<T>(this);
+        }
 
-			DataStream newStream = new DataStream(new System.IO.MemoryStream(), 0, -1);
-			this.File.ChangeStream(newStream);
-			this.Write(newStream);
-		}
+        public T ConvertWith<T>(dynamic converter)
+        {
+            if (!converter.GetType().GetInterfaces().Contains(typeof(IConverter<,>)))
+                throw new ArgumentException("Invalid converter");
 
-		public void Write(string outfile)
-		{
-			using (DataStream outStream = new DataStream(outfile, System.IO.FileMode.Create,
-														System.IO.FileAccess.Write))
-				this.Write(outStream);
-		}
+            if (converter.GetType().GenericTypeArguments[0] != this.GetType())
+                throw new ArgumentException("Converter cannot convert from this type");
 
-		public void Import(params string[] filesPath)
-		{
-			this.ImportedPaths = filesPath;
+            if (converter.GetType().GenericTypeArguments[1] != typeof(T))
+                throw new ArgumentException("Converter cannot convert to that type");
 
-			DataStream[] streams = new DataStream[filesPath.Length];
-			for (int i = 0; i < filesPath.Length; i++)
-				streams[i] = new DataStream(filesPath[i], System.IO.FileMode.Open, System.IO.FileAccess.Read);
-
-			this.Import(streams);
-
-			foreach (DataStream stream in streams)
-				stream.Dispose();
-		}
-
-		public void Export(params string[] filesPath)
-		{
-			DataStream[] streams = new DataStream[filesPath.Length];
-			for (int i = 0; i < filesPath.Length; i++)
-				streams[i] = new DataStream(filesPath[i], System.IO.FileMode.Create, System.IO.FileAccess.Write);
-
-			this.Export(streams);
-
-			foreach (DataStream stream in streams)
-				stream.Dispose();
-		}
-
-		public abstract void Read(DataStream strIn);
-        
-        public abstract void Write(DataStream strOut);
-        
-		public abstract void Import(params DataStream[] strIn);
-        
-		public abstract void Export(params DataStream[] strOut);
-
-		protected abstract void Dispose(bool freeManagedResourcesAlso);
+            return converter.Convert(this);
+        }
     }
 }

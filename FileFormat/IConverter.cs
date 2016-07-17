@@ -1,10 +1,10 @@
 ﻿//
-//  Converter.cs
+//  IConverter.cs
 //
 //  Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
+//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2015 Benito Palacios Sánchez
+//  Copyright (c) 2016 Benito Palacios Sánchez
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,23 +20,14 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame.FileFormat
 {
-	using System;
-	using Mono.Addins;
+    using Mono.Addins;
 
-	[TypeExtensionPoint]
-	public abstract class Converter<TSrc, TDst>
-		where TSrc : Format
-		where TDst : Format
-	{
-		public Type From {
-			get { return typeof(TSrc); }
-		}
-
-		public Type To {
-			get { return typeof(TDst); }
-		}
-
-		public abstract void Convert(TSrc source, TDst destination);
-	}
+    [TypeExtensionPoint]
+    /// <summary>
+    /// Format converter interface.
+    /// </summary>
+    public interface IConverter<TSrc, TDst>
+    {
+        TDst Convert(TSrc source);
+    }
 }
-
