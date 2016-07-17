@@ -36,7 +36,7 @@ namespace Libgame.FileFormat
             this.Dispose(false);
         }
 
-        public abstract string FormatName {
+        public abstract string Name {
             get;
         }
 

@@ -62,6 +62,7 @@
     <Compile Include="FileFormat\Format.cs" />
     <Compile Include="FileFormat\FormatValidation.cs" />
     <Compile Include="FileFormat\IConverter.cs" />
+    <Compile Include="FileFormat\BinaryFormat.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

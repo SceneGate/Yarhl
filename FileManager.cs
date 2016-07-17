@@ -79,7 +79,7 @@ namespace Libgame
 		{
 			InitializeAddins();
 			return AddinManager.GetExtensionObjects<Format>(false).
-				Where(f => f.FormatName == name).
+				Where(f => f.Name == name).
 			    ToArray()[0];
 		}
 
@@ -153,7 +153,7 @@ namespace Libgame
 			}
 
 			// Set dependencies
-			file.AddDependencies(depends.ToArray());
+			// TODO: file.AddDependencies(depends.ToArray());
 
 			return file;
 		}
@@ -179,7 +179,7 @@ namespace Libgame
 			}
 
 			// Add dependencies
-			file.AddDependencies(depends.ToArray());
+			// TODO: file.AddDependencies(depends.ToArray());
 
 
 			if (file.Format == null) {

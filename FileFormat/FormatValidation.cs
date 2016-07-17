@@ -94,7 +94,7 @@ namespace Libgame
 					this.dependencies.AddRange(depend);
 
 				if (this.AutosetFormat) {
-					file.SetFormat(this.FormatType, this.GuessParameters(file));
+					// TODO: file.SetFormat(this.FormatType, this.GuessParameters(file));
 					// TODO: file.Format.IsGuessed = true;
 				}
 			}
