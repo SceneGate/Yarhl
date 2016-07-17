@@ -51,7 +51,7 @@ namespace Libgame
 
 		public static FileManager GetInstance()
 		 {
-			if (Instance == null)
+			if (!IsInitialized())
 				throw new Exception("The class has not been initalized.");
 			return Instance;
 		}
@@ -68,6 +68,11 @@ namespace Libgame
 		public static void Initialize(FileContainer rootDir, FileInfoCollection infoCollection)
 		{
 			Instance = new FileManager(rootDir, infoCollection);
+		}
+
+		public static bool IsInitialized()
+		{
+			return Instance != null;
 		}
 
 		public static Format GetFormat(string name)

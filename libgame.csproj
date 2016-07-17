@@ -37,7 +37,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Mono.Addins">
-      <HintPath>libs\mono-addins\bin\Mono.Addins.dll</HintPath>
+      <HintPath>packages\Mono.Addins.1.2\lib\net40\Mono.Addins.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -69,5 +69,8 @@
     <Folder Include="IO\" />
     <Folder Include="Utils\" />
     <Folder Include="FileFormat\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@ namespace Libgame
 		private XDocument xmlEdit;
 		private Dictionary<string, string> relativePaths;
 		private Dictionary<string, char[,]> tables;
+        private readonly Dictionary<string, dynamic> extras;
 		private string ellipsis;
 		private char[] quotes;
 		private char[] furigana;
@@ -50,6 +51,8 @@ namespace Libgame
 
 			this.xmlEdit = xmlEdit;
 			this.ReadConfig();
+
+            this.extras = new Dictionary<string, dynamic>();
 		}
 
 		public XElement XEdit {
@@ -80,6 +83,10 @@ namespace Libgame
 			get { return this.appPath; }
 		}
 
+        public Dictionary<string, dynamic> Extras {
+            get { return extras; }
+        }
+
 		public static Configuration GetInstance()
 		{
 			if (Instance == null)
@@ -91,6 +98,11 @@ namespace Libgame
 		{
 			Instance = new Configuration(xmlEdit);
 		}
+
+        public static bool IsInitialized()
+        {
+            return Instance != null;
+        }
 
 		public string ResolvePathInVariable(string path)
 		{
