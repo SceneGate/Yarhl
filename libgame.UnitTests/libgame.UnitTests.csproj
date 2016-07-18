@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{9E24D896-4585-42A9-82FA-90DCF8F56A10}</ProjectGuid>
+    <ProjectGuid>{3525724C-57EC-4C84-ABFC-95780009A304}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Libgame.UnitTests</RootNamespace>
     <AssemblyName>libgame.UnitTests</AssemblyName>
@@ -33,11 +33,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.4.1\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
