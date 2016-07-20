@@ -28,7 +28,7 @@ namespace Libgame.UnitTests.FileFormat
     public class FormatTests
     {
         [TestFixtureSetUp]
-        public void Setup()
+        public void SetUp()
         {
             if (!AddinManager.IsInitialized) {
                 AddinManager.Initialize(".addins");
@@ -44,22 +44,48 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
-        public void ConvertFromTest()
+        public void Convert()
+        {
+            Assert.AreEqual(Format.Convert(typeof(string), "3", typeof(int)), 3);
+            Assert.AreEqual(Format.Convert(typeof(int), 3, typeof(string)), "3");
+        }
+
+        [Test]
+        public void ConvertFrom()
         {
             Assert.AreEqual(Format.ConvertFrom("3", typeof(int)), 3);
         }
 
         [Test]
-        public void ConvertTest()
+        public void ConvertTo()
         {
-            Assert.AreEqual(Format.Convert(typeof(string), "3", typeof(int)), 3);
-            Assert.AreEqual(Format.Convert(typeof(int), 3, typeof(string)), "3");
+            Assert.AreEqual(Format.ConvertTo<int>("3"), 3);
+        }
+
+        [Test]
+        public void ConvertGeneric()
+        {
+            Assert.AreEqual(Format.Convert<string, int>("3"), 3);
+        }
+
+        [Test]
+        public void ClassConvertTo()
+        {
+            var format = new FormatTest("3");
+            Assert.AreEqual(format.ConvertTo<int>(), 3);
         }
     }
 
     [Extension]
     public class FormatTest : Format
     {
+        public FormatTest(string str)
+        {
+            Value = str;
+        }
+
+        public string Value { get; private set; }
+
         protected override void Dispose(bool freeManagedResourcesAlso)
         {
         }
@@ -70,17 +96,11 @@ namespace Libgame.UnitTests.FileFormat
     }
 
     [Extension]
-    public class String2IntegerConverter : 
-        IConverter<string, int>, IConverter<int, string>
+    public class FormatTestConverter : IConverter<FormatTest, int>
     {
-        public int Convert(string source)
+        public int Convert(FormatTest test)
         {
-            return System.Convert.ToInt32(source);
-        }
-
-        public string Convert(int source)
-        {
-            return source.ToString();
+            return System.Convert.ToInt32(test.Value);
         }
     }
 }

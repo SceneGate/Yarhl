@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="FileFormat\FormatTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileFormat\ConverterTests.cs" />
+    <Compile Include="FileFormat\Converters.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

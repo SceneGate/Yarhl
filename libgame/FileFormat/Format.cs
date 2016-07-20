@@ -71,6 +71,7 @@ namespace Libgame.FileFormat
                     .GetExtensionNodes<TypeExtensionNode>(typeof(IConverter<,>))
                     .Single(node =>
                         node.Type.GetInterfaces().Any(type =>
+                            type.GenericTypeArguments.Length == 2 &&
                             type.GenericTypeArguments[0] == srcType &&
                             type.GenericTypeArguments[1] == dstType))
                     .Type;
