@@ -35,9 +35,27 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.Addins">
+      <HintPath>..\mono-addins\bin\Mono.Addins.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="FileFormat\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FileFormat\FormatTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libgame\libgame.csproj">
+      <Project>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</Project>
+      <Name>libgame</Name>
+    </ProjectReference>
   </ItemGroup>
 </Project>
