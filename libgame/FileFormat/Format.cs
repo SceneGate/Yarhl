@@ -64,14 +64,39 @@ namespace Libgame.FileFormat
 
         public static dynamic Convert(Type srcType, dynamic src, Type dstType)
         {
-            var converterType = AddinManager
-                .GetExtensionNodes<TypeExtensionNode>(typeof(IConverter<,>))
-                .Single(node =>
-                    node.Type.GetInterfaces().Any(type =>
-                        type.GenericTypeArguments[0] == srcType &&
-                        type.GenericTypeArguments[1] == dstType));
+            // Search the converter for the giving types and create an instance
+            dynamic converter;
+            try {
+                Type converterType = AddinManager
+                    .GetExtensionNodes<TypeExtensionNode>(typeof(IConverter<,>))
+                    .Single(node =>
+                        node.Type.GetInterfaces().Any(type =>
+                            type.GenericTypeArguments[0] == srcType &&
+                            type.GenericTypeArguments[1] == dstType))
+                    .Type;
 
-            dynamic converter = Activator.CreateInstance(converterType.Type);
+                converter = Activator.CreateInstance(converterType);
+            } catch (InvalidOperationException ex) {
+                throw new InvalidOperationException(
+                    "No unique converter for " + srcType + " -> " + dstType,
+                    ex);
+            } catch (System.Reflection.TargetInvocationException ex) {
+                throw new InvalidOperationException(
+                    "Exception in converter constructor",
+                    ex);
+            } catch (MissingMemberException ex) {
+                throw new InvalidOperationException(
+                    "The converter has no constructor without arguments.\n" +
+                    "Create the converter object and use ConvertWith<T>.",
+                    ex);
+            } catch (MemberAccessException ex) {
+                throw new InvalidOperationException(
+                    "The converter constructor is not public",
+                    ex);
+            }
+
+            // Call the convert method, this operations is unsafe because
+            // we are calling code from plugins.
             return converter.Convert(src);
         }
 
