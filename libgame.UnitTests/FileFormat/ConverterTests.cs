@@ -105,7 +105,6 @@ namespace Libgame.UnitTests.FileFormat
                         i.GenericTypeArguments[1] == typeof(string))));
         }
 
-        [Ignore]
         [Test]
         public void FindDerivedConverter()
         {
