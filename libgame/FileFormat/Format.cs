@@ -96,9 +96,31 @@ namespace Libgame.FileFormat
                     ex);
             }
 
-            // Call the convert method, this operations is unsafe because
-            // we are calling code from plugins.
             return converter.Convert(src);
+        }
+
+        public static T ConvertWith<T>(dynamic src, dynamic converter)
+        {
+            return Format.ConvertWith(src, typeof(T), converter);
+        }
+
+        public static dynamic ConvertWith(dynamic src, Type dstType, dynamic converter)
+        {
+            Type[] converterInterfaces = converter.GetType().GetInterfaces();
+            bool isConverter = converterInterfaces
+                .Any(i => i.GetGenericTypeDefinition() == (typeof(IConverter<,>)));
+            if (!isConverter)
+                throw new ArgumentException("Invalid converter");
+
+            bool canConvert = converterInterfaces.Any(i =>
+                i.IsGenericType &&
+                i.GenericTypeArguments.Length == 2 &&
+                i.GenericTypeArguments[0] == src.GetType() &&
+                i.GenericTypeArguments[1] == dstType);
+            if (!canConvert)
+                throw new ArgumentException("Converter cannot convert from/to the type");
+
+            return converter.Convert(src); 
         }
 
         public T ConvertTo<T>()
@@ -108,16 +130,7 @@ namespace Libgame.FileFormat
 
         public T ConvertWith<T>(dynamic converter)
         {
-            if (!converter.GetType().GetInterfaces().Contains(typeof(IConverter<,>)))
-                throw new ArgumentException("Invalid converter");
-
-            if (converter.GetType().GenericTypeArguments[0] != this.GetType())
-                throw new ArgumentException("Converter cannot convert from this type");
-
-            if (converter.GetType().GenericTypeArguments[1] != typeof(T))
-                throw new ArgumentException("Converter cannot convert to that type");
-
-            return converter.Convert(this);
+            return Format.ConvertWith<T>(this, converter);
         }
     }
 }

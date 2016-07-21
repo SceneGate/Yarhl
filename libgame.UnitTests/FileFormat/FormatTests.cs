@@ -18,6 +18,9 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using System;
+
+
 namespace Libgame.UnitTests.FileFormat
 {
     using Libgame.FileFormat;
@@ -51,6 +54,18 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
+        public void ConvertThrowExceptionIfTwoConverters()
+        {
+            FormatTest test = new FormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.Convert(typeof(FormatTest), test, typeof(short)));
+            Assert.AreEqual(
+                "No unique converter for " +
+                "Libgame.UnitTests.FileFormat.FormatTest -> System.Int16",
+                ex.Message);
+        }
+
+        [Test]
         public void ConvertFrom()
         {
             Assert.AreEqual(Format.ConvertFrom("3", typeof(int)), 3);
@@ -69,10 +84,34 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
+        public void ConvertWithGeneric()
+        {
+            var format = new FormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.AreEqual(Format.ConvertWith<short>(format, converter), 3);
+        }
+
+        [Test]
+        public void ConvertWith()
+        {
+            var format = new FormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.AreEqual(Format.ConvertWith(format, typeof(short), converter), 3);
+        }
+
+        [Test]
         public void ClassConvertTo()
         {
             var format = new FormatTest("3");
             Assert.AreEqual(format.ConvertTo<int>(), 3);
+        }
+
+        [Test]
+        public void ClassConvertWith()
+        {
+            var format = new FormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.AreEqual(format.ConvertWith<short>(converter), 3);
         }
     }
 
@@ -101,6 +140,24 @@ namespace Libgame.UnitTests.FileFormat
         public int Convert(FormatTest test)
         {
             return System.Convert.ToInt32(test.Value);
+        }
+    }
+
+    [Extension]
+    public class FormatTestDuplicatedConverter1 : IConverter<FormatTest, short>
+    {
+        public short Convert(FormatTest test)
+        {
+            return System.Convert.ToInt16(test.Value);
+        }
+    }
+
+    [Extension]
+    public class FormatTestDuplicatedConverter2 : IConverter<FormatTest, short>
+    {
+        public short Convert(FormatTest test)
+        {
+            return System.Convert.ToInt16(test.Value);
         }
     }
 }
