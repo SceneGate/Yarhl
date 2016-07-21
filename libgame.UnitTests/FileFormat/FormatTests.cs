@@ -54,15 +54,70 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
-        public void ConvertThrowExceptionIfTwoConverters()
+        public void ConvertThrowsExceptionIfTwoConverters()
         {
-            FormatTest test = new FormatTest("3");
+            var test = new FormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.Convert(typeof(FormatTest), test, typeof(short)));
             Assert.AreEqual(
-                "No unique converter for " +
+                "No single converter for " +
                 "Libgame.UnitTests.FileFormat.FormatTest -> System.Int16",
                 ex.Message);
+        }
+
+        [Test]
+        public void ConvertThrowsExceptionIfNoConverters()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.Convert(typeof(short), 3, typeof(short)));
+            Assert.AreEqual(
+                "No single converter for System.Int16 -> System.Int16",
+                ex.Message);
+        }
+
+        [Test]
+        public void ConvertThrowsExceptionIfConstructorFails()
+        {
+            var test = new FormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.Convert(typeof(FormatTest), test, typeof(ushort)));
+            Assert.AreEqual("Exception in converter constructor", ex.Message);
+        }
+
+        [Test]
+        public void ConvertThrowsExceptionIfNoConstructorWithNoArgs()
+        {
+            var test = new FormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.Convert(typeof(FormatTest), test, typeof(long)));
+            Assert.AreEqual(
+                "The converter has no constructor without arguments.\n" +
+                "Create the converter object and use ConvertWith<T>.",
+                ex.Message);
+        }
+
+        [Test]
+        public void ConvertThrowsExceptionIfNoPublicConstructor()
+        {
+            var test = new FormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.Convert(typeof(FormatTest), test, typeof(ulong)));
+            Assert.AreEqual(
+                "The converter has no constructor without arguments.\n" +
+                "Create the converter object and use ConvertWith<T>.", 
+                ex.Message);
+        }
+
+        [Test]
+        public void ConvertToBase()
+        {
+            Assert.DoesNotThrow(() => Format.Convert<ushort, Base>(3));
+        }
+
+        [Test]
+        public void ConvertFromBase()
+        {
+            Assert.DoesNotThrow(() => Format.Convert<Base, ushort>(null));
         }
 
         [Test]
@@ -96,7 +151,35 @@ namespace Libgame.UnitTests.FileFormat
         {
             var format = new FormatTest("3");
             var converter = new FormatTestDuplicatedConverter2();
-            Assert.AreEqual(Format.ConvertWith(format, typeof(short), converter), 3);
+            Assert.AreEqual(
+                Format.ConvertWith(format, typeof(short), converter),
+                3);
+        }
+
+        [Test]
+        public void ConvertWithThrowsExceptionIfNoImplementIConverter()
+        {
+            var format = new FormatTest("3");
+            var converter = new Double();
+            var ex = Assert.Throws<ArgumentException>(() =>
+                Format.ConvertWith(format, typeof(short), converter));
+            Assert.AreEqual(
+                "Converter doesn't implement IConverter<,>\n" +
+                "Parameter name: converter", 
+                ex.Message);
+        }
+
+        [Test]
+        public void ConvertWithThrowsExceptionIfInvalidConverter()
+        {
+            var format = new FormatTest("3");
+            var converter = new FormatTestConverter();
+            var ex = Assert.Throws<ArgumentException>(() =>
+                Format.ConvertWith(format, typeof(short), converter));
+            Assert.AreEqual(
+                "Converter cannot convert from/to the type\n" +
+                "Parameter name: converter", 
+                ex.Message);
         }
 
         [Test]
@@ -158,6 +241,72 @@ namespace Libgame.UnitTests.FileFormat
         public short Convert(FormatTest test)
         {
             return System.Convert.ToInt16(test.Value);
+        }
+    }
+
+    [Extension]
+    public class FormatTestBadConstructor : IConverter<FormatTest, ushort>
+    {
+        public FormatTestBadConstructor()
+        {
+            throw new Exception();
+        }
+
+        public ushort Convert(FormatTest test)
+        {
+            return 0;
+        }
+    }
+
+    [Extension]
+    public class FormatTestNoConstructor : IConverter<FormatTest, long>
+    {
+        public FormatTestNoConstructor(string dummy)
+        {
+            Dummy = dummy;
+        }
+
+        public string Dummy { get; set; }
+
+        public long Convert(FormatTest format)
+        {
+            return 0;
+        }
+    }
+
+    [Extension]
+    public class FormatTestPrivateConstructor : IConverter<FormatTest, ulong>
+    {
+        private FormatTestPrivateConstructor()
+        {
+        }
+
+        public ulong Convert(FormatTest format)
+        {
+            return 0;
+        }
+    }
+
+    public class Base
+    {
+    }
+
+    public class Derived : Base
+    {
+    }
+
+    [Extension]
+    public class ConvertDerived : 
+        IConverter<ushort, Derived>, IConverter<Derived, ushort>
+    {
+        public Derived Convert(ushort source)
+        {
+            return new Derived();
+        }
+
+        public ushort Convert(Derived source)
+        {
+            return 10;
         }
     }
 }

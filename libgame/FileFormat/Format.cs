@@ -32,7 +32,7 @@ namespace Libgame.FileFormat
     {
         ~Format()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
         public abstract string Name {
@@ -41,7 +41,7 @@ namespace Libgame.FileFormat
 
         public void Dispose()
         {
-            this.Dispose(true);         // Dispose me everything (L)
+            Dispose(true);         // Dispose me everything (L)
             GC.SuppressFinalize(this);  // Don't dispose again!
         }
 
@@ -72,14 +72,14 @@ namespace Libgame.FileFormat
                     .Single(node =>
                         node.Type.GetInterfaces().Any(type =>
                             type.GenericTypeArguments.Length == 2 &&
-                            type.GenericTypeArguments[0] == srcType &&
-                            type.GenericTypeArguments[1] == dstType))
+                            srcType.IsAssignableFrom(type.GenericTypeArguments[0]) &&
+                            dstType.IsAssignableFrom(type.GenericTypeArguments[1])))
                     .Type;
 
                 converter = Activator.CreateInstance(converterType);
             } catch (InvalidOperationException ex) {
                 throw new InvalidOperationException(
-                    "No unique converter for " + srcType + " -> " + dstType,
+                    "No single converter for " + srcType + " -> " + dstType,
                     ex);
             } catch (System.Reflection.TargetInvocationException ex) {
                 throw new InvalidOperationException(
@@ -89,10 +89,6 @@ namespace Libgame.FileFormat
                 throw new InvalidOperationException(
                     "The converter has no constructor without arguments.\n" +
                     "Create the converter object and use ConvertWith<T>.",
-                    ex);
-            } catch (MemberAccessException ex) {
-                throw new InvalidOperationException(
-                    "The converter constructor is not public",
                     ex);
             }
 
@@ -107,10 +103,13 @@ namespace Libgame.FileFormat
         public static dynamic ConvertWith(dynamic src, Type dstType, dynamic converter)
         {
             Type[] converterInterfaces = converter.GetType().GetInterfaces();
-            bool isConverter = converterInterfaces
-                .Any(i => i.GetGenericTypeDefinition() == (typeof(IConverter<,>)));
+            bool isConverter = converterInterfaces.Any(i =>
+                i.IsGenericType &&
+                i.GetGenericTypeDefinition() == typeof(IConverter<,>));
             if (!isConverter)
-                throw new ArgumentException("Invalid converter");
+                throw new ArgumentException(
+                    "Converter doesn't implement IConverter<,>",
+                    "converter");
 
             bool canConvert = converterInterfaces.Any(i =>
                 i.IsGenericType &&
@@ -118,7 +117,9 @@ namespace Libgame.FileFormat
                 i.GenericTypeArguments[0] == src.GetType() &&
                 i.GenericTypeArguments[1] == dstType);
             if (!canConvert)
-                throw new ArgumentException("Converter cannot convert from/to the type");
+                throw new ArgumentException(
+                    "Converter cannot convert from/to the type",
+                    "converter");
 
             return converter.Convert(src); 
         }
