@@ -164,8 +164,8 @@ namespace Libgame.UnitTests.FileFormat
             var ex = Assert.Throws<ArgumentException>(() =>
                 Format.ConvertWith(format, typeof(short), converter));
             Assert.AreEqual(
-                "Converter doesn't implement IConverter<,>\n" +
-                "Parameter name: converter", 
+                "Converter doesn't implement IConverter<,>" +
+                Environment.NewLine + "Parameter name: converter", 
                 ex.Message);
         }
 
@@ -177,8 +177,8 @@ namespace Libgame.UnitTests.FileFormat
             var ex = Assert.Throws<ArgumentException>(() =>
                 Format.ConvertWith(format, typeof(short), converter));
             Assert.AreEqual(
-                "Converter cannot convert from/to the type\n" +
-                "Parameter name: converter", 
+                "Converter cannot convert from/to the type" +
+                Environment.NewLine + "Parameter name: converter", 
                 ex.Message);
         }
 
