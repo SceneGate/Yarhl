@@ -1,9 +1,8 @@
 # LibGame
 
-<p align="center">
-<a href="https://travis-ci.org/pleonex/libgame"><img alt="Build Status" src="https://travis-ci.org/pleonex/libgame.svg?branch=converters" align="left" /></a>
-<a href="http://www.gnu.org/copyleft/gpl.html"><img alt="license" src="https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat" /></a>
-</p>
+[![Build Status](https://travis-ci.org/pleonex/libgame.svg?branch=converters)](https://travis-ci.org/pleonex/libgame)
+[![Build Status](https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/converters?svg=true)](https://ci.appveyor.com/project/pleonex/libgame/branch/converters)
+[![License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat)](http://www.gnu.org/copyleft/gpl.html)
 
 <br>
 <p align="center"><b>To hack your games could not be easier.</b></p>
