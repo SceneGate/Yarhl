@@ -4,6 +4,7 @@ version: 1.0.0.{build}-{branch}
 install:
 - cmd: >-
     git submodule update --init --recursive
+
     nuget restore
 
 before_build:
@@ -11,4 +12,3 @@ before_build:
 
 build:
   project: libgame.sln
-  verbosity: minimal
