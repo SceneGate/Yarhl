@@ -2,3 +2,7 @@ bin/
 obj/
 libgame.userprefs
 packages/
+
+gendarme_report.html
+StyleCopViolations.xml
+StyleCop.Cache
