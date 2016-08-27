@@ -20,8 +20,10 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame.FileFormat
 {
-    using Libgame.IO;
+    using IO;
+    using Mono.Addins;
 
+    [Extension]
     public class BinaryFormat : Format
     {
         public BinaryFormat(DataStream stream)
