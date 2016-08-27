@@ -30,6 +30,19 @@ namespace Libgame.FileFormat
     [TypeExtensionPoint]
     public abstract class Format : IDisposable
     {
+        static Format()
+        {
+            // HACK: Move addinmanager functions into own class and initialize there.
+            // the initialization has to be in the libgame library because otherwise
+            // the AddinManager could be initialized without references to libgame
+            // (the root addin), this happens in the DLL is not loaded before init.
+            // Initialize the plugin system
+            if (!AddinManager.IsInitialized) {
+                AddinManager.Initialize(".addins");
+                AddinManager.Registry.Rebuild(null);
+            }
+        }
+
         /// <summary>
         /// Finalizes an instance of the <see cref="Format"/> class.
         /// Releases unmanaged resources and performs other cleanup operations before the
