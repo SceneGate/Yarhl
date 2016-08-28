@@ -22,12 +22,17 @@ namespace Libgame.FileFormat
 {
     using Mono.Addins;
 
-    [TypeExtensionPoint]
     /// <summary>
     /// Format converter interface.
     /// </summary>
+    [TypeExtensionPoint]
     public interface IConverter<TSrc, TDst>
     {
+        /// <summary>
+        /// Converts the specified source into the given type.
+        /// </summary>
+        /// <returns>The converted source.</returns>
+        /// <param name="source">Source format to convert.</param>
         TDst Convert(TSrc source);
     }
 }

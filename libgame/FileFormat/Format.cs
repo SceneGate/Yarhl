@@ -1,23 +1,23 @@
-﻿// -----------------------------------------------------------------------
-//  <copyright file="Format.cs">
-//     Copyright (c) 2016 Benito Palacios Sánchez
+﻿//
+//  Format.cs
 //
-//     This program is free software: you can redistribute it and/or modify
-//     it under the terms of the GNU General Public License as published by
-//     the Free Software Foundation, either version 3 of the License, or
-//     (at your option) any later version.
+//  Author:
+//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//     This program is distributed in the hope that it will be useful,
-//     but WITHOUT ANY WARRANTY; without even the implied warranty of
-//     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//     GNU General Public License for more details.
+//  Copyright (c) 2016 Benito Palacios Sánchez
 //
-//     You should have received a copy of the GNU General Public License
-//     along with this program.  If not, see "http://www.gnu.org/licenses/".
-//  </copyright>
-//  <author>Benito Palacios Sánchez (aka pleonex)</author>
-//  <email>benito356@gmail.com</email>
-// -----------------------------------------------------------------------
+//  This program is free software: you can redistribute it and/or modify
+//  it under the terms of the GNU General Public License as published by
+//  the Free Software Foundation, either version 3 of the License, or
+//  (at your option) any later version.
+//
+//  This program is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU General Public License for more details.
+//
+//  You should have received a copy of the GNU General Public License
+//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame.FileFormat
 {
     using System;
@@ -30,23 +30,10 @@ namespace Libgame.FileFormat
     [TypeExtensionPoint]
     public abstract class Format : IDisposable
     {
-        static Format()
-        {
-            // HACK: Move addinmanager functions into own class and initialize there.
-            // the initialization has to be in the libgame library because otherwise
-            // the AddinManager could be initialized without references to libgame
-            // (the root addin), this happens in the DLL is not loaded before init.
-            // Initialize the plugin system
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(".addins");
-                AddinManager.Registry.Rebuild(null);
-            }
-        }
-
         /// <summary>
         /// Finalizes an instance of the <see cref="Format"/> class.
         /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Libgame.FileFormat.Format"/> is reclaimed by garbage collection.
+        /// <see cref="Format"/> is reclaimed by garbage collection.
         /// </summary>
         ~Format()
         {
@@ -58,6 +45,12 @@ namespace Libgame.FileFormat
         /// </summary>
         /// <value>The format name.</value>
         public abstract string Name { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Format"/> is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
+        protected bool Disposed { get; private set; }
 
         /// <summary>
         /// Converts the format to the specified type.
@@ -106,15 +99,9 @@ namespace Libgame.FileFormat
             // Search the converter for the giving types and create an instance
             dynamic converter;
             try {
-                Type converterType = AddinManager
-                    .GetExtensionNodes<TypeExtensionNode>(typeof(IConverter<,>))
-                    .Single(node =>
-                        node.Type.GetInterfaces().Any(type =>
-                            type.GenericTypeArguments.Length == 2 &&
-                            srcType.IsAssignableFrom(type.GenericTypeArguments[0]) &&
-                            dstType.IsAssignableFrom(type.GenericTypeArguments[1])))
-                    .Type;
-
+                Type converterType = PluginManager.Instance
+                    .FindGenericExtensions(typeof(IConverter<,>), srcType, dstType)
+                    .Single();
                 converter = Activator.CreateInstance(converterType);
             } catch (InvalidOperationException ex) {
                 throw new InvalidOperationException(
@@ -162,7 +149,7 @@ namespace Libgame.FileFormat
             if (!isConverter)
                 throw new ArgumentException(
                     "Converter doesn't implement IConverter<,>",
-                    "converter");
+                    nameof(converter));
 
             bool canConvert = converterInterfaces.Any(i =>
                 i.IsGenericType &&
@@ -172,7 +159,7 @@ namespace Libgame.FileFormat
             if (!canConvert)
                 throw new ArgumentException(
                     "Converter cannot convert from/to the type",
-                    "converter");
+                    nameof(converter));
 
             return converter.Convert(src); 
         }
@@ -184,7 +171,7 @@ namespace Libgame.FileFormat
         /// <typeparam name="T">The type of the destination format.</typeparam>
         public T ConvertTo<T>()
         {
-            return Format.ConvertTo<T>(this);
+            return ConvertTo<T>(this);
         }
 
         /// <summary>
@@ -195,32 +182,31 @@ namespace Libgame.FileFormat
         /// <typeparam name="T">The type of the destination format.</typeparam>
         public T ConvertWith<T>(dynamic converter)
         {
-            return Format.ConvertWith<T>(this, converter);
+            return ConvertWith<T>(this, converter);
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="Libgame.FileFormat.Format"/>
+        /// Releases all resource used by the <see cref="Format"/>
         /// object.
         /// </summary>
-        /// <remarks>Call <see cref="Dispose"/> when you are finished using the
-        /// <see cref="Libgame.FileFormat.Format"/>. The
-        /// <see cref="Dispose"/> method leaves the
-        /// <see cref="Libgame.FileFormat.Format"/> in an unusable state. After
-        /// calling <see cref="Dispose"/>, you must release all references to the
-        /// <see cref="Libgame.FileFormat.Format"/> so the garbage collector can reclaim the memory that the
-        /// <see cref="Libgame.FileFormat.Format"/> was occupying.</remarks>
         public void Dispose()
         {
-            this.Dispose(true);         // Dispose me everything (L)
+            Dispose(true);              // Dispose me everything (L)
             GC.SuppressFinalize(this);  // Don't dispose again!
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="Libgame.FileFormat.Format"/>
+        /// Releases all resource used by the <see cref="Format"/>
         /// object.
         /// </summary>
         /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
         /// managed resources also.</param>
-        protected abstract void Dispose(bool freeManagedResourcesAlso);
+        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        {
+            if (Disposed)
+                return;
+
+            Disposed = true;
+        }
     }
 }

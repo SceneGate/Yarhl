@@ -7,9 +7,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Libgame</RootNamespace>
     <AssemblyName>libgame</AssemblyName>
-    <ReleaseVersion>1.0</ReleaseVersion>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -62,6 +59,7 @@
     <Compile Include="FileFormat\FormatValidation.cs" />
     <Compile Include="FileFormat\IConverter.cs" />
     <Compile Include="FileFormat\BinaryFormat.cs" />
+    <Compile Include="PluginManager.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
