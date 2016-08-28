@@ -60,6 +60,7 @@
     <Compile Include="FileFormat\IConverter.cs" />
     <Compile Include="FileFormat\BinaryFormat.cs" />
     <Compile Include="PluginManager.cs" />
+    <Compile Include="FileFormat\IPartialConverter.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
