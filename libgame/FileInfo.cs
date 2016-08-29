@@ -25,43 +25,43 @@ using System.Xml.Linq;
 
 namespace Libgame
 {
-	public class FileInfo
-	{
-		private List<string> dependencies;
+    public class FileInfo
+    {
+        private List<string> dependencies;
 
-		public FileInfo()
-		{
-			this.dependencies = new List<string>();
-		}
+        public FileInfo()
+        {
+            this.dependencies = new List<string>();
+        }
 
-		public string Path {
-			get;
-			set;
-		}
+        public string Path {
+            get;
+            set;
+        }
 
-		public string Type {
-			get;
-			set;
-		}
+        public string Type {
+            get;
+            set;
+        }
 
-		public XElement Parameters {
-			get;
-			set;
-		}
+        public XElement Parameters {
+            get;
+            set;
+        }
 
-		public ReadOnlyCollection<string> Dependencies {
-			get { return new ReadOnlyCollection<string>(dependencies); }
-		}
+        public ReadOnlyCollection<string> Dependencies {
+            get { return new ReadOnlyCollection<string>(dependencies); }
+        }
 
-		public void AddDependency(string path)
-		{
-			this.dependencies.Add(path);
-		}
+        public void AddDependency(string path)
+        {
+            this.dependencies.Add(path);
+        }
 
-		public void RemoveDependency(string path)
-		{
-			this.dependencies.Remove(path);
-		}
-	}
+        public void RemoveDependency(string path)
+        {
+            this.dependencies.Remove(path);
+        }
+    }
 }
 

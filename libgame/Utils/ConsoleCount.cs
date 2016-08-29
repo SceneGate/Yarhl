@@ -23,45 +23,45 @@ using System;
 
 namespace Libgame.Utils
 {
-	public class ConsoleCount
-	{
-		private int index;
-		private int x;
-		private int y;
-		private int updX;
-		private int updY;
-		private int total;
-		private string message;
+    public class ConsoleCount
+    {
+        private int index;
+        private int x;
+        private int y;
+        private int updX;
+        private int updY;
+        private int total;
+        private string message;
 
-		public ConsoleCount(string msg, int total)
-		{
-			this.index = 1;
-			this.x = Console.CursorLeft;
-			this.y = Console.CursorTop;
-			this.updX = this.x;
-			this.updY = this.y + 1;
-			this.total = total;
-			this.message = msg;
+        public ConsoleCount(string msg, int total)
+        {
+            this.index = 1;
+            this.x = Console.CursorLeft;
+            this.y = Console.CursorTop;
+            this.updX = this.x;
+            this.updY = this.y + 1;
+            this.total = total;
+            this.message = msg;
 
-			if (this.updY == Console.BufferHeight) {
-				Console.WriteLine();
-				this.updY--;
-				this.y--;
-			}
-		}
+            if (this.updY == Console.BufferHeight) {
+                Console.WriteLine();
+                this.updY--;
+                this.y--;
+            }
+        }
 
-		public void Show()
-		{
-			Console.SetCursorPosition(this.x, this.y);
-			Console.WriteLine(this.message, this.index++, this.total);
-			Console.SetCursorPosition(this.updX, this.updY);
-		}
+        public void Show()
+        {
+            Console.SetCursorPosition(this.x, this.y);
+            Console.WriteLine(this.message, this.index++, this.total);
+            Console.SetCursorPosition(this.updX, this.updY);
+        }
 
-		public void UpdateCoordinates()
-		{
-			this.updX = Console.CursorLeft;
-			this.updY = Console.CursorTop;
-		}
-	}
+        public void UpdateCoordinates()
+        {
+            this.updX = Console.CursorLeft;
+            this.updY = Console.CursorTop;
+        }
+    }
 }
 

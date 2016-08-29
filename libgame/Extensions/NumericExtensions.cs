@@ -23,31 +23,31 @@ using System;
 
 namespace Libgame
 {
-	public static class NumericExtensions
-	{
-		public static ushort Pad(this ushort num, int padding)
-		{
-			if (num % padding == 0)
-				return num;
-			else
-				return (ushort)(num + (padding - (num % padding)));
-		}
+    public static class NumericExtensions
+    {
+        public static ushort Pad(this ushort num, int padding)
+        {
+            if (num % padding == 0)
+                return num;
+            else
+                return (ushort)(num + (padding - (num % padding)));
+        }
 
-		public static uint Pad(this uint num, int padding)
-		{
-			if (num % padding == 0)
-				return num;
-			else
-				return (uint)(num + (padding - (num % padding)));
-		}
+        public static uint Pad(this uint num, int padding)
+        {
+            if (num % padding == 0)
+                return num;
+            else
+                return (uint)(num + (padding - (num % padding)));
+        }
 
-		public static ulong Pad(this ulong num, ulong padding)
-		{
-			if (num % padding == 0)
-				return num;
-			else
-				return (ulong)(num + (padding - (num % padding)));
-		}
-	}
+        public static ulong Pad(this ulong num, ulong padding)
+        {
+            if (num % padding == 0)
+                return num;
+            else
+                return (ulong)(num + (padding - (num % padding)));
+        }
+    }
 }
 

@@ -24,31 +24,31 @@ using Libgame.IO;
 
 namespace Libgame.Utils.Checksums
 {
-	public static class Crc16
-	{
-		/// <summary>
-		/// Calculates CRC16 from the stream.
-		/// Code from "blz.c" (NDS Compressors) by CUE
-		/// </summary>
-		/// <param name="data">Data to calculate the checksum</param>
-		public static ushort Run(DataStream data, uint length)
-		{
-			ushort crc;
-			uint   nbits;
-		
-			crc = 0xFFFF;
-			while (length-- != 0) {
-				crc ^= data.ReadByte();
-				nbits = 8;
-				while (nbits-- != 0) {
-					if ((crc & 1) != 0) { crc = (ushort)((crc >> 1) ^ 0xA001); }
-					else           	      crc = (ushort)(crc >> 1);
-				}
-			}
+    public static class Crc16
+    {
+        /// <summary>
+        /// Calculates CRC16 from the stream.
+        /// Code from "blz.c" (NDS Compressors) by CUE
+        /// </summary>
+        /// <param name="data">Data to calculate the checksum</param>
+        public static ushort Run(DataStream data, uint length)
+        {
+            ushort crc;
+            uint   nbits;
+        
+            crc = 0xFFFF;
+            while (length-- != 0) {
+                crc ^= data.ReadByte();
+                nbits = 8;
+                while (nbits-- != 0) {
+                    if ((crc & 1) != 0) { crc = (ushort)((crc >> 1) ^ 0xA001); }
+                    else                     crc = (ushort)(crc >> 1);
+                }
+            }
 
-			return crc;
-		}
-	}
+            return crc;
+        }
+    }
 
     /// <summary>
     /// CRC-32

@@ -24,58 +24,58 @@ using System.Xml.Linq;
 
 namespace Libgame
 {
-	public class FileInfoCollection
-	{
-		readonly Dictionary<string, FileInfo> treasureMap;
+    public class FileInfoCollection
+    {
+        readonly Dictionary<string, FileInfo> treasureMap;
 
-		public FileInfoCollection()
-		{
-			treasureMap = new Dictionary<string, FileInfo>();
-		}
+        public FileInfoCollection()
+        {
+            treasureMap = new Dictionary<string, FileInfo>();
+        }
 
-		public static FileInfoCollection FromXml(XDocument xmlGame)
-		{
-			var collection = new FileInfoCollection();
-			XElement files = xmlGame.Root.Element("Files");
+        public static FileInfoCollection FromXml(XDocument xmlGame)
+        {
+            var collection = new FileInfoCollection();
+            XElement files = xmlGame.Root.Element("Files");
 
-			foreach (XElement fileInfo in files.Elements("FileInfo")) {
-				var info = new FileInfo();
-				info.Path = fileInfo.Element("Path").Value;
-				info.Type = fileInfo.Element("Type").Value;
-				info.Parameters = fileInfo.Element("Parameters");
-				fileInfo.Elements("DependsOn")
-					.InDocumentOrder()
-					.All(d => { info.AddDependency(d.Value); return true; });
-				collection.AddFileInfo(info);
-			}
+            foreach (XElement fileInfo in files.Elements("FileInfo")) {
+                var info = new FileInfo();
+                info.Path = fileInfo.Element("Path").Value;
+                info.Type = fileInfo.Element("Type").Value;
+                info.Parameters = fileInfo.Element("Parameters");
+                fileInfo.Elements("DependsOn")
+                    .InDocumentOrder()
+                    .All(d => { info.AddDependency(d.Value); return true; });
+                collection.AddFileInfo(info);
+            }
 
-			return collection;
-		}
+            return collection;
+        }
 
-		public bool Contains(string path)
-		{
-			return treasureMap.ContainsKey(path);
-		}
+        public bool Contains(string path)
+        {
+            return treasureMap.ContainsKey(path);
+        }
 
-		public void AddFileInfo(FileInfo info)
-		{
-			treasureMap.Add(info.Path, info);
-		}
+        public void AddFileInfo(FileInfo info)
+        {
+            treasureMap.Add(info.Path, info);
+        }
 
-		public FileInfo GetFileInfo(string path)
-		{
-			return treasureMap[path];
-		}
+        public FileInfo GetFileInfo(string path)
+        {
+            return treasureMap[path];
+        }
 
-		public FileInfo this[string path] {
-			get {
-				return treasureMap[path];
-			}
+        public FileInfo this[string path] {
+            get {
+                return treasureMap[path];
+            }
 
-			set {
-				treasureMap.Add(path, value);
-			}
-		}
-	}
+            set {
+                treasureMap.Add(path, value);
+            }
+        }
+    }
 }
 

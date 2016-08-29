@@ -25,35 +25,35 @@ using System.Collections.Generic;
 
 namespace Libgame
 {
-	public class ReadOnlyDictionary<TKey, TValue>
-	{
-		private Dictionary<TKey, TValue> dict;
+    public class ReadOnlyDictionary<TKey, TValue>
+    {
+        private Dictionary<TKey, TValue> dict;
 
-		public ReadOnlyDictionary(Dictionary<TKey, TValue> dict)
-		{
-			this.dict = dict;
-		}
+        public ReadOnlyDictionary(Dictionary<TKey, TValue> dict)
+        {
+            this.dict = dict;
+        }
 
-		public TValue this[TKey key] {
-			get { return this.dict[key]; }
-		}
+        public TValue this[TKey key] {
+            get { return this.dict[key]; }
+        }
 
-		public Dictionary<TKey, TValue>.KeyCollection Keys {
-			get { return dict.Keys; }
-		}
+        public Dictionary<TKey, TValue>.KeyCollection Keys {
+            get { return dict.Keys; }
+        }
 
-		public Dictionary<TKey, TValue>.ValueCollection Values {
-			get { return dict.Values; }
-		}
+        public Dictionary<TKey, TValue>.ValueCollection Values {
+            get { return dict.Values; }
+        }
 
-		public bool ContainsKey(TKey key)
-		{
-			foreach (TKey k in this.Keys)
-				if (k.Equals(key))
-					return true;
+        public bool ContainsKey(TKey key)
+        {
+            foreach (TKey k in this.Keys)
+                if (k.Equals(key))
+                    return true;
 
-			return false;
-		}
-	}
+            return false;
+        }
+    }
 }
 

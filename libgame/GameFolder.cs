@@ -34,10 +34,10 @@ namespace Libgame
         {
         }
         
-		public GameFolder(string name, FileContainer parent)
-			: base(name)
-		{
-			parent.AddFolder(this);
-		}
+        public GameFolder(string name, FileContainer parent)
+            : base(name)
+        {
+            parent.AddFolder(this);
+        }
     }
 }

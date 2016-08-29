@@ -25,25 +25,25 @@ using Libgame.IO;
 
 namespace Libgame
 {
-	public static class GameFolderFactory
-	{
-		public static GameFolder FromPath(string dir)
-		{
-			return FromPath(dir, Path.GetDirectoryName(dir));
-		}
+    public static class GameFolderFactory
+    {
+        public static GameFolder FromPath(string dir)
+        {
+            return FromPath(dir, Path.GetDirectoryName(dir));
+        }
 
-		public static GameFolder FromPath(string dir, string dirName)
-		{
-			GameFolder folder = new GameFolder(dirName);
+        public static GameFolder FromPath(string dir, string dirName)
+        {
+            GameFolder folder = new GameFolder(dirName);
 
-			foreach (string filePath in Directory.GetFiles(dir)) {
-				string filename = Path.GetFileName(filePath);
-				DataStream stream = new DataStream(filePath, FileMode.Open, FileAccess.ReadWrite);
-				folder.AddFile(new GameFile(filename, stream));
-			}
+            foreach (string filePath in Directory.GetFiles(dir)) {
+                string filename = Path.GetFileName(filePath);
+                DataStream stream = new DataStream(filePath, FileMode.Open, FileAccess.ReadWrite);
+                folder.AddFile(new GameFile(filename, stream));
+            }
 
-			return folder;
-		}
-	}
+            return folder;
+        }
+    }
 }
 

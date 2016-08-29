@@ -27,86 +27,86 @@ using Libgame.IO;
 
 namespace Libgame
 {
-	[TypeExtensionPoint]
-	public abstract class FormatValidation
-	{
-		protected enum ValidationResult
-	    {
-			Invalid  = 0,
-			No       = 0,
-			CouldBe  = 40,
-			ShouldBe = 70,
-			Sure     = 100,
-		}
+    [TypeExtensionPoint]
+    public abstract class FormatValidation
+    {
+        protected enum ValidationResult
+        {
+            Invalid  = 0,
+            No       = 0,
+            CouldBe  = 40,
+            ShouldBe = 70,
+            Sure     = 100,
+        }
 
-		private List<string> dependencies = new List<string>();
+        private List<string> dependencies = new List<string>();
 
-		public FormatValidation()
-		{
-			this.AutosetFormat = false;
-		}
+        public FormatValidation()
+        {
+            this.AutosetFormat = false;
+        }
 
-		/// <summary>
-		/// File format that this instance can validate.
-		/// </summary>
-		/// <value>The type of the format.</value>
-		public abstract Type FormatType {
-			get;
-		}
-		
-		public ReadOnlyCollection<String> Dependencies {
-			get { return new ReadOnlyCollection<String>(this.dependencies); }
-		}
+        /// <summary>
+        /// File format that this instance can validate.
+        /// </summary>
+        /// <value>The type of the format.</value>
+        public abstract Type FormatType {
+            get;
+        }
+        
+        public ReadOnlyCollection<String> Dependencies {
+            get { return new ReadOnlyCollection<String>(this.dependencies); }
+        }
 
-		public bool IsValid {
-			get;
-			private set;
-		}
+        public bool IsValid {
+            get;
+            private set;
+        }
 
-		public double Result {
-			get;
-			private set;
-		}
+        public double Result {
+            get;
+            private set;
+        }
 
-		public bool AutosetFormat {
-			get;
-			set;
-		}
+        public bool AutosetFormat {
+            get;
+            set;
+        }
 
-		public void RunTests(GameFile file)
-		{
-			if (file.Format != null)
-				throw new Exception("The file already has a format.");
+        public void RunTests(GameFile file)
+        {
+            if (file.Format != null)
+                throw new Exception("The file already has a format.");
 
-			this.dependencies.Clear();
-			this.Result = 0;
+            this.dependencies.Clear();
+            this.Result = 0;
 
-			this.Result += ((int)this.TestByTags(file.Tags) * 0.75);
-			this.Result += ((int)this.TestByData(file.Stream) * 0.50);
-			this.Result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
-			file.Stream.Seek(0, SeekMode.Origin);
+            this.Result += ((int)this.TestByTags(file.Tags) * 0.75);
+            this.Result += ((int)this.TestByData(file.Stream) * 0.50);
+            this.Result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
+            file.Stream.Seek(0, SeekMode.Origin);
 
-			this.IsValid = (this.Result >= 50) ? true : false;
+            this.IsValid = (this.Result >= 50) ? true : false;
 
-			if (this.IsValid) {
-				string[] depend = this.GuessDependencies(file);
-				if (depend != null)
-					this.dependencies.AddRange(depend);
+            if (this.IsValid) {
+                string[] depend = this.GuessDependencies(file);
+                if (depend != null)
+                    this.dependencies.AddRange(depend);
 
-				if (this.AutosetFormat) {
-					// TODO: file.SetFormat(this.FormatType, this.GuessParameters(file));
-					// TODO: file.Format.IsGuessed = true;
-				}
-			}
-		}
+                if (this.AutosetFormat) {
+                    // TODO: file.SetFormat(this.FormatType, this.GuessParameters(file));
+                    // TODO: file.Format.IsGuessed = true;
+                }
+            }
+        }
 
-		protected abstract ValidationResult TestByTags(IDictionary<string, object> tags);
-		protected abstract ValidationResult TestByData(DataStream stream);
-		protected abstract ValidationResult TestByRegexp(string filepath, string filename);
+        protected abstract ValidationResult TestByTags(IDictionary<string, object> tags);
+        protected abstract ValidationResult TestByData(DataStream stream);
+        protected abstract ValidationResult TestByRegexp(string filepath, string filename);
 
-		protected abstract string[] GuessDependencies(GameFile file);
+        protected abstract string[] GuessDependencies(GameFile file);
 
-		protected abstract object[] GuessParameters(GameFile file);
-	}
+        protected abstract object[] GuessParameters(GameFile file);
+    }
 }
 

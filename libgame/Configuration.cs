@@ -29,203 +29,203 @@ using System.Xml.Linq;
 
 namespace Libgame
 {
-	public class Configuration
-	{
-		private static Configuration Instance;
+    public class Configuration
+    {
+        private static Configuration Instance;
 
-		private XDocument xmlEdit;
-		private Dictionary<string, string> relativePaths;
-		private Dictionary<string, char[,]> tables;
+        private XDocument xmlEdit;
+        private Dictionary<string, string> relativePaths;
+        private Dictionary<string, char[,]> tables;
         private readonly Dictionary<string, dynamic> extras;
-		private string ellipsis;
-		private char[] quotes;
-		private char[] furigana;
+        private string ellipsis;
+        private char[] quotes;
+        private char[] furigana;
 
-		private string osName;
-		private string appPath;
+        private string osName;
+        private string appPath;
 
-		private Configuration(XDocument xmlEdit)
-		{
-			this.osName  = Environment.OSVersion.Platform.ToString();
-			this.appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        private Configuration(XDocument xmlEdit)
+        {
+            this.osName  = Environment.OSVersion.Platform.ToString();
+            this.appPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
-			this.xmlEdit = xmlEdit;
-			this.ReadConfig();
+            this.xmlEdit = xmlEdit;
+            this.ReadConfig();
 
             this.extras = new Dictionary<string, dynamic>();
-		}
+        }
 
-		public XElement XEdit {
-			get { return this.xmlEdit.Root; }
-		}
+        public XElement XEdit {
+            get { return this.xmlEdit.Root; }
+        }
 
-		public ReadOnlyDictionary<string, char[,]> Tables {
-			get { return new ReadOnlyDictionary<string, char[,]>(this.tables); }
-		}
+        public ReadOnlyDictionary<string, char[,]> Tables {
+            get { return new ReadOnlyDictionary<string, char[,]>(this.tables); }
+        }
 
-		public string Ellipsis {
-			get { return this.ellipsis; }
-		}
+        public string Ellipsis {
+            get { return this.ellipsis; }
+        }
 
-		public char[] QuoteMarks {
-			get { return this.quotes; }
-		}
+        public char[] QuoteMarks {
+            get { return this.quotes; }
+        }
 
-		public char[] FuriganaMarks {
-			get { return this.furigana; }
-		}
+        public char[] FuriganaMarks {
+            get { return this.furigana; }
+        }
 
-		public string OsName {
-			get { return this.osName;  }
-		}
+        public string OsName {
+            get { return this.osName;  }
+        }
 
-		public string AppPath {
-			get { return this.appPath; }
-		}
+        public string AppPath {
+            get { return this.appPath; }
+        }
 
         public Dictionary<string, dynamic> Extras {
             get { return extras; }
         }
 
-		public static Configuration GetInstance()
-		{
-			if (Instance == null)
-				throw new Exception("The class has not been initialized.");
-			return Instance;
-		}
+        public static Configuration GetInstance()
+        {
+            if (Instance == null)
+                throw new Exception("The class has not been initialized.");
+            return Instance;
+        }
 
-		public static void Initialize(XDocument xmlEdit)
-		{
-			Instance = new Configuration(xmlEdit);
-		}
+        public static void Initialize(XDocument xmlEdit)
+        {
+            Instance = new Configuration(xmlEdit);
+        }
 
         public static bool IsInitialized()
         {
             return Instance != null;
         }
 
-		public string ResolvePathInVariable(string path)
-		{
-			if (string.IsNullOrEmpty(path) || !path.Contains("{$PATH:"))
-				return path;
+        public string ResolvePathInVariable(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !path.Contains("{$PATH:"))
+                return path;
 
-			int pos = path.IndexOf("{$PATH:");
-			while (pos != -1) {
-				int endPos = GetEndVariablePosition(path, pos + 1);
-				if (endPos == -1)
-					break;
+            int pos = path.IndexOf("{$PATH:");
+            while (pos != -1) {
+                int endPos = GetEndVariablePosition(path, pos + 1);
+                if (endPos == -1)
+                    break;
 
-				// Get path to resolve
-				pos += 7;	// Jump tag chars
-				string toResolve = path.Substring(pos, endPos - pos);
-				string resolved = this.ResolvePath(toResolve);
+                // Get path to resolve
+                pos += 7;    // Jump tag chars
+                string toResolve = path.Substring(pos, endPos - pos);
+                string resolved = this.ResolvePath(toResolve);
 
-				// Replace
-				path = path.Replace("{$PATH:" + toResolve + "}", resolved);
+                // Replace
+                path = path.Replace("{$PATH:" + toResolve + "}", resolved);
 
-				// Get new position
-				pos = path.IndexOf("{$PATH:", pos);
-			}
+                // Get new position
+                pos = path.IndexOf("{$PATH:", pos);
+            }
 
-			return path;
-		}
+            return path;
+        }
 
-		public string ResolvePath(string path)
-		{
-			if (string.IsNullOrEmpty(path))
-				return path;
+        public string ResolvePath(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return path;
 
-			int pos = path.IndexOf('{');
-			while (pos != -1) {
-				// Get variable
-				string variable = path.Substring(pos + 2, path.IndexOf('}', pos) - (pos + 2));
-				path = path.Replace("{$" + variable + "}", this.relativePaths[variable]);
+            int pos = path.IndexOf('{');
+            while (pos != -1) {
+                // Get variable
+                string variable = path.Substring(pos + 2, path.IndexOf('}', pos) - (pos + 2));
+                path = path.Replace("{$" + variable + "}", this.relativePaths[variable]);
 
-				pos = path.IndexOf('{', pos);
-			}
+                pos = path.IndexOf('{', pos);
+            }
 
-			if (path.StartsWith("./"))
-				path = Path.Combine(this.appPath, path.Substring(2));
+            if (path.StartsWith("./"))
+                path = Path.Combine(this.appPath, path.Substring(2));
 
-			if (this.osName != "Unix") {
-				path = path.Replace('/', '\\');
-			}
+            if (this.osName != "Unix") {
+                path = path.Replace('/', '\\');
+            }
 
-			return path;
-		}
+            return path;
+        }
 
-		private void ReadConfig()
-		{
-			XElement root = this.xmlEdit.Root;
+        private void ReadConfig()
+        {
+            XElement root = this.xmlEdit.Root;
 
-			// Get relative paths
-			this.relativePaths = new Dictionary<string, string>();
-			foreach (XElement xrel in root.Element("RelativePaths").Elements("Path")) {
-				string variable = xrel.Element("Variable").Value;
-				string path = xrel.Element("Location").Value;
+            // Get relative paths
+            this.relativePaths = new Dictionary<string, string>();
+            foreach (XElement xrel in root.Element("RelativePaths").Elements("Path")) {
+                string variable = xrel.Element("Variable").Value;
+                string path = xrel.Element("Location").Value;
 
-				path = ResolvePath(path);
-				this.relativePaths.Add(variable, path);
-			}
+                path = ResolvePath(path);
+                this.relativePaths.Add(variable, path);
+            }
 
-			// FUTURE: What about adding a "Encoding" field?
+            // FUTURE: What about adding a "Encoding" field?
 
-			// Get tables
-			this.tables = new Dictionary<string, char[,]>();
-			foreach (XElement xtbl in root.Element("CharTables").Elements("Table")) {
-				string name = xtbl.Attribute("name").Value;
-				char[,] table = new char[xtbl.Elements().Count(), 2];	// Chars to replace: original <-> new
+            // Get tables
+            this.tables = new Dictionary<string, char[,]>();
+            foreach (XElement xtbl in root.Element("CharTables").Elements("Table")) {
+                string name = xtbl.Attribute("name").Value;
+                char[,] table = new char[xtbl.Elements().Count(), 2];    // Chars to replace: original <-> new
 
-				int i = 0;
-				foreach (XElement entry in xtbl.Elements()) {
-					// FUTURE: Entries by unicode number instead of char
-					if (entry.Name == "Char") {
-						table[i, 0] = entry.Attribute("original").Value[0];
-						table[i, 1] = entry.Attribute("new").Value[0];
-					}
+                int i = 0;
+                foreach (XElement entry in xtbl.Elements()) {
+                    // FUTURE: Entries by unicode number instead of char
+                    if (entry.Name == "Char") {
+                        table[i, 0] = entry.Attribute("original").Value[0];
+                        table[i, 1] = entry.Attribute("new").Value[0];
+                    }
 
-					i++;
-				}
+                    i++;
+                }
 
-				this.tables[name] = table;
-			}
+                this.tables[name] = table;
+            }
 
-			// Get special chars
-			XElement xSpecialChars = root.Element("SpecialChars");
-			this.ellipsis = xSpecialChars.Element("Ellipsis").Value;
-			this.quotes = new char[2] { 
-				xSpecialChars.Element("QuoteOpen").Value[0],
-				xSpecialChars.Element("QuoteClose").Value[0]
-			 };
-			this.furigana = new char[2] {
-				xSpecialChars.Element("FuriganaOpen").Value[0],
-				xSpecialChars.Element("FuriganaClose").Value[0]
-			};
-		}
+            // Get special chars
+            XElement xSpecialChars = root.Element("SpecialChars");
+            this.ellipsis = xSpecialChars.Element("Ellipsis").Value;
+            this.quotes = new char[2] { 
+                xSpecialChars.Element("QuoteOpen").Value[0],
+                xSpecialChars.Element("QuoteClose").Value[0]
+             };
+            this.furigana = new char[2] {
+                xSpecialChars.Element("FuriganaOpen").Value[0],
+                xSpecialChars.Element("FuriganaClose").Value[0]
+            };
+        }
 
-		private static int GetEndVariablePosition(string path, int startPos)
-		{
-			int endPos;
-			bool skip = false;
+        private static int GetEndVariablePosition(string path, int startPos)
+        {
+            int endPos;
+            bool skip = false;
 
-			for (endPos = startPos; endPos < path.Length; endPos++) {
-				if (path[endPos] == '{') {
-					if (skip)
-						throw new FormatException("Error getting end tag.");
-					skip = true;
-				} else if (path[endPos] == '}') {
-					if (skip)
-						skip = false;
-					else
-						break;
-				}
-			}
+            for (endPos = startPos; endPos < path.Length; endPos++) {
+                if (path[endPos] == '{') {
+                    if (skip)
+                        throw new FormatException("Error getting end tag.");
+                    skip = true;
+                } else if (path[endPos] == '}') {
+                    if (skip)
+                        skip = false;
+                    else
+                        break;
+                }
+            }
 
-			if (path[endPos] == path.Length)
-				return -1;
-			else
-				return endPos;
-		}
-	}
+            if (path[endPos] == path.Length)
+                return -1;
+            else
+                return endPos;
+        }
+    }
 }
 
