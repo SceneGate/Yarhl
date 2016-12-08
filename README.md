@@ -17,9 +17,7 @@ It has been developed and tested with *mono 4.2.4* in *Fedora 24*.
 You need to install *git* using your package manager (ie *apt-get*, *yum*, *pacman*...) and the last stable mono version from [here](http://www.mono-project.com/docs/getting-started/install/linux/).
 ``` shell
 # Clone the repository
-git clone https://github.com/pleonex/libgame
-cd libgame
-git submodule update --init --recursive
+git clone https://github.com/pleonex/libgame --recursive
 
 # Compile dependencies
 xbuild mono-addins/Mono.Addins/Mono.Addins.csproj
@@ -44,4 +42,3 @@ nunit-console libgame.UnitTests/bin/Debug/libgame.UnitTests.dll
 2. Download and install *Xamarin Studio* from [here](http://www.monodevelop.com/download/) and open the solution. It should work with *Visual Studio* and [*SharpDevelop*](http://www.icsharpcode.net/OpenSource/SD/Download/) too.
 3. Compile the Mono.Addins dependencies project at: *mono-addins/Mono.Addins/Mono.Addins.csproj*
 4. Compile libgame!
-
