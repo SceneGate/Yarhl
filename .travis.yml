@@ -4,9 +4,9 @@ solution: libgame.sln
 
 install:
     - nuget restore libgame.sln
-    - nuget install NUnit.Runners -Version 2.6.4 -OutputDirectory testrunner
+    - nuget install NUnit.Runners -OutputDirectory testrunner
 
 script:
     - xbuild mono-addins/Mono.Addins/Mono.Addins.csproj
     - xbuild libgame.sln
-    - mono ./testrunner/NUnit.Runners.2.6.4/tools/nunit-console.exe libgame.UnitTests/bin/Debug/libgame.UnitTests.dll
+    - mono ./testrunner/NUnit.Runners*/tools/nunit-console.exe libgame.UnitTests/bin/Debug/libgame.UnitTests.dll
