@@ -30,7 +30,7 @@ namespace Libgame.UnitTests.FileFormat
     [TestFixture]
     public class ConverterTests
     {
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUp()
         {
             if (!AddinManager.IsInitialized) {
@@ -39,7 +39,7 @@ namespace Libgame.UnitTests.FileFormat
             }
         }
 
-        [TestFixtureTearDown]
+        [OneTimeTearDown]
         public void TearDown()
         {
             if (AddinManager.IsInitialized)
