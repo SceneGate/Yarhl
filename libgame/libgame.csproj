@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Libgame</RootNamespace>
+    <AssemblyName>libgame</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.Addins">
+      <HintPath>..\mono-addins\bin\Mono.Addins.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileContainer.cs" />
+    <Compile Include="GameFile.cs" />
+    <Compile Include="GameFolder.cs" />
+    <Compile Include="Extensions\NumericExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="IO\DataReader.cs" />
+    <Compile Include="IO\DataStream.cs" />
+    <Compile Include="IO\DataWriter.cs" />
+    <Compile Include="FileManager.cs" />
+    <Compile Include="Configuration.cs" />
+    <Compile Include="ReadOnlyDictionary.cs" />
+    <Compile Include="Utils\Checksums.cs" />
+    <Compile Include="Utils\ConsoleCount.cs" />
+    <Compile Include="FileInfo.cs" />
+    <Compile Include="FileInfoCollection.cs" />
+    <Compile Include="GameFolderFactory.cs" />
+    <Compile Include="FileFormat\Format.cs" />
+    <Compile Include="FileFormat\FormatValidation.cs" />
+    <Compile Include="FileFormat\IConverter.cs" />
+    <Compile Include="FileFormat\BinaryFormat.cs" />
+    <Compile Include="PluginManager.cs" />
+    <Compile Include="FileFormat\IPartialConverter.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="Extensions\" />
+    <Folder Include="IO\" />
+    <Folder Include="Utils\" />
+    <Folder Include="FileFormat\" />
+  </ItemGroup>
+</Project>

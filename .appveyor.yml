@@ -1,0 +1,14 @@
+## AppVeyor CI Integration
+version: 1.0.0.{build}-{branch}
+
+install:
+- cmd: >-
+    git submodule update --init --recursive
+
+    nuget restore
+
+before_build:
+- cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
+
+build:
+  project: libgame.sln

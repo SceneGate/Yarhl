@@ -1,0 +1,4 @@
+[submodule "mono-addins"]
+	path = mono-addins
+	url = https://github.com/pleonex/mono-addins
+	branch = generics-fix
