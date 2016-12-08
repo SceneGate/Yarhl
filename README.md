@@ -1,7 +1,7 @@
 # LibGame
 
-[![Build Status](https://travis-ci.org/pleonex/libgame.svg?branch=converters)](https://travis-ci.org/pleonex/libgame)
-[![Build Status](https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/converters?svg=true)](https://ci.appveyor.com/project/pleonex/libgame/branch/converters)
+[![Build Status](https://travis-ci.org/pleonex/libgame.svg?branch=master)](https://travis-ci.org/pleonex/libgame)
+[![Build Status](https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/master?svg=true)](https://ci.appveyor.com/project/pleonex/libgame/branch/converters)
 [![License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat)](http://www.gnu.org/copyleft/gpl.html)
 
 <br>
