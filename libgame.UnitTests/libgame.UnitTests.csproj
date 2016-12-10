@@ -44,13 +44,14 @@
   <ItemGroup>
     <Folder Include="FileFormat\" />
     <Folder Include="Properties\" />
+    <Folder Include="FileSystem\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileFormat\FormatTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileFormat\ConverterTests.cs" />
     <Compile Include="FileFormat\Converters.cs" />
-    <Compile Include="GameFileTests.cs" />
+    <Compile Include="FileSystem\GameFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

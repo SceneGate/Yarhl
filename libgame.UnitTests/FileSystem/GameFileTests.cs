@@ -23,12 +23,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Libgame.UnitTests
+namespace Libgame.UnitTests.FileSystem
 {
     using System;
     using Mono.Addins;
     using NUnit.Framework;
     using Libgame.FileFormat;
+    using Libgame.FileSystem;
     using FileFormat;
 
     [TestFixture]

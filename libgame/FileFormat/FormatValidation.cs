@@ -26,6 +26,7 @@ using Mono.Addins;
 using Libgame.IO;
 using System.Linq;
 using Libgame.FileFormat;
+using Libgame.FileSystem;
 
 namespace Libgame
 {

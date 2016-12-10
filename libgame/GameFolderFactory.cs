@@ -23,6 +23,7 @@ using System.IO;
 using Libgame;
 using Libgame.IO;
 using Libgame.FileFormat;
+using Libgame.FileSystem;
 
 namespace Libgame
 {
