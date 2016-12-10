@@ -30,7 +30,7 @@ namespace Libgame.FileSystem
     /// </summary>
     public class GameFile : FileContainer
     {
-        readonly IList<Format> formats;
+        readonly List<Format> formats;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:Libgame.GameFile"/> class.
