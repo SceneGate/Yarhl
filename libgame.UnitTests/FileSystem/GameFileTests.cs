@@ -33,7 +33,7 @@ namespace Libgame.UnitTests.FileSystem
     using FileFormat;
 
     [TestFixture]
-    class GameFileTests
+    public class GameFileTests
     {
         [OneTimeSetUp]
         public void SetUp()
