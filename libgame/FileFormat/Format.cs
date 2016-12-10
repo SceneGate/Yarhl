@@ -50,7 +50,7 @@ namespace Libgame.FileFormat
         /// Gets a value indicating whether this <see cref="Format"/> is disposed.
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        protected bool Disposed { get; private set; }
+        public bool Disposed { get; private set; }
 
         /// <summary>
         /// Converts the format to the specified type.

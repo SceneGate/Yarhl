@@ -22,6 +22,7 @@ using System;
 using System.IO;
 using Libgame;
 using Libgame.IO;
+using Libgame.FileFormat;
 
 namespace Libgame
 {
@@ -39,7 +40,7 @@ namespace Libgame
             foreach (string filePath in Directory.GetFiles(dir)) {
                 string filename = Path.GetFileName(filePath);
                 DataStream stream = new DataStream(filePath, FileMode.Open, FileAccess.ReadWrite);
-                folder.AddFile(new GameFile(filename, stream));
+                folder.AddFile(new GameFile(filename, new BinaryFormat(stream)));
             }
 
             return folder;

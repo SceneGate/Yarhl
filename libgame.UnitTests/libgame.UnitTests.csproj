@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileFormat\ConverterTests.cs" />
     <Compile Include="FileFormat\Converters.cs" />
+    <Compile Include="GameFileTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

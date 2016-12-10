@@ -20,59 +20,84 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame
 {
+    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using Libgame.IO;
-    using Libgame.FileFormat;
+    using System.Collections.ObjectModel;
+    using FileFormat;
 
     /// <summary>
-    /// Description of GameFile.
+    /// File with an associated format.
     /// </summary>
     public class GameFile : FileContainer
     {
-        private readonly IList<Format> formats;
+        readonly IList<Format> formats;
 
-        public GameFile(string name, Format format)
+        public GameFile(string name)
             : base(name)
         {
-            this.Format = format;
-            this.formats = new List<Format>();
+            formats = new List<Format>();
+            FormatHistory = new ReadOnlyCollection<Format>(formats);
         }
 
-        public GameFile(string name, DataStream stream)
-            : this(name, new BinaryFormat(stream))
+        public GameFile(string name, Format format)
+            : this(name)
         {
+            formats.Add(format);
         }
 
-        public GameFile(string name, System.IO.Stream stream, long offset, long length)
-            : this(name, new DataStream(stream, offset, length))
-        {
+        public ReadOnlyCollection<Format> FormatHistory {
+            get;
+            private set;
         }
 
-        public DataStream Stream {
-            get {
-                var bin = formats.FirstOrDefault(f => f is BinaryFormat);
-                return (bin as BinaryFormat)?.Stream;
-            }
-        }
-
+        /// <summary>
+        /// Gets the current format of the file.
+        /// </summary>
+        /// <value>The current format.</value>
         public Format Format {
-            get { return formats.LastOrDefault(); }
-            set { formats.Add(value); }
+            get { return formats.Count > 0 ? formats[formats.Count - 1] : null; }
         }
 
-        public GameFile Transform<T>()
+        public GameFile TransformTo<T>()
             where T : Format
         {
-            Format = Format?.ConvertTo<T>();
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a file without format");
+            }
+
+            formats.Add(Format.ConvertTo<T>());
             return this;
         }
 
         public GameFile TransformWith<T>(dynamic converter)
             where T : Format
         {
-            Format = Format?.ConvertWith<T>(converter);
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a file without format");
+            }
+
+            formats.Add(Format.ConvertWith<T>(converter));
             return this;
+        }
+
+        public void OverrideFormat(Format format, bool disposePreviousFormats)
+        {
+            CleanFormatHistory(disposePreviousFormats);
+            if (format != null)
+                formats.Add(format);
+        }
+
+        public void CleanFormatHistory(bool disposeFormats)
+        {
+            if (disposeFormats) {
+                foreach (Format format in FormatHistory) {
+                    format.Dispose();
+                }
+            }
+
+            formats.Clear();
         }
     }
 }

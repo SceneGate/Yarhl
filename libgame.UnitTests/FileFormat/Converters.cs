@@ -83,5 +83,60 @@ namespace Libgame.UnitTests.FileFormat
     public class DerivedConverter : BaseConverter
     {
     }
+
+    [Extension]
+    public class StringFormatTest : Format
+    {
+        public StringFormatTest(string str)
+        {
+            Value = str;
+        }
+
+        public string Value { get; private set; }
+
+        public override string Name {
+            get { return "unittest.strformat"; }
+        }
+    }
+
+    [Extension]
+    public class IntFormatTest : Format
+    {
+        public IntFormatTest(int val)
+        {
+            Value = val;
+        }
+
+        public int Value { get; private set; }
+
+        public override string Name {
+            get { return "unittest.intformat"; }
+        }
+    }
+
+    [Extension]
+    public class StringFormatTest2IntConverter : IConverter<StringFormatTest, int>
+    {
+        public int Convert(StringFormatTest test)
+        {
+            return System.Convert.ToInt32(test.Value);
+        }
+    }
+
+    [Extension]
+    public class StringFormatTest2IntFormatTestConverter :
+        IConverter<StringFormatTest, IntFormatTest>,
+        IConverter<IntFormatTest, StringFormatTest>
+    {
+        public IntFormatTest Convert(StringFormatTest test)
+        {
+            return new IntFormatTest(System.Convert.ToInt32(test.Value));
+        }
+
+        public StringFormatTest Convert(IntFormatTest test)
+        {
+            return new StringFormatTest(test.Value.ToString());
+        }
+    }
 }
 
