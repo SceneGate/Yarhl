@@ -32,6 +32,10 @@ namespace Libgame
     {
         readonly IList<Format> formats;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Libgame.GameFile"/> class.
+        /// </summary>
+        /// <param name="name">File name.</param>
         public GameFile(string name)
             : base(name)
         {
@@ -39,12 +43,25 @@ namespace Libgame
             FormatHistory = new ReadOnlyCollection<Format>(formats);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Libgame.GameFile"/> class.
+        /// </summary>
+        /// <param name="name">File name.</param>
+        /// <param name="format">File format.</param>
         public GameFile(string name, Format format)
             : this(name)
         {
             formats.Add(format);
         }
 
+        /// <summary>
+        /// Gets a list with the format history.
+        /// </summary>
+        /// <remarks>
+        /// The format history contains all the formats the file had from its origin
+        /// to the current state and it's the equivalent of all its conversions.
+        /// </remarks>
+        /// <value>The format history.</value>
         public ReadOnlyCollection<Format> FormatHistory {
             get;
             private set;
@@ -58,6 +75,14 @@ namespace Libgame
             get { return formats.Count > 0 ? formats[formats.Count - 1] : null; }
         }
 
+        /// <summary>
+        /// Transforms the file format to the specified format.
+        /// </summary>
+        /// <remarks>
+        /// The previous format will be stored in the format history.
+        /// </remarks>
+        /// <returns>This file.</returns>
+        /// <typeparam name="T">The new file format.</typeparam>
         public GameFile TransformTo<T>()
             where T : Format
         {
@@ -70,6 +95,15 @@ namespace Libgame
             return this;
         }
 
+        /// <summary>
+        /// Transforms the file format with the specified converter to a format.
+        /// </summary>
+        /// <remarks>
+        /// The previous format will be stored in the format history.
+        /// </remarks>
+        /// <returns>This file.</returns>
+        /// <param name="converter">The format converter to use.</param>
+        /// <typeparam name="T">The new file format.</typeparam>
         public GameFile TransformWith<T>(dynamic converter)
             where T : Format
         {
@@ -82,14 +116,28 @@ namespace Libgame
             return this;
         }
 
-        public void OverrideFormat(Format format, bool disposePreviousFormats)
+        /// <summary>
+        /// Sets the file format.
+        /// </summary>
+        /// <remarks>
+        /// It will reset the format history.
+        /// </remarks>
+        /// <param name="newFormat">New format.</param>
+        /// <param name="disposePreviousFormats">
+        /// If set to <c>true</c> dispose previous formats.
+        /// </param>
+        public void SetFormat(Format newFormat, bool disposePreviousFormats)
         {
-            CleanFormatHistory(disposePreviousFormats);
-            if (format != null)
-                formats.Add(format);
+            CleanFormats(disposePreviousFormats);
+            if (newFormat != null)
+                formats.Add(newFormat);
         }
 
-        public void CleanFormatHistory(bool disposeFormats)
+        /// <summary>
+        /// Cleans the format history and the current format.
+        /// </summary>
+        /// <param name="disposeFormats">If set to <c>true</c> dispose formats.</param>
+        public void CleanFormats(bool disposeFormats)
         {
             if (disposeFormats) {
                 foreach (Format format in FormatHistory) {

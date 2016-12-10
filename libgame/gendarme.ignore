@@ -3,3 +3,8 @@ R: Gendarme.Rules.Portability.MonoCompatibilityReviewRule
 M: System.Boolean Libgame.FileFormat.Format/<Convert>c__AnonStorey0::<>m__1(System.Type)
 M: System.Boolean Libgame.FileFormat.Format::<ConvertWith>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(System.Type)
+
+R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
+# We want to convert by specifying the type in a generic
+M: Libgame.GameFile Libgame.GameFile::TransformTo()
+M: Libgame.GameFile Libgame.GameFile::TransformWith(System.Object)
