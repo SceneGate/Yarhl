@@ -86,7 +86,7 @@ namespace Libgame
 
             this.Result += ((int)this.TestByTags(file.Tags) * 0.75);
             this.Result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
-            BinaryFormat binary = file.FormatHistory.First(f => f is BinaryFormat) as BinaryFormat;
+            BinaryFormat binary = file.Format as BinaryFormat;
             if (binary != null) {
                 this.Result += ((int)this.TestByData(binary.Stream) * 0.50);
                 binary.Stream.Seek(0, SeekMode.Origin);

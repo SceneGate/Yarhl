@@ -187,7 +187,7 @@ namespace Libgame
                 string typeName = info.Type;    // Get type from info
                 XElement parameters = info.Parameters;    // Get "Initialize" parameters
 
-                file.SetFormat(FileManager.GetFormat(typeName), true);
+                file.Format = FileManager.GetFormat(typeName);
                 // TODO: file.Format.Initialize(file, parameters);
             }
 

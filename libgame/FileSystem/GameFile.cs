@@ -21,8 +21,6 @@
 namespace Libgame.FileSystem
 {
     using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using FileFormat;
 
     /// <summary>
@@ -30,60 +28,44 @@ namespace Libgame.FileSystem
     /// </summary>
     public class GameFile : FileContainer
     {
-        readonly List<Format> formats;
-
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Libgame.GameFile"/> class.
+        /// Initializes a new instance of the <see cref="GameFile"/> class.
         /// </summary>
         /// <param name="name">File name.</param>
         public GameFile(string name)
             : base(name)
         {
-            formats = new List<Format>();
-            FormatHistory = new ReadOnlyCollection<Format>(formats);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Libgame.GameFile"/> class.
+        /// Initializes a new instance of the <see cref="GameFile"/> class.
         /// </summary>
         /// <param name="name">File name.</param>
         /// <param name="format">File format.</param>
         public GameFile(string name, Format format)
             : this(name)
         {
-            formats.Add(format);
+            Format = format;
         }
 
         /// <summary>
-        /// Gets a list with the format history.
-        /// </summary>
-        /// <remarks>
-        /// The format history contains all the formats the file had from its origin
-        /// to the current state and it's the equivalent of all its conversions.
-        /// </remarks>
-        /// <value>The format history.</value>
-        public ReadOnlyCollection<Format> FormatHistory {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets the current format of the file.
+        /// Gets or sets the current format of the file.
         /// </summary>
         /// <value>The current format.</value>
         public Format Format {
-            get { return formats.Count > 0 ? formats[formats.Count - 1] : null; }
+            get;
+            set;
         }
 
         /// <summary>
         /// Transforms the file format to the specified format.
         /// </summary>
-        /// <remarks>
-        /// The previous format will be stored in the format history.
-        /// </remarks>
         /// <returns>This file.</returns>
+        /// <param name="disposeOldFormat">
+        /// If set to <c>true</c> dispose the previous format.
+        /// </param>
         /// <typeparam name="T">The new file format.</typeparam>
-        public GameFile TransformTo<T>()
+        public GameFile TransformTo<T>(bool disposeOldFormat = true)
             where T : Format
         {
             if (Format == null) {
@@ -91,20 +73,24 @@ namespace Libgame.FileSystem
                     "Cannot transform a file without format");
             }
 
-            formats.Add(Format.ConvertTo<T>());
+            Format newFormat = Format.ConvertTo<T>();
+            if (disposeOldFormat)
+                Format.Dispose();
+
+            Format = newFormat;
             return this;
         }
 
         /// <summary>
         /// Transforms the file format with the specified converter to a format.
         /// </summary>
-        /// <remarks>
-        /// The previous format will be stored in the format history.
-        /// </remarks>
         /// <returns>This file.</returns>
         /// <param name="converter">The format converter to use.</param>
+        /// <param name="disposeOldFormat">
+        /// If set to <c>true</c> dispose the previous format.
+        /// </param>
         /// <typeparam name="T">The new file format.</typeparam>
-        public GameFile TransformWith<T>(dynamic converter)
+        public GameFile TransformWith<T>(dynamic converter, bool disposeOldFormat = true)
             where T : Format
         {
             if (Format == null) {
@@ -112,40 +98,12 @@ namespace Libgame.FileSystem
                     "Cannot transform a file without format");
             }
 
-            formats.Add(Format.ConvertWith<T>(converter));
+            Format newFormat = Format.ConvertWith<T>(converter);
+            if (disposeOldFormat)
+                Format.Dispose();
+
+            Format = newFormat;
             return this;
-        }
-
-        /// <summary>
-        /// Sets the file format.
-        /// </summary>
-        /// <remarks>
-        /// It will reset the format history.
-        /// </remarks>
-        /// <param name="newFormat">New format.</param>
-        /// <param name="disposePreviousFormats">
-        /// If set to <c>true</c> dispose previous formats.
-        /// </param>
-        public void SetFormat(Format newFormat, bool disposePreviousFormats)
-        {
-            CleanFormats(disposePreviousFormats);
-            if (newFormat != null)
-                formats.Add(newFormat);
-        }
-
-        /// <summary>
-        /// Cleans the format history and the current format.
-        /// </summary>
-        /// <param name="disposeFormats">If set to <c>true</c> dispose formats.</param>
-        public void CleanFormats(bool disposeFormats)
-        {
-            if (disposeFormats) {
-                foreach (Format format in FormatHistory) {
-                    format.Dispose();
-                }
-            }
-
-            formats.Clear();
         }
     }
 }

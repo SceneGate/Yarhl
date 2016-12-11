@@ -68,22 +68,6 @@ namespace Libgame.UnitTests.FileSystem
         }
 
         [Test]
-        public void ConstructorFormatInHistory()
-        {
-            Format dummyFormat = new StringFormatTest("");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            Assert.AreEqual(1, file.FormatHistory.Count);
-            Assert.AreSame(dummyFormat, file.FormatHistory[0]);
-        }
-
-        [Test]
-        public void ConstructorWithoutFormatEmptyHistory()
-        {
-            GameFile file = new GameFile("mytest");
-            Assert.AreEqual(0, file.FormatHistory.Count);
-        }
-
-        [Test]
         public void ConstructorFormatInProperty()
         {
             Format dummyFormat = new StringFormatTest("");
@@ -108,19 +92,6 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsInstanceOf<IntFormatTest>(file.Format);
             Assert.AreNotSame(dummyFormat, file.Format);
             Assert.AreEqual(3, (file.Format as IntFormatTest).Value);
-        }
-
-        [Test]
-        public void TransformAddFormatToHistory()
-        {
-            Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-
-            file.TransformTo<IntFormatTest>();
-            Assert.AreEqual(2, file.FormatHistory.Count);
-            Assert.AreSame(dummyFormat, file.FormatHistory[0]);
-            Assert.IsInstanceOf<IntFormatTest>(file.FormatHistory[1]);
-            Assert.AreEqual(3, (file.FormatHistory[1] as IntFormatTest).Value);
         }
 
         [Test]
@@ -150,13 +121,26 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsInstanceOf<StringFormatTest>(file.Format);
             Assert.AreNotSame(dummyFormat, file.Format);
             Assert.AreEqual("3", (file.Format as StringFormatTest).Value);
+        }
 
-            Assert.AreEqual(3, file.FormatHistory.Count);
-            Assert.AreSame(dummyFormat, file.FormatHistory[0]);
-            Assert.IsInstanceOf<IntFormatTest>(file.FormatHistory[1]);
-            Assert.IsInstanceOf<StringFormatTest>(file.FormatHistory[2]);
-            Assert.AreEqual(3, (file.FormatHistory[1] as IntFormatTest).Value);
-            Assert.AreEqual("3", (file.FormatHistory[2] as StringFormatTest).Value);
+        [Test]
+        public void TransformDisposeFormat()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            GameFile file = new GameFile("mytest", dummyFormat);
+            file.TransformTo<IntFormatTest>();
+            Assert.IsTrue(dummyFormat.Disposed);
+            Assert.IsFalse(file.Format.Disposed);
+        }
+
+        [Test]
+        public void TransformNotDisposingFormat()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            GameFile file = new GameFile("mytest", dummyFormat);
+            file.TransformTo<IntFormatTest>(false);
+            Assert.IsFalse(dummyFormat.Disposed);
+            Assert.IsFalse(file.Format.Disposed);
         }
 
         [Test]
@@ -170,20 +154,6 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsInstanceOf<IntFormatTest>(file.Format);
             Assert.AreNotSame(dummyFormat, file.Format);
             Assert.AreEqual(4, (file.Format as IntFormatTest).Value);
-        }
-
-        [Test]
-        public void TransformWithAddFormatToHistory()
-        {
-            PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-
-            file.TransformWith<IntFormatTest>(converter);
-            Assert.AreEqual(2, file.FormatHistory.Count);
-            Assert.AreSame(dummyFormat, file.FormatHistory[0]);
-            Assert.IsInstanceOf<IntFormatTest>(file.FormatHistory[1]);
-            Assert.AreEqual(4, (file.FormatHistory[1] as IntFormatTest).Value);
         }
 
         [Test]
@@ -217,104 +187,68 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsInstanceOf<StringFormatTest>(file.Format);
             Assert.AreNotSame(dummyFormat, file.Format);
             Assert.AreEqual("4", (file.Format as StringFormatTest).Value);
-
-            Assert.AreEqual(3, file.FormatHistory.Count);
-            Assert.AreSame(dummyFormat, file.FormatHistory[0]);
-            Assert.IsInstanceOf<IntFormatTest>(file.FormatHistory[1]);
-            Assert.IsInstanceOf<StringFormatTest>(file.FormatHistory[2]);
-            Assert.AreEqual(4, (file.FormatHistory[1] as IntFormatTest).Value);
-            Assert.AreEqual("4", (file.FormatHistory[2] as StringFormatTest).Value);
         }
 
         [Test]
-        public void SetFormatChangeFormat()
+        public void TransformWithDisposeFormat()
+        {
+            PrivateConverter converter = new PrivateConverter();
+            Format dummyFormat = new StringFormatTest("3");
+            GameFile file = new GameFile("mytest", dummyFormat);
+            file.TransformWith<IntFormatTest>(converter);
+            Assert.IsTrue(dummyFormat.Disposed);
+            Assert.IsFalse(file.Format.Disposed);
+        }
+
+        [Test]
+        public void TransformWithNotDisposingFormat()
+        {
+            PrivateConverter converter = new PrivateConverter();
+            Format dummyFormat = new StringFormatTest("3");
+            GameFile file = new GameFile("mytest", dummyFormat);
+            file.TransformWith<IntFormatTest>(converter, false);
+            Assert.IsFalse(dummyFormat.Disposed);
+            Assert.IsFalse(file.Format.Disposed);
+        }
+
+        [Test]
+        public void SetFormat()
         {
             Format dummyFormat1 = new StringFormatTest("3");
             Format dummyFormat2 = new IntFormatTest(4);
             GameFile file = new GameFile("mytest", dummyFormat1);
-            file.SetFormat(dummyFormat2, false);
+            file.Format = dummyFormat2;
             Assert.AreNotSame(file.Format, dummyFormat1);
             Assert.AreSame(file.Format, dummyFormat2);
         }
 
         [Test]
-        public void SetFormatForFilesWithoutFormatChangeFormat()
+        public void SetFormatWithoutPreviousFormat()
         {
             Format dummyFormat = new StringFormatTest("3");
             GameFile file = new GameFile("mytest");
-            file.SetFormat(dummyFormat, false);
+            file.Format = dummyFormat;
             Assert.AreSame(file.Format, dummyFormat);
         }
 
         [Test]
-        public void SetFormatCleanPreviousFormats()
+        public void SetFormatDoesNotDisposePreviousFormat()
         {
             Format dummyFormat1 = new StringFormatTest("3");
             Format dummyFormat2 = new IntFormatTest(4);
             GameFile file = new GameFile("mytest", dummyFormat1);
-            file.SetFormat(dummyFormat2, false);
-            Assert.AreEqual(1, file.FormatHistory.Count);
-            Assert.AreSame(dummyFormat2, file.FormatHistory[0]);
-        }
-
-        [Test]
-        public void SetFormatWithDisposePreviousFormats()
-        {
-            Format dummyFormat1 = new StringFormatTest("3");
-            Format dummyFormat2 = new IntFormatTest(4);
-            GameFile file = new GameFile("mytest", dummyFormat1);
-            file.SetFormat(dummyFormat2, true);
-            Assert.IsTrue(dummyFormat1.Disposed);
-            Assert.IsFalse(dummyFormat2.Disposed);
-        }
-
-        [Test]
-        public void SetFormatWithNotDisposePreviousFormat()
-        {
-            Format dummyFormat1 = new StringFormatTest("3");
-            Format dummyFormat2 = new IntFormatTest(4);
-            GameFile file = new GameFile("mytest", dummyFormat1);
-            file.SetFormat(dummyFormat2, false);
+            file.Format = dummyFormat2;
             Assert.IsFalse(dummyFormat1.Disposed);
             Assert.IsFalse(dummyFormat2.Disposed);
         }
 
         [Test]
-        public void SetFormatWithNullFormats()
+        public void SetFormatToNull()
         {
             Format dummyFormat = new StringFormatTest("3");
             GameFile file = new GameFile("mytest", dummyFormat);
-            file.SetFormat(null, false);
-            Assert.IsEmpty(file.FormatHistory);
+            file.Format = null;
             Assert.IsNull(file.Format);
-        }
-
-        [Test]
-        public void CleanFormatsCleanHistory()
-        {
-            Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.CleanFormats(false);
-            Assert.IsEmpty(file.FormatHistory);
-            Assert.IsNull(file.Format);
-        }
-
-        [Test]
-        public void CleanFormatsWithDisposeFormats()
-        {
-            Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.CleanFormats(true);
-            Assert.IsTrue(dummyFormat.Disposed);
-        }
-
-        [Test]
-        public void CleanFormatsWithNotDisposeFormats()
-        {
-            Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.CleanFormats(false);
-            Assert.IsFalse(dummyFormat.Disposed);
         }
 
         public class PrivateConverter : 
