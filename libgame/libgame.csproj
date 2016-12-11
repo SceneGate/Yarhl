@@ -63,6 +63,7 @@
     <Compile Include="PluginManager.cs" />
     <Compile Include="FileFormat\IPartialConverter.cs" />
     <Compile Include="FileSystem\Node.cs" />
+    <Compile Include="FileFormat\NodeContainerFormat.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -58,6 +58,24 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
+        /// Gets a value indicating whether the format is a container of subnodes.
+        /// </summary>
+        /// <value><c>true</c> if is container; otherwise, <c>false</c>.</value>
+        public bool IsContainer {
+            get { return Format is NodeContainerFormat; }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Node"/> with a new NodeContainer format.
+        /// </summary>
+        /// <returns>The new node.</returns>
+        /// <param name="name">Node name.</param>
+        public static Node CreateContainer(string name)
+        {
+            return new Node(name, new NodeContainerFormat());
+        }
+
+        /// <summary>
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>

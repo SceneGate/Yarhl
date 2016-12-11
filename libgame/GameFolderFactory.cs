@@ -36,7 +36,7 @@ namespace Libgame
 
         public static Node FromPath(string dir, string dirName)
         {
-            Node folder = new Node(dirName); // TODO: Folders not supported yet
+            Node folder = Node.CreateContainer(dirName);
 
             foreach (string filePath in Directory.GetFiles(dir)) {
                 string filename = Path.GetFileName(filePath);
