@@ -1,5 +1,5 @@
 ﻿//
-//  GameFile.cs
+//  Node.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -24,32 +24,32 @@ namespace Libgame.FileSystem
     using FileFormat;
 
     /// <summary>
-    /// File with an associated format.
+    /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class GameFile : FileContainer
+    public class Node : FileContainer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameFile"/> class.
+        /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
-        /// <param name="name">File name.</param>
-        public GameFile(string name)
+        /// <param name="name">Name.</param>
+        public Node(string name)
             : base(name)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameFile"/> class.
+        /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
-        /// <param name="name">File name.</param>
-        /// <param name="format">File format.</param>
-        public GameFile(string name, Format format)
+        /// <param name="name">Name.</param>
+        /// <param name="format">Format.</param>
+        public Node(string name, Format format)
             : this(name)
         {
             Format = format;
         }
 
         /// <summary>
-        /// Gets or sets the current format of the file.
+        /// Gets or sets the current format of the node.
         /// </summary>
         /// <value>The current format.</value>
         public Format Format {
@@ -58,19 +58,19 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
-        /// Transforms the file format to the specified format.
+        /// Transforms the node format to the specified format.
         /// </summary>
-        /// <returns>This file.</returns>
+        /// <returns>This node.</returns>
         /// <param name="disposeOldFormat">
         /// If set to <c>true</c> dispose the previous format.
         /// </param>
-        /// <typeparam name="T">The new file format.</typeparam>
-        public GameFile TransformTo<T>(bool disposeOldFormat = true)
+        /// <typeparam name="T">The new node format.</typeparam>
+        public Node TransformTo<T>(bool disposeOldFormat = true)
             where T : Format
         {
             if (Format == null) {
                 throw new InvalidOperationException(
-                    "Cannot transform a file without format");
+                    "Cannot transform a node without format");
             }
 
             Format newFormat = Format.ConvertTo<T>();
@@ -82,20 +82,20 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
-        /// Transforms the file format with the specified converter to a format.
+        /// Transforms the node format with the specified converter to a format.
         /// </summary>
-        /// <returns>This file.</returns>
+        /// <returns>This node.</returns>
         /// <param name="converter">The format converter to use.</param>
         /// <param name="disposeOldFormat">
         /// If set to <c>true</c> dispose the previous format.
         /// </param>
-        /// <typeparam name="T">The new file format.</typeparam>
-        public GameFile TransformWith<T>(dynamic converter, bool disposeOldFormat = true)
+        /// <typeparam name="T">The new node format.</typeparam>
+        public Node TransformWith<T>(dynamic converter, bool disposeOldFormat = true)
             where T : Format
         {
             if (Format == null) {
                 throw new InvalidOperationException(
-                    "Cannot transform a file without format");
+                    "Cannot transform a node without format");
             }
 
             Format newFormat = Format.ConvertWith<T>(converter);

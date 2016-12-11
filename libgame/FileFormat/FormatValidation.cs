@@ -76,7 +76,7 @@ namespace Libgame
             set;
         }
 
-        public void RunTests(GameFile file)
+        public void RunTests(Node file)
         {
             if (file.Format != null)
                 throw new Exception("The file already has a format.");
@@ -110,9 +110,9 @@ namespace Libgame
         protected abstract ValidationResult TestByData(DataStream stream);
         protected abstract ValidationResult TestByRegexp(string filepath, string filename);
 
-        protected abstract string[] GuessDependencies(GameFile file);
+        protected abstract string[] GuessDependencies(Node file);
 
-        protected abstract object[] GuessParameters(GameFile file);
+        protected abstract object[] GuessParameters(Node file);
     }
 }
 

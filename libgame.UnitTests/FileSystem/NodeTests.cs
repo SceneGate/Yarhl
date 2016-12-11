@@ -1,5 +1,5 @@
 ﻿//
-// GameFileTests.cs
+// NodeTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -33,7 +33,7 @@ namespace Libgame.UnitTests.FileSystem
     using FileFormat;
 
     [TestFixture]
-    public class GameFileTests
+    public class NodeTests
     {
         [OneTimeSetUp]
         public void SetUp()
@@ -54,93 +54,93 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void ConstructorSetName()
         {
-            GameFile file = new GameFile("mytest");
-            Assert.AreEqual("mytest", file.Name);
+            Node node = new Node("mytest");
+            Assert.AreEqual("mytest", node.Name);
         }
 
         [Test]
         public void ConstructorSetNameAndFormat()
         {
             Format dummyFormat = new StringFormatTest("");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            Assert.AreEqual("mytest", file.Name);
-            Assert.AreSame(dummyFormat, file.Format);
+            Node node = new Node("mytest", dummyFormat);
+            Assert.AreEqual("mytest", node.Name);
+            Assert.AreSame(dummyFormat, node.Format);
         }
 
         [Test]
         public void ConstructorFormatInProperty()
         {
             Format dummyFormat = new StringFormatTest("");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            Assert.AreSame(dummyFormat, file.Format);
+            Node node = new Node("mytest", dummyFormat);
+            Assert.AreSame(dummyFormat, node.Format);
         }
 
         [Test]
         public void ConstructorWithoutFormatNullProperty()
         {
-            GameFile file = new GameFile("mytest");
-            Assert.IsNull(file.Format);
+            Node node = new Node("mytest");
+            Assert.IsNull(node.Format);
         }
 
         [Test]
         public void TransformChangeFormat()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
+            Node node = new Node("mytest", dummyFormat);
 
-            file.TransformTo<IntFormatTest>();
-            Assert.IsInstanceOf<IntFormatTest>(file.Format);
-            Assert.AreNotSame(dummyFormat, file.Format);
-            Assert.AreEqual(3, (file.Format as IntFormatTest).Value);
+            node.TransformTo<IntFormatTest>();
+            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual(3, (node.Format as IntFormatTest).Value);
         }
 
         [Test]
-        public void TransformNoFormatFileThrowException()
+        public void TransformWithoutFormatThrowException()
         {
-            GameFile file = new GameFile("mytest");
+            Node node = new Node("mytest");
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                file.TransformTo<IntFormatTest>());
-            Assert.AreEqual("Cannot transform a file without format", ex.Message);
+                node.TransformTo<IntFormatTest>());
+            Assert.AreEqual("Cannot transform a node without format", ex.Message);
         }
 
         [Test]
         public void TransformReturnsItself()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            Assert.AreSame(file, file.TransformTo<IntFormatTest>());
+            Node node = new Node("mytest", dummyFormat);
+            Assert.AreSame(node, node.TransformTo<IntFormatTest>());
         }
 
         [Test]
         public void TransformConcatenating()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
+            Node node = new Node("mytest", dummyFormat);
 
-            file.TransformTo<IntFormatTest>().TransformTo<StringFormatTest>();
-            Assert.IsInstanceOf<StringFormatTest>(file.Format);
-            Assert.AreNotSame(dummyFormat, file.Format);
-            Assert.AreEqual("3", (file.Format as StringFormatTest).Value);
+            node.TransformTo<IntFormatTest>().TransformTo<StringFormatTest>();
+            Assert.IsInstanceOf<StringFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual("3", (node.Format as StringFormatTest).Value);
         }
 
         [Test]
         public void TransformDisposeFormat()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.TransformTo<IntFormatTest>();
+            Node node = new Node("mytest", dummyFormat);
+            node.TransformTo<IntFormatTest>();
             Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(file.Format.Disposed);
+            Assert.IsFalse(node.Format.Disposed);
         }
 
         [Test]
         public void TransformNotDisposingFormat()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.TransformTo<IntFormatTest>(false);
+            Node node = new Node("mytest", dummyFormat);
+            node.TransformTo<IntFormatTest>(false);
             Assert.IsFalse(dummyFormat.Disposed);
-            Assert.IsFalse(file.Format.Disposed);
+            Assert.IsFalse(node.Format.Disposed);
         }
 
         [Test]
@@ -148,22 +148,22 @@ namespace Libgame.UnitTests.FileSystem
         {
             PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
+            Node node = new Node("mytest", dummyFormat);
 
-            file.TransformWith<IntFormatTest>(converter);
-            Assert.IsInstanceOf<IntFormatTest>(file.Format);
-            Assert.AreNotSame(dummyFormat, file.Format);
-            Assert.AreEqual(4, (file.Format as IntFormatTest).Value);
+            node.TransformWith<IntFormatTest>(converter);
+            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
         }
 
         [Test]
-        public void TransformmWithAndNoFormatFileThrowException()
+        public void TransformmWithAndNoFormatThrowException()
         {
             PrivateConverter converter = new PrivateConverter();
-            GameFile file = new GameFile("mytest");
+            Node node = new Node("mytest");
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                file.TransformWith<IntFormatTest>(converter));
-            Assert.AreEqual("Cannot transform a file without format", ex.Message);
+                node.TransformWith<IntFormatTest>(converter));
+            Assert.AreEqual("Cannot transform a node without format", ex.Message);
         }
 
         [Test]
@@ -171,8 +171,8 @@ namespace Libgame.UnitTests.FileSystem
         {
             PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            Assert.AreSame(file, file.TransformWith<IntFormatTest>(converter));
+            Node node = new Node("mytest", dummyFormat);
+            Assert.AreSame(node, node.TransformWith<IntFormatTest>(converter));
         }
 
         [Test]
@@ -180,13 +180,13 @@ namespace Libgame.UnitTests.FileSystem
         {
             PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
+            Node node = new Node("mytest", dummyFormat);
 
-            file.TransformWith<IntFormatTest>(converter)
+            node.TransformWith<IntFormatTest>(converter)
                 .TransformWith<StringFormatTest>(converter);
-            Assert.IsInstanceOf<StringFormatTest>(file.Format);
-            Assert.AreNotSame(dummyFormat, file.Format);
-            Assert.AreEqual("4", (file.Format as StringFormatTest).Value);
+            Assert.IsInstanceOf<StringFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual("4", (node.Format as StringFormatTest).Value);
         }
 
         [Test]
@@ -194,10 +194,10 @@ namespace Libgame.UnitTests.FileSystem
         {
             PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.TransformWith<IntFormatTest>(converter);
+            Node node = new Node("mytest", dummyFormat);
+            node.TransformWith<IntFormatTest>(converter);
             Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(file.Format.Disposed);
+            Assert.IsFalse(node.Format.Disposed);
         }
 
         [Test]
@@ -205,10 +205,10 @@ namespace Libgame.UnitTests.FileSystem
         {
             PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.TransformWith<IntFormatTest>(converter, false);
+            Node node = new Node("mytest", dummyFormat);
+            node.TransformWith<IntFormatTest>(converter, false);
             Assert.IsFalse(dummyFormat.Disposed);
-            Assert.IsFalse(file.Format.Disposed);
+            Assert.IsFalse(node.Format.Disposed);
         }
 
         [Test]
@@ -216,19 +216,19 @@ namespace Libgame.UnitTests.FileSystem
         {
             Format dummyFormat1 = new StringFormatTest("3");
             Format dummyFormat2 = new IntFormatTest(4);
-            GameFile file = new GameFile("mytest", dummyFormat1);
-            file.Format = dummyFormat2;
-            Assert.AreNotSame(file.Format, dummyFormat1);
-            Assert.AreSame(file.Format, dummyFormat2);
+            Node node = new Node("mytest", dummyFormat1);
+            node.Format = dummyFormat2;
+            Assert.AreNotSame(node.Format, dummyFormat1);
+            Assert.AreSame(node.Format, dummyFormat2);
         }
 
         [Test]
         public void SetFormatWithoutPreviousFormat()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest");
-            file.Format = dummyFormat;
-            Assert.AreSame(file.Format, dummyFormat);
+            Node node = new Node("mytest");
+            node.Format = dummyFormat;
+            Assert.AreSame(node.Format, dummyFormat);
         }
 
         [Test]
@@ -236,8 +236,8 @@ namespace Libgame.UnitTests.FileSystem
         {
             Format dummyFormat1 = new StringFormatTest("3");
             Format dummyFormat2 = new IntFormatTest(4);
-            GameFile file = new GameFile("mytest", dummyFormat1);
-            file.Format = dummyFormat2;
+            Node node = new Node("mytest", dummyFormat1);
+            node.Format = dummyFormat2;
             Assert.IsFalse(dummyFormat1.Disposed);
             Assert.IsFalse(dummyFormat2.Disposed);
         }
@@ -246,9 +246,9 @@ namespace Libgame.UnitTests.FileSystem
         public void SetFormatToNull()
         {
             Format dummyFormat = new StringFormatTest("3");
-            GameFile file = new GameFile("mytest", dummyFormat);
-            file.Format = null;
-            Assert.IsNull(file.Format);
+            Node node = new Node("mytest", dummyFormat);
+            node.Format = null;
+            Assert.IsNull(node.Format);
         }
 
         public class PrivateConverter : 

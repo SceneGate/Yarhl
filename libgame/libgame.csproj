@@ -63,7 +63,7 @@
     <Compile Include="FileFormat\BinaryFormat.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="FileFormat\IPartialConverter.cs" />
-    <Compile Include="FileSystem\GameFile.cs" />
+    <Compile Include="FileSystem\Node.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

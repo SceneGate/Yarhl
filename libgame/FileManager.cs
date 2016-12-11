@@ -84,7 +84,7 @@ namespace Libgame
                 ToArray()[0];
         }
 
-        public static FormatValidation AssignBestFormat(GameFile file)
+        public static FormatValidation AssignBestFormat(Node file)
         {
             if (file.Format != null)
                 return null;
@@ -102,7 +102,7 @@ namespace Libgame
             return validation;
         }
 
-        public GameFile RescueFile(string gameFilePath)
+        public Node RescueFile(string gameFilePath)
         {
             if (this.InfoCollection.Contains(gameFilePath))
                 return this.RescueFileInfo(gameFilePath);
@@ -110,18 +110,18 @@ namespace Libgame
                 return this.RescueFileNoInfo(gameFilePath);
         }
 
-        private GameFile RescueFileNoInfo(string gameFilePath)
+        private Node RescueFileNoInfo(string gameFilePath)
         {
             // 1.- Gets dependencies
             // Since no info of dependencies is given, it will search them in two steps.
-            List<GameFile> depends = new List<GameFile>();
+            List<Node> depends = new List<Node>();
 
             // 1.1.- Gets dependencies to get file data.
             // It will be the previous GameFile that contains that file.
             // Reading that file it's expected to get file data.
             string prevContainer = gameFilePath.GetPreviousPath();
             if (!string.IsNullOrEmpty(prevContainer)) {
-                GameFile dependency = this.RescueFile(prevContainer);
+                Node dependency = this.RescueFile(prevContainer);
                 if (dependency != null) {
                     // TODO: dependency.Format.Read();
                     depends.Add(dependency);
@@ -130,7 +130,7 @@ namespace Libgame
 
             // We should be able to get the file now
             FileContainer searchFile = this.Root.SearchFile(gameFilePath);
-            GameFile file =  searchFile as GameFile;
+            Node file =  searchFile as Node;
             // If we're trying to get the dependency and found a folder, pass its the "dependency"
             if (file == null && searchFile is GameFolder) {
                 if (depends.Count > 0)
@@ -147,7 +147,7 @@ namespace Libgame
             FormatValidation validation = AssignBestFormat(file);
             if (validation != null) {
                 foreach (string dependencyPath in validation.Dependencies) {
-                    GameFile dependency = this.RescueFile(dependencyPath);
+                    Node dependency = this.RescueFile(dependencyPath);
                     depends.Add(dependency);
                     // TODO: dependency.Format.Read();
                 }
@@ -159,22 +159,22 @@ namespace Libgame
             return file;
         }
 
-        private GameFile RescueFileInfo(string gameFilePath)
+        private Node RescueFileInfo(string gameFilePath)
         {
             FileInfo info = this.InfoCollection[gameFilePath];
 
             // Resolve dependencies
-            List<GameFile> depends = new List<GameFile>();
+            List<Node> depends = new List<Node>();
 
             foreach (string dependencyPath in info.Dependencies) {
-                GameFile dependency = this.RescueFile(dependencyPath);
+                Node dependency = this.RescueFile(dependencyPath);
                 depends.Add(dependency);
                 // TODO: dependency.Format.Read();
             }
 
             // Get file
             FileContainer searchFile = this.Root.SearchFile(gameFilePath);
-            GameFile file =  searchFile as GameFile;
+            Node file =  searchFile as Node;
             if (file == null) {
                 throw new Exception("File not found.");
             }
