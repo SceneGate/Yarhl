@@ -27,6 +27,7 @@ namespace Libgame
     using System.Xml.Linq;
     using Mono.Addins;
     using Libgame.FileFormat;
+    using Libgame.FileSystem;
 
     public class FileManager
     {

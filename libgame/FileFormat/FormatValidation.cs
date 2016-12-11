@@ -24,6 +24,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Mono.Addins;
 using Libgame.IO;
+using System.Linq;
+using Libgame.FileFormat;
+using Libgame.FileSystem;
 
 namespace Libgame
 {
@@ -82,9 +85,12 @@ namespace Libgame
             this.Result = 0;
 
             this.Result += ((int)this.TestByTags(file.Tags) * 0.75);
-            this.Result += ((int)this.TestByData(file.Stream) * 0.50);
             this.Result += ((int)this.TestByRegexp(file.Path, file.Name) * 0.25);
-            file.Stream.Seek(0, SeekMode.Origin);
+            BinaryFormat binary = file.Format as BinaryFormat;
+            if (binary != null) {
+                this.Result += ((int)this.TestByData(binary.Stream) * 0.50);
+                binary.Stream.Seek(0, SeekMode.Origin);
+            }
 
             this.IsValid = (this.Result >= 50) ? true : false;
 
