@@ -29,14 +29,14 @@ namespace Libgame
 {
     public static class GameFolderFactory
     {
-        public static GameFolder FromPath(string dir)
+        public static Node FromPath(string dir)
         {
             return FromPath(dir, Path.GetDirectoryName(dir));
         }
 
-        public static GameFolder FromPath(string dir, string dirName)
+        public static Node FromPath(string dir, string dirName)
         {
-            GameFolder folder = new GameFolder(dirName);
+            Node folder = new Node(dirName); // TODO: Folders not supported yet
 
             foreach (string filePath in Directory.GetFiles(dir)) {
                 string filename = Path.GetFileName(filePath);

@@ -132,7 +132,8 @@ namespace Libgame
             FileContainer searchFile = this.Root.SearchFile(gameFilePath);
             Node file =  searchFile as Node;
             // If we're trying to get the dependency and found a folder, pass its the "dependency"
-            if (file == null && searchFile is GameFolder) {
+            // TODO: Folders not supported yet
+            if (file == null && searchFile is Node) {
                 if (depends.Count > 0)
                     return depends[0];
                 else
