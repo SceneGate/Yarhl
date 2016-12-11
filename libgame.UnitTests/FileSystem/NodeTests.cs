@@ -88,7 +88,7 @@ namespace Libgame.UnitTests.FileSystem
             Format dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
 
-            node.TransformTo<IntFormatTest>();
+            node.Transform<IntFormatTest>();
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(3, (node.Format as IntFormatTest).Value);
@@ -99,7 +99,7 @@ namespace Libgame.UnitTests.FileSystem
         {
             Node node = new Node("mytest");
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                node.TransformTo<IntFormatTest>());
+                node.Transform<IntFormatTest>());
             Assert.AreEqual("Cannot transform a node without format", ex.Message);
         }
 
@@ -108,7 +108,7 @@ namespace Libgame.UnitTests.FileSystem
         {
             Format dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
-            Assert.AreSame(node, node.TransformTo<IntFormatTest>());
+            Assert.AreSame(node, node.Transform<IntFormatTest>());
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace Libgame.UnitTests.FileSystem
             Format dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
 
-            node.TransformTo<IntFormatTest>().TransformTo<StringFormatTest>();
+            node.Transform<IntFormatTest>().Transform<StringFormatTest>();
             Assert.IsInstanceOf<StringFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual("3", (node.Format as StringFormatTest).Value);
@@ -128,7 +128,7 @@ namespace Libgame.UnitTests.FileSystem
         {
             Format dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
-            node.TransformTo<IntFormatTest>();
+            node.Transform<IntFormatTest>();
             Assert.IsTrue(dummyFormat.Disposed);
             Assert.IsFalse(node.Format.Disposed);
         }
@@ -138,77 +138,36 @@ namespace Libgame.UnitTests.FileSystem
         {
             Format dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
-            node.TransformTo<IntFormatTest>(false);
+            node.Transform<IntFormatTest>(false);
             Assert.IsFalse(dummyFormat.Disposed);
             Assert.IsFalse(node.Format.Disposed);
         }
 
         [Test]
-        public void TransformWithChangeFormat()
+        public void TransformWithConverterChangeFormat()
         {
             PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
 
-            node.TransformWith<IntFormatTest>(converter);
+            node.Transform<IntFormatTest>(converter: converter);
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
         }
 
         [Test]
-        public void TransformmWithAndNoFormatThrowException()
+        public void TransformWithConverterConcatenating()
         {
             PrivateConverter converter = new PrivateConverter();
-            Node node = new Node("mytest");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                node.TransformWith<IntFormatTest>(converter));
-            Assert.AreEqual("Cannot transform a node without format", ex.Message);
-        }
-
-        [Test]
-        public void TransformWithReturnsItself()
-        {
-            PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new StringFormatTest("3");
-            Node node = new Node("mytest", dummyFormat);
-            Assert.AreSame(node, node.TransformWith<IntFormatTest>(converter));
-        }
-
-        [Test]
-        public void TransformWithConcatenating()
-        {
-            PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new StringFormatTest("3");
+            Format dummyFormat = new IntFormatTest(3);
             Node node = new Node("mytest", dummyFormat);
 
-            node.TransformWith<IntFormatTest>(converter)
-                .TransformWith<StringFormatTest>(converter);
-            Assert.IsInstanceOf<StringFormatTest>(node.Format);
+            node.Transform<StringFormatTest>()
+                .Transform<IntFormatTest>(converter: converter);
+            Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual("4", (node.Format as StringFormatTest).Value);
-        }
-
-        [Test]
-        public void TransformWithDisposeFormat()
-        {
-            PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new StringFormatTest("3");
-            Node node = new Node("mytest", dummyFormat);
-            node.TransformWith<IntFormatTest>(converter);
-            Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(node.Format.Disposed);
-        }
-
-        [Test]
-        public void TransformWithNotDisposingFormat()
-        {
-            PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new StringFormatTest("3");
-            Node node = new Node("mytest", dummyFormat);
-            node.TransformWith<IntFormatTest>(converter, false);
-            Assert.IsFalse(dummyFormat.Disposed);
-            Assert.IsFalse(node.Format.Disposed);
+            Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
         }
 
         [Test]
