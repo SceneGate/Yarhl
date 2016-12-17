@@ -26,12 +26,12 @@ namespace Libgame.FileSystem
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : FileContainer
+    public class Node : NavegableNode, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
-        /// <param name="name">Name.</param>
+        /// <param name="name">Node name.</param>
         public Node(string name)
             : base(name)
         {
@@ -40,12 +40,31 @@ namespace Libgame.FileSystem
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
-        /// <param name="name">Name.</param>
-        /// <param name="format">Format.</param>
+        /// <param name="name">Node name.</param>
+        /// <param name="format">Node format.</param>
         public Node(string name, Format format)
             : this(name)
         {
             Format = format;
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="Node"/> class.
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="Node"/> is reclaimed by garbage collection.
+        /// </summary>
+        ~Node()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="Format"/> is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
+        public bool Disposed {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -80,9 +99,9 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <returns>This node.</returns>
         /// <param name="disposeOldFormat">
-        /// <param name="converter">The format converter to use.</param>
         /// If set to <c>true</c> dispose the previous format.
         /// </param>
+        /// <param name="converter">The format converter to use.</param>
         /// <typeparam name="T">The new node format.</typeparam>
         public Node Transform<T>(bool disposeOldFormat = true, dynamic converter = null)
             where T : Format
@@ -103,6 +122,33 @@ namespace Libgame.FileSystem
 
             Format = newFormat;
             return this;
+        }
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="Node"/>
+        /// object.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);              // Dispose me everything (L)
+            GC.SuppressFinalize(this);  // Don't dispose again!
+        }
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="Node"/>
+        /// object.
+        /// </summary>
+        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
+        /// managed resources also.</param>
+        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        {
+            if (Disposed)
+                return;
+
+            Disposed = true;
+
+            if (freeManagedResourcesAlso)
+                Format?.Dispose();
         }
     }
 }

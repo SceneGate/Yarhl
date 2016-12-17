@@ -41,7 +41,7 @@ namespace Libgame
             foreach (string filePath in Directory.GetFiles(dir)) {
                 string filename = Path.GetFileName(filePath);
                 DataStream stream = new DataStream(filePath, FileMode.Open, FileAccess.ReadWrite);
-                folder.AddFile(new Node(filename, new BinaryFormat(stream)));
+                folder.AddChild(new Node(filename, new BinaryFormat(stream)));
             }
 
             return folder;
