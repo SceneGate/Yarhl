@@ -11,7 +11,7 @@ M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,Sys
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme
 # It makes no sense for a ReadOnlyCollection that furthermore is strongly type because of the generic
-T: Libgame.FileSystem.NavegableNodeCollection
+T: Libgame.FileSystem.NavegableNodeCollection`1
 
 R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects

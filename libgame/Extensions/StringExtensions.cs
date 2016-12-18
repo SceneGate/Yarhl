@@ -37,7 +37,7 @@ namespace Libgame
 
         public static string GetPreviousPath(this string path)
         {
-            return path.Substring(0, path.LastIndexOf(NavegableNode.PathSeparator));
+            return path.Substring(0, path.LastIndexOf(NodeSystem.PathSeparator));
         }
 
         public static string ApplyTable(this string s, string tableName, bool originalToNew)

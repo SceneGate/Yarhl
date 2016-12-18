@@ -32,13 +32,15 @@ namespace Libgame.FileSystem
     /// FileSystem navigator.
     /// Search for nodes and iterate over them.
     /// </summary>
-    public class Navigator
+    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
+    public class Navigator<T>
+        where T : NavegableNode<T>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Navigator"/> class.
+        /// Initializes a new instance of the <see cref="T:Libgame.FileSystem.Navigator`1"/> class.
         /// </summary>
         /// <param name="node">Initial node.</param>
-        public Navigator(NavegableNode node)
+        public Navigator(T node)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
@@ -50,7 +52,7 @@ namespace Libgame.FileSystem
         /// Gets the current node.
         /// </summary>
         /// <value>The node.</value>
-        public NavegableNode Node {
+        public T Node {
             get;
             private set;
         }
@@ -60,7 +62,7 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <param name="path">Path to search.</param>
         /// <returns>Node or null if not found.</returns>
-        public NavegableNode SearchFile(string path)
+        public T SearchFile(string path)
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
@@ -68,15 +70,15 @@ namespace Libgame.FileSystem
             if (!path.StartsWith(Node.Path, StringComparison.InvariantCulture))
                 return null;
 
-            var queue = new Queue<NavegableNode>();
+            var queue = new Queue<T>();
             queue.Enqueue(Node);
 
             while (queue.Count > 0) {
-                NavegableNode currentNode = queue.Dequeue();
+                T currentNode = queue.Dequeue();
                 if (path == currentNode.Path)
                     return currentNode;
 
-                foreach (NavegableNode child in currentNode.Children)
+                foreach (T child in currentNode.Children)
                     queue.Enqueue(child);
             }
 
@@ -87,13 +89,13 @@ namespace Libgame.FileSystem
         /// Iterates the nodes recursively.
         /// </summary>
         /// <returns>The nodes.</returns>
-        public IEnumerable<NavegableNode> IterateNodes()
+        public IEnumerable<T> IterateNodes()
         {
-            var queue = new Queue<NavegableNode>();
+            var queue = new Queue<T>();
             queue.Enqueue(Node);
 
             while (queue.Count > 0) {
-                NavegableNode node = queue.Dequeue();
+                T node = queue.Dequeue();
 
                 foreach (var child in node.Children) {
                     queue.Enqueue(child);

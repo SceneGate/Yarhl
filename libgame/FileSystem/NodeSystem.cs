@@ -1,5 +1,5 @@
 ﻿//
-// NavegableNodeCollection.cs
+// FileSystem.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -25,35 +25,17 @@
 // THE SOFTWARE.
 namespace Libgame.FileSystem
 {
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Linq;
-
     /// <summary>
-    /// Read-only collection of NavegableNodes.
+    /// Basic settings and configurations for a system of nodes.
     /// </summary>
-    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
-    public class NavegableNodeCollection<T> : ReadOnlyCollection<T>
-        where T : NavegableNode<T>
+    public static class NodeSystem
     {
         /// <summary>
-        /// Initializes a new instance of the
-        /// <see cref="T:Libgame.FileSystem.NavegableNodeCollection`1"/> class.
+        /// Gets the path separator.
         /// </summary>
-        /// <param name="list">Original list of nodes.</param>
-        public NavegableNodeCollection(IList<T> list)
-            : base(list)
-        {
-        }
-
-        /// <summary>
-        /// Gets the <see cref="T:Libgame.FileSystem.NavegableNodeCollection`1"/>
-        /// with the specified name.
-        /// </summary>
-        /// <param name="name">Node name.</param>
-        /// <returns>The node with the same name or null if not found.</returns>
-        public T this[string name] {
-            get { return this.FirstOrDefault((node) => node.Name == name); }
+        /// <value>The path separator.</value>
+        public static string PathSeparator {
+            get { return "/"; }
         }
     }
 }

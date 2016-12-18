@@ -27,8 +27,6 @@ namespace Libgame.UnitTests.FileSystem
 {
     using System;
     using System.Collections.Generic;
-    using System.Reflection;
-    using Moq;
     using NUnit.Framework;
     using Libgame.FileSystem;
 
@@ -38,152 +36,154 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void DefaultValues()
         {
-            var node = new Mock<NavegableNode>("NodeName");
-            Assert.AreEqual("NodeName", node.Object.Name);
-            Assert.AreEqual("/NodeName", node.Object.Path);
-            Assert.IsNull(node.Object.Parent);
-            Assert.IsEmpty(node.Object.Children);
-            Assert.IsEmpty(node.Object.Tags);
+            var node = new DummyNavegable("NodeName");
+            Assert.AreEqual("NodeName", node.Name);
+            Assert.AreEqual("/NodeName", node.Path);
+            Assert.IsNull(node.Parent);
+            Assert.IsEmpty(node.Children);
+            Assert.IsEmpty(node.Tags);
         }
 
         [Test]
         public void ExceptionIfNullName()
         {
-            var mock = new Mock<NavegableNode>(null);
-            NavegableNode node;
-            var ex = Assert.Throws<TargetInvocationException>(() => node = mock.Object);
-            Assert.IsInstanceOf<ArgumentNullException>(ex.InnerException);
+            Assert.Throws<ArgumentNullException>(() => new DummyNavegable(null));
         }
 
         [Test]
         public void ExceptionIfInvalidCharacters()
         {
-            var mock = new Mock<NavegableNode>("MyT/est");
-            NavegableNode node;
-            var ex = Assert.Throws<TargetInvocationException>(() => node = mock.Object);
-            Assert.IsInstanceOf<ArgumentException>(ex.InnerException);
+            var ex = Assert.Throws<ArgumentException>(() =>
+                new DummyNavegable("MyT/est"));
             Assert.AreEqual("Name contains invalid characters" + Environment.NewLine +
                             "Parameter name: name",
-                            ex.InnerException.Message);
+                            ex.Message);
         }
 
         [Test]
         public void NameProperty()
         {
-            var mock = new Mock<NavegableNode>("MyNameTest");
-            Assert.AreEqual("MyNameTest", mock.Object.Name);
+            var node = new DummyNavegable("MyNameTest");
+            Assert.AreEqual("MyNameTest", node.Name);
         }
 
         [Test]
         public void PathIfParentIsNull()
         {
-            var mock = new Mock<NavegableNode>("MyNameTest");
-            Assert.AreEqual("/MyNameTest", mock.Object.Path);
+            var node = new DummyNavegable("MyNameTest");
+            Assert.AreEqual("/MyNameTest", node.Path);
         }
 
         [Test]
         public void PathWithParent()
         {
-            var mock = new Mock<NavegableNode>("MyChild");
-            var parentMock = new Mock<NavegableNode>("MyParent");
-            parentMock.Object.Add(mock.Object);
+            var node = new DummyNavegable("MyChild");
+            var parentNode = new DummyNavegable("MyParent");
+            parentNode.Add(node);
 
-            Assert.AreEqual("/MyParent/MyChild", mock.Object.Path);
-            Assert.AreEqual("/MyParent", parentMock.Object.Path);
+            Assert.AreEqual("/MyParent/MyChild", node.Path);
+            Assert.AreEqual("/MyParent", parentNode.Path);
         }
 
         [Test]
         public void TagsAllowAdding()
         {
-            var mock = new Mock<NavegableNode>("MyNameTest");
-            mock.Object.Tags["MyTag"] = 5;
-            Assert.AreEqual(5, mock.Object.Tags["MyTag"]);
+            var node = new DummyNavegable("MyNameTest");
+            node.Tags["MyTag"] = 5;
+            Assert.AreEqual(5, node.Tags["MyTag"]);
         }
 
         [Test]
         public void AddChildUpdatesChildrenAndParent()
         {
-            var mock = new Mock<NavegableNode>("MyChild");
-            var parentMock = new Mock<NavegableNode>("MyParent");
-            parentMock.Object.Add(mock.Object);
+            var node = new DummyNavegable("MyChild");
+            var parentNode = new DummyNavegable("MyParent");
+            parentNode.Add(node);
 
-            Assert.AreSame(parentMock.Object, mock.Object.Parent);
-            Assert.AreEqual(1, parentMock.Object.Children.Count);
-            Assert.AreSame(mock.Object, parentMock.Object.Children[0]);
+            Assert.AreSame(parentNode, node.Parent);
+            Assert.AreEqual(1, parentNode.Children.Count);
+            Assert.AreSame(node, parentNode.Children[0]);
         }
 
         [Test]
         public void ChildrenGetsByName()
         {
-            var mock = new Mock<NavegableNode>("MyChild");
-            var parentMock = new Mock<NavegableNode>("MyParent");
-            parentMock.Object.Add(mock.Object);
-            Assert.AreSame(mock.Object, parentMock.Object.Children["MyChild"]);
+            var node = new DummyNavegable("MyChild");
+            var parentNode = new DummyNavegable("MyParent");
+            parentNode.Add(node);
+            Assert.AreSame(node, parentNode.Children["MyChild"]);
         }
 
         [Test]
         public void ExceptionIfNullChild()
         {
-            var mock = new Mock<NavegableNode>("MyParent");
-            NavegableNode child = null;
-            Assert.Throws<ArgumentNullException>(() => mock.Object.Add(child));
+            var node = new DummyNavegable("MyParent");
+            DummyNavegable child = null;
+            Assert.Throws<ArgumentNullException>(() => node.Add(child));
         }
 
         [Test]
         public void ReplaceIfSameName()
         {
-            var childrenMock1 = new Mock<NavegableNode>("MyChild1");
-            var childrenMock2 = new Mock<NavegableNode>("MyChild1");
-            var parentMock = new Mock<NavegableNode>("MyParent");
+            var children1 = new DummyNavegable("MyChild1");
+            var children2 = new DummyNavegable("MyChild1");
+            var parent = new DummyNavegable("MyParent");
 
-            parentMock.Object.Add(childrenMock1.Object);
-            Assert.AreEqual(1, parentMock.Object.Children.Count);
-            Assert.AreSame(childrenMock1.Object, parentMock.Object.Children[0]);
+            parent.Add(children1);
+            Assert.AreEqual(1, parent.Children.Count);
+            Assert.AreSame(children1, parent.Children[0]);
 
-            parentMock.Object.Add(childrenMock2.Object);
-            Assert.AreEqual(1, parentMock.Object.Children.Count);
-            Assert.AreSame(childrenMock2.Object, parentMock.Object.Children[0]);
-            Assert.AreNotSame(childrenMock1.Object, parentMock.Object.Children[0]);
+            parent.Add(children2);
+            Assert.AreEqual(1, parent.Children.Count);
+            Assert.AreSame(children2, parent.Children[0]);
+            Assert.AreNotSame(children1, parent.Children[0]);
         }
 
         [Test]
         public void AddAllChildren()
         {
-            var children = new List<NavegableNode>();
-            children.Add(new Mock<NavegableNode>("MyChild1").Object);
-            children.Add(new Mock<NavegableNode>("MyChild2").Object);
-            children.Add(new Mock<NavegableNode>("MyChild3").Object);
-            var parentMock = new Mock<NavegableNode>("MyParent");
+            var children = new List<DummyNavegable>();
+            children.Add(new DummyNavegable("MyChild1"));
+            children.Add(new DummyNavegable("MyChild2"));
+            children.Add(new DummyNavegable("MyChild3"));
+            var parent = new DummyNavegable("MyParent");
 
-            parentMock.Object.Add(children);
-            Assert.AreEqual(3, parentMock.Object.Children.Count);
-            Assert.AreSame(children[0], parentMock.Object.Children[0]);
-            Assert.AreSame(children[1], parentMock.Object.Children[1]);
-            Assert.AreSame(children[2], parentMock.Object.Children[2]);
+            parent.Add(children);
+            Assert.AreEqual(3, parent.Children.Count);
+            Assert.AreSame(children[0], parent.Children[0]);
+            Assert.AreSame(children[1], parent.Children[1]);
+            Assert.AreSame(children[2], parent.Children[2]);
         }
 
         [Test]
         public void AddChildrenThrowExceptionIfNull()
         {
-            var mock = new Mock<NavegableNode>("MyParent");
-            List<NavegableNode> children = null;
-            Assert.Throws<ArgumentNullException>(() => mock.Object.Add(children));
+            var node = new DummyNavegable("MyParent");
+            List<DummyNavegable> children = null;
+            Assert.Throws<ArgumentNullException>(() => node.Add(children));
         }
 
         [Test]
         public void RemoveChildren()
         {
-            var children = new List<NavegableNode>();
-            children.Add(new Mock<NavegableNode>("MyChild1").Object);
-            children.Add(new Mock<NavegableNode>("MyChild2").Object);
-            children.Add(new Mock<NavegableNode>("MyChild3").Object);
-            var parentMock = new Mock<NavegableNode>("MyParent");
+            var children = new List<DummyNavegable>();
+            children.Add(new DummyNavegable("MyChild1"));
+            children.Add(new DummyNavegable("MyChild2"));
+            children.Add(new DummyNavegable("MyChild3"));
+            var parent = new DummyNavegable("MyParent");
 
-            parentMock.Object.Add(children);
-            Assert.AreEqual(3, parentMock.Object.Children.Count);
+            parent.Add(children);
+            Assert.AreEqual(3, parent.Children.Count);
 
-            parentMock.Object.RemoveChildren();
-            Assert.IsEmpty(parentMock.Object.Children);
+            parent.RemoveChildren();
+            Assert.IsEmpty(parent.Children);
+        }
+
+        class DummyNavegable : NavegableNode<DummyNavegable>
+        {
+            public DummyNavegable(string name) : base(name)
+            {
+            }
         }
     }
 }

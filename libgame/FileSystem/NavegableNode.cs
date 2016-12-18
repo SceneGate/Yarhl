@@ -26,16 +26,18 @@ namespace Libgame.FileSystem
     /// <summary>
     /// Node with navigation features inside a FileSystem.
     /// </summary>
-    public abstract class NavegableNode
+    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
+    public abstract class NavegableNode<T>
+        where T : NavegableNode<T>
     {    
-        readonly List<NavegableNode> children;
+        readonly List<T> children;
 
         protected NavegableNode(string name)
         {
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
-            if (name.Contains(PathSeparator)) {
+            if (name.Contains(NodeSystem.PathSeparator)) {
                 throw new ArgumentException(
                     "Name contains invalid characters",
                     nameof(name));
@@ -43,16 +45,8 @@ namespace Libgame.FileSystem
 
             Name = name;
             Tags = new Dictionary<string, dynamic>();
-            children = new List<NavegableNode>();
-            Children = new NavegableNodeCollection(children);
-        }
-
-        /// <summary>
-        /// Gets the path separator.
-        /// </summary>
-        /// <value>The path separator.</value>
-        public static string PathSeparator {
-            get { return "/"; }
+            children = new List<T>();
+            Children = new NavegableNodeCollection<T>(children);
         }
 
         /// <summary>
@@ -69,14 +63,16 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <value>The path.</value>
         public string Path {
-            get { return (Parent?.Path ?? string.Empty) + PathSeparator + Name; }
+            get {
+                return (Parent?.Path ?? string.Empty) + NodeSystem.PathSeparator + Name;
+            }
         }
 
         /// <summary>
         /// Gets the parent node.
         /// </summary>
         /// <value>The node parent.</value>
-        public NavegableNode Parent {
+        public T Parent {
             get;
             private set;
         }
@@ -85,7 +81,7 @@ namespace Libgame.FileSystem
         /// Gets a read-only list of children nodes.
         /// </summary>
         /// <value>The list of children.</value>
-        public NavegableNodeCollection Children 
+        public NavegableNodeCollection<T> Children
         {
             get;
             private set;
@@ -109,13 +105,13 @@ namespace Libgame.FileSystem
         /// Otherwise the node is added.
         /// </remarks>
         /// <param name="node">Node to add.</param>
-        public void Add(NavegableNode node)
+        public void Add(T node)
         {
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
             // Update the parent of the child
-            node.Parent = this;
+            node.Parent = (T)this;
 
             // If we have already a child with the same, replace it. Otherwise add.
             int index = children.FindIndex((child) => child.Name == node.Name);
@@ -129,12 +125,12 @@ namespace Libgame.FileSystem
         /// Add a list of nodes.
         /// </summary>
         /// <param name="nodes">List of nodes to add.</param>
-        public void Add(IEnumerable<NavegableNode> nodes)
+        public void Add(IEnumerable<T> nodes)
         {
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
 
-            foreach (NavegableNode node in nodes)
+            foreach (T node in nodes)
                 Add(node);
         }
 

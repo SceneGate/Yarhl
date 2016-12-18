@@ -26,7 +26,6 @@
 namespace Libgame.UnitTests.FileSystem
 {
     using System.Collections.Generic;
-    using Moq;
     using NUnit.Framework;
     using Libgame.FileSystem;
 
@@ -36,13 +35,13 @@ namespace Libgame.UnitTests.FileSystem
        [Test]
         public void GetElementAsList()
         {
-            var children = new List<NavegableNode>();
-            var collection = new NavegableNodeCollection(children);
+            var children = new List<DummyNavegable>();
+            var collection = new NavegableNodeCollection<DummyNavegable>(children);
             Assert.IsEmpty(collection);
 
-            children.Add(new Mock<NavegableNode>("Child1").Object);
-            children.Add(new Mock<NavegableNode>("Child2").Object);
-            children.Add(new Mock<NavegableNode>("Child3").Object);
+            children.Add(new DummyNavegable("Child1"));
+            children.Add(new DummyNavegable("Child2"));
+            children.Add(new DummyNavegable("Child3"));
             Assert.AreEqual(3, collection.Count);
             Assert.AreSame(children[0], collection[0]);
             Assert.AreSame(children[1], collection[1]);
@@ -52,11 +51,11 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void GetNodesByName()
         {
-            var children = new List<NavegableNode>();
-            var collection = new NavegableNodeCollection(children);
-            children.Add(new Mock<NavegableNode>("Child1").Object);
-            children.Add(new Mock<NavegableNode>("Child2").Object);
-            children.Add(new Mock<NavegableNode>("Child3").Object);
+            var children = new List<DummyNavegable>();
+            var collection = new NavegableNodeCollection<DummyNavegable>(children);
+            children.Add(new DummyNavegable("Child1"));
+            children.Add(new DummyNavegable("Child2"));
+            children.Add(new DummyNavegable("Child3"));
             Assert.AreSame(children[0], collection["Child1"]);
             Assert.AreSame(children[1], collection["Child2"]);
             Assert.AreSame(children[2], collection["Child3"]);
@@ -65,9 +64,16 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void UnknownNameReturnsNull()
         {
-            var children = new List<NavegableNode>();
-            var collection = new NavegableNodeCollection(children);
+            var children = new List<DummyNavegable>();
+            var collection = new NavegableNodeCollection<DummyNavegable>(children);
             Assert.IsNull(collection["Child1"]);
+        }
+
+        class DummyNavegable : NavegableNode<DummyNavegable>
+        {
+            public DummyNavegable(string name) : base(name)
+            {
+            }
         }
     }
 }

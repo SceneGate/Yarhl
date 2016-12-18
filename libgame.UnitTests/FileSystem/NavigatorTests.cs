@@ -37,21 +37,21 @@ namespace Libgame.UnitTests.FileSystem
         public void ConstructorSetNode()
         {
             Node node = new Node("MyNode");
-            Navigator navigator = new Navigator(node);
+            var navigator = new Navigator<Node>(node);
             Assert.AreSame(node, navigator.Node);
         }
 
         [Test]
         public void ConstructorThrowExceptionIfNullNode()
         {
-            Assert.Throws<ArgumentNullException>(() => new Navigator(null));
+            Assert.Throws<ArgumentNullException>(() => new Navigator<Node>(null));
         }
 
         [Test]
         public void SearchNullPathThrowsException()
         {
             Node node = new Node("MyNode");
-            Navigator navigator = new Navigator(node);
+            var navigator = new Navigator<Node>(node);
             Assert.Throws<ArgumentNullException>(() => navigator.SearchFile(null));
         }
 
@@ -59,7 +59,7 @@ namespace Libgame.UnitTests.FileSystem
         public void SearchEmptyPath()
         {
             Node node = new Node("MyNode");
-            Navigator navigator = new Navigator(node);
+            var navigator = new Navigator<Node>(node);
             Assert.Throws<ArgumentNullException>(() => navigator.SearchFile(""));
         }
 
@@ -70,7 +70,7 @@ namespace Libgame.UnitTests.FileSystem
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
-            Navigator navigator = new Navigator(nodeChild);
+            var navigator = new Navigator<Node>(nodeChild);
             Assert.IsNull(navigator.SearchFile("/OtherParent"));
         }
 
@@ -81,7 +81,7 @@ namespace Libgame.UnitTests.FileSystem
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
-            Navigator navigator = new Navigator(nodeChild);
+            var navigator = new Navigator<Node>(nodeChild);
             Assert.AreSame(nodeChild, navigator.SearchFile("/Parent/Child"));
         }
 
@@ -92,7 +92,7 @@ namespace Libgame.UnitTests.FileSystem
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
-            Navigator navigator = new Navigator(nodeParent);
+            var navigator = new Navigator<Node>(nodeParent);
             Assert.AreSame(nodeChild, navigator.SearchFile("/Parent/Child"));
         }
 
@@ -105,7 +105,7 @@ namespace Libgame.UnitTests.FileSystem
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
-            Navigator navigator = new Navigator(nodeParent);
+            var navigator = new Navigator<Node>(nodeParent);
             Assert.AreSame(nodeSubChild, navigator.SearchFile("/Parent/Child/SubChild"));
         }
 
@@ -116,7 +116,7 @@ namespace Libgame.UnitTests.FileSystem
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
-            Navigator navigator = new Navigator(nodeParent);
+            var navigator = new Navigator<Node>(nodeParent);
             Assert.IsNull(navigator.SearchFile("/Parent/Child2"));
         }
 
@@ -124,7 +124,7 @@ namespace Libgame.UnitTests.FileSystem
         public void IterateNoChildren()
         {
             Node node = new Node("MyTest");
-            Navigator navigator = new Navigator(node);
+            var navigator = new Navigator<Node>(node);
             Assert.IsEmpty(navigator.IterateNodes());
         }
 
@@ -137,7 +137,7 @@ namespace Libgame.UnitTests.FileSystem
             node.Add(child1);
             node.Add(child2);
 
-            Navigator navigator = new Navigator(node);
+            var navigator = new Navigator<Node>(node);
             var iteration = navigator.IterateNodes().ToList();
             Assert.AreEqual(2, iteration.Count);
             Assert.AreSame(child1, iteration[0]);
@@ -155,7 +155,7 @@ namespace Libgame.UnitTests.FileSystem
             node.Add(child1);
             node.Add(child2);
 
-            Navigator navigator = new Navigator(node);
+            var navigator = new Navigator<Node>(node);
             var iteration = navigator.IterateNodes().ToList();
             Assert.AreEqual(3, iteration.Count);
             Assert.AreSame(child1, iteration[0]);

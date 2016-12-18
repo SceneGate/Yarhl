@@ -26,7 +26,7 @@ namespace Libgame.FileSystem
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavegableNode, IDisposable
+    public class Node : NavegableNode<Node>, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.

@@ -33,14 +33,14 @@ namespace Libgame
     {
         private static FileManager Instance;
 
-        private FileManager(NavegableNode root, FileInfoCollection infoCollection)
+        private FileManager(Node root, FileInfoCollection infoCollection)
         {
             this.Root = root;
             this.InfoCollection = infoCollection;
             InitializeAddins();
         }
             
-        public NavegableNode Root {
+        public Node Root {
             get;
             private set;
         }
@@ -66,7 +66,7 @@ namespace Libgame
             }
         }
 
-        public static void Initialize(NavegableNode rootDir, FileInfoCollection infoCollection)
+        public static void Initialize(Node rootDir, FileInfoCollection infoCollection)
         {
             Instance = new FileManager(rootDir, infoCollection);
         }
@@ -129,7 +129,7 @@ namespace Libgame
             }
 
             // We should be able to get the file now
-            NavegableNode searchFile = new Navigator(Root).SearchFile(gameFilePath);
+            Node searchFile = new Navigator<Node>(Root).SearchFile(gameFilePath);
             Node file =  searchFile as Node;
             // If we're trying to get the dependency and found a folder, pass its the "dependency"
             if (file == null && (searchFile as Node).IsContainer) {
@@ -173,7 +173,7 @@ namespace Libgame
             }
 
             // Get file
-            NavegableNode searchFile = new Navigator(Root).SearchFile(gameFilePath);
+            Node searchFile = new Navigator<Node>(Root).SearchFile(gameFilePath);
             Node file =  searchFile as Node;
             if (file == null) {
                 throw new Exception("File not found.");
