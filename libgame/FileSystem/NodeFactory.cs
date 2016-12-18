@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame.FileSystem
 {
+    using System;
     using System.IO;
     using FileFormat;
     using IO;
@@ -62,7 +63,16 @@ namespace Libgame.FileSystem
                 filePath,
                 FileMode.Open,
                 FileAccess.ReadWrite);
-            return new Node(nodeName, new BinaryFormat(stream));
+
+            Node node;
+            try {
+                node = new Node(nodeName, new BinaryFormat(stream));
+            } catch (Exception ex) {
+                stream.Dispose();
+                throw ex;
+            }
+
+            return node;
         }
 
         /// <summary>
