@@ -29,13 +29,25 @@ namespace Libgame.FileSystem
     using System.Collections.ObjectModel;
     using System.Linq;
 
+    /// <summary>
+    /// Read-only collection of NavegableNodes.
+    /// </summary>
     public class NavegableNodeCollection : ReadOnlyCollection<NavegableNode>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NavegableNodeCollection"/> class.
+        /// </summary>
+        /// <param name="list">Original list of nodes.</param>
         public NavegableNodeCollection(IList<NavegableNode> list)
             : base(list)
         {
         }
 
+        /// <summary>
+        /// Gets the <see cref="NavegableNodeCollection"/> with the specified name.
+        /// </summary>
+        /// <param name="name">Node name.</param>
+        /// <returns>The node with the same name or null if not found.</returns>
         public NavegableNode this[string name] {
             get { return this.FirstOrDefault((node) => node.Name == name); }
         }

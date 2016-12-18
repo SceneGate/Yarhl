@@ -28,13 +28,28 @@ namespace Libgame.FileSystem
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// FileSystem navigator.
+    /// Search for nodes and iterate over them.
+    /// </summary>
     public class Navigator
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Navigator"/> class.
+        /// </summary>
+        /// <param name="node">Initial node.</param>
         public Navigator(NavegableNode node)
         {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
             Node = node;
         }
 
+        /// <summary>
+        /// Gets the current node.
+        /// </summary>
+        /// <value>The node.</value>
         public NavegableNode Node {
             get;
             private set;
@@ -47,6 +62,9 @@ namespace Libgame.FileSystem
         /// <returns>Node or null if not found.</returns>
         public NavegableNode SearchFile(string path)
         {
+            if (string.IsNullOrEmpty(path))
+                throw new ArgumentNullException(nameof(path));
+
             if (!path.StartsWith(Node.Path, StringComparison.InvariantCulture))
                 return null;
 
@@ -65,10 +83,23 @@ namespace Libgame.FileSystem
             return null;
         }
 
-        public IEnumerable<NavegableNode> GetFilesRecursive()
+        /// <summary>
+        /// Iterates the nodes recursively.
+        /// </summary>
+        /// <returns>The nodes.</returns>
+        public IEnumerable<NavegableNode> IterateNodes()
         {
-            foreach (NavegableNode child in Node.Children)
-                yield return child;
+            var queue = new Queue<NavegableNode>();
+            queue.Enqueue(Node);
+
+            while (queue.Count > 0) {
+                NavegableNode node = queue.Dequeue();
+
+                foreach (var child in node.Children) {
+                    queue.Enqueue(child);
+                    yield return child;
+                }
+            }
         }
     }
 }

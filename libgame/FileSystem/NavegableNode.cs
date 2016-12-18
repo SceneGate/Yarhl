@@ -35,6 +35,12 @@ namespace Libgame.FileSystem
             if (name == null)
                 throw new ArgumentNullException(nameof(name));
 
+            if (name.Contains(PathSeparator)) {
+                throw new ArgumentException(
+                    "Name contains invalid characters",
+                    nameof(name));
+            }
+
             Name = name;
             Tags = new Dictionary<string, dynamic>();
             children = new List<NavegableNode>();

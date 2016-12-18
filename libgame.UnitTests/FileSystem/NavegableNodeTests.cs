@@ -28,7 +28,6 @@ namespace Libgame.UnitTests.FileSystem
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Mono.Addins;
     using Moq;
     using NUnit.Framework;
     using Libgame.FileSystem;
@@ -36,22 +35,6 @@ namespace Libgame.UnitTests.FileSystem
     [TestFixture]
     public class NavegableNodeTests
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(".addins");
-                AddinManager.Registry.Update();
-            }
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            if (AddinManager.IsInitialized)
-                AddinManager.Shutdown();
-        }
-
         [Test]
         public void DefaultValues()
         {
@@ -70,6 +53,17 @@ namespace Libgame.UnitTests.FileSystem
             NavegableNode node;
             var ex = Assert.Throws<TargetInvocationException>(() => node = mock.Object);
             Assert.IsInstanceOf<ArgumentNullException>(ex.InnerException);
+        }
+
+        [Test]
+        public void ExceptionIfInvalidCharacters()
+        {
+            var mock = new Mock<NavegableNode>("MyT/est");
+            NavegableNode node;
+            var ex = Assert.Throws<TargetInvocationException>(() => node = mock.Object);
+            Assert.IsInstanceOf<ArgumentException>(ex.InnerException);
+            Assert.AreEqual("Name contains invalid characters\nParameter name: name",
+                            ex.InnerException.Message);
         }
 
         [Test]

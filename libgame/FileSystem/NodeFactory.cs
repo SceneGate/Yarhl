@@ -24,6 +24,9 @@ namespace Libgame.FileSystem
     using FileFormat;
     using IO;
 
+    /// <summary>
+    /// Node factory.
+    /// </summary>
     public static class NodeFactory
     {
         /// <summary>
@@ -36,20 +39,54 @@ namespace Libgame.FileSystem
             return new Node(name, new NodeContainerFormat());
         }
 
-        public static Node FromPath(string dirPath)
+        /// <summary>
+        /// Creates a Node from a file.
+        /// </summary>
+        /// <returns>The node.</returns>
+        /// <param name="filePath">File path.</param>
+        public static Node FromFile(string filePath)
         {
-            return FromPath(dirPath, Path.GetDirectoryName(dirPath));
+            string filename = Path.GetFileName(filePath);
+            return FromFile(filePath, filename);
         }
 
-        public static Node FromPath(string dirPath, string dirName)
+        /// <summary>
+        /// Creates a Node from a file.
+        /// </summary>
+        /// <returns>The node.</returns>
+        /// <param name="filePath">File path.</param>
+        /// <param name="nodeName">Node name.</param>
+        public static Node FromFile(string filePath, string nodeName)
         {
-            Node folder = CreateContainer(dirName);
+            DataStream stream = new DataStream(
+                filePath,
+                FileMode.Open,
+                FileAccess.ReadWrite);
+            return new Node(nodeName, new BinaryFormat(stream));
+        }
 
-            foreach (string filePath in Directory.GetFiles(dirPath)) {
-                string filename = Path.GetFileName(filePath);
-                DataStream stream = new DataStream(filePath, FileMode.Open, FileAccess.ReadWrite);
-                folder.Add(new Node(filename, new BinaryFormat(stream)));
-            }
+        /// <summary>
+        /// Creates a Node containing all the files from the directory.
+        /// </summary>
+        /// <returns>The container node.</returns>
+        /// <param name="dirPath">Directory path.</param>
+        public static Node FromDirectory(string dirPath)
+        {
+            string dirName = Path.GetFileName(dirPath);
+            return FromDirectory(dirPath, dirName);
+        }
+
+        /// <summary>
+        /// Creates a Node containing all the files from the directory.
+        /// </summary>
+        /// <returns>The container node.</returns>
+        /// <param name="dirPath">Directory path.</param>
+        /// <param name="nodeName">Node name.</param>
+        public static Node FromDirectory(string dirPath, string nodeName)
+        {
+            Node folder = CreateContainer(nodeName);
+            foreach (string filePath in Directory.GetFiles(dirPath))
+                folder.Add(FromFile(filePath));
 
             return folder;
         }
