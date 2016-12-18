@@ -39,6 +39,12 @@
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.5.29\lib\net45\Moq.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -51,7 +57,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileFormat\ConverterTests.cs" />
     <Compile Include="FileFormat\Converters.cs" />
-    <Compile Include="FileSystem\GameFileTests.cs" />
+    <Compile Include="FileSystem\NodeTests.cs" />
+    <Compile Include="FileSystem\NavegableNodeTests.cs" />
+    <Compile Include="FileSystem\NavegableNodeCollectionTests.cs" />
+    <Compile Include="FileSystem\NavigatorTests.cs" />
+    <Compile Include="FileSystem\NodeFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

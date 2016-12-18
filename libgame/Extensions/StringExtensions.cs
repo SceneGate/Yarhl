@@ -24,6 +24,8 @@ using System.Text;
 
 namespace Libgame
 {
+    using FileSystem;
+
     public static class StringExtensions
     {
         /// <summary>
@@ -35,7 +37,7 @@ namespace Libgame
 
         public static string GetPreviousPath(this string path)
         {
-            return path.Substring(0, path.LastIndexOf(FileContainer.PathSeparator));
+            return path.Substring(0, path.LastIndexOf(NodeSystem.PathSeparator));
         }
 
         public static string ApplyTable(this string s, string tableName, bool originalToNew)

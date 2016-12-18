@@ -6,5 +6,14 @@ M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
-M: Libgame.FileSystem.GameFile Libgame.FileSystem.GameFile::TransformTo(System.Boolean)
-M: Libgame.FileSystem.GameFile Libgame.FileSystem.GameFile::TransformWith(System.Object,System.Boolean)
+M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,System.Object)
+
+R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
+# It looks like a bug in Gendarme
+# It makes no sense for a ReadOnlyCollection that furthermore is strongly type because of the generic
+T: Libgame.FileSystem.NavegableNodeCollection`1
+
+R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
+# It's a factory, we are creating the objects
+M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromFile(System.String,System.String)
+M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromDirectory(System.String,System.String)

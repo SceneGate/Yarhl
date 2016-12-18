@@ -65,7 +65,8 @@ namespace Libgame.UnitTests.FileFormat
             Assert.IsFalse(
                 converterTypes.Any(t =>
                     t.GetInterfaces().All(
-                        i => i.GetGenericTypeDefinition() != (typeof(IConverter<,>)))));
+                        i => i.IsGenericType &&
+                             i.GetGenericTypeDefinition() != (typeof(IConverter<,>)))));
         }
 
         [Test]
