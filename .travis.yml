@@ -2,6 +2,15 @@
 language: csharp
 solution: libgame.sln
 
+matrix:
+  include:
+    - os: linux
+      mono: latest
+      dotnet: 1.0.0-preview2-003121
+    - os: osx
+      mono: latest
+      dotnet: 1.0.0-preview2-003121
+
 install:
     - nuget restore libgame.sln
     - nuget install NUnit.Runners -OutputDirectory testrunner
