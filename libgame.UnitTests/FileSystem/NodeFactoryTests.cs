@@ -133,6 +133,10 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile2)));
             Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile3)));
 
+            ((Node)node.Children[0]).Dispose();
+            ((Node)node.Children[1]).Dispose();
+            ((Node)node.Children[2]).Dispose();
+            node.Dispose();
             Directory.Delete(tempDir, true);
         }
 

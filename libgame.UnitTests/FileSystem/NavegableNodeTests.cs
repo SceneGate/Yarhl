@@ -62,7 +62,8 @@ namespace Libgame.UnitTests.FileSystem
             NavegableNode node;
             var ex = Assert.Throws<TargetInvocationException>(() => node = mock.Object);
             Assert.IsInstanceOf<ArgumentException>(ex.InnerException);
-            Assert.AreEqual("Name contains invalid characters\nParameter name: name",
+            Assert.AreEqual("Name contains invalid characters" + Environment.NewLine +
+                            "Parameter name: name",
                             ex.InnerException.Message);
         }
 
