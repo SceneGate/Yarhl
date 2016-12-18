@@ -67,9 +67,9 @@ namespace Libgame.FileSystem
             Node node;
             try {
                 node = new Node(nodeName, new BinaryFormat(stream));
-            } catch (Exception ex) {
+            } catch {
                 stream.Dispose();
-                throw ex;
+                throw;
             }
 
             return node;
