@@ -54,7 +54,6 @@
     <Compile Include="Utils\ConsoleCount.cs" />
     <Compile Include="FileInfo.cs" />
     <Compile Include="FileInfoCollection.cs" />
-    <Compile Include="GameFolderFactory.cs" />
     <Compile Include="FileFormat\Format.cs" />
     <Compile Include="FileFormat\FormatValidation.cs" />
     <Compile Include="FileFormat\IConverter.cs" />
@@ -66,6 +65,7 @@
     <Compile Include="FileSystem\Navigator.cs" />
     <Compile Include="FileSystem\NavegableNodeCollection.cs" />
     <Compile Include="FileFormat\NodeContainerFormat.cs" />
+    <Compile Include="FileSystem\NodeFactory.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

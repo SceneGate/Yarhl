@@ -1,10 +1,10 @@
 ﻿//
-//  GameFolderFactory.cs
+//  NodeFactory.cs
 //
 //  Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
 //
-//  Copyright (c) 2014 Benito Palacios Sánchez
+//  Copyright (c) 2016 Benito Palacios Sánchez
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,34 +18,40 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.IO;
-using Libgame;
-using Libgame.IO;
-using Libgame.FileFormat;
-using Libgame.FileSystem;
-
-namespace Libgame
+namespace Libgame.FileSystem
 {
-    public static class GameFolderFactory
+    using System.IO;
+    using FileFormat;
+    using IO;
+
+    public static class NodeFactory
     {
-        public static Node FromPath(string dir)
+        /// <summary>
+        /// Creates a new <see cref="Node"/> with a new NodeContainer format.
+        /// </summary>
+        /// <returns>The new node.</returns>
+        /// <param name="name">Node name.</param>
+        public static Node CreateContainer(string name)
         {
-            return FromPath(dir, Path.GetDirectoryName(dir));
+            return new Node(name, new NodeContainerFormat());
         }
 
-        public static Node FromPath(string dir, string dirName)
+        public static Node FromPath(string dirPath)
         {
-            Node folder = Node.CreateContainer(dirName);
+            return FromPath(dirPath, Path.GetDirectoryName(dirPath));
+        }
 
-            foreach (string filePath in Directory.GetFiles(dir)) {
+        public static Node FromPath(string dirPath, string dirName)
+        {
+            Node folder = CreateContainer(dirName);
+
+            foreach (string filePath in Directory.GetFiles(dirPath)) {
                 string filename = Path.GetFileName(filePath);
                 DataStream stream = new DataStream(filePath, FileMode.Open, FileAccess.ReadWrite);
-                folder.AddChild(new Node(filename, new BinaryFormat(stream)));
+                folder.Add(new Node(filename, new BinaryFormat(stream)));
             }
 
             return folder;
         }
     }
 }
-

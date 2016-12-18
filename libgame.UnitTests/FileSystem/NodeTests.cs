@@ -210,6 +210,18 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsNull(node.Format);
         }
 
+        [Test]
+        public void DisposeDoesDisposeFormat()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+            Assert.IsFalse(node.Disposed);
+            Assert.IsFalse(dummyFormat.Disposed);
+            node.Dispose();
+            Assert.IsTrue(node.Disposed);
+            Assert.IsTrue(dummyFormat.Disposed);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

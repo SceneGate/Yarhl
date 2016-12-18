@@ -85,16 +85,6 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
-        /// Creates a new <see cref="Node"/> with a new NodeContainer format.
-        /// </summary>
-        /// <returns>The new node.</returns>
-        /// <param name="name">Node name.</param>
-        public static Node CreateContainer(string name)
-        {
-            return new Node(name, new NodeContainerFormat());
-        }
-
-        /// <summary>
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>
@@ -106,6 +96,9 @@ namespace Libgame.FileSystem
         public Node Transform<T>(bool disposeOldFormat = true, dynamic converter = null)
             where T : Format
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
             if (Format == null) {
                 throw new InvalidOperationException(
                     "Cannot transform a node without format");

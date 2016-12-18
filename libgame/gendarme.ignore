@@ -6,5 +6,4 @@ M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
-M: Libgame.FileSystem.GameFile Libgame.FileSystem.GameFile::TransformTo(System.Boolean)
-M: Libgame.FileSystem.GameFile Libgame.FileSystem.GameFile::TransformWith(System.Object,System.Boolean)
+M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,System.Object)

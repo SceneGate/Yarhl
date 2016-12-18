@@ -20,14 +20,21 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Libgame.FileSystem
 {
+    using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Node with navigation features inside a FileSystem.
+    /// </summary>
     public abstract class NavegableNode
     {    
         readonly List<NavegableNode> children;
 
         protected NavegableNode(string name)
         {
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
+
             Name = name;
             Tags = new Dictionary<string, dynamic>();
             children = new List<NavegableNode>();
@@ -38,12 +45,12 @@ namespace Libgame.FileSystem
         /// Gets the path separator.
         /// </summary>
         /// <value>The path separator.</value>
-        public static char PathSeparator {
-            get { return '/'; }
+        public static string PathSeparator {
+            get { return "/"; }
         }
 
         /// <summary>
-        /// Gets the folder name.
+        /// Gets the node name.
         /// </summary>
         public string Name
         {
@@ -56,7 +63,7 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <value>The path.</value>
         public string Path {
-            get { return (Parent?.Path ?? "") + PathSeparator + Name; }
+            get { return (Parent?.Path ?? string.Empty) + PathSeparator + Name; }
         }
 
         /// <summary>
@@ -69,7 +76,7 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
-        /// Gets the list of children nodes.
+        /// Gets a read-only list of children nodes.
         /// </summary>
         /// <value>The list of children.</value>
         public NavegableNodeCollection Children 
@@ -79,7 +86,7 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
-        /// Gets the tags.
+        /// Gets the dictionary of tags.
         /// </summary>
         /// <value>The tags.</value>
         public IDictionary<string, dynamic> Tags {
@@ -91,34 +98,43 @@ namespace Libgame.FileSystem
         /// Add a node.
         /// </summary>
         /// <remarks>
-        /// The parent of the child node is update to match this instance.
+        /// Updates the parent of the child node to match this instance.
         /// If the node already contains a child with the same name it will be replaced.
         /// Otherwise the node is added.
         /// </remarks>
-        /// <param name="child">Node to add.</param>
-        public void AddChild(NavegableNode child)
+        /// <param name="node">Node to add.</param>
+        public void Add(NavegableNode node)
         {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
             // Update the parent of the child
-            child.Parent = this;
+            node.Parent = this;
 
             // If we have already a child with the same, replace it. Otherwise add.
-            int index = children.FindIndex((node) => node.Name == child.Name);
+            int index = children.FindIndex((child) => child.Name == node.Name);
             if (index == -1)
-                children.Add(child);
+                children.Add(node);
             else
-                children[index] = child;
+                children[index] = node;
         }
         
         /// <summary>
         /// Add a list of nodes.
         /// </summary>
-        /// <param name="children">List of nodes to add.</param>
-        public void AddChildren(IEnumerable<NavegableNode> children)
+        /// <param name="nodes">List of nodes to add.</param>
+        public void Add(IEnumerable<NavegableNode> nodes)
         {
-            foreach (NavegableNode child in children)
-                AddChild(child);
+            if (nodes == null)
+                throw new ArgumentNullException(nameof(nodes));
+
+            foreach (NavegableNode node in nodes)
+                Add(node);
         }
 
+        /// <summary>
+        /// Removes all the children from the node.
+        /// </summary>
         public void RemoveChildren()
         {
             children.Clear();
