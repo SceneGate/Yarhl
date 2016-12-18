@@ -5,11 +5,21 @@ solution: libgame.sln
 matrix:
   include:
     - os: linux
+      dist: trusty
       mono: latest
+    - os: linux
+      dist: trusty
       dotnet: 1.0.0-preview2-003121
+      mono: none
+      env: DOTNETCORE=1
     - os: osx
+      osx_image: xcode8
       mono: latest
+    - os: osx
+      osx_image: xcode8
       dotnet: 1.0.0-preview2-003121
+      mono: none
+      env: DOTNETCORE=1
 
 install:
     - nuget restore libgame.sln
