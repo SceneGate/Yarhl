@@ -95,6 +95,18 @@ namespace Libgame.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformTypedChangeFormat()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+
+            node.Transform(typeof(IntFormatTest));
+            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual(3, (node.Format as IntFormatTest).Value);
+        }
+
+        [Test]
         public void TransformWithoutFormatThrowException()
         {
             Node node = new Node("mytest");
@@ -151,6 +163,19 @@ namespace Libgame.UnitTests.FileSystem
             Node node = new Node("mytest", dummyFormat);
 
             node.Transform<IntFormatTest>(converter: converter);
+            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
+        }
+
+        [Test]
+        public void TransformWithAndTypeConverterChangeFormat()
+        {
+            PrivateConverter converter = new PrivateConverter();
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+
+            node.Transform(typeof(IntFormatTest), converter: converter);
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, (node.Format as IntFormatTest).Value);

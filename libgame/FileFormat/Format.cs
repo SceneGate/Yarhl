@@ -76,6 +76,17 @@ namespace Libgame.FileFormat
         }
 
         /// <summary>
+        /// Converts the format to the specified type.
+        /// </summary>
+        /// <returns>The new format.</returns>
+        /// <param name="source">Format to convert.</param>
+        /// <param name="dstType">The destination format type.</param>
+        public static dynamic ConvertTo(dynamic source, Type dstType)
+        {
+            return Convert(source.GetType(), source, dstType);
+        }
+
+        /// <summary>
         /// Converts the format into the specified type.
         /// </summary>
         /// <returns>The new format.</returns>
@@ -143,10 +154,10 @@ namespace Libgame.FileFormat
         public static dynamic ConvertWith(dynamic src, Type dstType, dynamic converter)
         {
             Type[] converterInterfaces = converter.GetType().GetInterfaces();
-            bool isConverter = converterInterfaces.Any(i =>
+            bool implementConverter = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition() == typeof(IConverter<,>));
-            if (!isConverter)
+            if (!implementConverter)
                 throw new ArgumentException(
                     "Converter doesn't implement IConverter<,>",
                     nameof(converter));
@@ -172,6 +183,16 @@ namespace Libgame.FileFormat
         public T ConvertTo<T>()
         {
             return ConvertTo<T>(this);
+        }
+
+        /// <summary>
+        /// Converts into the specified type.
+        /// </summary>
+        /// <returns>The new format.</returns>
+        /// <param name="dstType">The type of the destination format.</param>
+        public dynamic ConvertTo(Type dstType)
+        {
+            return ConvertTo(this, dstType);
         }
 
         /// <summary>

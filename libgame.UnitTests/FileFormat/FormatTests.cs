@@ -127,9 +127,15 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
-        public void ConvertTo()
+        public void ConvertToGeneric()
         {
             Assert.AreEqual(Format.ConvertTo<int>("3"), 3);
+        }
+
+        [Test]
+        public void ConvertTo()
+        {
+            Assert.AreEqual(Format.ConvertTo("3", typeof(int)), 3);
         }
 
         [Test]
@@ -183,10 +189,17 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
-        public void ClassConvertTo()
+        public void ClassConvertToGeneric()
         {
             var format = new StringFormatTest("3");
             Assert.AreEqual(format.ConvertTo<int>(), 3);
+        }
+
+        [Test]
+        public void ClassConvertTo()
+        {
+            var format = new StringFormatTest("3");
+            Assert.AreEqual(format.ConvertTo(typeof(int)), 3);
         }
 
         [Test]

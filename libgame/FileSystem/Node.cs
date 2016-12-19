@@ -88,13 +88,12 @@ namespace Libgame.FileSystem
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>
+        /// <param name="dst">Format to convert.</param>
         /// <param name="disposeOldFormat">
         /// If set to <c>true</c> dispose the previous format.
         /// </param>
         /// <param name="converter">The format converter to use.</param>
-        /// <typeparam name="T">The new node format.</typeparam>
-        public Node Transform<T>(bool disposeOldFormat = true, dynamic converter = null)
-            where T : Format
+        public Node Transform(Type dst, bool disposeOldFormat = true, dynamic converter = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -106,15 +105,30 @@ namespace Libgame.FileSystem
 
             Format newFormat;
             if (converter == null)
-                newFormat = Format.ConvertTo<T>();
+                newFormat = Format.ConvertTo(dst);
             else
-                newFormat = Format.ConvertWith<T>(converter);
+                newFormat = FileFormat.Format.ConvertWith(Format, dst, converter);
 
             if (disposeOldFormat)
                 Format.Dispose();
 
             Format = newFormat;
             return this;
+        }
+
+        /// <summary>
+        /// Transforms the node format to the specified format.
+        /// </summary>
+        /// <returns>This node.</returns>
+        /// <param name="disposeOldFormat">
+        /// If set to <c>true</c> dispose the previous format.
+        /// </param>
+        /// <param name="converter">The format converter to use.</param>
+        /// <typeparam name="T">The new node format.</typeparam>
+        public Node Transform<T>(bool disposeOldFormat = true, dynamic converter = null)
+            where T : Format
+        {
+            return Transform(typeof(T), disposeOldFormat, converter);
         }
 
         /// <summary>
