@@ -23,28 +23,61 @@ namespace Libgame.FileFormat
     using IO;
     using Mono.Addins;
 
+    /// <summary>
+    /// Binary format.
+    /// </summary>
     [Extension]
     public class BinaryFormat : Format
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
+        /// </summary>
+        /// <param name="stream">Binary stream.</param>
         public BinaryFormat(DataStream stream)
         {
             Stream = stream;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
+        /// </summary>
+        /// <param name="filePath">The file path.</param>
+        public BinaryFormat(string filePath)
+        {
+            Stream = new DataStream(
+                filePath,
+                System.IO.FileMode.OpenOrCreate,
+                System.IO.FileAccess.ReadWrite);
+        }
+
+        /// <summary>
+        /// Gets the format name.
+        /// </summary>
+        /// <value>The format name.</value>
         public override string Name {
             get { return "libgame.binary"; }
         }
 
+        /// <summary>
+        /// Gets the stream.
+        /// </summary>
+        /// <value>The stream.</value>
         public DataStream Stream {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Releases all resource used by the <see cref="BinaryFormat"/>
+        /// object.
+        /// </summary>
+        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
+        /// managed resources also.</param>
         protected override void Dispose(bool freeManagedResourcesAlso)
         {
+            base.Dispose(freeManagedResourcesAlso);
             if (freeManagedResourcesAlso)
                 Stream.Dispose();
         }
-
     }
 }

@@ -35,3 +35,4 @@ using Mono.Addins;
 [assembly: AssemblyCulture("")]
 [assembly: AssemblyVersion("1.0.*")]
 [assembly: AddinRoot("libgame", "1.0")]
+[assembly: InternalsVisibleTo("libgame.UnitTests")]
