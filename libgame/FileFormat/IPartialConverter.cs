@@ -25,8 +25,10 @@ namespace Libgame.FileFormat
     /// <summary>
     /// Partial format converter interface.
     /// </summary>
+    /// <typeparam name="TSrc">Source format.</typeparam>
+    /// <typeparam name="TDst">Destination format.</typeparam>
     [TypeExtensionPoint]
-    public interface IPartialConverter<TSrc, TDst>: IConverter<TSrc, TDst>
+    public interface IPartialConverter<TSrc, TDst> : IConverter<TSrc, TDst>
     {
         /// <summary>
         /// Sets the destination format to partially fill.

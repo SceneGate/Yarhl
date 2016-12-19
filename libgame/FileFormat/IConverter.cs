@@ -25,6 +25,8 @@ namespace Libgame.FileFormat
     /// <summary>
     /// Format converter interface.
     /// </summary>
+    /// <typeparam name="TSrc">Source format.</typeparam>
+    /// <typeparam name="TDst">Destination format.</typeparam>
     [TypeExtensionPoint]
     public interface IConverter<TSrc, TDst>
     {
