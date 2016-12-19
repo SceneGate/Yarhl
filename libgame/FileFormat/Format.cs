@@ -182,6 +182,9 @@ namespace Libgame.FileFormat
         /// <typeparam name="T">The type of the destination format.</typeparam>
         public T ConvertTo<T>()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Format));
+
             return ConvertTo<T>(this);
         }
 
@@ -192,6 +195,9 @@ namespace Libgame.FileFormat
         /// <param name="dstType">The type of the destination format.</param>
         public dynamic ConvertTo(Type dstType)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Format));
+
             return ConvertTo(this, dstType);
         }
 
@@ -203,6 +209,9 @@ namespace Libgame.FileFormat
         /// <typeparam name="T">The type of the destination format.</typeparam>
         public T ConvertWith<T>(dynamic converter)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Format));
+
             return ConvertWith<T>(this, converter);
         }
 

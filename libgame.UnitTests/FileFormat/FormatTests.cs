@@ -196,10 +196,26 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
+        public void ClassConvertToGenericThrowExceptionIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => format.ConvertTo<int>());
+        }
+
+        [Test]
         public void ClassConvertTo()
         {
             var format = new StringFormatTest("3");
             Assert.AreEqual(format.ConvertTo(typeof(int)), 3);
+        }
+
+        [Test]
+        public void ClassConvertToThrowExceptionIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => format.ConvertTo(typeof(int)));
         }
 
         [Test]
@@ -208,6 +224,25 @@ namespace Libgame.UnitTests.FileFormat
             var format = new StringFormatTest("3");
             var converter = new FormatTestDuplicatedConverter2();
             Assert.AreEqual(format.ConvertWith<short>(converter), 3);
+        }
+
+        [Test]
+        public void ClassConvertWithThrowsExceptionIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() =>
+                format.ConvertWith<short>(converter));
+        }
+
+        [Test]
+        public void DisposeChangesDisposed()
+        {
+            var format = new StringFormatTest("3");
+            Assert.IsFalse(format.Disposed);
+            format.Dispose();
+            Assert.IsTrue(format.Disposed);
         }
     }
 
