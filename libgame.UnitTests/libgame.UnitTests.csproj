@@ -62,6 +62,8 @@
     <Compile Include="FileSystem\NavegableNodeCollectionTests.cs" />
     <Compile Include="FileSystem\NavigatorTests.cs" />
     <Compile Include="FileSystem\NodeFactoryTests.cs" />
+    <Compile Include="FileFormat\BinaryFormatTests.cs" />
+    <Compile Include="FileFormat\BaseGeneralTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">
