@@ -58,6 +58,7 @@
     <Compile Include="FileSystem\NodeFactoryTests.cs" />
     <Compile Include="FileFormat\BinaryFormatTests.cs" />
     <Compile Include="FileFormat\BaseGeneralTests.cs" />
+    <Compile Include="FileFormat\NodeContainerFormatTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">
