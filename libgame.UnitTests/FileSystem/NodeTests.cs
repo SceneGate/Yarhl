@@ -297,6 +297,15 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsTrue(node.IsContainer);
         }
 
+        [Test]
+        public void SetFormatThrowExceptionIfDisposed()
+        {
+            Node node = new Node("MyTest");
+            node.Dispose();
+            StringFormatTest format = new StringFormatTest("3");
+            Assert.Throws<ObjectDisposedException>(() => node.Format = format);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

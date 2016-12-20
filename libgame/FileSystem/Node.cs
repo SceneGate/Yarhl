@@ -43,11 +43,11 @@ namespace Libgame.FileSystem
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
         /// <param name="name">Node name.</param>
-        /// <param name="format">Node format.</param>
-        public Node(string name, Format format)
+        /// <param name="initialFormat">Node format.</param>
+        public Node(string name, Format initialFormat)
             : this(name)
         {
-            Format = format;
+            Format = initialFormat;
         }
 
         /// <summary>
@@ -74,8 +74,14 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <value>The current format.</value>
         public Format Format {
-            get { return format; }
+            get {
+                return format;
+            }
+
             set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(Node));
+
                 // If it was a container, clean children
                 if (IsContainer)
                     RemoveChildren();
@@ -168,7 +174,7 @@ namespace Libgame.FileSystem
             Disposed = true;
 
             if (freeManagedResourcesAlso)
-                Format?.Dispose();
+                format?.Dispose();
         }
 
         void AddContainerChildren()
