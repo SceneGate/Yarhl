@@ -247,6 +247,65 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsTrue(dummyFormat.Disposed);
         }
 
+        [Test]
+        public void SetContainerFormatAddChildren()
+        {
+            Node node = new Node("MyTest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Add(new Node("Child"));
+            node.Format = format;
+
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.AreSame(format.Children[0], node.Children[0]);
+        }
+
+        [Test]
+        public void SetFromContainerToDifferentCleanChildren()
+        {
+            Node node = new Node("mytest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Add(new Node("Child"));
+            node.Format = format;
+            Assert.IsNotEmpty(node.Children);
+
+            StringFormatTest newFormat = new StringFormatTest("3");
+            node.Format = newFormat;
+            Assert.IsEmpty(node.Children);
+        }
+
+        [Test]
+        public void IsContainerIfFormatNodeContainer()
+        {
+            NodeContainerFormat format = new NodeContainerFormat();
+            Node node = new Node("NodeTest", format);
+            Assert.IsTrue(node.IsContainer);
+        }
+
+        [Test]
+        public void IsNotContainerForDifferentFormat()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            Assert.IsFalse(node.IsContainer);
+        }
+
+        [Test]
+        public void IsContainerIfFormatDerivedFromNodeContainer()
+        {
+            MyContainer format = new MyContainer();
+            Node node = new Node("MyTest", format);
+            Assert.IsTrue(node.IsContainer);
+        }
+
+        [Test]
+        public void SetFormatThrowExceptionIfDisposed()
+        {
+            Node node = new Node("MyTest");
+            node.Dispose();
+            StringFormatTest format = new StringFormatTest("3");
+            Assert.Throws<ObjectDisposedException>(() => node.Format = format);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>
@@ -260,6 +319,10 @@ namespace Libgame.UnitTests.FileSystem
             {
                 return new StringFormatTest(test.Value.ToString());
             }
+        }
+
+        class MyContainer : NodeContainerFormat
+        {
         }
     }
 }

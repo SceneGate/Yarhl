@@ -28,6 +28,8 @@ namespace Libgame.FileSystem
     /// </summary>
     public class Node : NavegableNode<Node>, IDisposable
     {
+        Format format;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
@@ -41,11 +43,11 @@ namespace Libgame.FileSystem
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
         /// <param name="name">Node name.</param>
-        /// <param name="format">Node format.</param>
-        public Node(string name, Format format)
+        /// <param name="initialFormat">Node format.</param>
+        public Node(string name, Format initialFormat)
             : this(name)
         {
-            Format = format;
+            Format = initialFormat;
         }
 
         /// <summary>
@@ -72,8 +74,24 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <value>The current format.</value>
         public Format Format {
-            get;
-            set;
+            get {
+                return format;
+            }
+
+            set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(Node));
+
+                // If it was a container, clean children
+                if (IsContainer)
+                    RemoveChildren();
+
+                format = value;
+
+                // If now it's a container, add its children
+                if (IsContainer)
+                    AddContainerChildren();
+            }
         }
 
         /// <summary>
@@ -113,6 +131,7 @@ namespace Libgame.FileSystem
                 Format.Dispose();
 
             Format = newFormat;
+
             return this;
         }
 
@@ -155,7 +174,13 @@ namespace Libgame.FileSystem
             Disposed = true;
 
             if (freeManagedResourcesAlso)
-                Format?.Dispose();
+                format?.Dispose();
+        }
+
+        void AddContainerChildren()
+        {
+            RemoveChildren();
+            Add((Format as NodeContainerFormat).Children);
         }
     }
 }
