@@ -273,6 +273,30 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsEmpty(node.Children);
         }
 
+        [Test]
+        public void IsContainerIfFormatNodeContainer()
+        {
+            NodeContainerFormat format = new NodeContainerFormat();
+            Node node = new Node("NodeTest", format);
+            Assert.IsTrue(node.IsContainer);
+        }
+
+        [Test]
+        public void IsNotContainerForDifferentFormat()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            Assert.IsFalse(node.IsContainer);
+        }
+
+        [Test]
+        public void IsContainerIfFormatDerivedFromNodeContainer()
+        {
+            MyContainer format = new MyContainer();
+            Node node = new Node("MyTest", format);
+            Assert.IsTrue(node.IsContainer);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>
@@ -286,6 +310,10 @@ namespace Libgame.UnitTests.FileSystem
             {
                 return new StringFormatTest(test.Value.ToString());
             }
+        }
+
+        class MyContainer : NodeContainerFormat
+        {
         }
     }
 }
