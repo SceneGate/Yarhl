@@ -247,6 +247,32 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsTrue(dummyFormat.Disposed);
         }
 
+        [Test]
+        public void SetContainerFormatAddChildren()
+        {
+            Node node = new Node("MyTest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Add(new Node("Child"));
+            node.Format = format;
+
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.AreSame(format.Children[0], node.Children[0]);
+        }
+
+        [Test]
+        public void SetFromContainerToDifferentCleanChildren()
+        {
+            Node node = new Node("mytest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Add(new Node("Child"));
+            node.Format = format;
+            Assert.IsNotEmpty(node.Children);
+
+            StringFormatTest newFormat = new StringFormatTest("3");
+            node.Format = newFormat;
+            Assert.IsEmpty(node.Children);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

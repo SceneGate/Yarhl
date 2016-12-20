@@ -28,6 +28,8 @@ namespace Libgame.FileSystem
     /// </summary>
     public class Node : NavegableNode<Node>, IDisposable
     {
+        Format format;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
         /// </summary>
@@ -72,8 +74,18 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <value>The current format.</value>
         public Format Format {
-            get;
-            set;
+            get { return format; }
+            set {
+                // If it was a container, clean children
+                if (IsContainer)
+                    RemoveChildren();
+
+                format = value;
+
+                // If now it's a container, add its children
+                if (IsContainer)
+                    AddContainerChildren();
+            }
         }
 
         /// <summary>
@@ -113,6 +125,7 @@ namespace Libgame.FileSystem
                 Format.Dispose();
 
             Format = newFormat;
+
             return this;
         }
 
@@ -156,6 +169,12 @@ namespace Libgame.FileSystem
 
             if (freeManagedResourcesAlso)
                 Format?.Dispose();
+        }
+
+        void AddContainerChildren()
+        {
+            RemoveChildren();
+            Add((Format as NodeContainerFormat).Children);
         }
     }
 }
