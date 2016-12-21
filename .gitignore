@@ -2,7 +2,9 @@ bin/
 obj/
 libgame.userprefs
 packages/
+nuget.exe
 
+TestResult.xml
 gendarme_report.html
 StyleCopViolations.xml
 StyleCop.Cache

@@ -27,7 +27,7 @@ Now, you can either open the solution with *MonoDevelop* or compile from the ter
 ``` shell
 # Restore NuGet packages
 wget http://nuget.org/nuget.exe
-mono nuget.exe libgame.sln
+mono nuget.exe restore libgame.sln
 
 # Compile
 xbuild libgame.sln
