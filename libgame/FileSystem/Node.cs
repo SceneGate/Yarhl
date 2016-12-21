@@ -162,6 +162,24 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
+        /// Transform the node format to another format with a converter of that type.
+        /// </summary>
+        /// <returns>This node.</returns>
+        /// <param name="disposeOldFormat">
+        /// If set to <c>true</c> dispose the previous format.
+        /// </param>
+        /// <typeparam name="TSrc">The type of the current format.</typeparam>
+        /// <typeparam name="TDst">The type of the new format.</typeparam>
+        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
+        public Node Transform<TSrc, TDst, TConv>(bool disposeOldFormat = true)
+            where TSrc : Format
+            where TDst : Format
+            where TConv : IConverter<TSrc, TDst>, new()
+        {
+            return Transform<TDst>(disposeOldFormat, new TConv());
+        }
+
+        /// <summary>
         /// Releases all resource used by the <see cref="Node"/>
         /// object.
         /// </summary>

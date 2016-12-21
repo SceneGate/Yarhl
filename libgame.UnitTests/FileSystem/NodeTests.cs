@@ -322,6 +322,18 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsNull(node.GetFormatAs<IntFormatTest>());
         }
 
+        [Test]
+        public void TransformWithGenericConverter()
+        {
+            PrivateConverter converter = new PrivateConverter();
+            Format dummyFormat = new IntFormatTest(3);
+            Node node = new Node("mytest", dummyFormat);
+
+            var result = node.Transform<IntFormatTest, StringFormatTest, PrivateConverter>();
+            Assert.IsInstanceOf<StringFormatTest>(node.Format);
+            Assert.AreSame(node, result);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>
