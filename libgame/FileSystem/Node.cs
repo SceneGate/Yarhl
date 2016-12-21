@@ -103,6 +103,17 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
+        /// Gets the format as the specified type.
+        /// </summary>
+        /// <returns>The format casted to the type or null if not possible.</returns>
+        /// <typeparam name="T">The format type.</typeparam>
+        public T GetFormatAs<T>()
+            where T : Format
+        {
+            return Format as T;
+        }
+
+        /// <summary>
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>

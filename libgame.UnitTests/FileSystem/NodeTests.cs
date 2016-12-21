@@ -306,6 +306,22 @@ namespace Libgame.UnitTests.FileSystem
             Assert.Throws<ObjectDisposedException>(() => node.Format = format);
         }
 
+        [Test]
+        public void GetFormatAs()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            Assert.AreSame(node.Format, node.GetFormatAs<StringFormatTest>());
+        }
+
+        [Test]
+        public void GetFormatAsReturnNullIfNoCastingPossible()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            Assert.IsNull(node.GetFormatAs<IntFormatTest>());
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>
