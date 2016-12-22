@@ -325,7 +325,6 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void TransformWithGenericConverter()
         {
-            PrivateConverter converter = new PrivateConverter();
             Format dummyFormat = new IntFormatTest(3);
             Node node = new Node("mytest", dummyFormat);
 

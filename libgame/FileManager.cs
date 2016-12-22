@@ -129,7 +129,7 @@ namespace Libgame
             }
 
             // We should be able to get the file now
-            Node searchFile = new Navigator<Node>(Root).SearchFile(gameFilePath);
+            Node searchFile = Navigator.SearchFile(Root, gameFilePath);
             Node file =  searchFile as Node;
             // If we're trying to get the dependency and found a folder, pass its the "dependency"
             if (file == null && (searchFile as Node).IsContainer) {
@@ -173,7 +173,7 @@ namespace Libgame
             }
 
             // Get file
-            Node searchFile = new Navigator<Node>(Root).SearchFile(gameFilePath);
+            Node searchFile = Navigator.SearchFile(Root, gameFilePath);
             Node file =  searchFile as Node;
             if (file == null) {
                 throw new Exception("File not found.");

@@ -32,46 +32,29 @@ namespace Libgame.FileSystem
     /// FileSystem navigator.
     /// Search for nodes and iterate over them.
     /// </summary>
-    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
-    public class Navigator<T>
-        where T : NavegableNode<T>
+    public static class Navigator
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:Libgame.FileSystem.Navigator`1"/> class.
-        /// </summary>
-        /// <param name="node">Initial node.</param>
-        public Navigator(T node)
-        {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
-
-            Node = node;
-        }
-
-        /// <summary>
-        /// Gets the current node.
-        /// </summary>
-        /// <value>The node.</value>
-        public T Node {
-            get;
-            private set;
-        }
-
         /// <summary>
         /// Search a node by path.
         /// </summary>
+        /// <param name="rootNode">The root node to start the search.</param>
         /// <param name="path">Path to search.</param>
         /// <returns>Node or null if not found.</returns>
-        public T SearchFile(string path)
+        /// <typeparam name="T">NavegableNode type</typeparam>
+        public static T SearchFile<T>(T rootNode, string path)
+            where T : NavegableNode<T>
         {
+            if (rootNode == null)
+                throw new ArgumentNullException(nameof(rootNode));
+
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
 
-            if (!path.StartsWith(Node.Path, StringComparison.InvariantCulture))
+            if (!path.StartsWith(rootNode.Path, StringComparison.InvariantCulture))
                 return null;
 
             var queue = new Queue<T>();
-            queue.Enqueue(Node);
+            queue.Enqueue(rootNode);
 
             while (queue.Count > 0) {
                 T currentNode = queue.Dequeue();
@@ -88,16 +71,22 @@ namespace Libgame.FileSystem
         /// <summary>
         /// Iterates the nodes recursively.
         /// </summary>
+        /// <param name="rootNode">The root node to start iterating.</param>
         /// <returns>The nodes.</returns>
-        public IEnumerable<T> IterateNodes()
+        /// <typeparam name="T">NavegableNode type</typeparam>
+        public static IEnumerable<T> IterateNodes<T>(T rootNode)
+            where T : NavegableNode<T>
         {
+            if (rootNode == null)
+                throw new ArgumentNullException(nameof(rootNode));
+
             var queue = new Queue<T>();
-            queue.Enqueue(Node);
+            queue.Enqueue(rootNode);
 
             while (queue.Count > 0) {
-                T node = queue.Dequeue();
+                T currentNode = queue.Dequeue();
 
-                foreach (var child in node.Children) {
+                foreach (var child in currentNode.Children) {
                     queue.Enqueue(child);
                     yield return child;
                 }
