@@ -179,6 +179,13 @@ namespace Libgame.FileSystem
             return Transform<TDst>(disposeOldFormat, new TConv());
         }
 
+        public override void RemoveChildren()
+        {
+            foreach (var child in Children)
+                child.Dispose();
+            base.RemoveChildren();
+        }
+
         /// <summary>
         /// Releases all resource used by the <see cref="Node"/>
         /// object.
@@ -202,14 +209,16 @@ namespace Libgame.FileSystem
 
             Disposed = true;
 
-            if (freeManagedResourcesAlso)
+            if (freeManagedResourcesAlso) {
                 format?.Dispose();
+                RemoveChildren();
+            }
         }
 
         void AddContainerChildren()
         {
             RemoveChildren();
-            Add((Format as NodeContainerFormat).Children);
+            Add(GetFormatAs<NodeContainerFormat>().Children);
         }
     }
 }

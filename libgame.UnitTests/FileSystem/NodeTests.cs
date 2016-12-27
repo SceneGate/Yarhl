@@ -333,6 +333,66 @@ namespace Libgame.UnitTests.FileSystem
             Assert.AreSame(node, result);
         }
 
+        [Test]
+        public void RemoveChildrenDisposeChildren()
+        {
+            Node parent = new Node("Parent");
+            Node child1 = new Node("Child1");
+            Node child2 = new Node("Child2");
+            Node subchild1 = new Node("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            Assert.IsFalse(parent.Disposed);
+            Assert.IsFalse(child1.Disposed);
+            Assert.IsFalse(child2.Disposed);
+            Assert.IsFalse(subchild1.Disposed);
+
+            parent.RemoveChildren();
+            Assert.IsFalse(parent.Disposed);
+            Assert.IsTrue(child1.Disposed);
+            Assert.IsTrue(child2.Disposed);
+            Assert.IsTrue(subchild1.Disposed);
+        }
+
+        [Test]
+        public void RemoveChildreRemoveChildrens()
+        {
+            Node parent = new Node("Parent");
+            Node child1 = new Node("Child1");
+            Node child2 = new Node("Child2");
+            Node subchild1 = new Node("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            parent.RemoveChildren();
+            Assert.IsEmpty(parent.Children);
+            Assert.IsEmpty(child1.Children);
+        }
+
+        [Test]
+        public void DisposeRemoveChildrens()
+        {
+            Node parent = new Node("Parent");
+            Node child1 = new Node("Child1");
+            Node child2 = new Node("Child2");
+            Node subchild1 = new Node("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            parent.Dispose();
+            Assert.IsEmpty(parent.Children);
+            Assert.IsEmpty(child1.Children);
+
+            Assert.IsTrue(parent.Disposed);
+            Assert.IsTrue(child1.Disposed);
+            Assert.IsTrue(child2.Disposed);
+            Assert.IsTrue(subchild1.Disposed);
+        }
+
         public class PrivateConverter : 
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

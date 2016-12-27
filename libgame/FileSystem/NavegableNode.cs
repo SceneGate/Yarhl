@@ -137,7 +137,7 @@ namespace Libgame.FileSystem
         /// <summary>
         /// Removes all the children from the node.
         /// </summary>
-        public void RemoveChildren()
+        public virtual void RemoveChildren()
         {
             children.Clear();
         }
