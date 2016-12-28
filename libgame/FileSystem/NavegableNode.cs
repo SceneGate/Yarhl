@@ -61,6 +61,9 @@ namespace Libgame.FileSystem
         /// <summary>
         /// Gets the path.
         /// </summary>
+        /// <remarks>
+        /// It includes the names of all the parent nodes and this node.
+        /// </remarks>
         /// <value>The path.</value>
         public string Path {
             get {
@@ -137,7 +140,7 @@ namespace Libgame.FileSystem
         /// <summary>
         /// Removes all the children from the node.
         /// </summary>
-        public void RemoveChildren()
+        public virtual void RemoveChildren()
         {
             children.Clear();
         }

@@ -8,6 +8,7 @@ M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,System.Object)
+M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean)
 
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme
@@ -18,3 +19,8 @@ R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects
 M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromFile(System.String,System.String)
 M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromDirectory(System.String,System.String)
+
+R: Gendarme.Rules.Maintainability.AvoidUnnecessarySpecializationRule
+# In this case it is not possible since one of the methods creates a derived type.
+M: System.Void Libgame.FileSystem.NodeFactory::CreateContainersForChild(Libgame.FileSystem.Node,System.String,Libgame.FileSystem.Node)
+

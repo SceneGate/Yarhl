@@ -103,6 +103,17 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
+        /// Gets the format as the specified type.
+        /// </summary>
+        /// <returns>The format casted to the type or null if not possible.</returns>
+        /// <typeparam name="T">The format type.</typeparam>
+        public T GetFormatAs<T>()
+            where T : Format
+        {
+            return Format as T;
+        }
+
+        /// <summary>
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>
@@ -151,6 +162,34 @@ namespace Libgame.FileSystem
         }
 
         /// <summary>
+        /// Transform the node format to another format with a converter of that type.
+        /// </summary>
+        /// <returns>This node.</returns>
+        /// <param name="disposeOldFormat">
+        /// If set to <c>true</c> dispose the previous format.
+        /// </param>
+        /// <typeparam name="TSrc">The type of the current format.</typeparam>
+        /// <typeparam name="TDst">The type of the new format.</typeparam>
+        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
+        public Node Transform<TSrc, TDst, TConv>(bool disposeOldFormat = true)
+            where TSrc : Format
+            where TDst : Format
+            where TConv : IConverter<TSrc, TDst>, new()
+        {
+            return Transform<TDst>(disposeOldFormat, new TConv());
+        }
+
+        /// <summary>
+        /// Removes all the children from the node.
+        /// </summary>
+        public override void RemoveChildren()
+        {
+            foreach (var child in Children)
+                child.Dispose();
+            base.RemoveChildren();
+        }
+
+        /// <summary>
         /// Releases all resource used by the <see cref="Node"/>
         /// object.
         /// </summary>
@@ -173,14 +212,16 @@ namespace Libgame.FileSystem
 
             Disposed = true;
 
-            if (freeManagedResourcesAlso)
+            if (freeManagedResourcesAlso) {
                 format?.Dispose();
+                RemoveChildren();
+            }
         }
 
         void AddContainerChildren()
         {
             RemoveChildren();
-            Add((Format as NodeContainerFormat).Children);
+            Add(GetFormatAs<NodeContainerFormat>().Root.Children);
         }
     }
 }

@@ -252,11 +252,11 @@ namespace Libgame.UnitTests.FileSystem
         {
             Node node = new Node("MyTest");
             NodeContainerFormat format = new NodeContainerFormat();
-            format.Add(new Node("Child"));
+            format.Root.Add(new Node("Child"));
             node.Format = format;
 
             Assert.AreEqual(1, node.Children.Count);
-            Assert.AreSame(format.Children[0], node.Children[0]);
+            Assert.AreSame(format.Root.Children[0], node.Children[0]);
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace Libgame.UnitTests.FileSystem
         {
             Node node = new Node("mytest");
             NodeContainerFormat format = new NodeContainerFormat();
-            format.Add(new Node("Child"));
+            format.Root.Add(new Node("Child"));
             node.Format = format;
             Assert.IsNotEmpty(node.Children);
 
@@ -304,6 +304,93 @@ namespace Libgame.UnitTests.FileSystem
             node.Dispose();
             StringFormatTest format = new StringFormatTest("3");
             Assert.Throws<ObjectDisposedException>(() => node.Format = format);
+        }
+
+        [Test]
+        public void GetFormatAs()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            Assert.AreSame(node.Format, node.GetFormatAs<StringFormatTest>());
+        }
+
+        [Test]
+        public void GetFormatAsReturnNullIfNoCastingPossible()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            Assert.IsNull(node.GetFormatAs<IntFormatTest>());
+        }
+
+        [Test]
+        public void TransformWithGenericConverter()
+        {
+            Format dummyFormat = new IntFormatTest(3);
+            Node node = new Node("mytest", dummyFormat);
+
+            var result = node.Transform<IntFormatTest, StringFormatTest, PrivateConverter>();
+            Assert.IsInstanceOf<StringFormatTest>(node.Format);
+            Assert.AreSame(node, result);
+        }
+
+        [Test]
+        public void RemoveChildrenDisposeChildren()
+        {
+            Node parent = new Node("Parent");
+            Node child1 = new Node("Child1");
+            Node child2 = new Node("Child2");
+            Node subchild1 = new Node("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            Assert.IsFalse(parent.Disposed);
+            Assert.IsFalse(child1.Disposed);
+            Assert.IsFalse(child2.Disposed);
+            Assert.IsFalse(subchild1.Disposed);
+
+            parent.RemoveChildren();
+            Assert.IsFalse(parent.Disposed);
+            Assert.IsTrue(child1.Disposed);
+            Assert.IsTrue(child2.Disposed);
+            Assert.IsTrue(subchild1.Disposed);
+        }
+
+        [Test]
+        public void RemoveChildreRemoveChildrens()
+        {
+            Node parent = new Node("Parent");
+            Node child1 = new Node("Child1");
+            Node child2 = new Node("Child2");
+            Node subchild1 = new Node("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            parent.RemoveChildren();
+            Assert.IsEmpty(parent.Children);
+            Assert.IsEmpty(child1.Children);
+        }
+
+        [Test]
+        public void DisposeRemoveChildrens()
+        {
+            Node parent = new Node("Parent");
+            Node child1 = new Node("Child1");
+            Node child2 = new Node("Child2");
+            Node subchild1 = new Node("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            parent.Dispose();
+            Assert.IsEmpty(parent.Children);
+            Assert.IsEmpty(child1.Children);
+
+            Assert.IsTrue(parent.Disposed);
+            Assert.IsTrue(child1.Disposed);
+            Assert.IsTrue(child2.Disposed);
+            Assert.IsTrue(subchild1.Disposed);
         }
 
         public class PrivateConverter : 
