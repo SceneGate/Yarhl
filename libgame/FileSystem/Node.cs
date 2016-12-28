@@ -179,6 +179,9 @@ namespace Libgame.FileSystem
             return Transform<TDst>(disposeOldFormat, new TConv());
         }
 
+        /// <summary>
+        /// Removes all the children from the node.
+        /// </summary>
         public override void RemoveChildren()
         {
             foreach (var child in Children)

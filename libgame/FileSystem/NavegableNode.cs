@@ -61,6 +61,9 @@ namespace Libgame.FileSystem
         /// <summary>
         /// Gets the path.
         /// </summary>
+        /// <remarks>
+        /// It includes the names of all the parent nodes and this node.
+        /// </remarks>
         /// <value>The path.</value>
         public string Path {
             get {

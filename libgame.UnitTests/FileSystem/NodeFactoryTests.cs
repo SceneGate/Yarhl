@@ -178,5 +178,124 @@ namespace Libgame.UnitTests.FileSystem
             
             Directory.Delete(tempDir, true);
         }
+
+        [Test]
+        public void CreateContainersAndAdd()
+        {
+            Node root = new Node("root");
+            string path = "/parent1/parent2/";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.AreEqual(1, root.Children.Count);
+            Assert.AreEqual("parent1", root.Children[0].Name);
+            Assert.AreEqual(1, root.Children[0].Children.Count);
+            Assert.AreEqual("parent2", root.Children[0].Children[0].Name);
+            Assert.AreEqual(1, root.Children[0].Children[0].Children.Count);
+            Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
+            Assert.AreEqual("/root/parent1/parent2/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainersWithEmptyParents()
+        {
+            Node root = new Node("root");
+            string path = "/parent1///parent2/";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
+            Assert.AreEqual("/root/parent1/parent2/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenPathDoesNotStartWithSeparator()
+        {
+            Node root = new Node("root");
+            string path = "parent1/parent2";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
+            Assert.AreEqual("/root/parent1/parent2/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenPathIsEmpty()
+        {
+            Node root = new Node("root");
+            string path = "";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.AreSame(child, root.Children[0]);
+            Assert.AreEqual("/root/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenSomeContainersExists()
+        {
+            Node root = new Node("root");
+            Node parent1 = new Node("parent1");
+            root.Add(parent1);
+            string path = "/parent1/parent2/";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.AreSame(parent1, root.Children[0]);
+            Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
+            Assert.AreEqual("/root/parent1/parent2/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenAllContainersExists()
+        {
+            Node root = new Node("root");
+            Node parent1 = new Node("parent1");
+            Node parent2 = new Node("parent2");
+            parent1.Add(parent2);
+            root.Add(parent1);
+            string path = "/parent1///parent2/";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.AreSame(parent1, root.Children["parent1"]);
+            Assert.AreSame(parent2, root.Children["parent1"].Children["parent2"]);
+            Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
+            Assert.AreEqual("/root/parent1/parent2/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenRootIsNullThrowsException()
+        {
+            Node root = null;
+            string path = "";
+            Node child = new Node("child");
+
+            Assert.Throws<ArgumentNullException>(() =>
+                NodeFactory.CreateContainersForChild(root, path, child));
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenPathIsNullThrowsException()
+        {
+            Node root = new Node("root");
+            string path = null;
+            Node child = new Node("child");
+
+            Assert.Throws<ArgumentNullException>(() =>
+                NodeFactory.CreateContainersForChild(root, path, child));
+        }
+
+        [Test]
+        public void CreateContainersForChildWhenChildIsNullThrowsException()
+        {
+            Node root = new Node("root");
+            string path = "";
+            Node child = null;
+
+            Assert.Throws<ArgumentNullException>(() =>
+                NodeFactory.CreateContainersForChild(root, path, child));
+        }
     }
 }

@@ -22,6 +22,7 @@ namespace Libgame.FileSystem
 {
     using System;
     using System.IO;
+    using System.Linq;
     using FileFormat;
     using IO;
 
@@ -38,6 +39,42 @@ namespace Libgame.FileSystem
         public static Node CreateContainer(string name)
         {
             return new Node(name, new NodeContainerFormat());
+        }
+
+        /// <summary>
+        /// Creates the missing parent nodes to contain the child and add it.
+        /// </summary>
+        /// <param name="root">The root node that will contain the nodes.</param>
+        /// <param name="path">
+        /// The path for the child. It doesn't contain the root or child names.</param>
+        /// <param name="child">The child to add to root with the path.</param>
+        public static void CreateContainersForChild(Node root, string path, Node child)
+        {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
+
+            if (child == null)
+                throw new ArgumentNullException(nameof(child));
+
+            if (path == null)
+                throw new ArgumentNullException(nameof(path));
+
+            string[] parentNames = path.Split(
+                new[] { NodeSystem.PathSeparator[0] },
+                StringSplitOptions.RemoveEmptyEntries);
+
+            Node currentNode = root;
+            foreach (string name in parentNames) {
+                Node subParent = currentNode.Children[name];
+                if (subParent == null) {
+                    subParent = CreateContainer(name);
+                    currentNode.Add(subParent);
+                }
+
+                currentNode = subParent;
+            }
+
+            currentNode.Add(child);
         }
 
         /// <summary>
