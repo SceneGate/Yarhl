@@ -22,7 +22,6 @@ namespace Libgame.FileSystem
 {
     using System;
     using System.IO;
-    using System.Linq;
     using FileFormat;
     using IO;
 
