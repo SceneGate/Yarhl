@@ -126,19 +126,9 @@ namespace Libgame.IO
             this.Write(buffer);
         }
 
-        public void Write(string s, int bytesCount, string tableName, bool originalToNew)
-        {
-            this.Write(s.ApplyTable(tableName, originalToNew), bytesCount);
-        }
-
         public void Write(string s)
         {
             this.Write(this.Encoding.GetBytes(s));
-        }
-
-        public void Write(string s, string tableName, bool originalToNew)
-        {
-            this.Write(s.ApplyTable(tableName, originalToNew));
         }
 
         public void Write(string s, Type sizeType)
@@ -146,11 +136,6 @@ namespace Libgame.IO
             byte[] data = this.Encoding.GetBytes(s);
             this.Write(data.Length, sizeType);
             this.Write(data);
-        }
-
-        public void Write(string s, Type sizeType, string tableName, bool originalToNew)
-        {
-            this.Write(s.ApplyTable(tableName, originalToNew), sizeType);
         }
 
         public void Write(object o, Type type)
