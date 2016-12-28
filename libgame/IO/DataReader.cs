@@ -177,21 +177,11 @@ namespace Libgame.IO
             return s;
         }
 
-        public string ReadString(int bytesCount, string tableName, bool originalToNew)
-        {
-            return this.ReadString(bytesCount).ApplyTable(tableName, originalToNew);
-        }
-
         public string ReadString(Type sizeType)
         {
             object size = this.Read(sizeType);
             size = Convert.ChangeType(size, typeof(int));
             return this.ReadString((int)size);
-        }
-
-        public string ReadString(Type sizeType, string tableName, bool originalToNew)
-        {
-            return this.ReadString(sizeType).ApplyTable(tableName, originalToNew);
         }
 
         public object Read(Type type)
