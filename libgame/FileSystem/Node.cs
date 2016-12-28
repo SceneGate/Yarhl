@@ -221,7 +221,7 @@ namespace Libgame.FileSystem
         void AddContainerChildren()
         {
             RemoveChildren();
-            Add(GetFormatAs<NodeContainerFormat>().Children);
+            Add(GetFormatAs<NodeContainerFormat>().Root.Children);
         }
     }
 }

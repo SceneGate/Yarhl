@@ -44,100 +44,25 @@ namespace Libgame.UnitTests.FileFormat
         public void ConstructorSetProperties()
         {
             NodeContainerFormat format = new NodeContainerFormat();
-            Assert.IsNotNull(format.Children);
-            Assert.IsEmpty(format.Children);
+            Assert.IsNotNull(format.Root);
+            Assert.IsEmpty(format.Root.Children);
         }
 
         [Test]
-        public void AddNewChildren()
+        public void DisposeIsDisposingRoot()
         {
             NodeContainerFormat format = CreateDummyFormat();
-
-            Node child1 = new Node("Child1");
-            format.Add(child1);
-            Assert.AreEqual(1, format.Children.Count);
-            Assert.AreSame(child1, format.Children[0]);
-
-            Node child2 = new Node("Child2");
-            format.Add(child2);
-            Assert.AreEqual(2, format.Children.Count);
-            Assert.AreSame(child2, format.Children[1]);
+            format.Dispose();
+            Assert.IsTrue(format.Root.Disposed);
         }
 
         [Test]
-        public void ReplaceChildren()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-
-            Node child = new Node("Child1");
-            format.Add(child);
-            Assert.AreEqual(1, format.Children.Count);
-            Assert.AreSame(child, format.Children[0]);
-
-            Node childSameName = new Node("Child1");
-            format.Add(childSameName);
-            Assert.AreEqual(1, format.Children.Count);
-            Assert.AreNotSame(child, format.Children[0]);
-            Assert.AreSame(childSameName, format.Children[0]);
-        }
-
-        [Test]
-        public void AddListOfNodes()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-
-            List<Node> children = new List<Node>();
-            children.Add(new Node("Child1"));
-            children.Add(new Node("Child2"));
-            children.Add(new Node("Child3"));
-            
-            format.Add(children);
-            Assert.AreEqual(3, format.Children.Count);
-            Assert.AreSame(children[0], format.Children[0]);
-            Assert.AreSame(children[1], format.Children[1]);
-            Assert.AreSame(children[2], format.Children[2]);
-        }
-
-        [Test]
-        public void AddListOfNodesNull()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-            Assert.Throws<ArgumentNullException>(() => format.Add((List<Node>)null));
-        }
-
-        [Test]
-        public void AddNullNode()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-            Assert.Throws<ArgumentNullException>(() => format.Add((Node)null));
-        }
-
-        [Test]
-        public void AddAndGetNodeByName()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-            Node child = new Node("Child1");
-            format.Add(child);
-            Assert.AreSame(child, format.Children["Child1"]);
-        }
-
-        [Test]
-        public void AddAfterDisposeThrowException()
+        public void AddAfterDisposeDoesNotThrowException()
         {
             NodeContainerFormat format = CreateDummyFormat();
             format.Dispose();
             Node child = new Node("Child");
-            Assert.Throws<ObjectDisposedException>(() => format.Add(child));
-        }
-
-        [Test]
-        public void AddListOfNodesAfterDisposeThrowException()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-            format.Dispose();
-            List<Node> children = new List<Node>();
-            children.Add(new Node("Child"));
-            Assert.Throws<ObjectDisposedException>(() => format.Add(children));
+            Assert.DoesNotThrow(() => format.Root.Add(child));
         }
 
         protected override NodeContainerFormat CreateDummyFormat()

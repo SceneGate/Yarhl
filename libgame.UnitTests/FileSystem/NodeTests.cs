@@ -252,11 +252,11 @@ namespace Libgame.UnitTests.FileSystem
         {
             Node node = new Node("MyTest");
             NodeContainerFormat format = new NodeContainerFormat();
-            format.Add(new Node("Child"));
+            format.Root.Add(new Node("Child"));
             node.Format = format;
 
             Assert.AreEqual(1, node.Children.Count);
-            Assert.AreSame(format.Children[0], node.Children[0]);
+            Assert.AreSame(format.Root.Children[0], node.Children[0]);
         }
 
         [Test]
@@ -264,7 +264,7 @@ namespace Libgame.UnitTests.FileSystem
         {
             Node node = new Node("mytest");
             NodeContainerFormat format = new NodeContainerFormat();
-            format.Add(new Node("Child"));
+            format.Root.Add(new Node("Child"));
             node.Format = format;
             Assert.IsNotEmpty(node.Children);
 
