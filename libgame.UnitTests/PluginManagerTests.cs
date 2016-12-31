@@ -1,5 +1,5 @@
-﻿//
-// NodeContainerFormatTests.cs
+//
+// PluginManagerTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -23,49 +23,41 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Libgame.UnitTests.FileFormat
+namespace Libgame.UnitTests
 {
-    using Libgame.FileSystem;
-    using Libgame.FileFormat;
+    using Mono.Addins;
     using NUnit.Framework;
 
     [TestFixture]
-    public class NodeContainerFormatTests : BaseGeneralTests<NodeContainerFormat>
+    public class PluginManagerTests
     {
-        [Test]
-        public void CorrectName()
+        [OneTimeSetUp]
+        public void SetUp()
         {
-            NameIsCorrect("libgame", "nodecontainer");
+            PluginManager.Shutdown();  // Clean any previous state
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            PluginManager.Shutdown();
         }
 
         [Test]
-        public void ConstructorSetProperties()
+        public void InitilaizeInitializeManager()
         {
-            NodeContainerFormat format = new NodeContainerFormat();
-            Assert.IsNotNull(format.Root);
-            Assert.IsEmpty(format.Root.Children);
+            Assert.IsFalse(AddinManager.IsInitialized);
+            PluginManager.Initialize();
+            Assert.IsTrue(AddinManager.IsInitialized);
         }
 
         [Test]
-        public void DisposeIsDisposingRoot()
+        public void ShutdownTurnOffAddinManager()
         {
-            NodeContainerFormat format = CreateDummyFormat();
-            format.Dispose();
-            Assert.IsTrue(format.Root.Disposed);
-        }
-
-        [Test]
-        public void AddAfterDisposeDoesNotThrowException()
-        {
-            NodeContainerFormat format = CreateDummyFormat();
-            format.Dispose();
-            Node child = new Node("Child");
-            Assert.DoesNotThrow(() => format.Root.Add(child));
-        }
-
-        protected override NodeContainerFormat CreateDummyFormat()
-        {
-            return new NodeContainerFormat();
+            PluginManager.Initialize();
+            Assert.IsTrue(AddinManager.IsInitialized);
+            PluginManager.Shutdown();
+            Assert.IsFalse(AddinManager.IsInitialized);
         }
     }
 }

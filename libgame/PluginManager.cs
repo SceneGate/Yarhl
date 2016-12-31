@@ -27,7 +27,7 @@ namespace Libgame
     using Mono.Addins;
 
     /// <summary>
-    /// Manager for plugins / addins.
+    /// Manager for LibGame plugins.
     /// </summary>
     class PluginManager
     {
@@ -43,7 +43,7 @@ namespace Libgame
         {
             if (!AddinManager.IsInitialized) {
                 AddinManager.Initialize(AddinFolder);
-                AddinManager.Registry.Rebuild(null);
+                AddinManager.Registry.Update();
             }
 
             // Make the addin folder hidden for Windows.
@@ -54,26 +54,48 @@ namespace Libgame
 
         ~PluginManager()
         {
-            if (AddinManager.IsInitialized) {
-                AddinManager.Shutdown();
-            }
+            Shutdown();
         }
 
         /// <summary>
         /// Gets the plugin manager instance.
         /// </summary>
+        /// <remarks>It initializes the manager if needed.</remarks>
         /// <value>The plugin manager instance.</value>
         public static PluginManager Instance {
             get {
-                if (singleInstance == null) {
-                    lock (lockObj) {
-                        if (singleInstance == null)
-                            singleInstance = new PluginManager();
-                    }
-                }
-
+                if (singleInstance == null)
+                    Initialize();
                 return singleInstance;
             }
+        }
+
+        /// <summary>
+        /// Initialize the plugin manager.
+        /// </summary>
+        public static void Initialize()
+        {
+            if (singleInstance == null) {
+                lock (lockObj) {
+                    if (singleInstance == null)
+                        singleInstance = new PluginManager();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Shutdown the plugin manager.
+        /// </summary>
+        /// <remarks>
+        /// This is usually unnecessary since the destructor will do it too.
+        /// </remarks>
+        public static void Shutdown()
+        {
+            if (AddinManager.IsInitialized) {
+                AddinManager.Shutdown();
+            }
+
+            singleInstance = null;
         }
 
         public IEnumerable<Type> FindExtensions<T>()
