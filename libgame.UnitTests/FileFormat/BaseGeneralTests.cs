@@ -27,28 +27,11 @@ namespace Libgame.UnitTests.FileFormat
 {
     using System.Linq;
     using Libgame.FileFormat;
-    using Mono.Addins;
     using NUnit.Framework;
 
     public abstract class BaseGeneralTests<T>
         where T: Format
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(".addins");
-                AddinManager.Registry.Update();
-            }
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            if (AddinManager.IsInitialized)
-                AddinManager.Shutdown();
-        }
-
         [Test]
         public void FormatIsFound()
         {

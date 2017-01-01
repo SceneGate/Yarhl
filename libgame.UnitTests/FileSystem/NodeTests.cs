@@ -26,7 +26,6 @@
 namespace Libgame.UnitTests.FileSystem
 {
     using System;
-    using Mono.Addins;
     using NUnit.Framework;
     using Libgame.FileFormat;
     using Libgame.FileSystem;
@@ -35,22 +34,6 @@ namespace Libgame.UnitTests.FileSystem
     [TestFixture]
     public class NodeTests
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(".addins");
-                AddinManager.Registry.Update();
-            }
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            if (AddinManager.IsInitialized)
-                AddinManager.Shutdown();
-        }
-
         [Test]
         public void ConstructorSetName()
         {

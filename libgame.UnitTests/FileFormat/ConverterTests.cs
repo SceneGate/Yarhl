@@ -18,42 +18,24 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
-using System.Linq;
-using NUnit.Framework;
-using Mono.Addins;
-using Libgame.FileFormat;
-using System.Collections.Generic;
-
 namespace Libgame.UnitTests.FileFormat
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Libgame.FileFormat;
+    using NUnit.Framework;
+
     [TestFixture]
     public class ConverterTests
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(".addins");
-                AddinManager.Registry.Update();
-            }
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            if (AddinManager.IsInitialized)
-                AddinManager.Shutdown();
-        }
-
-        private static List<Type> GetConverters()
+        static List<Type> GetConverters()
         {
             List<Type> converterTypes = new List<Type>();
             Assert.DoesNotThrow(() => {
-                converterTypes = AddinManager
-                    .GetExtensionNodes<TypeExtensionNode>(typeof(IConverter<,>))
-                    .Select(node => node.Type)
-                    .ToList();
+                converterTypes = PluginManager.Instance
+                                              .FindExtensions(typeof(IConverter<,>))
+                                              .ToList();
             });
             return converterTypes;
         }
