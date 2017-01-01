@@ -18,11 +18,9 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
-
-
 namespace Libgame.UnitTests.FileFormat
 {
+    using System;
     using Libgame.FileFormat;
     using Mono.Addins;
     using NUnit.Framework;
@@ -30,22 +28,6 @@ namespace Libgame.UnitTests.FileFormat
     [TestFixture]
     public class FormatTests
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(".addins");
-                AddinManager.Registry.Update();
-            }
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            if (AddinManager.IsInitialized)
-                AddinManager.Shutdown();
-        }
-
         [Test]
         public void Convert()
         {

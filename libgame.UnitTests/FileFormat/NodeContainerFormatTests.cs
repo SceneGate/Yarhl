@@ -25,8 +25,6 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests.FileFormat
 {
-    using System;
-    using System.Collections.Generic;
     using Libgame.FileSystem;
     using Libgame.FileFormat;
     using NUnit.Framework;

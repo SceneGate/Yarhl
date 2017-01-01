@@ -3,6 +3,8 @@ obj/
 libgame.userprefs
 packages/
 nuget.exe
+testrunner/
+.addins
 
 TestResult.xml
 gendarme_report.html

@@ -20,7 +20,6 @@
 // <date>11/06/2013</date>
 //-----------------------------------------------------------------------
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 namespace Libgame.IO
