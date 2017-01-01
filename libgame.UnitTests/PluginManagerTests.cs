@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests
 {
+    using System;
     using System.IO;
     using System.Linq;
     using FileFormat;
@@ -102,11 +103,85 @@ namespace Libgame.UnitTests
         }
 
         [Test]
-        public void FindSpecificExtensionFails()
+        public void FindExtensionNotRegisteredReturnsEmpty()
         {
             var extensions = PluginManager.Instance
                                           .FindExtensions(typeof(StringFormatTest));
             Assert.IsEmpty(extensions);
+        }
+
+        [Test]
+        public void FindExtensionWithNullTypeThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                                             PluginManager.Instance.FindExtensions(null));
+        }
+
+        [Test]
+        public void FindGenericExtensions()
+        {
+            var extensions = PluginManager.Instance
+                .FindGenericExtensions(typeof(IConverter<,>), typeof(string), typeof(uint))
+                .ToList();
+            Assert.IsNotEmpty(extensions);
+            Assert.Contains(typeof(SingleOuterConverterExample), extensions);
+        }
+
+        [Test]
+        public void FindGenericExtensionsNotRegisteredReturnsEmpty()
+        {
+            var extensions = PluginManager.Instance
+                .FindGenericExtensions(typeof(DummyExtensionPoint<>), typeof(uint))
+                .ToList();
+            Assert.IsEmpty(extensions);
+        }
+
+        [Test]
+        public void FindGenericExtensionWithInvalidTypeArgumentsReturnEmpty()
+        {
+            var extensions = PluginManager.Instance
+                .FindGenericExtensions(typeof(IConverter<,>), typeof(string), typeof(string))
+                .ToList();
+            Assert.IsEmpty(extensions);
+        }
+
+        [Test]
+        public void FindGenericExtensionWithDerivedTypeArgumentsDoesNotReturnEmpty()
+        {
+            var extensions = PluginManager.Instance
+                .FindGenericExtensions(typeof(IConverter<,>), typeof(Format), typeof(int))
+                .ToList();
+            Assert.IsNotEmpty(extensions);
+            Assert.Contains(typeof(StringFormatTest2IntConverter), extensions);
+        }
+
+        [Test]
+        public void FindGenericExtensionWithNullTypeThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                                 PluginManager.Instance.FindGenericExtensions(null));
+        }
+
+        [Test]
+        public void FindGenericExtensionWithNEmptyTypeArgumentReturnsEmpty()
+        {
+            var extensions = PluginManager.Instance
+                .FindGenericExtensions(typeof(IConverter<,>))
+                .ToList();
+            Assert.IsEmpty(extensions);
+        }
+
+        [Test]
+        public void FindGenericExtensionWithNullTypeArgumentReturnsEmpty()
+        {
+            var extensions = PluginManager.Instance
+                .FindGenericExtensions(typeof(IConverter<,>), null, null)
+                .ToList();
+            Assert.IsEmpty(extensions);
+        }
+
+        public interface DummyExtensionPoint<T>
+        {
         }
     }
 }

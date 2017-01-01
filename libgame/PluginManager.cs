@@ -128,6 +128,8 @@ namespace Libgame
             return FindExtensions(extension)
                    .Where(type =>
                        type.GetInterfaces().Any(inter =>
+                            inter.IsGenericType &&
+                            inter.GetGenericTypeDefinition().IsEquivalentTo(extension) &&
                             genericTypeArguments.SequenceEqual(
                                 inter.GenericTypeArguments,
                                 new TypeParamComparer())));
@@ -137,6 +139,12 @@ namespace Libgame
         {
             public bool Equals(Type x, Type y)
             {
+                if (x == null && y == null)
+                    return true;
+
+                if (x == null || y == null)
+                    return false;
+
                 return x.IsAssignableFrom(y);
             }
 
