@@ -1,29 +1,34 @@
-//-----------------------------------------------------------------------
-// <copyright file="DataReader.cs" company="none">
-// Copyright (C) 2013
 //
-//   This program is free software: you can redistribute it and/or modify
-//   it under the terms of the GNU General Public License as published by 
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
+// DataReader.cs
 //
-//   This program is distributed in the hope that it will be useful, 
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details. 
+// Author:
+//       Benito Palacios Sánchez <benito356@gmail.com>
 //
-//   You should have received a copy of the GNU General Public License
-//   along with this program.  If not, see "http://www.gnu.org/licenses/". 
-// </copyright>
-// <author>pleoNeX</author>
-// <email>benito356@gmail.com</email>
-// <date>11/06/2013</date>
-//-----------------------------------------------------------------------
-using System;
-using System.Text;
-
+// Copyright (c) 2017 Benito Palacios Sánchez
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 namespace Libgame.IO
 {
+    using System;
+    using System.Globalization;
+    using System.Text;
+
     public class DataReader
     {
         public DataReader(DataStream stream)
@@ -33,9 +38,9 @@ namespace Libgame.IO
 
         public DataReader(DataStream stream, EndiannessMode endiannes, Encoding encoding)
         {
-            this.Stream    = stream;
-            this.Endiannes = endiannes;
-            this.Encoding  = encoding;
+            Stream    = stream;
+            Endiannes = endiannes;
+            Encoding  = encoding;
         }
 
         public DataStream Stream {
@@ -55,83 +60,83 @@ namespace Libgame.IO
 
         public byte ReadByte()
         {
-            return this.Stream.ReadByte();
+            return Stream.ReadByte();
         }
 
         public sbyte ReadSByte()
         {
-            return (sbyte)this.Stream.ReadByte();
+            return (sbyte)Stream.ReadByte();
         }
 
         public ushort ReadUInt16()
         {
-            if (this.Endiannes == EndiannessMode.LittleEndian)
-                return (ushort)((this.ReadByte() << 0) | (this.ReadByte() << 8));
-            else if (this.Endiannes == EndiannessMode.BigEndian)
-                return (ushort)((this.ReadByte() << 8) | (this.ReadByte() << 0));
+            if (Endiannes == EndiannessMode.LittleEndian)
+                return (ushort)((ReadByte() << 0) | (ReadByte() << 8));
+            if (Endiannes == EndiannessMode.BigEndian)
+                return (ushort)((ReadByte() << 8) | (ReadByte() << 0));
 
             return 0xFFFF;
         }
 
         public short ReadInt16()
         {
-            return (short)this.ReadUInt16();
+            return (short)ReadUInt16();
         }
 
         public uint ReadUInt32()
         {
-            if (this.Endiannes == EndiannessMode.LittleEndian)
-                return (uint)((this.ReadUInt16() << 00) | (this.ReadUInt16() << 16));
-            else if (this.Endiannes == EndiannessMode.BigEndian)
-                return (uint)((this.ReadUInt16() << 16) | (this.ReadUInt16() << 00));
+            if (Endiannes == EndiannessMode.LittleEndian)
+                return (uint)((ReadUInt16() << 00) | (ReadUInt16() << 16));
+            if (Endiannes == EndiannessMode.BigEndian)
+                return (uint)((ReadUInt16() << 16) | (ReadUInt16() << 00));
 
             return 0xFFFFFFFF;
         }
 
         public int ReadInt32()
         {
-            return (int)this.ReadUInt32();
+            return (int)ReadUInt32();
         }
 
         public ulong ReadUInt64()
         {
-            if (this.Endiannes == EndiannessMode.LittleEndian)
-                return (ulong)((this.ReadUInt32() << 00) | (this.ReadUInt32() << 32));
-            else if (this.Endiannes == EndiannessMode.BigEndian)
-                return (ulong)((this.ReadUInt32() << 32) | (this.ReadUInt32() << 00));
+            if (Endiannes == EndiannessMode.LittleEndian)
+                return (ReadUInt32() << 00) | (ReadUInt32() << 32);
+            if (Endiannes == EndiannessMode.BigEndian)
+                return (ReadUInt32() << 32) | (ReadUInt32() << 00);
 
             return 0xFFFFFFFFFFFFFFFF;
         }
 
         public long ReadInt64()
         {
-            return (long)this.ReadUInt64();
+            return (long)ReadUInt64();
         }
 
         public byte[] ReadBytes(int count)
         {
             byte[] buffer = new byte[count];
-            this.Stream.Read(buffer, 0, count);
+            Stream.Read(buffer, 0, count);
             return buffer;
         }
 
         public char ReadChar()
         {
-            return this.ReadChars(1)[0];
+            return ReadChars(1)[0];
         }
 
         public char[] ReadChars(int count)
         {
-            long pos1 = this.Stream.Position;
-            int charLength = this.Encoding.GetMaxByteCount(count);
-            byte[] buffer = this.ReadBytes(charLength);
+            long pos1 = Stream.Position;
+            int charLength = Encoding.GetMaxByteCount(count);
+            byte[] buffer = ReadBytes(charLength);
 
-            char[] charArray = this.Encoding.GetChars(buffer);
+            char[] charArray = Encoding.GetChars(buffer);
             Array.Resize(ref charArray, count);    // In case we get more chars than asked
 
             // Adjust position
-            charLength = this.Encoding.GetByteCount(charArray);
-            this.Stream.Seek(pos1 + charLength, SeekMode.Absolute);
+            charLength = Encoding.GetByteCount(charArray);
+            Stream.Seek(pos1 + charLength, SeekMode.Absolute);
 
             return charArray;
         }
@@ -144,68 +149,67 @@ namespace Libgame.IO
         {
             StringBuilder str = new StringBuilder();
 
-            int maxBytes = this.Encoding.GetMaxByteCount(1);
+            int maxBytes = Encoding.GetMaxByteCount(1);
             char ch;
 
             do {
-                long bytesLeft = this.Stream.Length - this.Stream.RelativePosition;
+                long bytesLeft = Stream.Length - Stream.RelativePosition;
                 int bytesToRead = (bytesLeft < maxBytes) ? (int)bytesLeft : maxBytes;
 
-                byte[] data = this.ReadBytes((int)bytesToRead);
-                string decodedString = this.Encoding.GetString(data);
+                byte[] data = ReadBytes(bytesToRead);
+                string decodedString = Encoding.GetString(data);
                 if (decodedString.Length == 0)
                     break;
 
                 ch = decodedString[0];
-                int bytesRead = this.Encoding.GetByteCount(ch.ToString());
+                int bytesRead = Encoding.GetByteCount(ch.ToString());
                 int bytesNotRead = bytesToRead - bytesRead;
                 Stream.Seek(-bytesNotRead, SeekMode.Current);
 
                 if (ch != '\0')
                     str.Append(ch);
-            } while (ch != '\0' && !this.Stream.EOF);
+            } while (ch != '\0' && !Stream.EOF);
 
             return str.ToString();
         }
 
         public string ReadString(int bytesCount)
         {
-            byte[] buffer = this.ReadBytes(bytesCount);
-            string s = this.Encoding.GetString(buffer);
-            s = s.Replace("\0", "");
+            byte[] buffer = ReadBytes(bytesCount);
+            string s = Encoding.GetString(buffer);
+            s = s.Replace("\0", string.Empty);
             return s;
         }
 
         public string ReadString(Type sizeType)
         {
-            object size = this.Read(sizeType);
-            size = Convert.ChangeType(size, typeof(int));
-            return this.ReadString((int)size);
+            object size = Read(sizeType);
+            size = Convert.ChangeType(size, typeof(int), CultureInfo.InvariantCulture);
+            return ReadString((int)size);
         }
 
         public object Read(Type type)
         {
             if (type == typeof(long))
-                return this.ReadInt64();
-            else if (type == typeof(ulong))
-                return this.ReadUInt64();
-            else if (type == typeof(int))
-                return this.ReadInt32();
-            else if (type == typeof(uint))
-                return this.ReadUInt32();
-            else if (type == typeof(short))
-                return this.ReadInt16();
-            else if (type == typeof(ushort))
-                return this.ReadUInt16();
-            else if (type == typeof(byte))
-                return this.ReadByte();
-            else if (type == typeof(sbyte))
-                return this.ReadSByte();
-            else if (type == typeof(char))
-                return this.ReadChar();
+                return ReadInt64();
+            if (type == typeof(ulong))
+                return ReadUInt64();
+            if (type == typeof(int))
+                return ReadInt32();
+            if (type == typeof(uint))
+                return ReadUInt32();
+            if (type == typeof(short))
+                return ReadInt16();
+            if (type == typeof(ushort))
+                return ReadUInt16();
+            if (type == typeof(byte))
+                return ReadByte();
+            if (type == typeof(sbyte))
+                return ReadSByte();
+            if (type == typeof(char))
+                return ReadChar();
 
             return null;
         }
     }
 }
-
