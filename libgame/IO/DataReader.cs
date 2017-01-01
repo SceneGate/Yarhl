@@ -63,11 +63,13 @@ namespace Libgame.IO
             return Stream.ReadByte();
         }
 
+        [CLSCompliant(false)]
         public sbyte ReadSByte()
         {
             return (sbyte)Stream.ReadByte();
         }
 
+        [CLSCompliant(false)]
         public ushort ReadUInt16()
         {
             if (Endiannes == EndiannessMode.LittleEndian)
@@ -83,6 +85,7 @@ namespace Libgame.IO
             return (short)ReadUInt16();
         }
 
+        [CLSCompliant(false)]
         public uint ReadUInt32()
         {
             if (Endiannes == EndiannessMode.LittleEndian)
@@ -98,6 +101,7 @@ namespace Libgame.IO
             return (int)ReadUInt32();
         }
 
+        [CLSCompliant(false)]
         public ulong ReadUInt64()
         {
             if (Endiannes == EndiannessMode.LittleEndian)

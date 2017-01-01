@@ -66,6 +66,7 @@ namespace Libgame.IO
             Stream.WriteByte(val);
         }
 
+        [CLSCompliant(false)]
         public void Write(sbyte val)
         {
             Stream.WriteByte((byte)val);
@@ -76,6 +77,7 @@ namespace Libgame.IO
             Write((ushort)val);
         }
 
+        [CLSCompliant(false)]
         public void Write(ushort val)
         {
             if (Endiannes == EndiannessMode.LittleEndian) {
@@ -92,6 +94,7 @@ namespace Libgame.IO
             Write((uint)val);
         }
 
+        [CLSCompliant(false)]
         public void Write(uint val)
         {
             if (Endiannes == EndiannessMode.LittleEndian) {
@@ -108,6 +111,7 @@ namespace Libgame.IO
             Write((ulong)val);
         }
 
+        [CLSCompliant(false)]
         public void Write(ulong val)
         {
             if (Endiannes == EndiannessMode.LittleEndian) {
