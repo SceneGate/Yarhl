@@ -1,8 +1,34 @@
-using System;
-using System.Text;
-
+//
+// DataWriter.cs
+//
+// Author:
+//       Benito Palacios Sánchez <benito356@gmail.com>
+//
+// Copyright (c) 2017 Benito Palacios Sánchez
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 namespace Libgame.IO
 {
+    using System;
+    using System.Globalization;
+    using System.Text;
+
     public class DataWriter
     {
         public DataWriter(DataStream stream)
@@ -12,9 +38,12 @@ namespace Libgame.IO
 
         public DataWriter(DataStream stream, EndiannessMode endiannes, Encoding encoding)
         {
-            this.Stream    = stream;
-            this.Endiannes = endiannes;
-            this.Encoding  = encoding;
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            Stream    = stream;
+            Endiannes = endiannes;
+            Encoding  = encoding;
         }
 
         public DataStream Stream {
@@ -34,81 +63,87 @@ namespace Libgame.IO
 
         public void Write(byte val)
         {
-            this.Stream.WriteByte(val);
+            Stream.WriteByte(val);
         }
 
         public void Write(sbyte val)
         {
-            this.Stream.WriteByte((byte)val);
+            Stream.WriteByte((byte)val);
         }
 
         public void Write(short val)
         {
-            this.Write((ushort)val);
+            Write((ushort)val);
         }
 
         public void Write(ushort val)
         {
-            if (this.Endiannes == EndiannessMode.LittleEndian) {
-                this.Write((byte)((val >> 0) & 0xFF));
-                this.Write((byte)((val >> 8) & 0xFF));
-            } else if (this.Endiannes == EndiannessMode.BigEndian) {
-                this.Write((byte)((val >> 8) & 0xFF));
-                this.Write((byte)((val >> 0) & 0xFF));
+            if (Endiannes == EndiannessMode.LittleEndian) {
+                Write((byte)((val >> 0) & 0xFF));
+                Write((byte)((val >> 8) & 0xFF));
+            } else if (Endiannes == EndiannessMode.BigEndian) {
+                Write((byte)((val >> 8) & 0xFF));
+                Write((byte)((val >> 0) & 0xFF));
             }
         }
 
         public void Write(int val)
         {
-            this.Write((uint)val);
+            Write((uint)val);
         }
 
         public void Write(uint val)
         {
-            if (this.Endiannes == EndiannessMode.LittleEndian) {
-                this.Write((ushort)((val >> 00) & 0xFFFF));
-                this.Write((ushort)((val >> 16) & 0xFFFF));
-            } else if (this.Endiannes == EndiannessMode.BigEndian) {
-                this.Write((ushort)((val >> 16) & 0xFFFF));
-                this.Write((ushort)((val >> 00) & 0xFFFF));
+            if (Endiannes == EndiannessMode.LittleEndian) {
+                Write((ushort)((val >> 00) & 0xFFFF));
+                Write((ushort)((val >> 16) & 0xFFFF));
+            } else if (Endiannes == EndiannessMode.BigEndian) {
+                Write((ushort)((val >> 16) & 0xFFFF));
+                Write((ushort)((val >> 00) & 0xFFFF));
             }
         }
 
         public void Write(long val)
         {
-            this.Write((ulong)val);
+            Write((ulong)val);
         }
 
         public void Write(ulong val)
         {
-            if (this.Endiannes == EndiannessMode.LittleEndian) {
-                this.Write((uint)((val >> 00) & 0xFFFFFFFF));
-                this.Write((uint)((val >> 32) & 0xFFFFFFFF));
-            } else if (this.Endiannes == EndiannessMode.BigEndian) {
-                this.Write((uint)((val >> 32) & 0xFFFFFFFF));
-                this.Write((uint)((val >> 00) & 0xFFFFFFFF));
+            if (Endiannes == EndiannessMode.LittleEndian) {
+                Write((uint)((val >> 00) & 0xFFFFFFFF));
+                Write((uint)((val >> 32) & 0xFFFFFFFF));
+            } else if (Endiannes == EndiannessMode.BigEndian) {
+                Write((uint)((val >> 32) & 0xFFFFFFFF));
+                Write((uint)((val >> 00) & 0xFFFFFFFF));
             }
         }
 
         public void Write(byte[] vals)
         {
-            this.Stream.Write(vals, 0, vals.Length);
+            if (vals == null)
+                throw new ArgumentNullException(nameof(vals));
+
+            Stream.Write(vals, 0, vals.Length);
         }
 
         public void Write(char ch)
         {
-            this.Write(this.Encoding.GetBytes(new char[] { ch }));
+            Write(Encoding.GetBytes(new char[] { ch }));
         }
 
         public void Write(char[] chs)
         {
-            this.Write(this.Encoding.GetBytes(chs));
+            Write(Encoding.GetBytes(chs));
         }
 
         public void Write(string s, int byteCount, bool nullTerminator = true)
         {
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
             int maxBytes = nullTerminator ? byteCount - 1 : byteCount;
-            byte[] buffer = this.Encoding.GetBytes(s);
+            byte[] buffer = Encoding.GetBytes(s);
 
             if (buffer.Length > maxBytes) {
                 System.IO.File.AppendAllText(
@@ -117,57 +152,66 @@ namespace Libgame.IO
 
                 if (nullTerminator)
                     buffer[byteCount - 1] = 0x00;    // Null terminator
-
-                // TODO: Give warning instead of error
-                //throw new ArgumentOutOfRangeException("s", s, "Text is so big");
             }
 
             Array.Resize(ref buffer, byteCount);
-            this.Write(buffer);
+            Write(buffer);
         }
 
         public void Write(string s)
         {
-            this.Write(this.Encoding.GetBytes(s));
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+
+            Write(Encoding.GetBytes(s));
         }
 
         public void Write(string s, Type sizeType)
         {
-            byte[] data = this.Encoding.GetBytes(s);
-            this.Write(data.Length, sizeType);
-            this.Write(data);
+            if (s == null)
+                throw new ArgumentNullException(nameof(s));
+            if (sizeType == null)
+                throw new ArgumentNullException(nameof(sizeType));
+
+            byte[] data = Encoding.GetBytes(s);
+            Write(data.Length, sizeType);
+            Write(data);
         }
 
         public void Write(object o, Type type)
         {
-            o = Convert.ChangeType(o, type);
+            if (o == null)
+                throw new ArgumentNullException(nameof(o));
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            o = Convert.ChangeType(o, type, CultureInfo.InvariantCulture);
 
             if (type == typeof(long))
-                this.Write((long)o);
+                Write((long)o);
             else if (type == typeof(ulong))
-                this.Write((ulong)o);
+                Write((ulong)o);
             else if (type == typeof(int))
-                this.Write((int)o);
+                Write((int)o);
             else if (type == typeof(uint))
-                this.Write((uint)o);
+                Write((uint)o);
             else if (type == typeof(short))
-                this.Write((short)o);
+                Write((short)o);
             else if (type == typeof(ushort))
-                this.Write((ushort)o);
+                Write((ushort)o);
             else if (type == typeof(byte))
-                this.Write((byte)o);
+                Write((byte)o);
             else if (type == typeof(sbyte))
-                this.Write((sbyte)o);
+                Write((sbyte)o);
             else if (type == typeof(char))
-                this.Write((char)o);
+                Write((char)o);
             else if (type == typeof(string))
-                this.Write((string)o);
+                Write((string)o);
         }
 
         public void Flush()
         {
-            this.Stream.Flush();
+            Stream.Flush();
         }
     }
 }
-

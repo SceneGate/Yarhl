@@ -6,6 +6,8 @@ M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey0::<>m__0(
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(System.Type)
 M: System.Boolean Libgame.PluginManager/TypeParamComparer::Equals(System.Type,System.Type)
 M: System.Object Libgame.IO.DataReader::Read(System.Type)
+M: System.Void Libgame.IO.DataWriter::Write(System.Object,System.Type)
+M: System.Void Libgame.IO.DataWriter::Write(System.String,System.Type)
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
@@ -34,4 +36,12 @@ M: System.Void Libgame.PluginManager::Shutdown()
 R: Gendarme.Rules.Naming.UseCorrectSuffixRule
 # It doesn't inherit but internally use a Stream.
 T: Libgame.IO.DataStream
+
+R: Gendarme.Rules.Performance.AvoidUnneededUnboxingRule
+# Actually we are unboxing once
+M: System.Void Libgame.IO.DataWriter::Write(System.Object,System.Type)
+
+R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
+# We are implementing a general binary writer
+T: Libgame.IO.DataWriter
 
