@@ -30,3 +30,7 @@ R: Gendarme.Rules.Concurrency.ReviewLockUsedOnlyForOperationsOnVariablesRule
 # We want to lock between methods including the initialization. It is called a few times and it's not easy to fix.
 M: System.Void Libgame.PluginManager::Shutdown()
 
+R: Gendarme.Rules.Naming.UseCorrectSuffixRule
+# It doesn't inherit but internally use a Stream.
+T: Libgame.IO.DataStream
+
