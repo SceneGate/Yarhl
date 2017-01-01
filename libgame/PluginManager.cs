@@ -29,15 +29,16 @@ namespace Libgame
     /// <summary>
     /// Manager for LibGame plugins.
     /// </summary>
-    class PluginManager
+    public class PluginManager
     {
         const string AddinFolder = ".addins";
 
-        static readonly object lockObj = new object();
+        static readonly object LockObj = new object();
         static PluginManager singleInstance;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Libgame.PluginManager"/> class.
+        /// Prevents a default instance of the <see cref="PluginManager" />
+        /// class from being created.
         /// </summary>
         PluginManager()
         {
@@ -64,22 +65,14 @@ namespace Libgame
         /// <value>The plugin manager instance.</value>
         public static PluginManager Instance {
             get {
-                if (singleInstance == null)
-                    Initialize();
-                return singleInstance;
-            }
-        }
-
-        /// <summary>
-        /// Initialize the plugin manager.
-        /// </summary>
-        public static void Initialize()
-        {
-            if (singleInstance == null) {
-                lock (lockObj) {
-                    if (singleInstance == null)
-                        singleInstance = new PluginManager();
+                if (singleInstance == null) {
+                    lock (LockObj) {
+                        if (singleInstance == null)
+                            singleInstance = new PluginManager();
+                    }
                 }
+
+                return singleInstance;
             }
         }
 
@@ -98,11 +91,21 @@ namespace Libgame
             singleInstance = null;
         }
 
+        /// <summary>
+        /// Finds all the extensions from the given base type.
+        /// </summary>
+        /// <returns>The extensions.</returns>
+        /// <typeparam name="T">Type of the extension point.</typeparam>
         public IEnumerable<Type> FindExtensions<T>()
         {
             return FindExtensions(typeof(T));
         }
 
+        /// <summary>
+        /// Finds all the extensions from the given base type.
+        /// </summary>
+        /// <returns>The extensions.</returns>
+        /// <param name="extension">Type of the extension point.</param>
         public IEnumerable<Type> FindExtensions(Type extension)
         {
             return AddinManager
@@ -110,6 +113,14 @@ namespace Libgame
                 .Select(node => node.Type);
         }
 
+        /// <summary>
+        /// Finds all the extensions extending a generic extension point class.
+        /// </summary>
+        /// <returns>The extensions.</returns>
+        /// <param name="extension">The generic extension point type.</param>
+        /// <param name="genericTypeArguments">
+        /// The types of the generic extension point.
+        /// </param>
         public IEnumerable<Type> FindGenericExtensions(
                 Type extension,
                 params Type[] genericTypeArguments)
@@ -122,7 +133,7 @@ namespace Libgame
                                 new TypeParamComparer())));
         }
 
-        class TypeParamComparer : IEqualityComparer<Type>
+        sealed class TypeParamComparer : IEqualityComparer<Type>
         {
             public bool Equals(Type x, Type y)
             {

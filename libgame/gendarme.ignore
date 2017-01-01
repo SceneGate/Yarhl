@@ -9,6 +9,7 @@ R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,System.Object)
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean)
+M: System.Collections.Generic.IEnumerable`1<System.Type> Libgame.PluginManager::FindExtensions()
 
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme

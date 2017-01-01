@@ -25,6 +25,10 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests
 {
+    using System.IO;
+    using System.Linq;
+    using FileFormat;
+    using Libgame.FileFormat;
     using Mono.Addins;
     using NUnit.Framework;
 
@@ -44,20 +48,65 @@ namespace Libgame.UnitTests
         }
 
         [Test]
-        public void InitilaizeInitializeManager()
+        public void InstanceInitializeAddinManager()
         {
             Assert.IsFalse(AddinManager.IsInitialized);
-            PluginManager.Initialize();
+            Assert.IsNotNull(PluginManager.Instance);
             Assert.IsTrue(AddinManager.IsInitialized);
+        }
+
+        [Test]
+        public void AddinFolderIsHiddenAndExists()
+        {
+            Assert.IsNotNull(PluginManager.Instance);
+            DirectoryInfo dirInfo = new DirectoryInfo(".addins");
+            Assert.IsTrue(dirInfo.Exists);
+            Assert.IsTrue(dirInfo.Attributes.HasFlag(FileAttributes.Hidden));
         }
 
         [Test]
         public void ShutdownTurnOffAddinManager()
         {
-            PluginManager.Initialize();
+            Assert.IsNotNull(PluginManager.Instance);
             Assert.IsTrue(AddinManager.IsInitialized);
             PluginManager.Shutdown();
             Assert.IsFalse(AddinManager.IsInitialized);
+        }
+
+        [Test]
+        public void FindExtensionByGenericType()
+        {
+            var extensions = PluginManager.Instance
+                .FindExtensions<Format>()
+                .ToList();
+            Assert.IsNotEmpty(extensions);
+            Assert.Contains(typeof(StringFormatTest), extensions);
+        }
+
+        [Test]
+        public void FindSpecificExtensionByGenericTypeFails()
+        {
+            var extensions = PluginManager.Instance
+                                          .FindExtensions<StringFormatTest>();
+            Assert.IsEmpty(extensions);
+        }
+
+        [Test]
+        public void FindExtension()
+        {
+            var extensions = PluginManager.Instance
+                                          .FindExtensions(typeof(Format))
+                                          .ToList();
+            Assert.IsNotEmpty(extensions);
+            Assert.Contains(typeof(StringFormatTest), extensions);
+        }
+
+        [Test]
+        public void FindSpecificExtensionFails()
+        {
+            var extensions = PluginManager.Instance
+                                          .FindExtensions(typeof(StringFormatTest));
+            Assert.IsEmpty(extensions);
         }
     }
 }
