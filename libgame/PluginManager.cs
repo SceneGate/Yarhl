@@ -88,7 +88,8 @@ namespace Libgame
                 AddinManager.Shutdown();
             }
 
-            singleInstance = null;
+            lock (LockObj)
+                singleInstance = null;
         }
 
         /// <summary>

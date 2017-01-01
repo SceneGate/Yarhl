@@ -36,21 +36,10 @@ namespace Libgame.UnitTests
     [TestFixture]
     public class PluginManagerTests
     {
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            PluginManager.Shutdown();  // Clean any previous state
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            PluginManager.Shutdown();
-        }
-
         [Test]
         public void InstanceInitializeAddinManager()
         {
+            PluginManager.Shutdown();
             Assert.IsFalse(AddinManager.IsInitialized);
             Assert.IsNotNull(PluginManager.Instance);
             Assert.IsTrue(AddinManager.IsInitialized);
