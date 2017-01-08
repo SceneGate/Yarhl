@@ -213,6 +213,41 @@ namespace Libgame.IO
                 Write((string)o);
         }
 
+        public void WriteTimes(byte val, long times)
+        {
+            const int BufferSize = 5 * 1024;
+            byte[] buffer = new byte[BufferSize];
+            for (int i = 0; i < BufferSize; i++)
+                buffer[i] = val;
+
+            int written = 0;
+            int bytesToWrite = 0;
+            do {
+                if (written + BufferSize > times)
+                    bytesToWrite = (int)(times - written);
+                else
+                    bytesToWrite = BufferSize;
+
+                written += bytesToWrite;
+                Stream.Write(buffer, 0, bytesToWrite);
+            } while (written != times);
+        }
+
+        public void WriteUntilLength(byte val, long length)
+        {
+            long times = length - Stream.Length;
+            Stream.Seek(0, SeekMode.End);
+            WriteTimes(val, times);
+        }
+
+        public void WritePadding(byte val, int padding)
+        {
+            // TODO: Make relative padding
+            int times = (int)(padding - (Stream.AbsolutePosition % padding));
+            if (times != padding)    // Else it's already padded
+                WriteTimes(val, times);
+        }
+
         public void Flush()
         {
             Stream.Flush();

@@ -27,7 +27,7 @@ namespace Libgame.UnitTests.FileFormat
 {
     using System.IO;
     using Libgame.FileFormat;
-    using IO;
+    using Libgame.IO;
     using NUnit.Framework;
 
     [TestFixture]
@@ -50,7 +50,7 @@ namespace Libgame.UnitTests.FileFormat
             BinaryFormat format = new BinaryFormat(tempPath);
 
             Assert.DoesNotThrow(() => format.Stream.WriteByte(0xAE));
-            format.Stream.Seek(0, SeekMode.Origin);
+            format.Stream.Seek(0, SeekMode.Start);
             Assert.AreEqual(0xAE, format.Stream.ReadByte());
 
             format.Dispose();

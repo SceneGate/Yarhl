@@ -45,6 +45,7 @@
     <Folder Include="FileFormat\" />
     <Folder Include="Properties\" />
     <Folder Include="FileSystem\" />
+    <Folder Include="IO\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginManagerTests.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="FileFormat\BinaryFormatTests.cs" />
     <Compile Include="FileFormat\BaseGeneralTests.cs" />
     <Compile Include="FileFormat\NodeContainerFormatTests.cs" />
+    <Compile Include="IO\DataStreamTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

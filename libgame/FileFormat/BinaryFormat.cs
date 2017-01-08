@@ -44,10 +44,7 @@ namespace Libgame.FileFormat
         /// <param name="filePath">The file path.</param>
         public BinaryFormat(string filePath)
         {
-            Stream = new DataStream(
-                filePath,
-                System.IO.FileMode.OpenOrCreate,
-                System.IO.FileAccess.ReadWrite);
+            Stream = new DataStream(filePath, System.IO.FileMode.OpenOrCreate);
         }
 
         /// <summary>

@@ -140,7 +140,7 @@ namespace Libgame.IO
 
             // Adjust position
             charLength = Encoding.GetByteCount(charArray);
-            Stream.Seek(pos1 + charLength, SeekMode.Absolute);
+            Stream.Seek(pos1 + charLength, SeekMode.Start);
 
             return charArray;
         }
@@ -157,7 +157,7 @@ namespace Libgame.IO
             char ch;
 
             do {
-                long bytesLeft = Stream.Length - Stream.RelativePosition;
+                long bytesLeft = Stream.Length - Stream.Position;
                 int bytesToRead = (bytesLeft < maxBytes) ? (int)bytesLeft : maxBytes;
 
                 byte[] data = ReadBytes(bytesToRead);
@@ -172,7 +172,7 @@ namespace Libgame.IO
 
                 if (ch != '\0')
                     str.Append(ch);
-            } while (ch != '\0' && !Stream.EOF);
+            } while (ch != '\0' && !Stream.EndOfStream);
 
             return str.ToString();
         }

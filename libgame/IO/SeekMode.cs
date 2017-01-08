@@ -26,19 +26,14 @@
 namespace Libgame.IO
 {
     /// <summary>
-    /// Seek mode.
+    /// Seek mode for DataStream.
     /// </summary>
     public enum SeekMode
     {
         /// <summary>
-        /// Position is absolute from the base stream.
+        /// Position from the origin of the DataStream.
         /// </summary>
-        Absolute,
-
-        /// <summary>
-        /// Position is from the origin of this sub-stream.
-        /// </summary>
-        Origin,
+        Start,
 
         /// <summary>
         /// Position from the current position.
@@ -46,7 +41,7 @@ namespace Libgame.IO
         Current,
 
         /// <summary>
-        /// Position going back from the end of the sub-stream.
+        /// Position going back from the end of the DataStream.
         /// </summary>
         End
     }

@@ -38,11 +38,16 @@ namespace Libgame.IO
     public class DataStream : IDisposable
     {
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
+        long length;
 
         public DataStream(Stream stream, long offset, long length)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
+            if (offset < 0 || offset > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < -1)
+                throw new ArgumentOutOfRangeException(nameof(length));
 
             if (!Instances.ContainsKey(stream))
                 Instances.Add(stream, 1);
@@ -50,23 +55,27 @@ namespace Libgame.IO
                 Instances[stream] += 1;
 
             BaseStream = stream;
-            Length = (length != -1) ? length : stream.Length;
             Offset = offset;
-            Position = Offset;
+            Length = length;
         }
 
-        public DataStream(string filePath, FileMode mode, FileAccess access)
-            : this(new FileStream(filePath, mode, access), 0, -1)
+        public DataStream(Stream stream)
+            : this(stream, 0, -1)
         {
         }
 
-        public DataStream(string filePath, FileMode mode, FileAccess access, FileShare share)
-            : this(new FileStream(filePath, mode, access, share), 0, -1)
+        public DataStream()
+            : this(new MemoryStream())
+        {
+        }
+
+        public DataStream(string filePath, FileMode mode)
+            : this(new FileStream(filePath, mode, FileAccess.ReadWrite))
         {
         }
 
         public DataStream(DataStream stream, long offset, long length)
-            : this(stream?.BaseStream, offset + stream.Offset, length)
+            : this(stream?.BaseStream, offset + (stream?.Offset ?? 0), length)
         {
         }
 
@@ -90,13 +99,22 @@ namespace Libgame.IO
             private set;
         }
 
-        public long RelativePosition {
-            get { return Position - Offset; }
-        }
-
         public long Length {
-            get;
-            private set;
+            get {
+                return length;
+            }
+
+            set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(DataStream));
+                if (value < -1)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                length = (value != -1) ? value : BaseStream.Length;
+
+                if (Position > Length)
+                    Position = Length;
+            }
         }
 
         public Stream BaseStream {
@@ -104,10 +122,14 @@ namespace Libgame.IO
             private set;
         }
 
-        public bool EOF {
+        public bool EndOfStream {
             get {
-                return Position >= Offset + Length;
+                return Position >= Length;
             }
+        }
+
+        public long AbsolutePosition {
+            get { return Offset + Position; }
         }
 
         public static bool Compare(DataStream ds1, DataStream ds2)
@@ -120,10 +142,10 @@ namespace Libgame.IO
             if (ds1.Length != ds2.Length)
                 return false;
 
-            ds1.Seek(0, SeekMode.Origin);
-            ds2.Seek(0, SeekMode.Origin);
+            ds1.Seek(0, SeekMode.Start);
+            ds2.Seek(0, SeekMode.Start);
 
-            while (!ds1.EOF) {
+            while (!ds1.EndOfStream) {
                 if (ds1.ReadByte() != ds2.ReadByte())
                     return false;
             }
@@ -151,39 +173,20 @@ namespace Libgame.IO
             case SeekMode.Current:
                 Position += shift;
                 break;
-            case SeekMode.Origin:
-                Position = Offset + shift;
+            case SeekMode.Start:
+                Position = shift;
                 break;
             case SeekMode.End:
-                Position = Offset + Length - shift;
-                break;
-            case SeekMode.Absolute:
-                Position = shift;
+                Position = Length - shift;
                 break;
             }
 
-            if (Position < Offset)
-                Position = Offset;
-            if (Position > Offset + Length)
-                Position = Offset + Length;
+            if (Position < 0)
+                Position = 0;
+            if (Position > Length)
+                Position = Length;
 
-            BaseStream.Position = Position;
-        }
-
-        public void SetLength(long length)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            if (length > BaseStream.Length)
-                throw new ArgumentOutOfRangeException(nameof(length), length, "Length is bigger than BaseStream");
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length), length, "Length can not be negative");
-
-            Length = length;
-
-            if (RelativePosition > Length)
-                Seek(0, SeekMode.End);
+            BaseStream.Position = AbsolutePosition;
         }
 
         public byte ReadByte()
@@ -191,10 +194,11 @@ namespace Libgame.IO
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            if (Position >= Offset + Length)
+            if (AbsolutePosition >= Offset + Length)
                 throw new EndOfStreamException();
 
-            BaseStream.Position = Position++;
+            BaseStream.Position = AbsolutePosition;
+            Position++;
             return (byte)BaseStream.ReadByte();
         }
 
@@ -206,10 +210,10 @@ namespace Libgame.IO
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
 
-            if (Position > Offset + Length + count)
+            if (AbsolutePosition > Offset + Length + count)
                 throw new EndOfStreamException();
 
-            BaseStream.Position = Position;
+            BaseStream.Position = AbsolutePosition;
             int read = BaseStream.Read(buffer, index, count);
             Position += count;
 
@@ -221,13 +225,14 @@ namespace Libgame.IO
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            if (Position > Offset + Length)
+            if (AbsolutePosition > Offset + Length)
                 throw new EndOfStreamException();
 
-            if (Position == Offset + Length)
+            if (AbsolutePosition == Offset + Length)
                 Length++;
 
-            BaseStream.Position = Position++;
+            BaseStream.Position = AbsolutePosition;
+            Position++;
             BaseStream.WriteByte(val);
         }
 
@@ -240,59 +245,16 @@ namespace Libgame.IO
                 throw new ArgumentNullException(nameof(buffer));
 
             // If we're trying to write out the stream
-            if (Position > Offset + Length)
+            if (AbsolutePosition > Offset + Length)
                 throw new EndOfStreamException();
 
             // If it's in the end the file, increment it
-            if (Position == Offset + Length)
+            if (AbsolutePosition == Offset + Length)
                 Length += count;
 
-            BaseStream.Position = Position;
+            BaseStream.Position = AbsolutePosition;
             BaseStream.Write(buffer, index, count);
             Position += count;
-        }
-
-        public void WriteTimes(byte val, long times)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            const int BufferSize = 5 * 1024;
-            byte[] buffer = new byte[BufferSize];
-            for (int i = 0; i < BufferSize; i++)
-                buffer[i] = val;
-
-            int written = 0;
-            int bytesToWrite = 0;
-            do {
-                if (written + BufferSize > times)
-                    bytesToWrite = (int)(times - written);
-                else
-                    bytesToWrite = BufferSize;
-
-                written += bytesToWrite;
-                Write(buffer, 0, bytesToWrite);
-            } while (written != times);
-        }
-
-        public void WriteUntilLength(byte val, long length)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            long times = length - Length;
-            Seek(0, SeekMode.End);
-            WriteTimes(val, times);
-        }
-
-        public void WritePadding(byte val, int padding)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            int times = (int)(padding - (Position % padding));
-            if (times != padding)    // Else it's already padded
-                WriteTimes(val, times);
         }
 
         public void WriteTo(string fileOut)
@@ -300,19 +262,18 @@ namespace Libgame.IO
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            using (DataStream stream = new DataStream(fileOut, FileMode.Create, FileAccess.Write))
+            using (var stream = new DataStream(fileOut, FileMode.Create))
                 WriteTo(stream);
         }
 
         public void WriteTo(DataStream stream)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            long currPos = Position;
+            Seek(0, SeekMode.Start);
 
             WriteTo(stream, Length);
+
+            Seek(currPos, SeekMode.Start);
         }
 
         public void WriteTo(DataStream stream, long count)
@@ -323,9 +284,7 @@ namespace Libgame.IO
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-            long currPos = Position;
-            Seek(0, SeekMode.Origin);
-            BaseStream.Position = Position;
+            BaseStream.Position = AbsolutePosition;
 
             const int BufferSize = 5 * 1024;
             byte[] buffer = new byte[BufferSize];
@@ -341,8 +300,6 @@ namespace Libgame.IO
                 written += Read(buffer, 0, bytesToRead);
                 stream.Write(buffer, 0, bytesToRead);
             } while (written != count);
-
-            Seek(currPos, SeekMode.Absolute);
         }
 
         protected virtual void Dispose(bool freeManagedResourcesAlso)
