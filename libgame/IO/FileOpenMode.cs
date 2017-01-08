@@ -28,6 +28,9 @@ namespace Libgame.IO
     using System;
     using System.IO;
 
+    /// <summary>
+    /// Mode to open files.
+    /// </summary>
     public enum FileOpenMode
     {
         /// <summary>
@@ -61,8 +64,16 @@ namespace Libgame.IO
         Append
     }
 
+    /// <summary>
+    /// Extensions for the FileOpenMode enumeration.
+    /// </summary>
     public static class FileOpenModeExtensions
     {
+        /// <summary>
+        /// Get the equivalent <see cref="FileMode"/>.
+        /// </summary>
+        /// <returns>The file mode.</returns>
+        /// <param name="openMode">File open mode.</param>
         public static FileMode ToFileMode(this FileOpenMode openMode)
         {
             switch (openMode) {
@@ -79,6 +90,11 @@ namespace Libgame.IO
             }
         }
 
+        /// <summary>
+        /// Get the equivalent <see cref="FileAccess"/>.
+        /// </summary>
+        /// <returns>The file access.</returns>
+        /// <param name="openMode">File open mode.</param>
         public static FileAccess ToFileAccess(this FileOpenMode openMode)
         {
             switch (openMode) {

@@ -62,6 +62,7 @@
     <Compile Include="FileFormat\BaseGeneralTests.cs" />
     <Compile Include="FileFormat\NodeContainerFormatTests.cs" />
     <Compile Include="IO\DataStreamTests.cs" />
+    <Compile Include="IO\FileOpenModeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">
