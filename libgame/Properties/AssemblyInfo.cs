@@ -36,6 +36,7 @@ using Mono.Addins;
 [assembly: AssemblyCopyright("Copyright (c) 2017 Benito Palacios (aka pleonex)")]
 [assembly: Guid("cf6865f7-7161-41c5-92b8-46049634bc23")]
 [assembly: AssemblyVersion("1.0.0.*")]
+[assembly: AssemblyFileVersion("1.0.0")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]
 [assembly: InternalsVisibleTo("libgame.UnitTests")]

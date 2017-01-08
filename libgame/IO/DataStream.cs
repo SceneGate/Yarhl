@@ -46,7 +46,7 @@ namespace Libgame.IO
                 throw new ArgumentNullException(nameof(stream));
             if (offset < 0 || offset > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < -1)
+            if (length < -1 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             if (!Instances.ContainsKey(stream))
@@ -69,8 +69,8 @@ namespace Libgame.IO
         {
         }
 
-        public DataStream(string filePath, FileMode mode)
-            : this(new FileStream(filePath, mode, FileAccess.ReadWrite))
+        public DataStream(string filePath, FileOpenMode mode)
+            : this(new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess()))
         {
         }
 
@@ -107,7 +107,7 @@ namespace Libgame.IO
             set {
                 if (Disposed)
                     throw new ObjectDisposedException(nameof(DataStream));
-                if (value < -1)
+                if (value < -1 || Offset + Length > BaseStream.Length)
                     throw new ArgumentOutOfRangeException(nameof(value));
 
                 length = (value != -1) ? value : BaseStream.Length;
@@ -262,7 +262,7 @@ namespace Libgame.IO
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            using (var stream = new DataStream(fileOut, FileMode.Create))
+            using (var stream = new DataStream(fileOut, FileOpenMode.Write))
                 WriteTo(stream);
         }
 

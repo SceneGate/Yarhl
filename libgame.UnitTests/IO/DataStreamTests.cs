@@ -38,10 +38,11 @@ namespace Libgame.UnitTests.IO
         {
             Stream baseStream = new MemoryStream();
             baseStream.WriteByte(0xCA);
-            DataStream stream = new DataStream(baseStream, 0x1, 0x100);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0x1, 0x1);
             Assert.AreSame(baseStream, stream.BaseStream);
             Assert.AreEqual(0x1, stream.Offset);
-            Assert.AreEqual(0x100, stream.Length);
+            Assert.AreEqual(0x1, stream.Length);
             Assert.AreEqual(0x0, stream.Position);
         }
 
@@ -77,10 +78,10 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
-        public void DataStreamLengthLargerThanBaseLengthIsAllowed()
+        public void DataStreamLengthLargerThanBaseLengthIsNotAllowed()
         {
             Stream baseStream = new MemoryStream();
-            Assert.DoesNotThrow(() =>
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, 0, 100));
         }
 

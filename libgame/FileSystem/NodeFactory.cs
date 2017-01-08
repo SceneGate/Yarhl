@@ -95,7 +95,7 @@ namespace Libgame.FileSystem
         /// <param name="nodeName">Node name.</param>
         public static Node FromFile(string filePath, string nodeName)
         {
-            DataStream stream = new DataStream(filePath, FileMode.Open);
+            DataStream stream = new DataStream(filePath, FileOpenMode.ReadWrite);
             Node node;
             try {
                 node = new Node(nodeName, new BinaryFormat(stream));
