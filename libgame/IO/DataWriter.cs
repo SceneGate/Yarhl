@@ -247,10 +247,5 @@ namespace Libgame.IO
             if (times != padding)    // Else it's already padded
                 WriteTimes(val, times);
         }
-
-        public void Flush()
-        {
-            Stream.Flush();
-        }
     }
 }

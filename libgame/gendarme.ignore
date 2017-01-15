@@ -45,7 +45,8 @@ R: Gendarme.Rules.Performance.AvoidUnneededUnboxingRule
 M: System.Void Libgame.IO.DataWriter::Write(System.Object,System.Type)
 
 R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
-# We are implementing a general binary writer
+# We are implementing a general streams
+T: Libgame.IO.DataStream
 T: Libgame.IO.DataWriter
 
 R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule

@@ -38,8 +38,18 @@ namespace Libgame.IO
     public class DataStream : IDisposable
     {
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
+        long position;
         long length;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
+        /// <param name="offset">Offset from the base stream origin.</param>
+        /// <param name="length">
+        /// Length of this DataStream.
+        /// If it's -1 then it takes the stream length.
+        /// </param>
         public DataStream(Stream stream, long offset, long length)
         {
             if (stream == null)
@@ -59,21 +69,42 @@ namespace Libgame.IO
             Length = length;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
         public DataStream(Stream stream)
             : this(stream, 0, -1)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
         public DataStream()
             : this(new MemoryStream())
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="filePath">File path.</param>
+        /// <param name="mode">File open mode.</param>
         public DataStream(string filePath, FileOpenMode mode)
             : this(new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess()))
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
+        /// <param name="offset">Offset from the DataStream start.</param>
+        /// <param name="length">
+        /// Length of this DataStream.
+        /// If it's -1 then it takes the stream length.
+        /// </param>
         public DataStream(DataStream stream, long offset, long length)
             : this(stream?.BaseStream, offset + (stream?.Offset ?? 0), length)
         {
@@ -84,21 +115,48 @@ namespace Libgame.IO
             Dispose(false);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="DataStream"/> is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the offset from the BaseStream.
+        /// </summary>
+        /// <value>The offset.</value>
         public long Offset {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets or sets the position from the start of this stream.
+        /// </summary>
+        /// <value>The position.</value>
         public long Position {
-            get;
-            private set;
+            get {
+                return position;
+            }
+
+            set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(DataStream));
+                if (value < 0 || value > Length)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                position = value;
+            }
         }
 
+        /// <summary>
+        /// Gets or sets the length of this stream.
+        /// If the value set is -1, then the length is taken from the BaseStream.
+        /// </summary>
+        /// <value>The length.</value>
         public long Length {
             get {
                 return length;
@@ -107,7 +165,7 @@ namespace Libgame.IO
             set {
                 if (Disposed)
                     throw new ObjectDisposedException(nameof(DataStream));
-                if (value < -1 || Offset + Length > BaseStream.Length)
+                if (value < -1 || Offset + value > BaseStream.Length)
                     throw new ArgumentOutOfRangeException(nameof(value));
 
                 length = (value != -1) ? value : BaseStream.Length;
@@ -117,53 +175,47 @@ namespace Libgame.IO
             }
         }
 
+        /// <summary>
+        /// Gets the base stream.
+        /// </summary>
+        /// <value>The base stream.</value>
         public Stream BaseStream {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the position is at end of the stream.
+        /// </summary>
+        /// <value><c>true</c> if end of stream; otherwise, <c>false</c>.</value>
         public bool EndOfStream {
             get {
                 return Position >= Length;
             }
         }
 
+        /// <summary>
+        /// Gets the position from the base stream.
+        /// </summary>
+        /// <value>The absolute position.</value>
         public long AbsolutePosition {
             get { return Offset + Position; }
         }
 
-        public static bool Compare(DataStream ds1, DataStream ds2)
-        {
-            if (ds1 == null)
-                throw new ArgumentNullException(nameof(ds1));
-            if (ds2 == null)
-                throw new ArgumentNullException(nameof(ds2));
-
-            if (ds1.Length != ds2.Length)
-                return false;
-
-            ds1.Seek(0, SeekMode.Start);
-            ds2.Seek(0, SeekMode.Start);
-
-            while (!ds1.EndOfStream) {
-                if (ds1.ReadByte() != ds2.ReadByte())
-                    return false;
-            }
-
-            return true;
-        }
-
+        /// <summary>
+        /// Releases all resource used by the <see cref="DataStream"/> object.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        public void Flush()
-        {
-            BaseStream.Flush();
-        }
-
+        /// <summary>
+        /// Move the position of the Stream.
+        /// </summary>
+        /// <param name="shift">Distance to move position.</param>
+        /// <param name="mode">Start to move position.</param>
         public void Seek(long shift, SeekMode mode)
         {
             if (Disposed)
@@ -180,21 +232,18 @@ namespace Libgame.IO
                 Position = Length - shift;
                 break;
             }
-
-            if (Position < 0)
-                Position = 0;
-            if (Position > Length)
-                Position = Length;
-
-            BaseStream.Position = AbsolutePosition;
         }
 
+        /// <summary>
+        /// Reads the next byte.
+        /// </summary>
+        /// <returns>The next byte.</returns>
         public byte ReadByte()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            if (AbsolutePosition >= Offset + Length)
+            if (Position >= Length)
                 throw new EndOfStreamException();
 
             BaseStream.Position = AbsolutePosition;
@@ -209,8 +258,10 @@ namespace Libgame.IO
 
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
+            if (index + count >= buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
-            if (AbsolutePosition > Offset + Length + count)
+            if (Position > Length + count)
                 throw new EndOfStreamException();
 
             BaseStream.Position = AbsolutePosition;
@@ -225,15 +276,15 @@ namespace Libgame.IO
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            if (AbsolutePosition > Offset + Length)
+            if (Position > Length)
                 throw new EndOfStreamException();
 
-            if (AbsolutePosition == Offset + Length)
-                Length++;
-
             BaseStream.Position = AbsolutePosition;
-            Position++;
             BaseStream.WriteByte(val);
+
+            if (Position == Length)
+                Length++;
+            Position++;
         }
 
         public void Write(byte[] buffer, int index, int count)
@@ -245,11 +296,11 @@ namespace Libgame.IO
                 throw new ArgumentNullException(nameof(buffer));
 
             // If we're trying to write out the stream
-            if (AbsolutePosition > Offset + Length)
+            if (Position > Length)
                 throw new EndOfStreamException();
 
             // If it's in the end the file, increment it
-            if (AbsolutePosition == Offset + Length)
+            if (Position == Length)
                 Length += count;
 
             BaseStream.Position = AbsolutePosition;
@@ -268,21 +319,13 @@ namespace Libgame.IO
 
         public void WriteTo(DataStream stream)
         {
-            long currPos = Position;
-            Seek(0, SeekMode.Start);
-
-            WriteTo(stream, Length);
-
-            Seek(currPos, SeekMode.Start);
-        }
-
-        public void WriteTo(DataStream stream, long count)
-        {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
-
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
+
+            long currPos = Position;
+            Seek(0, SeekMode.Start);
 
             BaseStream.Position = AbsolutePosition;
 
@@ -292,14 +335,39 @@ namespace Libgame.IO
             int written = 0;
             int bytesToRead = 0;
             do {
-                if (written + BufferSize > count)
-                    bytesToRead = (int)(count - written);
+                if (written + BufferSize > Length)
+                    bytesToRead = (int)(Length - written);
                 else
                     bytesToRead = BufferSize;
 
                 written += Read(buffer, 0, bytesToRead);
                 stream.Write(buffer, 0, bytesToRead);
-            } while (written != count);
+            } while (written != Length);
+
+            Seek(currPos, SeekMode.Start);
+        }
+
+        public bool Compare(DataStream otherStream)
+        {
+            if (otherStream == null)
+                throw new ArgumentNullException(nameof(otherStream));
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+            if (otherStream.Disposed)
+                throw new ObjectDisposedException(nameof(otherStream));
+
+            if (Length != otherStream.Length)
+                return false;
+
+            Seek(0, SeekMode.Start);
+            otherStream.Seek(0, SeekMode.Start);
+
+            while (!EndOfStream) {
+                if (ReadByte() != otherStream.ReadByte())
+                    return false;
+            }
+
+            return true;
         }
 
         protected virtual void Dispose(bool freeManagedResourcesAlso)
