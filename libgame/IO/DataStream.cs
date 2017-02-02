@@ -358,8 +358,6 @@ namespace Libgame.IO
             long currPos = Position;
             Seek(0, SeekMode.Start);
 
-            BaseStream.Position = AbsolutePosition;
-
             const int BufferSize = 5 * 1024;
             byte[] buffer = new byte[BufferSize];
 
@@ -378,6 +376,11 @@ namespace Libgame.IO
             Seek(currPos, SeekMode.Start);
         }
 
+        /// <summary>
+        /// Compare the content of the stream with another one.
+        /// </summary>
+        /// <returns>The result of the comparaison.</returns>
+        /// <param name="otherStream">Stream to compare with.</param>
         public bool Compare(DataStream otherStream)
         {
             if (otherStream == null)
