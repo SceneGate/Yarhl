@@ -448,5 +448,365 @@ namespace Libgame.UnitTests.IO
             baseStream.Position = 1;
             Assert.AreEqual(0xCA, stream.ReadByte());
         }
+
+        [Test]
+        public void ReadsBuffer()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            byte[] buffer = new byte[2];
+            Assert.AreEqual(1, stream.Read(buffer, 0, 1));
+            Assert.AreEqual(0xCA, buffer[0]);
+            Assert.AreEqual(0x00, buffer[1]);
+            Assert.AreEqual(1, stream.Position);
+
+            Assert.AreEqual(1, stream.Read(buffer, 1, 1));
+            Assert.AreEqual(0xCA, buffer[0]);
+            Assert.AreEqual(0xFE, buffer[1]);
+            Assert.AreEqual(2, stream.Position);
+        }
+
+        [Test]
+        public void ReadBufferfterDisposeThrowException()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            stream.Dispose();
+            byte[] buffer = new byte[2];
+            Assert.Throws<ObjectDisposedException>(() => stream.Read(buffer, 0, 0));
+        }
+
+        [Test]
+        public void ReadBufferWhenEOSThrowsException()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            stream.Seek(0, SeekMode.End);
+            byte[] buffer = new byte[2];
+            Assert.Throws<EndOfStreamException>(() => stream.Read(buffer, 0, 1));
+            Assert.AreEqual(2, stream.Position);
+        }
+
+        [Test]
+        public void ReadBufferSetBaseStreamPosition()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            baseStream.Position = 1;
+            byte[] buffer = new byte[1];
+            stream.Read(buffer, 0, 1);
+            Assert.AreEqual(0xCA, buffer[0]);
+        }
+
+        [Test]
+        public void ReadBufferZeroBytes()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            byte[] buffer = new byte[2];
+            Assert.DoesNotThrow(() => stream.Read(buffer, 10, 0));
+            Assert.AreEqual(0, stream.Read(buffer, 10, 0));
+        }
+
+        [Test]
+        public void ReadBufferButNullThrowException()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            Assert.DoesNotThrow(() => stream.Read(null, 0, 0));
+            Assert.Throws<ArgumentNullException>(() => stream.Read(null, 0, 1));
+        }
+
+        [Test]
+        public void ReadBufferOutOfRange()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            byte[] buffer = new byte[2];
+            Assert.Throws<ArgumentOutOfRangeException>(() => stream.Read(buffer, 10, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => stream.Read(buffer, 0, 10));
+        }
+
+        [Test]
+        public void WritesAByteAndIncreasePosition()
+        {
+            MemoryStream baseStream = new MemoryStream(2);
+            DataStream stream = new DataStream(baseStream);
+            stream.WriteByte(0xCA);
+            Assert.AreEqual(1, stream.Position);
+            stream.Position = 0;
+            Assert.AreEqual(0xCA, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteByteIncreaseLength()
+        {
+            DataStream stream = new DataStream();
+            Assert.DoesNotThrow(() => stream.WriteByte(0xCA));
+            Assert.AreEqual(1, stream.Length);
+            Assert.AreEqual(1, stream.Position);
+            stream.Position = 0;
+            Assert.AreEqual(0xCA, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteByteAfterDisposeThrowException()
+        {
+            DataStream stream = new DataStream();
+            stream.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream.WriteByte(0xCA));
+        }
+
+        [Test]
+        public void WriteByteSetBaseStreamPosition()
+        {
+            MemoryStream baseStream = new MemoryStream(2);
+            DataStream stream = new DataStream(baseStream);
+            baseStream.Position = 1;
+            stream.WriteByte(0xCA);
+            baseStream.Position = 0;
+            Assert.AreEqual(0xCA, baseStream.ReadByte());
+        }
+
+        [Test]
+        public void WriteBufferAndIncreasePosition()
+        {
+            MemoryStream baseStream = new MemoryStream(2);
+            DataStream stream = new DataStream(baseStream);
+            byte[] buffer = {0x00, 0xCA};
+            stream.Write(buffer, 1, 1);
+            Assert.AreEqual(1, stream.Position);
+            stream.Position = 0;
+            Assert.AreEqual(0xCA, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteBufferAndIncreaseLength()
+        {
+            MemoryStream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xFF);
+            DataStream stream = new DataStream(baseStream);
+            Assert.AreEqual(1, stream.Length);
+            byte[] buffer = {0xCA, 0xFE};
+            Assert.DoesNotThrow(() => stream.Write(buffer, 0, 2));
+            Assert.AreEqual(2, stream.Position);
+            Assert.AreEqual(2, stream.Length);
+            stream.Position = 0;
+            Assert.AreEqual(0xCA, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteBufferWhenEOSIncreaseLength()
+        {
+            DataStream stream = new DataStream();
+            byte[] buffer = {0xCA, 0xFE};
+            Assert.DoesNotThrow(() => stream.Write(buffer, 0, 2));
+            Assert.AreEqual(2, stream.Position);
+            Assert.AreEqual(2, stream.Length);
+            stream.Position = 0;
+            Assert.AreEqual(0xCA, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteBufferAfterDisposeThrowException()
+        {
+            DataStream stream = new DataStream();
+            byte[] buffer = {0xCA};
+            stream.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream.Write(buffer, 0, 1));
+        }
+
+        [Test]
+        public void WriteBufferSetBaseStreamPosition()
+        {
+            MemoryStream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xFF);
+            DataStream stream = new DataStream(baseStream);
+            Assert.AreEqual(1, baseStream.Position);
+            byte[] buffer = {0xCA};
+            stream.Write(buffer, 0, 1);
+            baseStream.Position = 0;
+            Assert.AreEqual(0xCA, baseStream.ReadByte());
+        }
+
+        [Test]
+        public void WriteBufferButNullThrowException()
+        {
+            DataStream stream = new DataStream();
+            Assert.Throws<ArgumentNullException>(() => stream.Write(null, 0, 1));
+        }
+
+        [Test]
+        public void WriteBufferOutOfRangeThrowException()
+        {
+            DataStream stream = new DataStream();
+            byte[] buffer = {0xCA};
+            Assert.Throws<ArgumentOutOfRangeException>(() => stream.Write(buffer, 10, 1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => stream.Write(buffer, 0, 10));
+        }
+
+        [Test]
+        public void WriteBufferWithZeroBytes()
+        {
+            DataStream stream = new DataStream();
+            byte[] buffer = {0xCA};
+            Assert.DoesNotThrow(() => stream.Write(null, 0, 0));
+            Assert.AreEqual(0, stream.Position);
+            Assert.AreEqual(0, stream.Length);
+            Assert.DoesNotThrow(() => stream.Write(buffer, 10, 0));
+            Assert.AreEqual(0, stream.Position);
+            Assert.AreEqual(0, stream.Length);
+            stream.Write(buffer, 0, 0);
+            Assert.AreEqual(0, stream.Position);
+            Assert.AreEqual(0, stream.Length);
+        }
+
+        [Test]
+        public void CompareTwoEqualStreams()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x00);
+            stream2.WriteByte(0xFF);
+            Assert.IsTrue(stream1.Compare(stream2));
+            Assert.IsTrue(stream2.Compare(stream1));
+        }
+
+        [Test]
+        public void CompareTwoDifferentContentStreams()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x01);
+            stream2.WriteByte(0xFF);
+            Assert.IsFalse(stream1.Compare(stream2));
+            Assert.IsFalse(stream2.Compare(stream1));
+        }
+
+        [Test]
+        public void CompareTwoDifferentLengthStreams()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x00);
+            Assert.IsFalse(stream1.Compare(stream2));
+            Assert.IsFalse(stream2.Compare(stream1));
+        }
+
+        [Test]
+        public void CompareWithNullStream()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            Assert.Throws<ArgumentNullException>(() => stream1.Compare(null));
+        }
+
+        [Test]
+        public void CompareWithDisposedStream()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            stream2.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream1.Compare(stream2));
+        }
+
+        [Test]
+        public void CompareAfterDispose()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            stream1.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream1.Compare(stream2));
+        }
+
+        [Test]
+        public void CompareStartsFromBeginning()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x00);
+            stream2.WriteByte(0xFF);
+            stream1.Position = 1;
+            Assert.IsTrue(stream1.Compare(stream2));
+        }
+
+        [Test]
+        public void CompareDoesNotResetPosition()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.WriteByte(0xCA);
+            stream2.WriteByte(0xFE);
+            stream2.WriteByte(0x00);
+            stream2.WriteByte(0xFF);
+            stream1.Position = 1;
+            stream2.Position = 2;
+            Assert.IsTrue(stream1.Compare(stream2));
+            Assert.AreEqual(1, stream1.Position);
+            Assert.AreEqual(2, stream2.Position);
+        }
     }
 }

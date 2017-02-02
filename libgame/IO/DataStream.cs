@@ -251,17 +251,27 @@ namespace Libgame.IO
             return (byte)BaseStream.ReadByte();
         }
 
+        /// <summary>
+        /// Reads from the stream to the buffer.
+        /// </summary>
+        /// <returns>The number of bytes read.</returns>
+        /// <param name="buffer">Buffer to copy data.</param>
+        /// <param name="index">Index to start copying in buffer.</param>
+        /// <param name="count">Number of bytes to read.</param>
         public int Read(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
+            if (count == 0)
+                return 0;
+
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
-            if (index + count >= buffer.Length)
+            if (index + count > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(index));
 
-            if (Position > Length + count)
+            if (Position + count > Length)
                 throw new EndOfStreamException();
 
             BaseStream.Position = AbsolutePosition;
@@ -271,13 +281,14 @@ namespace Libgame.IO
             return read;
         }
 
+        /// <summary>
+        /// Writes a byte.
+        /// </summary>
+        /// <param name="val">Byte value.</param>
         public void WriteByte(byte val)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
-
-            if (Position > Length)
-                throw new EndOfStreamException();
 
             BaseStream.Position = AbsolutePosition;
             BaseStream.WriteByte(val);
@@ -287,42 +298,62 @@ namespace Libgame.IO
             Position++;
         }
 
+        /// <summary>
+        /// Writes the a portion of the buffer to the stream.
+        /// </summary>
+        /// <param name="buffer">Buffer to write.</param>
+        /// <param name="index">Index in the buffer.</param>
+        /// <param name="count">Bytes to write.</param>
         public void Write(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
+            if (count == 0)
+                return;
+
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
-
-            // If we're trying to write out the stream
-            if (Position > Length)
-                throw new EndOfStreamException();
-
-            // If it's in the end the file, increment it
-            if (Position == Length)
-                Length += count;
+            if (index + count > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
 
             BaseStream.Position = AbsolutePosition;
             BaseStream.Write(buffer, index, count);
+
+            if (Position + count > Length)
+                Length = Position + count;
             Position += count;
         }
 
+        /// <summary>
+        /// Writes the stream into a file.
+        /// </summary>
+        /// <param name="fileOut">Output file path.</param>
         public void WriteTo(string fileOut)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
+            if (string.IsNullOrEmpty(fileOut))
+                throw new ArgumentNullException(nameof(fileOut));
+
             using (var stream = new DataStream(fileOut, FileOpenMode.Write))
                 WriteTo(stream);
         }
 
+        /// <summary>
+        /// Writes the stream into another DataStream.
+        /// </summary>
+        /// <param name="stream">Output DataStream.</param>
         public void WriteTo(DataStream stream)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
+
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
+            if (stream.Disposed)
+                throw new ObjectDisposedException(nameof(stream));
 
             long currPos = Position;
             Seek(0, SeekMode.Start);
@@ -359,15 +390,21 @@ namespace Libgame.IO
             if (Length != otherStream.Length)
                 return false;
 
+            long startPosition = Position;
+            long otherStreamStartPosition = otherStream.position;
             Seek(0, SeekMode.Start);
             otherStream.Seek(0, SeekMode.Start);
 
-            while (!EndOfStream) {
+            bool result = true;
+            while (!EndOfStream && result) {
                 if (ReadByte() != otherStream.ReadByte())
-                    return false;
+                    result = false;
             }
 
-            return true;
+            Seek(startPosition, SeekMode.Start);
+            otherStream.Seek(otherStreamStartPosition, SeekMode.Start);
+
+            return result;
         }
 
         protected virtual void Dispose(bool freeManagedResourcesAlso)
