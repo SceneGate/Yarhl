@@ -834,6 +834,7 @@ namespace Libgame.UnitTests.IO
             DataStream fileStream = new DataStream(tempFile, FileOpenMode.Read);
             Assert.IsTrue(stream.Compare(fileStream));
 
+            fileStream.Dispose();
             File.Delete(tempFile);
         }
 
