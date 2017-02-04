@@ -412,6 +412,9 @@ namespace Libgame.IO
 
         protected virtual void Dispose(bool freeManagedResourcesAlso)
         {
+            if (Disposed)
+                return;
+
             Disposed = true;
             Instances[BaseStream] -= 1;
 

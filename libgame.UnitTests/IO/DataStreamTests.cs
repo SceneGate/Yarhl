@@ -96,6 +96,33 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void DisposeTwiceDoesNotThrowException()
+        {
+            DataStream stream = new DataStream();
+            stream.Dispose();
+            Assert.DoesNotThrow(stream.Dispose);
+        }
+
+        [Test]
+        public void DisposeTwiceDoesNotAffectOtherStreams()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            baseStream.Position = 0;
+
+            DataStream stream1 = new DataStream(baseStream);
+            DataStream stream2 = new DataStream(baseStream);
+
+            stream1.Dispose();
+            stream1.Dispose();
+
+            Assert.DoesNotThrow(() => baseStream.ReadByte());
+            stream2.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => baseStream.ReadByte());
+        }
+
+        [Test]
         public void DisposeChangesDisposed()
         {
             DataStream stream = new DataStream();
