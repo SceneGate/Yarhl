@@ -416,10 +416,12 @@ namespace Libgame.IO
                 return;
 
             Disposed = true;
-            Instances[BaseStream] -= 1;
 
-            if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
-                BaseStream.Dispose();
+            // BaseStream will be null if the constructor throws exception
+            if (BaseStream != null) {
+                Instances[BaseStream] -= 1;
+                if (freeManagedResourcesAlso && Instances[BaseStream] == 0)
+                    BaseStream.Dispose();
             }
         }
     }
