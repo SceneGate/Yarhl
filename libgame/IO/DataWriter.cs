@@ -32,18 +32,10 @@ namespace Libgame.IO
     public class DataWriter
     {
         public DataWriter(DataStream stream)
-            : this(stream, EndiannessMode.LittleEndian, Encoding.UTF8)
         {
-        }
-
-        public DataWriter(DataStream stream, EndiannessMode endiannes, Encoding encoding)
-        {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-
-            Stream    = stream;
-            Endiannes = endiannes;
-            Encoding  = encoding;
+            Stream = stream;
+            Endianness = EndiannessMode.LittleEndian;
+            DefaultEncoding = Encoding.UTF8;
         }
 
         public DataStream Stream {
@@ -51,14 +43,14 @@ namespace Libgame.IO
             private set;
         }
 
-        public EndiannessMode Endiannes {
+        public EndiannessMode Endianness {
             get;
-            private set;
+            set;
         }
 
-        public Encoding Encoding {
+        public Encoding DefaultEncoding {
             get;
-            private set;
+            set;
         }
 
         public void Write(byte val)
@@ -74,53 +66,35 @@ namespace Libgame.IO
 
         public void Write(short val)
         {
-            Write((ushort)val);
+            WriteNumber((ushort)val, 16);
         }
 
         [CLSCompliant(false)]
         public void Write(ushort val)
         {
-            if (Endiannes == EndiannessMode.LittleEndian) {
-                Write((byte)((val >> 0) & 0xFF));
-                Write((byte)((val >> 8) & 0xFF));
-            } else if (Endiannes == EndiannessMode.BigEndian) {
-                Write((byte)((val >> 8) & 0xFF));
-                Write((byte)((val >> 0) & 0xFF));
-            }
+            WriteNumber(val, 16);
         }
 
         public void Write(int val)
         {
-            Write((uint)val);
+            WriteNumber((uint)val, 32);
         }
 
         [CLSCompliant(false)]
         public void Write(uint val)
         {
-            if (Endiannes == EndiannessMode.LittleEndian) {
-                Write((ushort)((val >> 00) & 0xFFFF));
-                Write((ushort)((val >> 16) & 0xFFFF));
-            } else if (Endiannes == EndiannessMode.BigEndian) {
-                Write((ushort)((val >> 16) & 0xFFFF));
-                Write((ushort)((val >> 00) & 0xFFFF));
-            }
+            WriteNumber(val, 32);
         }
 
         public void Write(long val)
         {
-            Write((ulong)val);
+            WriteNumber((ulong)val, 64);
         }
 
         [CLSCompliant(false)]
         public void Write(ulong val)
         {
-            if (Endiannes == EndiannessMode.LittleEndian) {
-                Write((uint)((val >> 00) & 0xFFFFFFFF));
-                Write((uint)((val >> 32) & 0xFFFFFFFF));
-            } else if (Endiannes == EndiannessMode.BigEndian) {
-                Write((uint)((val >> 32) & 0xFFFFFFFF));
-                Write((uint)((val >> 00) & 0xFFFFFFFF));
-            }
+            WriteNumber(val, 64);
         }
 
         public void Write(byte[] vals)
@@ -131,58 +105,67 @@ namespace Libgame.IO
             Stream.Write(vals, 0, vals.Length);
         }
 
-        public void Write(char ch)
+        public void Write(char ch, Encoding encoding = null)
         {
-            Write(Encoding.GetBytes(new char[] { ch }));
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            Write(encoding.GetBytes(new[] { ch }));
         }
 
-        public void Write(char[] chs)
+        public void Write(char[] chs, Encoding encoding = null)
         {
-            Write(Encoding.GetBytes(chs));
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            Write(encoding.GetBytes(chs));
         }
 
-        public void Write(string s, int byteCount, bool nullTerminator = true)
+        public void Write(
+            string s,
+            int fixedLength,
+            bool nullTerminator = true,
+            Encoding encoding = null)
         {
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
+            if (encoding == null)
+                encoding = DefaultEncoding;
 
-            int maxBytes = nullTerminator ? byteCount - 1 : byteCount;
-            byte[] buffer = Encoding.GetBytes(s);
+            byte[] buffer = encoding.GetBytes(s);
+            Array.Resize(ref buffer, fixedLength);
 
-            if (buffer.Length > maxBytes) {
-                System.IO.File.AppendAllText(
-                    "fallo bytes.txt",
-                    byteCount.ToString() + ": " + s + "\r\n\r\n");
+            if (nullTerminator)
+                buffer[fixedLength - 1] = 0x00;
 
-                if (nullTerminator)
-                    buffer[byteCount - 1] = 0x00;    // Null terminator
-            }
-
-            Array.Resize(ref buffer, byteCount);
             Write(buffer);
         }
 
-        public void Write(string s)
+        public void Write(string s, Encoding encoding = null)
         {
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
+            if (encoding == null)
+                encoding = DefaultEncoding;
 
-            Write(Encoding.GetBytes(s));
+            Write(encoding.GetBytes(s));
         }
 
-        public void Write(string s, Type sizeType)
+        public void Write(string s, Type sizeType, Encoding encoding = null)
         {
             if (s == null)
                 throw new ArgumentNullException(nameof(s));
             if (sizeType == null)
                 throw new ArgumentNullException(nameof(sizeType));
+            if (encoding == null)
+                encoding = DefaultEncoding;
 
-            byte[] data = Encoding.GetBytes(s);
+            byte[] data = encoding.GetBytes(s);
             Write(data.Length, sizeType);
             Write(data);
         }
 
-        public void Write(object o, Type type)
+        public void Write(dynamic o, Type type)
         {
             if (o == null)
                 throw new ArgumentNullException(nameof(o));
@@ -242,10 +225,31 @@ namespace Libgame.IO
 
         public void WritePadding(byte val, int padding)
         {
-            // TODO: Make relative padding
             int times = (int)(padding - (Stream.AbsolutePosition % padding));
             if (times != padding)    // Else it's already padded
                 WriteTimes(val, times);
+        }
+
+        void WriteNumber(ulong number, byte numBytes)
+        {
+            byte start;
+            byte end;
+            int step;
+
+            if (Endianness == EndiannessMode.LittleEndian) {
+                start = 0;
+                end = numBytes;
+                step = 8;
+            } else {
+                start = (byte)(numBytes - 8);
+                end = 0xF8; // When the byte var reach < 0 it overflows to 0-8=0xF8
+                step = -8;
+            }
+
+            for (byte i = start; i < end; i = (byte)(i + step)) {
+                byte val = (byte)((number >> i) & 0xFF);
+                Stream.WriteByte(val);
+            }
         }
     }
 }

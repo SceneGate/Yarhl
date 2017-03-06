@@ -7,7 +7,7 @@ M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(
 M: System.Boolean Libgame.PluginManager/TypeParamComparer::Equals(System.Type,System.Type)
 M: System.Object Libgame.IO.DataReader::Read(System.Type)
 M: System.Void Libgame.IO.DataWriter::Write(System.Object,System.Type)
-M: System.Void Libgame.IO.DataWriter::Write(System.String,System.Type)
+M: System.Void Libgame.IO.DataWriter::Write(System.String,System.Type,System.Text.Encoding)
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
@@ -52,4 +52,3 @@ T: Libgame.IO.DataWriter
 R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 # I allow this to happen only for constructors
 T: Libgame.IO.DataStream
-
