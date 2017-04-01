@@ -25,6 +25,8 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests.IO
 {
+    using System;
+    using System.Linq;
     using System.Text;
     using Libgame.IO;
     using NUnit.Framework;
@@ -51,7 +53,7 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
-        public void DefaultEncodingProperty()
+        public void EncodingProperty()
         {
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
@@ -296,6 +298,549 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(0x7F, stream.ReadByte());
             Assert.AreEqual(0x55, stream.ReadByte());
             Assert.AreEqual(0x52, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteByteArray()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            byte[] buffer = { 0xCA, 0xFE, 0xBE, 0xBE };
+            writer.Write(buffer);
+
+            Assert.AreEqual(4, stream.Length);
+            stream.Position = 0;
+            Assert.AreEqual(buffer[0], stream.ReadByte());
+            Assert.AreEqual(buffer[1], stream.ReadByte());
+            Assert.AreEqual(buffer[2], stream.ReadByte());
+            Assert.AreEqual(buffer[3], stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteNullByteArrayThrowsException()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            byte[] buffer = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write((buffer)));
+        }
+
+        [Test]
+        public void WriteCharWithDefaultEncoding()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write('あ');
+
+            // UTF-8
+            stream.Position = 0;
+            Assert.AreEqual(3, stream.Length);
+            Assert.AreEqual(0xE3, stream.ReadByte());
+            Assert.AreEqual(0x81, stream.ReadByte());
+            Assert.AreEqual(0x82, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteCharWithSpecificEncoding()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write('あ', Encoding.GetEncoding(932));
+
+            // SHIFT-JIS
+            stream.Position = 0;
+            Assert.AreEqual(2, stream.Length);
+            Assert.AreEqual(0x82, stream.ReadByte());
+            Assert.AreEqual(0xA0, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteCharArrayWithDefaultEncoding()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            char[] chars = { 'あ', 'ア' };
+            writer.Write(chars);
+
+            // UTF-8
+            stream.Position = 0;
+            Assert.AreEqual(6, stream.Length);
+            Assert.AreEqual(0xE3, stream.ReadByte());
+            Assert.AreEqual(0x81, stream.ReadByte());
+            Assert.AreEqual(0x82, stream.ReadByte());
+            Assert.AreEqual(0xE3, stream.ReadByte());
+            Assert.AreEqual(0x82, stream.ReadByte());
+            Assert.AreEqual(0xA2, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteCharArrayWithSpecificEncoding()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            char[] chars = { 'あ', 'ア' };
+            writer.Write(chars, Encoding.GetEncoding(932));
+
+            // SHIFT-JIS
+            stream.Position = 0;
+            Assert.AreEqual(4, stream.Length);
+            Assert.AreEqual(0x82, stream.ReadByte());
+            Assert.AreEqual(0xA0, stream.ReadByte());
+            Assert.AreEqual(0x83, stream.ReadByte());
+            Assert.AreEqual(0x41, stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteCharArrayNullThrowsException()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            char[] chars = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write(chars));
+        }
+
+        [Test]
+        public void WriteText()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text);
+
+            Assert.AreEqual(6, stream.Length);
+            byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2 };
+            byte[] actual = new byte[6];
+            stream.Position = 0;
+            stream.Read(actual, 0, 6);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextWithEncodingAndNullTerminator()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, true, Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x42, 0x30, 0xA2, 0x30, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextWithMaxSizeAndNullTerminator()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, true, maxSize: 4);
+
+            byte[] expected = { 0xE3, 0x81, 0x82, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextWithInvalidArgumentsThrowsException()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write(text));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.Write("", maxSize: -2));
+        }
+
+        [Test]
+        public void WriteTextFixedSize()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, 10);
+
+            byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00, 0x00, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextFixedSizeTruncating()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, 4, true, Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x42, 0x30, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextFixedSizeWithEncodingAndNoNullTerminator()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, 4, false, Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x42, 0x30, 0xA2, 0x30 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextFixedSizeWithInvalidArgumentsThrowsException()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write(text, 5));
+        }
+
+        [Test]
+        public void WriteTextAndSize()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, typeof(ushort));
+
+            Assert.AreEqual(8, stream.Length);
+            byte[] expected = { 0x06, 0x00, 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2 };
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeWithEncodingAndNullTerminator()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, typeof(byte), true, Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x06, 0x42, 0x30, 0xA2, 0x30, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeWithMaxSizeAndNullTerminator()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, typeof(int), true, maxSize: 3);
+
+            byte[] expected = { 0x03, 0x00, 0x00, 0x00, 0xE3, 0x81, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeWithInvalidArgumentsThrowsException()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = null;
+            Type type = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write(text, typeof(short)));
+            Assert.Throws<ArgumentNullException>(() => writer.Write("", type));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.Write("", maxSize: -2));
+        }
+
+        [Test]
+        public void WriteObjects()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(typeof(long), "3");
+            writer.Write(typeof(ulong), 2);
+            writer.Write(typeof(int), 1);
+            writer.Write(typeof(uint), 4);
+            writer.Write(typeof(short), 5);
+            writer.Write(typeof(ushort), 6);
+            writer.Write(typeof(byte), 7);
+            writer.Write(typeof(sbyte), 8);
+            writer.Write(typeof(string), 9);
+            writer.Write(typeof(string), "8");
+
+            byte[] expected = {
+                0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x01, 0x00, 0x00, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+                0x05, 0x00,
+                0x06, 0x00,
+                0x07,
+                0x08,
+                0x39,
+                0x38
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteObjectsInvalidConversion()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<InvalidCastException>(() => writer.Write(typeof(DateTime), 1));
+        }
+
+        [Test]
+        public void WriteObjectsUnsupportedType()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<FormatException>(() => writer.Write(typeof(bool), true));
+        }
+
+        [Test]
+        public void WriteObjectsInvalidArguments()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Type nullType = null;
+            string nullValue = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write(nullType, 1));
+            Assert.Throws<ArgumentNullException>(() => writer.Write(typeof(string), nullValue));
+        }
+
+        [Test]
+        public void WriteTimesLessBufferSize()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteTimes(0xFF, 3);
+
+            byte[] expected = { 0xFF, 0xFF, 0xFF };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTimesMoreThanOneBuffer()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteTimes(0xFF, 5 * 1024 + 8);
+
+            byte[] expected = new byte[5 * 1024 + 8];
+            for (int i = 0; i < expected.Length; i++)
+                expected[i] = 0xFF;
+
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteNegativeTimes()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.WriteTimes(0xFF, -2));
+        }
+
+        [Test]
+        public void WriteUntilLength()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteUntilLength(0xAF, 7);
+
+            byte[] expected = { 0xAF, 0xAF, 0xAF, 0xAF, 0xAF, 0xAF, 0xAF };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteUntilLengthLessThanStream()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(0xFFFFFFFF);
+            writer.WriteUntilLength(0xAF, 3);
+
+            byte[] expected = { 0xFF, 0xFF, 0xFF, 0xFF };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteUntilLengthMoveToEnd()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(0xFFFFFFFF);
+            stream.Position = 2;
+            writer.WriteUntilLength(0xAF, 6);
+
+            byte[] expected = { 0xFF, 0xFF, 0xFF, 0xFF, 0xAF, 0xAF };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteUntilLengthInvalidArguments()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.WriteUntilLength(0x00, -2));
+        }
+
+        [Test]
+        public void WritePadding()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write((ushort)0xCAFE);
+            writer.WritePadding(0xFF, 4);
+
+            byte[] expected = { 0xFE, 0xCA, 0xFF, 0xFF };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WritePaddingWhenNoNeed()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write((uint)0xCAFE);
+            writer.WritePadding(0xFF, 4);
+
+            byte[] expected = { 0xFE, 0xCA, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WritePaddingAbsoluteMode()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xAF);
+
+            DataStream stream2 = new DataStream(stream, 1, 0);
+            DataWriter writer = new DataWriter(stream2);
+
+            writer.Write((uint)0xCAFE);
+            writer.WritePadding(0xFF, 4);
+
+            byte[] expected = { 0xAF, 0xFE, 0xCA, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+
+            writer.WritePadding(0xFF, 4, true);
+
+            byte[] expected2 = { 0xAF, 0xFE, 0xCA, 0x00, 0x00, 0xFF, 0xFF, 0xFF };
+            Assert.AreEqual(expected2.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual2 = new byte[expected2.Length];
+            stream.Read(actual2, 0, expected2.Length);
+            Assert.IsTrue(expected2.SequenceEqual(actual2));
+        }
+
+        [Test]
+        public void WritePaddingInvalidArguments()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.WritePadding(0x00, -2));
         }
     }
 }
