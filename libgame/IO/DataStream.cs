@@ -108,6 +108,7 @@ namespace Libgame.IO
         public DataStream(DataStream stream, long offset, long length)
             : this(stream?.BaseStream, offset + (stream?.Offset ?? 0), length)
         {
+            ParentDataStream = stream;
         }
 
         ~DataStream()
@@ -168,11 +169,24 @@ namespace Libgame.IO
                 if (value < -1 || Offset + value > BaseStream.Length)
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                length = (value != -1) ? value : BaseStream.Length;
+                long newLength = (value != -1) ? value : BaseStream.Length;
 
+                if (ParentDataStream != null && Offset + newLength > ParentDataStream.length)
+                    ParentDataStream.Length = Offset + newLength;
+
+                length = newLength;
                 if (Position > Length)
                     Position = Length;
             }
+        }
+
+        /// <summary>
+        /// Gets the parent DataStream.
+        /// </summary>
+        /// <value>The parent DataStream.</value>
+        public DataStream ParentDataStream {
+            get;
+            private set;
         }
 
         /// <summary>

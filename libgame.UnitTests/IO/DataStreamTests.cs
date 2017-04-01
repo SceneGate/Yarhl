@@ -44,6 +44,7 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(0x1, stream.Offset);
             Assert.AreEqual(0x1, stream.Length);
             Assert.AreEqual(0x0, stream.Position);
+            Assert.IsNull(stream.ParentDataStream);
         }
 
         [Test]
@@ -177,6 +178,7 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(0x0, stream.Offset);
             Assert.AreEqual(0x2, stream.Length);
             Assert.AreEqual(0x0, stream.Position);
+            Assert.IsNull(stream.ParentDataStream);
         }
 
         [Test]
@@ -189,6 +191,7 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(0x0, stream.Offset);
             Assert.AreEqual(0x0, stream.Length);
             Assert.AreEqual(0x0, stream.Position);
+            Assert.IsNull(stream.ParentDataStream);
         }
 
         [Test]
@@ -210,6 +213,7 @@ namespace Libgame.UnitTests.IO
             Assert.IsInstanceOf<FileStream>(readStream.BaseStream);
             Assert.IsFalse(readStream.BaseStream.CanWrite);
             Assert.IsTrue(readStream.BaseStream.CanRead);
+            Assert.IsNull(readStream.ParentDataStream);
             Assert.AreEqual(0x0, readStream.Offset);
             Assert.AreEqual(0x1, readStream.Length);
             Assert.AreEqual(0x0, readStream.Position);
@@ -235,6 +239,7 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(0x1, stream2.Length);
             Assert.AreEqual(0x0, stream2.Position);
             Assert.AreEqual(0xBE, stream2.ReadByte());
+            Assert.AreSame(stream1, stream2.ParentDataStream);
         }
 
         [Test]
@@ -286,6 +291,33 @@ namespace Libgame.UnitTests.IO
             baseStream.WriteByte(0xFE);
             DataStream stream = new DataStream(baseStream, 0, 2);
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Position = 10);
+        }
+
+        [Test]
+        public void SetLength()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            DataStream stream = new DataStream(baseStream, 0, 2);
+            Assert.AreEqual(2, stream.Length);
+            stream.Length = 1;
+            Assert.AreEqual(1, stream.Length);
+        }
+
+        [Test]
+        public void SetLengthUpdatesParentStream()
+        {
+            DataStream parentStream = new DataStream();
+            parentStream.WriteByte(0xFF);
+            parentStream.WriteByte(0xFF);
+  
+            DataStream parentStream2 = new DataStream(parentStream, 0, 0);
+            DataStream stream = new DataStream(parentStream2, 0, 0);
+            stream.WriteByte(0xFF);
+            Assert.AreEqual(1, stream.Length);
+            Assert.AreEqual(1, parentStream2.Length);
+            Assert.AreEqual(2, parentStream.Length);
         }
 
         [Test]
