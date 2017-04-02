@@ -586,11 +586,11 @@ namespace Libgame.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            string text = null;
-            Type type = null;
-            Assert.Throws<ArgumentNullException>(() => writer.Write(text, typeof(short)));
-            Assert.Throws<ArgumentNullException>(() => writer.Write("", type));
-            Assert.Throws<ArgumentOutOfRangeException>(() => writer.Write("", maxSize: -2));
+            string nullText = null;
+            Type nullType = null;
+            Assert.Throws<ArgumentNullException>(() => writer.Write(nullText, typeof(short)));
+            Assert.Throws<ArgumentNullException>(() => writer.Write("", nullType));
+            Assert.Throws<ArgumentOutOfRangeException>(() => writer.Write("", typeof(short), maxSize: -2));
         }
 
         [Test]
@@ -608,6 +608,7 @@ namespace Libgame.UnitTests.IO
             writer.Write(typeof(byte), 7);
             writer.Write(typeof(sbyte), 8);
             writer.Write(typeof(string), 9);
+            writer.Write(typeof(char), 'a');
             writer.Write(typeof(string), "8");
 
             byte[] expected = {
@@ -620,6 +621,7 @@ namespace Libgame.UnitTests.IO
                 0x07,
                 0x08,
                 0x39,
+                0x61,
                 0x38
             };
             Assert.AreEqual(expected.Length, stream.Length);
@@ -841,6 +843,31 @@ namespace Libgame.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.Throws<ArgumentOutOfRangeException>(() => writer.WritePadding(0x00, -2));
+        }
+
+        [Test]
+        public void WritePaddingLessEqualOneDoesNothing()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write((uint)0xCAFE);
+            writer.WritePadding(0xFF, 0);
+
+            byte[] expected = { 0xFE, 0xCA, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+
+            writer.WritePadding(0xFF, 1);
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
         }
     }
 }

@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests.IO
 {
+    using System;
     using System.IO;
     using Libgame.IO;
     using NUnit.Framework;
@@ -39,6 +40,7 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(FileMode.Create, FileOpenMode.Write.ToFileMode());
             Assert.AreEqual(FileMode.Append, FileOpenMode.Append.ToFileMode());
             Assert.AreEqual(FileMode.OpenOrCreate, FileOpenMode.ReadWrite.ToFileMode());
+            Assert.Throws<ArgumentOutOfRangeException>(() => ((FileOpenMode)0x100).ToFileMode());
         }
 
         [Test]
@@ -48,6 +50,7 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(FileAccess.Write, FileOpenMode.Write.ToFileAccess());
             Assert.AreEqual(FileAccess.Write, FileOpenMode.Append.ToFileAccess());
             Assert.AreEqual(FileAccess.ReadWrite, FileOpenMode.ReadWrite.ToFileAccess());
+            Assert.Throws<ArgumentOutOfRangeException>(() => ((FileOpenMode)0x100).ToFileAccess());
         }
     }
 }
