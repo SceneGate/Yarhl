@@ -64,6 +64,7 @@
     <Compile Include="IO\DataStreamTests.cs" />
     <Compile Include="IO\FileOpenModeTests.cs" />
     <Compile Include="IO\DataWriterTests.cs" />
+    <Compile Include="IO\DataReaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

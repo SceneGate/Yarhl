@@ -27,96 +27,151 @@ namespace Libgame.IO
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Text;
 
+    /// <summary>
+    /// Binary DataReader for DataStreams.
+    /// </summary>
     public class DataReader
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:Libgame.IO.DataReader"/> class.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <remarks>
+        /// By default the endianness is LittleEndian and the encoding is UTF-8.
+        /// </remarks>
         public DataReader(DataStream stream)
-            : this(stream, EndiannessMode.LittleEndian, Encoding.UTF8)
         {
+            Stream = stream;
+            Endianness = EndiannessMode.LittleEndian;
+            DefaultEncoding = Encoding.UTF8;
         }
 
-        public DataReader(DataStream stream, EndiannessMode endiannes, Encoding encoding)
-        {
-            Stream    = stream;
-            Endiannes = endiannes;
-            Encoding  = encoding;
-        }
-
+        /// <summary>
+        /// Gets the stream.
+        /// </summary>
+        /// <value>The stream.</value>
         public DataStream Stream {
             get;
             private set;
         }
 
-        public EndiannessMode Endiannes {
+        /// <summary>
+        /// Gets or sets the endianness.
+        /// </summary>
+        /// <value>The endianness.</value>
+        public EndiannessMode Endianness {
             get;
-            private set;
+            set;
         }
 
-        public Encoding Encoding {
+        /// <summary>
+        /// Gets or sets the default encoding.
+        /// </summary>
+        /// <value>The default encoding.</value>
+        public Encoding DefaultEncoding {
             get;
-            private set;
+            set;
         }
 
+        /// <summary>
+        /// Reads a 8-bit byte number.
+        /// </summary>
+        /// <returns>The next byte.</returns>
         public byte ReadByte()
         {
             return Stream.ReadByte();
         }
 
+        /// <summary>
+        /// Reads a signed 8-bit byte number.
+        /// </summary>
+        /// <returns>The next signed byte.</returns>
         [CLSCompliant(false)]
         public sbyte ReadSByte()
         {
             return (sbyte)Stream.ReadByte();
         }
 
+        /// <summary>
+        /// Reads an unsigned 16-bit number.
+        /// </summary>
+        /// <returns>The next 16-bit number.</returns>
         [CLSCompliant(false)]
         public ushort ReadUInt16()
         {
-            if (Endiannes == EndiannessMode.LittleEndian)
+            if (Endianness == EndiannessMode.LittleEndian)
                 return (ushort)((ReadByte() << 0) | (ReadByte() << 8));
-            if (Endiannes == EndiannessMode.BigEndian)
+            if (Endianness == EndiannessMode.BigEndian)
                 return (ushort)((ReadByte() << 8) | (ReadByte() << 0));
 
             return 0xFFFF;
         }
 
+        /// <summary>
+        /// Reads a signed 16-bit number.
+        /// </summary>
+        /// <returns>The next signed 16-bit number.</returns>
         public short ReadInt16()
         {
             return (short)ReadUInt16();
         }
 
+        /// <summary>
+        /// Reads an unsigned 32-bit number
+        /// </summary>
+        /// <returns>The next unsigned 32-bit number.</returns>
         [CLSCompliant(false)]
         public uint ReadUInt32()
         {
-            if (Endiannes == EndiannessMode.LittleEndian)
+            if (Endianness == EndiannessMode.LittleEndian)
                 return (uint)((ReadUInt16() << 00) | (ReadUInt16() << 16));
-            if (Endiannes == EndiannessMode.BigEndian)
+            if (Endianness == EndiannessMode.BigEndian)
                 return (uint)((ReadUInt16() << 16) | (ReadUInt16() << 00));
 
             return 0xFFFFFFFF;
         }
 
+        /// <summary>
+        /// Reads a signed 32-bit number.
+        /// </summary>
+        /// <returns>The next signed 32-bit number.</returns>
         public int ReadInt32()
         {
             return (int)ReadUInt32();
         }
 
+        /// <summary>
+        /// Reads an unsigned 64-bit number.
+        /// </summary>
+        /// <returns>The next unsigned 64-bit number.</returns>
         [CLSCompliant(false)]
         public ulong ReadUInt64()
         {
-            if (Endiannes == EndiannessMode.LittleEndian)
-                return (ReadUInt32() << 00) | (ReadUInt32() << 32);
-            if (Endiannes == EndiannessMode.BigEndian)
-                return (ReadUInt32() << 32) | (ReadUInt32() << 00);
+            if (Endianness == EndiannessMode.LittleEndian)
+                return (ReadUInt32() << 00) | ((ulong)ReadUInt32() << 32);
+            if (Endianness == EndiannessMode.BigEndian)
+                return ((ulong)ReadUInt32() << 32) | (ReadUInt32() << 00);
 
             return 0xFFFFFFFFFFFFFFFF;
         }
 
+        /// <summary>
+        /// Reads a signed 64-bit number.
+        /// </summary>
+        /// <returns>The next signed 64-bit number.</returns>
         public long ReadInt64()
         {
             return (long)ReadUInt64();
         }
 
+        /// <summary>
+        /// Reads bytes from the stream.
+        /// </summary>
+        /// <returns>The bytes read.</returns>
+        /// <param name="count">Number of bytes to read.</param>
         public byte[] ReadBytes(int count)
         {
             byte[] buffer = new byte[count];
@@ -124,75 +179,112 @@ namespace Libgame.IO
             return buffer;
         }
 
-        public char ReadChar()
+        /// <summary>
+        /// Reads a char.
+        /// </summary>
+        /// <returns>The next char.</returns>
+        /// <param name="encoding">Optional encoding to use.</param>
+        public char ReadChar(Encoding encoding = null)
         {
-            return ReadChars(1)[0];
+            return ReadChars(1, encoding)[0];
         }
 
-        public char[] ReadChars(int count)
+        /// <summary>
+        /// Reads an array of chars.
+        /// </summary>
+        /// <returns>The chars read.</returns>
+        /// <param name="count">The number of chars to read.</param>
+        /// <param name="encoding">Optional encoding to use.</param>
+        public char[] ReadChars(int count, Encoding encoding = null)
         {
-            long pos1 = Stream.Position;
-            int charLength = Encoding.GetMaxByteCount(count);
-            byte[] buffer = ReadBytes(charLength);
+            if (encoding == null)
+                encoding = DefaultEncoding;
 
-            char[] charArray = Encoding.GetChars(buffer);
-            Array.Resize(ref charArray, count);    // In case we get more chars than asked
+            long startPos = Stream.Position;
+
+            // Reads the maximum number of bytes possible to get that number of chars
+            int charLength = encoding.GetMaxByteCount(count);
+            if (charLength > Stream.Length - Stream.Position)
+                charLength = (int)(Stream.Length - Stream.Position);
+
+            byte[] buffer = ReadBytes(charLength);
+            char[] charArray = encoding.GetChars(buffer);
+
+            if (charArray.Length > count)
+                Array.Resize(ref charArray, count);
+            else if (charArray.Length < count)
+                throw new EndOfStreamException();
 
             // Adjust position
-            charLength = Encoding.GetByteCount(charArray);
-            Stream.Seek(pos1 + charLength, SeekMode.Start);
+            int actualCharLength = encoding.GetByteCount(charArray);
+            if (startPos + actualCharLength > Stream.Length)
+                throw new EndOfStreamException();
+            Stream.Seek(startPos + actualCharLength, SeekMode.Start);
 
             return charArray;
         }
 
         /// <summary>
-        /// Read until 0x00 byte or EOF reached
+        /// Reads a string that ends with the null terminator.
         /// </summary>
         /// <returns>The string.</returns>
-        public string ReadString()
+        /// <param name="encoding">Optional encoding to use.</param>
+        public string ReadString(Encoding encoding = null)
         {
             StringBuilder str = new StringBuilder();
+            if (encoding == null)
+                encoding = DefaultEncoding;
 
-            int maxBytes = Encoding.GetMaxByteCount(1);
             char ch;
-
             do {
-                long bytesLeft = Stream.Length - Stream.Position;
-                int bytesToRead = (bytesLeft < maxBytes) ? (int)bytesLeft : maxBytes;
+                if (Stream.EndOfStream)
+                    throw new EndOfStreamException();
 
-                byte[] data = ReadBytes(bytesToRead);
-                string decodedString = Encoding.GetString(data);
-                if (decodedString.Length == 0)
-                    break;
-
-                ch = decodedString[0];
-                int bytesRead = Encoding.GetByteCount(ch.ToString());
-                int bytesNotRead = bytesToRead - bytesRead;
-                Stream.Seek(-bytesNotRead, SeekMode.Current);
-
+                ch = ReadChar(encoding);
                 if (ch != '\0')
                     str.Append(ch);
-            } while (ch != '\0' && !Stream.EndOfStream);
+            } while (ch != '\0');
 
             return str.ToString();
         }
 
-        public string ReadString(int bytesCount)
+        /// <summary>
+        /// Reads a string with a constant size.
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="bytesCount">Size of the string in bytes.</param>
+        /// <param name="encoding">Optional encoding to use.</param>
+        public string ReadString(int bytesCount, Encoding encoding = null)
         {
+            if (encoding == null)
+                encoding = DefaultEncoding;
+            
             byte[] buffer = ReadBytes(bytesCount);
-            string s = Encoding.GetString(buffer);
-            s = s.Replace("\0", string.Empty);
-            return s;
+            return encoding.GetString(buffer);
         }
 
-        public string ReadString(Type sizeType)
+        /// <summary>
+        /// Reads the size with a size field first.
+        /// </summary>
+        /// <returns>The string.</returns>
+        /// <param name="sizeType">Type of the size field.</param>
+        /// <param name="encoding">Optional encoding to use.</param>
+        public string ReadStringWithSize(Type sizeType, Encoding encoding = null)
         {
-            object size = Read(sizeType);
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            dynamic size = ReadByType(sizeType);
             size = Convert.ChangeType(size, typeof(int), CultureInfo.InvariantCulture);
-            return ReadString((int)size);
+            return ReadString((int)size, encoding);
         }
 
-        public object Read(Type type)
+        /// <summary>
+        /// Reads a field by type.
+        /// </summary>
+        /// <returns>The field.</returns>
+        /// <param name="type">Type of the field.</param>
+        public dynamic ReadByType(Type type)
         {
             if (type == typeof(long))
                 return ReadInt64();
@@ -213,7 +305,38 @@ namespace Libgame.IO
             if (type == typeof(char))
                 return ReadChar();
 
-            return null;
+            throw new FormatException("Unsupported type");
+        }
+
+        /// <summary>
+        /// Read a field by type.
+        /// </summary>
+        /// <returns>The field.</returns>
+        /// <typeparam name="T">The type of the field.</typeparam>
+        public dynamic Read<T>()
+        {
+            return ReadByType(typeof(T));
+        }
+
+        /// <summary>
+        /// Reads bytes to padd the position in the stream.
+        /// </summary>
+        /// <param name="padding">Padding value.</param>
+        /// <param name="absolutePadding">
+        /// If set to <c>true</c> absolute position in the stream.
+        /// </param>
+        public void ReadPadding(int padding, bool absolutePadding = false)
+        {
+            if (padding < 0)
+                throw new ArgumentOutOfRangeException(nameof(padding));
+
+            if (padding <= 1)
+                return;
+
+            long position = absolutePadding ? Stream.AbsolutePosition : Stream.Position;
+            int times = (int)(padding - (position % padding));
+            if (times != padding)
+                ReadBytes(times);
         }
     }
 }

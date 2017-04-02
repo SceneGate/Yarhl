@@ -391,7 +391,7 @@ namespace Libgame.IO
         /// <param name="val">Value to repeat.</param>
         /// <param name="padding">Padding value.</param>
         /// <param name="absolutePadding">
-        /// If set to <c>true</c> pad using the absolute position in the stream..
+        /// If set to <c>true</c> pad using the absolute position in the stream.
         /// </param>
         public void WritePadding(byte val, int padding, bool absolutePadding = false)
         {

@@ -5,7 +5,7 @@ M: System.Boolean Libgame.FileFormat.Format::<ConvertWith>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey0::<>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(System.Type)
 M: System.Boolean Libgame.PluginManager/TypeParamComparer::Equals(System.Type,System.Type)
-M: System.Object Libgame.IO.DataReader::Read(System.Type)
+M: System.Object Libgame.IO.DataReader::ReadByType(System.Type)
 M: System.Void Libgame.IO.DataWriter::Write(System.Type,System.Object)
 M: System.Void Libgame.IO.DataWriter::Write(System.String,System.Type,System.Boolean,System.Text.Encoding,System.Int32)
 
@@ -14,6 +14,7 @@ R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,System.Object)
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean)
 M: System.Collections.Generic.IEnumerable`1<System.Type> Libgame.PluginManager::FindExtensions()
+M: System.Object Libgame.IO.DataReader::Read()
 
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme
