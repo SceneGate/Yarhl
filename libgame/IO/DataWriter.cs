@@ -204,7 +204,7 @@ namespace Libgame.IO
         /// <remarks>If the encoding is null, it will use the default encoding.</remarks>
         public void Write(
                 string text,
-                bool nullTerminator = false,
+                bool nullTerminator = true,
                 Encoding encoding = null,
                 int maxSize = -1)
         {

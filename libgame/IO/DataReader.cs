@@ -92,7 +92,7 @@ namespace Libgame.IO
         [CLSCompliant(false)]
         public sbyte ReadSByte()
         {
-            return (sbyte)Stream.ReadByte();
+            return (sbyte)ReadByte();
         }
 
         /// <summary>
@@ -269,14 +269,14 @@ namespace Libgame.IO
         /// <returns>The string.</returns>
         /// <param name="sizeType">Type of the size field.</param>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadStringWithSize(Type sizeType, Encoding encoding = null)
+        public string ReadString(Type sizeType, Encoding encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
 
             dynamic size = ReadByType(sizeType);
             size = Convert.ChangeType(size, typeof(int), CultureInfo.InvariantCulture);
-            return ReadString((int)size, encoding);
+            return ReadString(size, encoding);
         }
 
         /// <summary>
@@ -304,6 +304,8 @@ namespace Libgame.IO
                 return ReadSByte();
             if (type == typeof(char))
                 return ReadChar();
+            if (type == typeof(string))
+                return ReadString();
 
             throw new FormatException("Unsupported type");
         }

@@ -407,13 +407,13 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
-        public void WriteText()
+        public void WriteTextAndNoNullTerminator()
         {
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
-            writer.Write(text);
+            writer.Write(text, false);
 
             Assert.AreEqual(6, stream.Length);
             byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2 };
@@ -620,9 +620,9 @@ namespace Libgame.UnitTests.IO
                 0x06, 0x00,
                 0x07,
                 0x08,
-                0x39,
+                0x39, 0x00,
                 0x61,
-                0x38
+                0x38, 0x00
             };
             Assert.AreEqual(expected.Length, stream.Length);
 
