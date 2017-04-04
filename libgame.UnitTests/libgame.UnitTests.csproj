@@ -37,7 +37,7 @@
       <HintPath>..\mono-addins\bin\Mono.Addins.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
+      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -45,6 +45,7 @@
     <Folder Include="FileFormat\" />
     <Folder Include="Properties\" />
     <Folder Include="FileSystem\" />
+    <Folder Include="IO\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginManagerTests.cs" />
@@ -60,6 +61,10 @@
     <Compile Include="FileFormat\BinaryFormatTests.cs" />
     <Compile Include="FileFormat\BaseGeneralTests.cs" />
     <Compile Include="FileFormat\NodeContainerFormatTests.cs" />
+    <Compile Include="IO\DataStreamTests.cs" />
+    <Compile Include="IO\FileOpenModeTests.cs" />
+    <Compile Include="IO\DataWriterTests.cs" />
+    <Compile Include="IO\DataReaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

@@ -1,298 +1,442 @@
-//-----------------------------------------------------------------------
-// <copyright file="DataStream.cs" company="none">
-// Copyright (C) 2013
 //
-//   This program is free software: you can redistribute it and/or modify
-//   it under the terms of the GNU General Public License as published by 
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
+// DataStream.cs
 //
-//   This program is distributed in the hope that it will be useful, 
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU General Public License for more details. 
+// Author:
+//       Benito Palacios Sánchez <benito356@gmail.com>
 //
-//   You should have received a copy of the GNU General Public License
-//   along with this program.  If not, see "http://www.gnu.org/licenses/". 
-// </copyright>
-// <author>pleoNeX</author>
-// <email>benito356@gmail.com</email>
-// <date>11/06/2013</date>
-//-----------------------------------------------------------------------
-using System;
-using System.Collections.Generic;
-using System.IO;
-
+// Copyright (c) 2017 Benito Palacios Sánchez
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 namespace Libgame.IO
 {
-    public enum SeekMode
-    {
-        Absolute,
-        Origin,
-        Current,
-        End
-    }
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
 
-    public enum EndiannessMode 
-    {
-        LittleEndian,
-        BigEndian
-    }
-
+    /// <summary>
+    /// Data stream.
+    /// </summary>
+    /// <remarks>
+    /// Custom implementation of a Stream based on System.IO.Stream.
+    /// </remarks>
     public class DataStream : IDisposable
     {
-        private static Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
+        static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
+        long position;
+        long length;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
+        /// <param name="offset">Offset from the base stream origin.</param>
+        /// <param name="length">
+        /// Length of this DataStream.
+        /// If it's -1 then it takes the stream length.
+        /// </param>
         public DataStream(Stream stream, long offset, long length)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (offset < 0 || offset > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < -1 || offset + length > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
             if (!Instances.ContainsKey(stream))
                 Instances.Add(stream, 1);
             else
                 Instances[stream] += 1;
 
-            this.BaseStream = stream;
-            this.Length = (length != -1) ? length : stream.Length;
-            this.Offset = offset;
-            this.Position = this.Offset;
+            BaseStream = stream;
+            Offset = offset;
+            Length = length;
         }
 
-        public DataStream(string filePath, FileMode mode, FileAccess access)
-            : this(new FileStream(filePath, mode, access), 0, -1)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
+        public DataStream(Stream stream)
+            : this(stream, 0, -1)
         {
         }
 
-        public DataStream(string filePath, FileMode mode, FileAccess access, FileShare share)
-            : this(new FileStream(filePath, mode, access, share), 0, -1)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        public DataStream()
+            : this(new MemoryStream())
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="filePath">File path.</param>
+        /// <param name="mode">File open mode.</param>
+        public DataStream(string filePath, FileOpenMode mode)
+            : this(new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess()))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
+        /// <param name="offset">Offset from the DataStream start.</param>
+        /// <param name="length">
+        /// Length of this DataStream.
+        /// If it's -1 then it takes the stream length.
+        /// </param>
         public DataStream(DataStream stream, long offset, long length)
-            : this(stream.BaseStream, offset + stream.Offset, length)
+            : this(stream?.BaseStream, offset + (stream?.Offset ?? 0), length)
         {
+            ParentDataStream = stream;
         }
 
         ~DataStream()
         {
-            this.Dispose(false);
+            Dispose(false);
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="DataStream"/> is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
+        public bool Disposed {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the offset from the BaseStream.
+        /// </summary>
+        /// <value>The offset.</value>
         public long Offset {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets or sets the position from the start of this stream.
+        /// </summary>
+        /// <value>The position.</value>
         public long Position {
-            get;
-            private set;
+            get {
+                return position;
+            }
+
+            set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(DataStream));
+                if (value < 0 || value > Length)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                position = value;
+            }
         }
 
-        public long RelativePosition {
-            get { return this.Position - this.Offset; }
-        }
-
+        /// <summary>
+        /// Gets or sets the length of this stream.
+        /// If the value set is -1, then the length is taken from the BaseStream.
+        /// </summary>
+        /// <value>The length.</value>
         public long Length {
+            get {
+                return length;
+            }
+
+            set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(DataStream));
+                if (value < -1 || Offset + value > BaseStream.Length)
+                    throw new ArgumentOutOfRangeException(nameof(value));
+
+                long newLength = (value != -1) ? value : BaseStream.Length;
+
+                if (ParentDataStream != null && Offset + newLength > ParentDataStream.length)
+                    ParentDataStream.Length = Offset + newLength;
+
+                length = newLength;
+                if (Position > Length)
+                    Position = Length;
+            }
+        }
+
+        /// <summary>
+        /// Gets the parent DataStream.
+        /// </summary>
+        /// <value>The parent DataStream.</value>
+        public DataStream ParentDataStream {
             get;
             private set;
         }
 
+        /// <summary>
+        /// Gets the base stream.
+        /// </summary>
+        /// <value>The base stream.</value>
         public Stream BaseStream {
             get;
             private set;
         }
 
-        public bool EOF {
+        /// <summary>
+        /// Gets a value indicating whether the position is at end of the stream.
+        /// </summary>
+        /// <value><c>true</c> if end of stream; otherwise, <c>false</c>.</value>
+        public bool EndOfStream {
             get {
-                if (this.Position >= this.Offset + this.Length)
-                    return true;
-                else
-                    return false;
+                return Position >= Length;
             }
         }
 
-        public static bool Compare(DataStream ds1, DataStream ds2)
-        {
-            if (ds1.Length != ds2.Length)
-                return false;
-
-            ds1.Seek(0, SeekMode.Origin);
-            ds2.Seek(0, SeekMode.Origin);
-
-            while (!ds1.EOF) {
-                if (ds1.ReadByte() != ds2.ReadByte())
-                    return false;
-            }
-
-            return true;
+        /// <summary>
+        /// Gets the position from the base stream.
+        /// </summary>
+        /// <value>The absolute position.</value>
+        public long AbsolutePosition {
+            get { return Offset + Position; }
         }
 
+        /// <summary>
+        /// Releases all resource used by the <see cref="DataStream"/> object.
+        /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool freeManagedResourcesAlso)
+        /// <summary>
+        /// Move the position of the Stream.
+        /// </summary>
+        /// <param name="shift">Distance to move position.</param>
+        /// <param name="mode">Start to move position.</param>
+        public void Seek(long shift, SeekMode mode)
         {
-            Instances[this.BaseStream] -= 1;
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
 
-            if (Instances[this.BaseStream] == 0) {
-                this.BaseStream.Dispose();
+            switch (mode) {
+            case SeekMode.Current:
+                Position += shift;
+                break;
+            case SeekMode.Start:
+                Position = shift;
+                break;
+            case SeekMode.End:
+                Position = Length - shift;
+                break;
             }
         }
 
-        public void Flush()
-        {
-            this.BaseStream.Flush();
-        }
-
-        public void Seek(long shift, SeekMode mode)
-        {
-            if (mode == SeekMode.Current)
-                this.Position += shift;
-            else if (mode == SeekMode.Origin)
-                this.Position = this.Offset + shift;
-            else if (mode == SeekMode.End)
-                this.Position = this.Offset + this.Length - shift;
-            else if (mode == SeekMode.Absolute)
-                this.Position = shift;
-
-            if (this.Position < this.Offset)
-                this.Position = this.Offset;
-            if (this.Position > this.Offset + this.Length)
-                this.Position = this.Offset + this.Length;
-
-            this.BaseStream.Position = this.Position;
-        }
-
-        public void SetLength(long length)
-        {
-            if (length > this.BaseStream.Length)
-                throw new ArgumentOutOfRangeException("length", length, "Length is bigger than BaseStream");
-            if (length < 0)
-                throw new ArgumentOutOfRangeException("length", length, "Length can not be negative");
-
-            this.Length = length;
-
-            if (this.RelativePosition > this.Length)
-                this.Seek(0, SeekMode.End);
-        }
-
+        /// <summary>
+        /// Reads the next byte.
+        /// </summary>
+        /// <returns>The next byte.</returns>
         public byte ReadByte()
         {
-            if (this.Position >= this.Offset + this.Length)
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (Position >= Length)
                 throw new EndOfStreamException();
 
-            this.BaseStream.Position = this.Position++;
-            return (byte)this.BaseStream.ReadByte();
+            BaseStream.Position = AbsolutePosition;
+            Position++;
+            return (byte)BaseStream.ReadByte();
         }
 
+        /// <summary>
+        /// Reads from the stream to the buffer.
+        /// </summary>
+        /// <returns>The number of bytes read.</returns>
+        /// <param name="buffer">Buffer to copy data.</param>
+        /// <param name="index">Index to start copying in buffer.</param>
+        /// <param name="count">Number of bytes to read.</param>
         public int Read(byte[] buffer, int index, int count)
         {
-            if (this.Position > this.Offset + this.Length + count)
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (count == 0)
+                return 0;
+
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+            if (index + count > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            if (Position + count > Length)
                 throw new EndOfStreamException();
 
-            this.BaseStream.Position = this.Position;
-            int read = this.BaseStream.Read(buffer, index, count);
-            this.Position += count;
+            BaseStream.Position = AbsolutePosition;
+            int read = BaseStream.Read(buffer, index, count);
+            Position += count;
 
             return read;
         }
 
+        /// <summary>
+        /// Writes a byte.
+        /// </summary>
+        /// <param name="val">Byte value.</param>
         public void WriteByte(byte val)
         {
-            if (this.Position > this.Offset + this.Length)
-                throw new EndOfStreamException();
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
 
-            if (this.Position == this.Offset + this.Length)
-                this.Length++;
+            BaseStream.Position = AbsolutePosition;
+            BaseStream.WriteByte(val);
 
-            this.BaseStream.Position = this.Position++;
-            this.BaseStream.WriteByte(val);
+            if (Position == Length)
+                Length++;
+            Position++;
         }
 
+        /// <summary>
+        /// Writes the a portion of the buffer to the stream.
+        /// </summary>
+        /// <param name="buffer">Buffer to write.</param>
+        /// <param name="index">Index in the buffer.</param>
+        /// <param name="count">Bytes to write.</param>
         public void Write(byte[] buffer, int index, int count)
         {
-            // If we're trying to write out the stream
-            if (this.Position > this.Offset + this.Length)
-                throw new EndOfStreamException();
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
 
-            // If it's in the end the file, increment it
-            if (this.Position == this.Offset + this.Length)
-                this.Length += count;
+            if (count == 0)
+                return;
 
-            this.BaseStream.Position = this.Position;
-            this.BaseStream.Write(buffer, index, count);
-            this.Position += count;
+            if (buffer == null)
+                throw new ArgumentNullException(nameof(buffer));
+            if (index + count > buffer.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            BaseStream.Position = AbsolutePosition;
+            BaseStream.Write(buffer, index, count);
+
+            if (Position + count > Length)
+                Length = Position + count;
+            Position += count;
         }
 
-        public void WriteTimes(byte val, long times)
-        {
-            const int BufferSize = 5 * 1024;
-            byte[] buffer = new byte[BufferSize];
-            for (int i = 0; i < BufferSize; i++)
-                buffer[i] = val;
-
-            int written = 0;
-            int toWrite = 0;
-            do {
-                if (written + BufferSize > times)
-                    toWrite = (int)(times - written);
-                else
-                    toWrite = BufferSize;
-
-                written += toWrite;
-                this.Write(buffer, 0, toWrite);
-            } while (written != times);
-        }
-
-        public void WriteUntilLength(byte val, long length)
-        {
-            long times = length - this.Length;
-            this.Seek(0, SeekMode.End);
-            this.WriteTimes(val, times);
-        }
-
-        public void WritePadding(byte val, int padding)
-        {
-            int times = (int)(padding - (this.Position % padding));
-            if (times != padding)    // Else it's already padded
-                this.WriteTimes(val, times);
-        }
-
+        /// <summary>
+        /// Writes the stream into a file.
+        /// </summary>
+        /// <param name="fileOut">Output file path.</param>
         public void WriteTo(string fileOut)
         {
-            using (DataStream stream = new DataStream(fileOut, FileMode.Create, FileAccess.Write))
-                this.WriteTo(stream);
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (string.IsNullOrEmpty(fileOut))
+                throw new ArgumentNullException(nameof(fileOut));
+
+            using (var stream = new DataStream(fileOut, FileOpenMode.Write))
+                WriteTo(stream);
         }
 
+        /// <summary>
+        /// Writes the stream into another DataStream.
+        /// </summary>
+        /// <param name="stream">Output DataStream.</param>
         public void WriteTo(DataStream stream)
         {
-            this.WriteTo(stream, this.Length);
-        }
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
 
-        public void WriteTo(DataStream stream, long count)
-        {
-            long currPos = this.Position;
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (stream.Disposed)
+                throw new ObjectDisposedException(nameof(stream));
 
-            this.Seek(0, SeekMode.Origin);
-            this.BaseStream.Position = this.Position;
+            long currPos = Position;
+            Seek(0, SeekMode.Start);
 
             const int BufferSize = 5 * 1024;
             byte[] buffer = new byte[BufferSize];
 
             int written = 0;
-            int toRead = 0;
+            int bytesToRead = 0;
             do {
-                if (written + BufferSize > count)
-                    toRead = (int)(count - written);
+                if (written + BufferSize > Length)
+                    bytesToRead = (int)(Length - written);
                 else
-                    toRead = BufferSize;
+                    bytesToRead = BufferSize;
 
-                written += this.Read(buffer, 0, toRead);
-                stream.Write(buffer, 0, toRead);
-            } while (written != count);
+                written += Read(buffer, 0, bytesToRead);
+                stream.Write(buffer, 0, bytesToRead);
+            } while (written != Length);
 
-            this.Seek(currPos, SeekMode.Absolute);
+            Seek(currPos, SeekMode.Start);
+        }
+
+        /// <summary>
+        /// Compare the content of the stream with another one.
+        /// </summary>
+        /// <returns>The result of the comparaison.</returns>
+        /// <param name="otherStream">Stream to compare with.</param>
+        public bool Compare(DataStream otherStream)
+        {
+            if (otherStream == null)
+                throw new ArgumentNullException(nameof(otherStream));
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+            if (otherStream.Disposed)
+                throw new ObjectDisposedException(nameof(otherStream));
+
+            if (Length != otherStream.Length)
+                return false;
+
+            long startPosition = Position;
+            long otherStreamStartPosition = otherStream.position;
+            Seek(0, SeekMode.Start);
+            otherStream.Seek(0, SeekMode.Start);
+
+            bool result = true;
+            while (!EndOfStream && result) {
+                if (ReadByte() != otherStream.ReadByte())
+                    result = false;
+            }
+
+            Seek(startPosition, SeekMode.Start);
+            otherStream.Seek(otherStreamStartPosition, SeekMode.Start);
+
+            return result;
+        }
+
+        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        {
+            if (Disposed)
+                return;
+
+            Disposed = true;
+
+            // BaseStream will be null if the constructor throws exception
+            if (BaseStream != null) {
+                Instances[BaseStream] -= 1;
+                if (freeManagedResourcesAlso && Instances[BaseStream] == 0)
+                    BaseStream.Dispose();
+            }
         }
     }
 }

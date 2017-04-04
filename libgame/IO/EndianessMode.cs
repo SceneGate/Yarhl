@@ -1,5 +1,5 @@
-//
-// AssemblyInfo.cs
+﻿//
+// EndianessMode.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -23,28 +23,21 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-using System;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using Mono.Addins;
+namespace Libgame.IO
+{
+    /// <summary>
+    /// Endianness mode.
+    /// </summary>
+    public enum EndiannessMode
+    {
+        /// <summary>
+        /// Little endian.
+        /// </summary>
+        LittleEndian,
 
-[assembly: AssemblyTitle("libgame")]
-[assembly: AssemblyDescription("ROM Hacking library")]
-[assembly: AssemblyCompany("libgame development team")]
-[assembly: AssemblyProduct("libgame")]
-[assembly: AssemblyCopyright("Copyright (c) 2017 Benito Palacios (aka pleonex)")]
-[assembly: Guid("cf6865f7-7161-41c5-92b8-46049634bc23")]
-[assembly: AssemblyVersion("1.0.0.*")]
-[assembly: AssemblyFileVersion("1.0.0")]
-[assembly: CLSCompliant(true)]
-[assembly: ComVisible(true)]
-[assembly: InternalsVisibleTo("libgame.UnitTests")]
-
-#if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
-#elif RELEASE
-[assembly: AssemblyConfiguration("Release")]
-#endif
-
-[assembly: AddinRoot("libgame", "1.0")]
+        /// <summary>
+        /// Big endian.
+        /// </summary>
+        BigEndian
+    }
+}

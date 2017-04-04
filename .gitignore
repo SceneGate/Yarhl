@@ -10,3 +10,4 @@ TestResult.xml
 gendarme_report.html
 StyleCopViolations.xml
 StyleCop.Cache
+coverage-report/

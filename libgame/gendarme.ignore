@@ -5,12 +5,16 @@ M: System.Boolean Libgame.FileFormat.Format::<ConvertWith>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey0::<>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(System.Type)
 M: System.Boolean Libgame.PluginManager/TypeParamComparer::Equals(System.Type,System.Type)
+M: System.Object Libgame.IO.DataReader::ReadByType(System.Type)
+M: System.Void Libgame.IO.DataWriter::Write(System.Type,System.Object)
+M: System.Void Libgame.IO.DataWriter::Write(System.String,System.Type,System.Boolean,System.Text.Encoding,System.Int32)
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean,System.Object)
 M: Libgame.FileSystem.Node Libgame.FileSystem.Node::Transform(System.Boolean)
 M: System.Collections.Generic.IEnumerable`1<System.Type> Libgame.PluginManager::FindExtensions()
+M: System.Object Libgame.IO.DataReader::Read()
 
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme
@@ -21,6 +25,9 @@ R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects
 M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromFile(System.String,System.String)
 M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromDirectory(System.String,System.String)
+# In the DataStream we are sure we will dispose the streams created in the ctor.
+M: System.Void Libgame.IO.DataStream::.ctor()
+M: System.Void Libgame.IO.DataStream::.ctor(System.String,Libgame.IO.FileOpenMode)
 
 R: Gendarme.Rules.Maintainability.AvoidUnnecessarySpecializationRule
 # In this case it is not possible since one of the methods creates a derived type.
@@ -30,3 +37,19 @@ R: Gendarme.Rules.Concurrency.ReviewLockUsedOnlyForOperationsOnVariablesRule
 # We want to lock between methods including the initialization. It is called a few times and it's not easy to fix.
 M: System.Void Libgame.PluginManager::Shutdown()
 
+R: Gendarme.Rules.Naming.UseCorrectSuffixRule
+# It doesn't inherit but internally use a Stream.
+T: Libgame.IO.DataStream
+
+R: Gendarme.Rules.Performance.AvoidUnneededUnboxingRule
+# Actually we are unboxing once
+M: System.Void Libgame.IO.DataWriter::Write(System.Object,System.Type)
+
+R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
+# We are implementing a general streams
+T: Libgame.IO.DataStream
+T: Libgame.IO.DataWriter
+
+R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
+# I allow this to happen only for constructors
+T: Libgame.IO.DataStream

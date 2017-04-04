@@ -62,8 +62,15 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void CreateFromFileDoesNotExist()
         {
-            Assert.Throws<FileNotFoundException>(() =>
-                NodeFactory.FromFile("ThisPathDoesNotExist"));
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Node tempNode = null;
+
+            Assert.IsFalse(File.Exists(tempFile));
+            Assert.DoesNotThrow(() => tempNode = NodeFactory.FromFile(tempFile));
+            Assert.IsTrue(File.Exists(tempFile));
+
+            tempNode?.Dispose();
+            File.Delete(tempFile);
         }
 
         [Test]

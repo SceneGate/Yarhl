@@ -56,6 +56,9 @@
     <Compile Include="FileFormat\NodeContainerFormat.cs" />
     <Compile Include="FileSystem\NodeFactory.cs" />
     <Compile Include="FileSystem\NodeSystem.cs" />
+    <Compile Include="IO\SeekMode.cs" />
+    <Compile Include="IO\EndianessMode.cs" />
+    <Compile Include="IO\FileOpenMode.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
