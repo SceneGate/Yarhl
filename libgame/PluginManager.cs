@@ -49,8 +49,7 @@ namespace Libgame
 
             // Make the addin folder hidden for Windows.
             var addinDir = new DirectoryInfo(AddinFolder);
-            if (!addinDir.Attributes.HasFlag(FileAttributes.Hidden))
-                addinDir.Attributes |= FileAttributes.Hidden;
+            addinDir.Attributes |= FileAttributes.Hidden;
         }
 
         ~PluginManager()

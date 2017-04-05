@@ -179,6 +179,16 @@ namespace Libgame.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformThrowsExceptionIfDisposed()
+        {
+            Format dummyFormat = new IntFormatTest(3);
+            Node node = new Node("mytest", dummyFormat);
+
+            node.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => node.Transform<StringFormatTest>());
+        }
+
+        [Test]
         public void SetFormat()
         {
             Format dummyFormat1 = new StringFormatTest("3");

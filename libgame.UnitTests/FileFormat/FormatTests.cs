@@ -226,6 +226,15 @@ namespace Libgame.UnitTests.FileFormat
             format.Dispose();
             Assert.IsTrue(format.Disposed);
         }
+
+        [Test]
+        public void DisposeTwiceDoesNotThrowException()
+        {
+            var format = new StringFormatTest("3");
+            format.Dispose();
+            Assert.DoesNotThrow(format.Dispose);
+            Assert.IsTrue(format.Disposed);
+        }
     }
 
     [Extension]
