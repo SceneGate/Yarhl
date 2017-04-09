@@ -95,12 +95,19 @@ namespace Libgame.FileSystem
         /// <param name="nodeName">Node name.</param>
         public static Node FromFile(string filePath, string nodeName)
         {
-            // Createa a DataStream from the file path and dispose it.
-            // The new BinaryFormat will create a substream so
-            // the basestream is not disposed
+            // The basestream won't be disposed since the BinaryFormat creates a substream
             Node node;
+            BinaryFormat format;
             using (DataStream stream = new DataStream(filePath, FileOpenMode.ReadWrite))
-                node = new Node(nodeName, new BinaryFormat(stream));
+                format = new BinaryFormat(stream);
+
+            try {
+                node = new Node(nodeName, format);
+            } catch {
+                format.Dispose();
+                throw;
+            }
+
             return node;
         }
 
