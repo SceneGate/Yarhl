@@ -35,7 +35,7 @@ namespace Libgame.FileFormat
         /// <param name="stream">Binary stream.</param>
         public BinaryFormat(DataStream stream)
         {
-            Stream = new DataStream(stream, 0, stream.Length);
+            Stream = new DataStream(stream, 0, stream?.Length ?? 0);
         }
 
         /// <summary>
