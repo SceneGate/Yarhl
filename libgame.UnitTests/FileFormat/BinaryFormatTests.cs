@@ -33,13 +33,13 @@ namespace Libgame.UnitTests.FileFormat
     [TestFixture]
     public class BinaryFormatTests : BaseGeneralTests<BinaryFormat>
     {
-
         [Test]
         public void ConstructorWithStream()
         {
-            DataStream stream = new DataStream(new MemoryStream(), 0, 0);
+            DataStream stream = new DataStream();
             BinaryFormat format = new BinaryFormat(stream);
-            Assert.AreSame(stream, format.Stream);
+            Assert.AreNotSame(stream, format.Stream);
+            Assert.AreSame(stream.BaseStream, format.Stream.BaseStream);
             format.Dispose();
         }
 
@@ -75,6 +75,26 @@ namespace Libgame.UnitTests.FileFormat
             BinaryFormat format = new BinaryFormat(tempPath);
             format.Dispose();
             Assert.DoesNotThrow(() => File.Delete(tempPath));
+        }
+
+        [Test]
+        public void DisposeDoesNotAffectToOtherFormatOrStreams()
+        {
+            DataStream baseStream = new DataStream();
+            BinaryFormat format1 = new BinaryFormat(baseStream);
+            BinaryFormat format2 = new BinaryFormat(baseStream);
+
+            format1.Dispose();
+            Assert.IsTrue(format1.Disposed);
+            Assert.IsFalse(format2.Disposed);
+            Assert.IsFalse(baseStream.Disposed);
+
+            format2.Dispose();
+            Assert.IsTrue(format2.Disposed);
+            Assert.IsFalse(baseStream.Disposed);
+
+            baseStream.Dispose();
+            Assert.IsTrue(baseStream.Disposed);
         }
 
         [Test]
