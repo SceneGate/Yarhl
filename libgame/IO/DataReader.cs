@@ -120,6 +120,20 @@ namespace Libgame.IO
         }
 
         /// <summary>
+        /// Reads a 24-bit number.
+        /// </summary>
+        /// <returns>The next 24-bit number.</returns>
+        public int ReadInt24()
+        {
+            if (Endianness == EndiannessMode.LittleEndian)
+                return (ReadByte() << 0) | (ReadByte() << 8) | (ReadByte() << 16);
+            if (Endianness == EndiannessMode.BigEndian)
+                return (ReadByte() << 16) | (ReadByte() << 8) | (ReadByte() << 0);
+
+            return -1;
+        }
+
+        /// <summary>
         /// Reads an unsigned 32-bit number
         /// </summary>
         /// <returns>The next unsigned 32-bit number.</returns>

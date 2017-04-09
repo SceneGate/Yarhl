@@ -154,6 +154,35 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void ReadInt24LE()
+        {
+            byte[] buffer = { 0xAF, 0xFE, 0xCA };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            Assert.AreEqual(0xCAFEAF, reader.ReadInt24());
+        }
+
+        [Test]
+        public void ReadInt24BE()
+        {
+            byte[] buffer = { 0xCA, 0xFE, 0xAF };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = EndiannessMode.BigEndian;
+            Assert.AreEqual(0xCAFEAF, reader.ReadInt24());
+        }
+
+        [Test]
+        public void ReadInt24InvalidEndianness()
+        {
+            byte[] buffer = { 0xCA, 0xFE, 0xAF };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = (EndiannessMode)0x100;
+            Assert.AreEqual(-1, reader.ReadInt24());
+        }
+
+        [Test]
         public void ReadUInt32LE()
         {
             byte[] buffer = { 0xCA, 0xFE, 0xBA, 0xBE };
