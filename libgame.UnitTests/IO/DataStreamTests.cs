@@ -224,6 +224,29 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void FilePathConstructorWithOffset()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            DataStream writeStream = new DataStream(tempFile, FileOpenMode.Write);
+            writeStream.WriteByte(0xCA);
+            writeStream.WriteByte(0xFE);
+            writeStream.WriteByte(0xAF);
+            writeStream.WriteByte(0xFA);
+            writeStream.Dispose();
+
+            DataStream readStream = new DataStream(tempFile, 1, 2, FileOpenMode.Read);
+            Assert.AreEqual(0x1, readStream.Offset);
+            Assert.AreEqual(0x2, readStream.Length);
+            Assert.AreEqual(0x0, readStream.Position);
+            Assert.AreEqual(0x1, readStream.AbsolutePosition);
+            Assert.AreEqual(0xFE, readStream.ReadByte());
+            readStream.Dispose();
+
+            File.Delete(tempFile);
+        }
+
+        [Test]
         public void ConstructorFromDataStreamSetProperties()
         {
             Stream baseStream = new MemoryStream();

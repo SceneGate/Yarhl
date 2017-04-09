@@ -92,7 +92,25 @@ namespace Libgame.IO
         /// <param name="filePath">File path.</param>
         /// <param name="mode">File open mode.</param>
         public DataStream(string filePath, FileOpenMode mode)
-            : this(new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess()))
+            : this(filePath, 0, -1, mode)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// </summary>
+        /// <param name="filePath">File path.</param>
+        /// <param name="offset">Offset from the start of the file.</param>
+        /// <param name="length">
+        /// Length of this DataStream.
+        /// If it's -1 then it takes the file length.
+        /// </param>
+        /// <param name="mode">File open mode.</param>
+        public DataStream(string filePath, long offset, long length, FileOpenMode mode)
+            : this(
+                new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess()),
+                offset,
+                length)
         {
         }
 
