@@ -28,6 +28,7 @@ namespace Libgame.IO
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using FileFormat;
 
     /// <summary>
     /// Data stream.
@@ -311,6 +312,22 @@ namespace Libgame.IO
             Position += count;
 
             return read;
+        }
+
+        /// <summary>
+        /// Reads a format from this stream.
+        /// </summary>
+        /// <returns>The format read.</returns>
+        /// <typeparam name="T">The type of the format to read.</typeparam>
+        public T ReadFormat<T>()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            T format;
+            using (var binary = new BinaryFormat(this))
+                format = binary.ConvertTo<T>();
+            return format;
         }
 
         /// <summary>

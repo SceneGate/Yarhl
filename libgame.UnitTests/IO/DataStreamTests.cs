@@ -27,7 +27,9 @@ namespace Libgame.UnitTests.IO
 {
     using System;
     using System.IO;
+    using Libgame.FileFormat;
     using Libgame.IO;
+    using Mono.Addins;
     using NUnit.Framework;
 
     [TestFixture]
@@ -624,6 +626,27 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void ReadFormat()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xAF);
+            stream.Position = 0x00;
+            Assert.AreEqual(0xAF, stream.ReadFormat<byte>());
+        }
+
+        [Test]
+        public void ReadFormAfeterDisposeThrowException()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xAF);
+            stream.Position = 0x00;
+
+            stream.Dispose();
+            Assert.IsTrue(stream.Disposed);
+            Assert.Throws<ObjectDisposedException>(() => stream.ReadFormat<byte>());
+        }
+
+        [Test]
         public void WritesAByteAndIncreasePosition()
         {
             MemoryStream baseStream = new MemoryStream(2);
@@ -1093,6 +1116,15 @@ namespace Libgame.UnitTests.IO
             stream1.BaseStream.Position = 1;
             stream2.BaseStream.Position = 2;
             Assert.IsTrue(stream1.Compare(stream2));
+        }
+
+        [Extension]
+        public class DummyBinaryConverter : IConverter<BinaryFormat, byte>
+        {
+            public byte Convert(BinaryFormat source)
+            {
+                return source.Stream.ReadByte();
+            }
         }
     }
 }
