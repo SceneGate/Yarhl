@@ -487,6 +487,61 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void PushPositionMovePosition()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            Assert.AreEqual(2, stream.Position);
+            stream.PushToPosition(-1, SeekMode.Current);
+            Assert.AreEqual(1, stream.Position);
+        }
+
+        [Test]
+        public void PushPositionThrowExceptionAfterDispose()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            stream.Dispose();
+            Assert.Throws<ObjectDisposedException>(() =>
+                    stream.PushToPosition(-1, SeekMode.Current));
+        }
+
+        [Test]
+        public void PopRestoresPosition()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            Assert.AreEqual(2, stream.Position);
+            stream.PushToPosition(-1, SeekMode.Current);
+            Assert.AreEqual(1, stream.Position);
+            stream.PopPosition();
+            Assert.AreEqual(2, stream.Position);
+        }
+
+        [Test]
+        public void PopWithoutPushThrowException()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            Assert.Throws<InvalidOperationException>(stream.PopPosition);
+        }
+
+        [Test]
+        public void PopThrowsExceptionAfterDispose()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            stream.PushToPosition(-1, SeekMode.Current);
+            stream.Dispose();
+            Assert.Throws<ObjectDisposedException>(stream.PopPosition);
+        }
+
+        [Test]
         public void ReadsByte()
         {
             Stream baseStream = new MemoryStream();

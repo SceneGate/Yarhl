@@ -41,6 +41,7 @@ namespace Libgame.IO
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
         long position;
         long length;
+        Stack<long> positionStack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class.
@@ -65,6 +66,7 @@ namespace Libgame.IO
             else
                 Instances[stream] += 1;
 
+            positionStack = new Stack<long>();
             BaseStream = stream;
             Offset = offset;
             Length = length;
@@ -248,7 +250,7 @@ namespace Libgame.IO
         /// Move the position of the Stream.
         /// </summary>
         /// <param name="shift">Distance to move position.</param>
-        /// <param name="mode">Start to move position.</param>
+        /// <param name="mode">Mode to move position.</param>
         public void Seek(long shift, SeekMode mode)
         {
             if (Disposed)
@@ -265,6 +267,34 @@ namespace Libgame.IO
                 Position = Length - shift;
                 break;
             }
+        }
+
+        /// <summary>
+        /// Push the current position into a stack and move to a new one.
+        /// </summary>
+        /// <param name="shift">Distance to move position.</param>
+        /// <param name="mode">Mode to move position.</param>
+        public void PushToPosition(long shift, SeekMode mode)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            positionStack.Push(Position);
+            Seek(shift, mode);
+        }
+
+        /// <summary>
+        /// Pop the last position from the stack and move to it.
+        /// </summary>
+        public void PopPosition()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (positionStack.Count == 0)
+                throw new InvalidOperationException("Position stack is empty");
+
+            Position = positionStack.Pop();
         }
 
         /// <summary>
