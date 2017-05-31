@@ -64,6 +64,13 @@ namespace Libgame.FileFormat
             private set;
         }
 
+        public static BinaryFormat CreateForSingleStream(DataStream stream)
+        {
+            BinaryFormat format = new BinaryFormat(stream);
+            stream.Dispose();
+            return format;
+        }
+
         /// <summary>
         /// Releases all resource used by the <see cref="BinaryFormat"/>
         /// object.
