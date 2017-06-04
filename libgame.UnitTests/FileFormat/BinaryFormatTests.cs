@@ -44,6 +44,37 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
+        public void ConstructorWithStreamArgs()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0x1);
+            stream.WriteByte(0x2);
+            stream.WriteByte(0x3);
+
+            BinaryFormat format = new BinaryFormat(stream, 1, 2);
+            Assert.AreNotSame(stream, format.Stream);
+            Assert.AreSame(stream.BaseStream, format.Stream.BaseStream);
+            Assert.AreEqual(0, format.Stream.Position);
+            Assert.AreEqual(3, stream.Position);
+            Assert.AreEqual(1, format.Stream.Offset);
+            Assert.AreEqual(0, stream.Offset);
+            Assert.AreEqual(2, format.Stream.Length);
+            Assert.AreEqual(3, stream.Length);
+            format.Dispose();
+            stream.Dispose();
+        }
+
+        [Test]
+        public void MemoryConstructor()
+        {
+            BinaryFormat format = new BinaryFormat();
+            Assert.IsInstanceOf<MemoryStream>(format.Stream.BaseStream);
+            Assert.AreEqual(0, format.Stream.Position);
+            Assert.AreEqual(0, format.Stream.Length);
+            format.Dispose();
+        }
+
+        [Test]
         public void ConstructorWithPathAllowReadWrite()
         {
             string tempPath = Path.GetTempFileName();
