@@ -60,6 +60,7 @@
     <Compile Include="IO\SeekMode.cs" />
     <Compile Include="IO\EndianessMode.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
+    <Compile Include="IO\NumericExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

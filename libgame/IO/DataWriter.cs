@@ -404,9 +404,7 @@ namespace Libgame.IO
                 return;
 
             long position = absolutePadding ? Stream.AbsolutePosition : Stream.Position;
-            int times = (int)(padding - (position % padding));
-            if (times != padding)    // Else it's already padded
-                WriteTimes(val, times);
+            WriteTimes(val, position.Pad(padding) - position);
         }
 
         void WriteNumber(ulong number, byte numBytes)

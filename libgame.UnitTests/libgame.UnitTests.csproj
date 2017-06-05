@@ -66,6 +66,7 @@
     <Compile Include="IO\FileOpenModeTests.cs" />
     <Compile Include="IO\DataWriterTests.cs" />
     <Compile Include="IO\DataReaderTests.cs" />
+    <Compile Include="IO\NumericExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">
