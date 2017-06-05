@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests.FileFormat
 {
+    using System;
     using Libgame.FileSystem;
     using Libgame.FileFormat;
     using NUnit.Framework;
@@ -61,6 +62,60 @@ namespace Libgame.UnitTests.FileFormat
             format.Dispose();
             Node child = new Node("Child");
             Assert.DoesNotThrow(() => format.Root.Add(child));
+        }
+
+        [Test]
+        public void MoveChildrenReplaceRootNode()
+        {
+            Node node = new Node("MyTest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Root.Add(new Node("Child"));
+
+            format.MoveChildrenTo(node);
+            Assert.AreSame(node, format.Root);
+        }
+
+        [Test]
+        public void MoveChildrenDoesNotDisposeOldNode()
+        {
+            Node node = new Node("MyTest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Root.Add(new Node("Child"));
+            Node prevNode = format.Root;
+
+            format.MoveChildrenTo(node);
+            Assert.AreNotSame(prevNode, format.Root);
+            Assert.IsFalse(prevNode.Disposed);
+        }
+
+        [Test]
+        public void MoveChildrenDoesNotDisposeChildrenAfterDispose()
+        {
+            Node node = new Node("MyTest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Root.Add(new Node("Child"));
+            format.MoveChildrenTo(node);
+
+            format.Dispose();
+            Assert.IsFalse(node.Disposed);
+            Assert.IsNotEmpty(node.Children);
+            Assert.IsFalse(node.Children[0].Disposed);
+        }
+
+        [Test]
+        public void MoveChildrenToNodeAfterDisposeThrowsException()
+        {
+            NodeContainerFormat format = CreateDummyFormat();
+            Node dummy = new Node("Dummy");
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => format.MoveChildrenTo(dummy));
+        }
+
+        [Test]
+        public void MoveChildrenToNodeThrowsIfNullNode()
+        {
+            NodeContainerFormat format = CreateDummyFormat();
+            Assert.Throws<ArgumentNullException>(() => format.MoveChildrenTo(null));
         }
 
         protected override NodeContainerFormat CreateDummyFormat()
