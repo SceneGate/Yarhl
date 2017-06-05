@@ -138,6 +138,13 @@ namespace Libgame.IO
         }
 
         /// <summary>
+        /// Gets the number of streams in use.
+        /// </summary>
+        /// <value>The active streams number.</value>
+        public static int ActiveStreams => Instances.Count;
+
+
+        /// <summary>
         /// Gets a value indicating whether this <see cref="DataStream"/> is disposed.
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
@@ -499,8 +506,10 @@ namespace Libgame.IO
             // BaseStream will be null if the constructor throws exception
             if (BaseStream != null) {
                 Instances[BaseStream] -= 1;
-                if (freeManagedResourcesAlso && Instances[BaseStream] == 0)
+                if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
                     BaseStream.Dispose();
+                    Instances.Remove(BaseStream);
+                }
             }
         }
     }
