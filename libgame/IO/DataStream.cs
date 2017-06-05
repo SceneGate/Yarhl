@@ -143,7 +143,6 @@ namespace Libgame.IO
         /// <value>The active streams number.</value>
         public static int ActiveStreams => Instances.Count;
 
-
         /// <summary>
         /// Gets a value indicating whether this <see cref="DataStream"/> is disposed.
         /// </summary>
