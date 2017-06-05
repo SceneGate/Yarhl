@@ -216,7 +216,7 @@ namespace Libgame.IO
             if (encoding == null)
                 encoding = DefaultEncoding;
 
-            if (nullTerminator)
+            if (nullTerminator && (text.Length == 0 || text[text.Length - 1] != '\0'))
                 text += "\0";
 
             int textSize = encoding.GetByteCount(text);
@@ -249,6 +249,8 @@ namespace Libgame.IO
             byte[] buffer = encoding.GetBytes(text);
             Array.Resize(ref buffer, fixedSize);
 
+            // There is no problem having already the null terminator since it that
+            // case it will overwrite it.
             if (nullTerminator) {
                 byte[] nullChar = encoding.GetBytes("\0");
                 for (int i = 0; i < nullChar.Length; i++)
@@ -284,7 +286,7 @@ namespace Libgame.IO
             if (encoding == null)
                 encoding = DefaultEncoding;
 
-            if (nullTerminator)
+            if (nullTerminator && (text.Length == 0 || text[text.Length - 1] != '\0'))
                 text += "\0";
 
             int textSize = encoding.GetByteCount(text);
