@@ -46,7 +46,7 @@ namespace Libgame.IO
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
-            DefaultEncoding = Encoding.UTF8;
+            DefaultEncoding = new UTF8Encoding(false, true);
         }
 
         /// <summary>
