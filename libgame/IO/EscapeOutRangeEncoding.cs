@@ -27,6 +27,8 @@ namespace Libgame.IO
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
 
@@ -57,6 +59,10 @@ namespace Libgame.IO
     /// <summary>
     /// Provides a substitute string for invalid symbols of an encoding.
     /// </summary>
+    [SuppressMessage(
+        "Microsoft.StyleCop.CSharp.MaintainabilityRules",
+        "SA1402:FileMayOnlyContainASingleClass",
+        Justification = "This class is not used by users and it's related to encoding.")]
     public class EscapeOutRangeDecoderFallbackBuffer : DecoderFallbackBuffer
     {
         string replacement;
@@ -78,7 +84,7 @@ namespace Libgame.IO
         {
             replacement =
                 EscapeOutRangeEnconding.TokenStart +
-                BitConverter.ToString(bytesUnknown).Replace("-", "") +
+                BitConverter.ToString(bytesUnknown).Replace("-", string.Empty) +
                 EscapeOutRangeEnconding.TokenEnd;
             currentPos = 0;
             return true;
@@ -128,7 +134,7 @@ namespace Libgame.IO
 
             tokenStart = baseEncoding.GetBytes(TokenStart);
             tokenEnd = baseEncoding.GetBytes(TokenEnd);
-            replacement = baseEncoding.GetBytes(Replacement.ToString());
+            replacement = baseEncoding.GetBytes(Replacement.ToString(CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -189,7 +195,7 @@ namespace Libgame.IO
             // Now replace the bytes for the token with the actual value
             // In this way we avoid the encoder to process the invalid symbols
             int pos = 0;
-            while (pos < buffer.Count()) {
+            while (pos < buffer.Length) {
                 if (!MatchSequence(buffer, pos, tokenStart)) {
                     bytes[byteIndex++] = buffer[pos++];
                     continue;
@@ -200,8 +206,8 @@ namespace Libgame.IO
 
                 // For each char, take the next symbol
                 while (!MatchSequence(buffer, pos, tokenEnd)) {
-                    if (pos >= buffer.Count())
-                        throw new EncoderFallbackException();
+                    if (pos >= buffer.Length)
+                        throw new EncoderFallbackException("End token not found");
 
                     pos += replacement.Length;
                     bytes[byteIndex++] = symbols[symbolIdx++];
