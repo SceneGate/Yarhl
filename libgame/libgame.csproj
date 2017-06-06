@@ -62,6 +62,7 @@
     <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="FileFormat\XmlExtension.cs" />
     <Compile Include="IO\NumericExtension.cs" />
+    <Compile Include="IO\EscapeOutRangeEncoding.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
