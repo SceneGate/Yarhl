@@ -94,6 +94,9 @@ namespace Libgame.UnitTests.FileFormat
             TestIndentation(" test\n  hey", "\n    {!SP}test\n    {!SP}{!SP}hey\n  ");
             TestIndentation(" test\nhey  test", "\n    {!SP}test\n    hey  test\n  ");
             TestIndentation(" \n ", "\n    {!SP}\n    {!SP}\n  ");
+            TestGetting(" test", " test");
+            TestGetting(" test\n  hey  test\n \n", "test\nhey  test\n");
+            TestGetting("\n     t\n      a\n  ", "t\na");
         }
 
         [Test]
@@ -103,6 +106,11 @@ namespace Libgame.UnitTests.FileFormat
             TestIndentation("test  ", "test  ");
             TestIndentation("test \nhey  ", "\n    test{!SP}\n    hey{!SP}{!SP}\n  ");
             TestIndentation(" test \n hey \n", "\n    {!SP}test{!SP}\n    {!SP}hey{!SP}\n    \n  ");
+            TestGetting("test ", "test ");
+            TestGetting("test \nhey  \na  b   \n \n", "test\nhey\na  b\n");
+            TestGetting("\n    t \n    a  \n  ", "t\na");
+            TestGetting(" \n a\n  ", "a");
+
         }
 
         [Test]
@@ -122,6 +130,12 @@ namespace Libgame.UnitTests.FileFormat
         {
             entry.SetIndentedValue(original, 2);
             Assert.AreEqual(transformed, entry.Value);
+            Assert.AreEqual(original, entry.GetIndentedValue());
+        }
+
+        void TestGetting(string transformed, string original)
+        {
+            entry.Value = transformed;
             Assert.AreEqual(original, entry.GetIndentedValue());
         }
     }

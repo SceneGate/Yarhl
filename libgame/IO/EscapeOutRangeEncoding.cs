@@ -102,11 +102,24 @@ namespace Libgame.IO
         /// <summary>
         /// Moves to the previous position in the buffer.
         /// </summary>
-        /// <returns>Returns <c>true</c>.</returns>
+        /// <returns>Returns <c>true</c> if it was able to move back.</returns>
         public override bool MovePrevious()
         {
+            if (currentPos == 0)
+                return false;
+
             currentPos--;
             return true;
+        }
+
+        /// <summary>
+        /// Reset this instance.
+        /// </summary>
+        public override void Reset()
+        {
+            base.Reset();
+            currentPos = 0;
+            replacement = string.Empty;
         }
     }
 
@@ -206,9 +219,6 @@ namespace Libgame.IO
 
                 // For each char, take the next symbol
                 while (!MatchSequence(buffer, pos, tokenEnd)) {
-                    if (pos >= buffer.Length)
-                        throw new EncoderFallbackException("End token not found");
-
                     pos += replacement.Length;
                     bytes[byteIndex++] = symbols[symbolIdx++];
                 }
@@ -276,6 +286,9 @@ namespace Libgame.IO
             int tokenIdx = -1;
             while ((tokenIdx = text.IndexOf(TokenStart, tokenIdx + 1, culture)) != -1) {
                 int endTokenIdx = text.IndexOf(TokenEnd, tokenIdx, culture);
+                if (endTokenIdx == -1)
+                    throw new EncoderFallbackException("Missing end token");
+
                 int tokenLength = endTokenIdx - tokenIdx - TokenStart.Length - TokenEnd.Length + 1;
                 string token = text.Substring(tokenIdx + TokenStart.Length, tokenLength);
 

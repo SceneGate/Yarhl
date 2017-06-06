@@ -153,7 +153,7 @@ namespace Libgame.FileFormat
             int newLine = 0;
             do {
                 // Remove consecutive spaces
-                while (newLine + 1 < str.Length && str[newLine] == ' ' && str[newLine + 1] == ' ')
+                while (newLine < str.Length && str[newLine] == ' ')
                     str.Remove(newLine, 1);
 
                 // Go to next line
@@ -166,8 +166,10 @@ namespace Libgame.FileFormat
             int newLine = str.Length - 1;
             while (newLine > 0) {
                 // Remove consecutive spaces
-                while (str[newLine] == ' ' && str[newLine - 1] == ' ')
+                while (newLine > 0 && str[newLine] == ' ') {
                     str.Remove(newLine, 1);
+                    newLine--;
+                }
 
                 // Go to previous line
                 newLine = str.ToString().LastIndexOf('\n', newLine) - 1;

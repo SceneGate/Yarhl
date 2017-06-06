@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests.IO
 {
+    using System;
     using System.Linq;
     using System.Text;
     using Libgame.IO;
@@ -33,6 +34,67 @@ namespace Libgame.UnitTests.IO
     [TestFixture]
     public class EscapeOutRangeEncodingTests
     {
+        [Test]
+        public void DecoderFallbackBufferGetsBuffer()
+        {
+            var buffer = new EscapeOutRangeDecoderFallbackBuffer();
+            byte[] invalidBuffer = { 0xE2, 0x81 };
+            Assert.True(buffer.Fallback(invalidBuffer, 0));
+
+            string replacement = "[@!!E281]";
+            for (int i = 0; i < replacement.Length; i++) {
+                Assert.AreEqual(replacement.Length - i, buffer.Remaining);
+                Assert.AreEqual(replacement[i], buffer.GetNextChar());
+            }
+
+            Assert.AreEqual(0, buffer.Remaining);
+            Assert.AreEqual('\0', buffer.GetNextChar());
+        }
+
+        [Test]
+        public void DecoderFallbackBufferResets()
+        {
+            var buffer = new EscapeOutRangeDecoderFallbackBuffer();
+            byte[] invalidBuffer = { 0xE2, 0x81 };
+            Assert.True(buffer.Fallback(invalidBuffer, 0));
+
+            Assert.AreEqual(9, buffer.Remaining);
+            Assert.AreEqual('[', buffer.GetNextChar());
+            Assert.AreEqual(8, buffer.Remaining);
+            Assert.AreEqual('@', buffer.GetNextChar());
+            Assert.AreEqual(7, buffer.Remaining);
+
+            buffer.Reset();
+            Assert.AreEqual(0, buffer.Remaining);
+            Assert.AreEqual('\0', buffer.GetNextChar());
+        }
+
+        [Test]
+        public void DecoderFallbackBufferMoveBack()
+        {
+            var buffer = new EscapeOutRangeDecoderFallbackBuffer();
+            byte[] invalidBuffer = { 0xE2, 0x81 };
+            Assert.True(buffer.Fallback(invalidBuffer, 0));
+
+            Assert.AreEqual(9, buffer.Remaining);
+            Assert.AreEqual('[', buffer.GetNextChar());
+            Assert.AreEqual(8, buffer.Remaining);
+            Assert.AreEqual('@', buffer.GetNextChar());
+            Assert.AreEqual(7, buffer.Remaining);
+
+            Assert.IsTrue(buffer.MovePrevious());
+            Assert.AreEqual(8, buffer.Remaining);
+            Assert.AreEqual('@', buffer.GetNextChar());
+
+            Assert.IsTrue(buffer.MovePrevious());
+            Assert.AreEqual(8, buffer.Remaining);
+            Assert.IsTrue(buffer.MovePrevious());
+            Assert.AreEqual(9, buffer.Remaining);
+            Assert.IsFalse(buffer.MovePrevious());
+            Assert.AreEqual(9, buffer.Remaining);
+            Assert.AreEqual('[', buffer.GetNextChar());
+        }
+
         [Test]
         public void ReplaceInvalidUtf8Symbols()
         {
@@ -101,6 +163,22 @@ namespace Libgame.UnitTests.IO
             Assert.AreEqual(output.Length, encoding.GetByteCount(input));
             Assert.Less(output.Length, encoding.GetMaxByteCount(3));
             Assert.IsTrue(output.SequenceEqual(new byte[] { 0xE3, 0x81, 0x82, 0xE3, 0xE3, 0x81, 0x82 }));
+        }
+
+        [Test]
+        public void EncodingEncodesThrowExceptionIfMissingEndToken()
+        {
+            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            string input = "あ[@!!E3";
+            Assert.Throws<EncoderFallbackException>(() => encoding.GetBytes(input));
+        }
+
+        [Test]
+        public void EncodingEncodesThrowExceptionIfInvalidHexNumber()
+        {
+            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            string input = "あ[@!!Q3]あ";
+            Assert.Throws<FormatException>(() => encoding.GetBytes(input));
         }
     }
 }
