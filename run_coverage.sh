@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xbuild /v:minimal libgame.sln
+msbuild /v:minimal libgame.sln
 if [ $? -ne 0 ] ; then exit 3; fi
 
 NUNIT=`ls testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe`

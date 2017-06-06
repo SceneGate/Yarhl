@@ -1,6 +1,6 @@
 #!/bin/bash
 
-xbuild /v:minimal libgame.sln
+msbuild /v:minimal libgame.sln
 if [ $? -ne 0 ] ; then exit 3; fi
 
 StyleCop.Baboon libgame/Settings.StyleCop libgame/ libgame/bin libgame/obj

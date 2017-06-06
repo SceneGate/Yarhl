@@ -4,6 +4,8 @@ M: System.Boolean Libgame.FileFormat.Format/<Convert>c__AnonStorey0::<>m__1(Syst
 M: System.Boolean Libgame.FileFormat.Format::<ConvertWith>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey0::<>m__0(System.Type)
 M: System.Boolean Libgame.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(System.Type)
+M: System.Boolean Libgame.FileFormat.Format/<>c__DisplayClass13_0::<ConvertWith>b__1(System.Type)
+M: System.Boolean Libgame.FileFormat.Format/<>c::<ConvertWith>b__13_0(System.Type)
 M: System.Boolean Libgame.PluginManager/TypeParamComparer::Equals(System.Type,System.Type)
 M: System.Object Libgame.IO.DataReader::ReadByType(System.Type)
 M: System.Void Libgame.IO.DataWriter::Write(System.Type,System.Object)
@@ -28,6 +30,10 @@ M: Libgame.FileSystem.Node Libgame.FileSystem.NodeFactory::FromDirectory(System.
 # In the DataStream we are sure we will dispose the streams created in the ctor.
 M: System.Void Libgame.IO.DataStream::.ctor()
 M: System.Void Libgame.IO.DataStream::.ctor(System.String,Libgame.IO.FileOpenMode)
+
+R: Gendarme.Rules.Correctness.DisposableFieldsShouldBeDisposedRule
+# Bug in Gendarme because I am using the ? operator
+T: Libgame.FileSystem.Node
 
 R: Gendarme.Rules.Maintainability.AvoidUnnecessarySpecializationRule
 # In this case it is not possible since one of the methods creates a derived type.

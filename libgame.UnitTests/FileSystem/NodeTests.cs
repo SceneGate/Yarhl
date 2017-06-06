@@ -250,6 +250,24 @@ namespace Libgame.UnitTests.FileSystem
 
             Assert.AreEqual(1, node.Children.Count);
             Assert.AreSame(format.Root.Children[0], node.Children[0]);
+            Assert.AreEqual("/MyTest/Child", node.Children[0].Path);
+            Assert.AreSame(node, node.Children[0].Parent);
+        }
+
+        [Test]
+        public void SetContainerFormatTransferHandlingToNode()
+        {
+            Node node = new Node("MyTest");
+            NodeContainerFormat format = new NodeContainerFormat();
+            format.Root.Add(new Node("Child"));
+            node.Format = format;
+
+            // It must be the same parent
+            Assert.AreSame(node, format.Root);
+            format.Dispose();
+            Assert.IsFalse(node.Disposed);
+            Assert.IsNotEmpty(node.Children);
+            Assert.IsFalse(node.Children[0].Disposed);
         }
 
         [Test]

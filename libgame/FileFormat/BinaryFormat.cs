@@ -32,10 +32,32 @@ namespace Libgame.FileFormat
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
         /// </summary>
+        /// <remarks>This format creates a substream from the provided stream.</remarks>
+        /// <param name="stream">Binary stream.</param>
+        /// <param name="offset">Offset from the DataStream start.</param>
+        /// <param name="length">Length of the substream.</param>
+        public BinaryFormat(DataStream stream, long offset, long length)
+        {
+            Stream = new DataStream(stream, offset, length);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
+        /// </summary>
+        /// <remarks>This format creates a substream from the provided stream.</remarks>
         /// <param name="stream">Binary stream.</param>
         public BinaryFormat(DataStream stream)
+            : this(stream, 0, stream?.Length ?? -1)
         {
-            Stream = new DataStream(stream, 0, stream?.Length ?? 0);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
+        /// Creates a stream in memory.
+        /// </summary>
+        public BinaryFormat()
+        {
+            Stream = new DataStream();
         }
 
         /// <summary>

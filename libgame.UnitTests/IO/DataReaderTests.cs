@@ -68,7 +68,7 @@ namespace Libgame.UnitTests.IO
         [Test]
         public void EncodingProperty()
         {
-            Assert.AreSame(Encoding.UTF8, reader.DefaultEncoding);
+            Assert.AreEqual("utf-8", reader.DefaultEncoding.BodyName);
             reader.DefaultEncoding = Encoding.GetEncoding(932);
             Assert.AreSame(Encoding.GetEncoding(932), reader.DefaultEncoding);
         }
@@ -381,13 +381,23 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
-        public void ReadCharArrayThrowsEofWhenExpectedLengthIsBiggerThanStream()
+        public void ReadCharArrayThrowsExceptionForInvalidSymbols()
+        {
+            byte[] buffer = { 0xE3, 0x81, 0x42, 0x42, 0x42};
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            Assert.Throws<DecoderFallbackException>(() => reader.ReadChars(1));
+        }
+
+        [Test]
+        public void ReadCharArrayThrowsDecoderExWhenExpectedLengthIsBiggerThanStream()
         {
             byte[] buffer = { 0xE3, 0x81, 0x82, 0xE3, 0x81 };
             stream.Write(buffer, 0, buffer.Length);
 
             stream.Position = 0;
-            Assert.Throws<EndOfStreamException>(() => reader.ReadChars(2));
+            Assert.Throws<DecoderFallbackException>(() => reader.ReadChars(2));
         }
 
         [Test]

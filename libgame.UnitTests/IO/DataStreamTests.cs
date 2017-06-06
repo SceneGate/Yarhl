@@ -275,6 +275,32 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void ActiveStreamsUpdatesWithDisposes()
+        {
+            int currActive = DataStream.ActiveStreams;
+            DataStream stream = new DataStream();
+            Assert.AreEqual(currActive + 1, DataStream.ActiveStreams);
+            stream.Dispose();
+            Assert.AreEqual(currActive, DataStream.ActiveStreams);
+        }
+
+        [Test]
+        public void ActiveStreamsDoesNotChangeWithSubStreams()
+        {
+            int currActive = DataStream.ActiveStreams;
+            DataStream stream = new DataStream();
+            Assert.AreEqual(currActive + 1, DataStream.ActiveStreams);
+
+            DataStream stream2 = new DataStream(stream, 0, 0);
+            Assert.AreEqual(currActive + 1, DataStream.ActiveStreams);
+            stream2.Dispose();
+            Assert.AreEqual(currActive + 1, DataStream.ActiveStreams);
+
+            stream.Dispose();
+            Assert.AreEqual(currActive, DataStream.ActiveStreams);
+        }
+
+        [Test]
         public void SetPositionChangesProperty()
         {
             Stream baseStream = new MemoryStream();

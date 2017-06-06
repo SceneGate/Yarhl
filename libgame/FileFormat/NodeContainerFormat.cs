@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 namespace Libgame.FileFormat
 {
+    using System;
     using FileSystem;
     using Mono.Addins;
 
@@ -34,12 +35,15 @@ namespace Libgame.FileFormat
     [Extension]
     public class NodeContainerFormat : Format
     {
+        bool manageRoot;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NodeContainerFormat"/> class.
         /// </summary>
         public NodeContainerFormat()
         {
             Root = new Node("NodeContainerRoot");
+            manageRoot = true;
         }
 
         /// <summary>
@@ -59,10 +63,31 @@ namespace Libgame.FileFormat
             private set;
         }
 
+        /// <summary>
+        /// Moves the children from this format to a <see cref="Node"/>.
+        /// </summary>
+        /// <remarks>
+        /// The node will handle the lifecycle of the children.
+        /// Disposing the format won't dispose the children.
+        /// </remarks>
+        /// <param name="newNode">Node that will contain the children.</param>
+        public void MoveChildrenTo(Node newNode)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NodeContainerFormat));
+
+            if (newNode == null)
+                throw new ArgumentNullException(nameof(newNode));
+
+            newNode.Add(Root.Children);
+            Root = newNode;
+            manageRoot = false;
+        }
+
         protected override void Dispose(bool freeManagedResourcesAlso)
         {
             base.Dispose(freeManagedResourcesAlso);
-            if (freeManagedResourcesAlso)
+            if (freeManagedResourcesAlso && manageRoot)
                 Root.Dispose();
         }
     }

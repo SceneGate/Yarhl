@@ -46,7 +46,7 @@ namespace Libgame.IO
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
-            DefaultEncoding = Encoding.UTF8;
+            DefaultEncoding = new UTF8Encoding(false, true);
         }
 
         /// <summary>
@@ -231,8 +231,6 @@ namespace Libgame.IO
 
             // Adjust position
             int actualCharLength = encoding.GetByteCount(charArray);
-            if (startPos + actualCharLength > Stream.Length)
-                throw new EndOfStreamException();
             Stream.Seek(startPos + actualCharLength, SeekMode.Start);
 
             return charArray;

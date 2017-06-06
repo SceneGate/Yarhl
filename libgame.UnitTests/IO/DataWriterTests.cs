@@ -486,6 +486,23 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void WriteTextAvoidDuplicateNullTerminator()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア\0";
+            writer.Write(text);
+
+            byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
         public void WriteTextFixedSizeTruncating()
         {
             DataStream stream = new DataStream();
@@ -562,6 +579,24 @@ namespace Libgame.UnitTests.IO
             stream.Read(actual, 0, expected.Length);
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
+
+        [Test]
+        public void WriteTextAndSizeWithAvoidDuplicateNullTerminators()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア\0";
+            writer.Write(text, typeof(byte), true);
+
+            byte[] expected = { 0x07, 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
 
         [Test]
         public void WriteTextAndSizeWithMaxSizeAndNullTerminator()
