@@ -22,6 +22,7 @@ namespace Libgame.FileSystem
 {
     using System;
     using FileFormat;
+    using FileFormat.Common;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.

@@ -22,7 +22,7 @@ namespace Libgame.FileSystem
 {
     using System;
     using System.IO;
-    using FileFormat;
+    using FileFormat.Common;
     using IO;
 
     /// <summary>

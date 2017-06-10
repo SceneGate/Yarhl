@@ -29,7 +29,7 @@ namespace Libgame.UnitTests.FileSystem
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
-    using Libgame.FileFormat;
+    using Libgame.FileFormat.Common;
     using Libgame.FileSystem;
 
     [TestFixture]

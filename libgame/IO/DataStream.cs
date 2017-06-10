@@ -28,7 +28,7 @@ namespace Libgame.IO
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using FileFormat;
+    using FileFormat.Common;
 
     /// <summary>
     /// Data stream.

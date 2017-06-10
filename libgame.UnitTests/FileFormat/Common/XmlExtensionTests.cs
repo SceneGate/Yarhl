@@ -23,12 +23,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Libgame.UnitTests.FileFormat
+namespace Libgame.UnitTests.FileFormat.Common
 {
     using System;
     using System.Xml.Linq;
     using NUnit.Framework;
-    using Libgame.FileFormat;
+    using Libgame.FileFormat.Common;
 
     [TestFixture]
     public class XmlExtensionTests

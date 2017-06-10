@@ -48,6 +48,7 @@
     <Folder Include="Properties\" />
     <Folder Include="FileSystem\" />
     <Folder Include="IO\" />
+    <Folder Include="FileFormat\Common\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginManagerTests.cs" />
@@ -60,16 +61,16 @@
     <Compile Include="FileSystem\NavegableNodeCollectionTests.cs" />
     <Compile Include="FileSystem\NavigatorTests.cs" />
     <Compile Include="FileSystem\NodeFactoryTests.cs" />
-    <Compile Include="FileFormat\BinaryFormatTests.cs" />
     <Compile Include="FileFormat\BaseGeneralTests.cs" />
-    <Compile Include="FileFormat\NodeContainerFormatTests.cs" />
     <Compile Include="IO\DataStreamTests.cs" />
     <Compile Include="IO\FileOpenModeTests.cs" />
     <Compile Include="IO\DataWriterTests.cs" />
     <Compile Include="IO\DataReaderTests.cs" />
     <Compile Include="IO\NumericExtensionTests.cs" />
-    <Compile Include="FileFormat\XmlExtensionTests.cs" />
     <Compile Include="IO\EscapeOutRangeEncodingTests.cs" />
+    <Compile Include="FileFormat\Common\BinaryFormatTests.cs" />
+    <Compile Include="FileFormat\Common\NodeContainerFormatTests.cs" />
+    <Compile Include="FileFormat\Common\XmlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

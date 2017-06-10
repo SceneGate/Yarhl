@@ -28,6 +28,7 @@ namespace Libgame.UnitTests.IO
     using System;
     using System.IO;
     using Libgame.FileFormat;
+    using Libgame.FileFormat.Common;
     using Libgame.IO;
     using Mono.Addins;
     using NUnit.Framework;

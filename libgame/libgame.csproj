@@ -48,26 +48,27 @@
     <Compile Include="IO\DataWriter.cs" />
     <Compile Include="FileFormat\Format.cs" />
     <Compile Include="FileFormat\IConverter.cs" />
-    <Compile Include="FileFormat\BinaryFormat.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="FileSystem\Node.cs" />
     <Compile Include="FileSystem\NavegableNode.cs" />
     <Compile Include="FileSystem\Navigator.cs" />
     <Compile Include="FileSystem\NavegableNodeCollection.cs" />
-    <Compile Include="FileFormat\NodeContainerFormat.cs" />
     <Compile Include="FileSystem\NodeFactory.cs" />
     <Compile Include="FileSystem\NodeSystem.cs" />
     <Compile Include="IO\SeekMode.cs" />
     <Compile Include="IO\EndianessMode.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
-    <Compile Include="FileFormat\XmlExtension.cs" />
     <Compile Include="IO\NumericExtension.cs" />
     <Compile Include="IO\EscapeOutRangeEncoding.cs" />
+    <Compile Include="FileFormat\Common\NodeContainerFormat.cs" />
+    <Compile Include="FileFormat\Common\BinaryFormat.cs" />
+    <Compile Include="FileFormat\Common\XmlExtension.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="IO\" />
     <Folder Include="FileFormat\" />
     <Folder Include="FileSystem\" />
+    <Folder Include="FileFormat\Common\" />
   </ItemGroup>
 </Project>

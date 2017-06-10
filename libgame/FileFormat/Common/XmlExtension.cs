@@ -23,7 +23,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Libgame.FileFormat
+namespace Libgame.FileFormat.Common
 {
     using System;
     using System.Text;
@@ -85,25 +85,25 @@ namespace Libgame.FileFormat
             if (entry == null)
                 throw new ArgumentNullException(nameof(entry));
 
-            StringBuilder str = new StringBuilder(entry.Value);
+            StringBuilder text = new StringBuilder(entry.Value);
 
             // Remove new line indentation
             if (entry.Value.Contains("\n")) {
-                RemoveStartingSpaces(str);
-                RemoveTrailingSpaces(str);
+                RemoveStartingSpaces(text);
+                RemoveTrailingSpaces(text);
 
-                str.Replace("\n ", "\n");       // Remove spaces after
-                str.Replace(" \n", "\n");       // and before new line
-                if (str[0] == '\n')             // Remove first new line char
-                    str.Remove(0, 1);
-                if (str[str.Length - 1] == '\n') // Remove last new line char
-                    str.Remove(str.Length - 1, 1);
+                text.Replace("\n ", "\n");       // Remove spaces after
+                text.Replace(" \n", "\n");       // and before new line
+                if (text[0] == '\n')             // Remove first new line char
+                    text.Remove(0, 1);
+                if (text[text.Length - 1] == '\n') // Remove last new line char
+                    text.Remove(text.Length - 1, 1);
             }
 
-            str.Replace("{!SP}", " ");
-            str.Replace("[@!!0B]", "\v");
+            text.Replace("{!SP}", " ");
+            text.Replace("[@!!0B]", "\v");
 
-            return str.ToString();
+            return text.ToString();
         }
 
         static void IndentNewLines(StringBuilder text, int indent)

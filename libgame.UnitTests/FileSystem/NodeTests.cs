@@ -28,6 +28,7 @@ namespace Libgame.UnitTests.FileSystem
     using System;
     using NUnit.Framework;
     using Libgame.FileFormat;
+    using Libgame.FileFormat.Common;
     using Libgame.FileSystem;
     using FileFormat;
 
