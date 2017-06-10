@@ -64,6 +64,15 @@ namespace Libgame.UnitTests
         }
 
         [Test]
+        public void DisposeTurnOffAddinManager()
+        {
+            Assert.IsNotNull(PluginManager.Instance);
+            Assert.IsTrue(AddinManager.IsInitialized);
+            PluginManager.Instance.Dispose();
+            Assert.IsFalse(AddinManager.IsInitialized);
+        }
+
+        [Test]
         public void FindExtensionByGenericType()
         {
             var extensions = PluginManager.Instance

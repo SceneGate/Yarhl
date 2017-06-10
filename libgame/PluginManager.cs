@@ -29,7 +29,7 @@ namespace Libgame
     /// <summary>
     /// Manager for LibGame plugins.
     /// </summary>
-    public class PluginManager
+    public class PluginManager : IDisposable
     {
         const string AddinFolder = ".addins";
 
@@ -54,7 +54,7 @@ namespace Libgame
 
         ~PluginManager()
         {
-            Shutdown();
+            Dispose(false);
         }
 
         /// <summary>
@@ -78,17 +78,9 @@ namespace Libgame
         /// <summary>
         /// Shutdown the plugin manager.
         /// </summary>
-        /// <remarks>
-        /// This is usually unnecessary since the destructor will do it too.
-        /// </remarks>
         public static void Shutdown()
         {
-            if (AddinManager.IsInitialized) {
-                AddinManager.Shutdown();
-            }
-
-            lock (LockObj)
-                singleInstance = null;
+            Dispose(true);
         }
 
         /// <summary>
@@ -133,6 +125,30 @@ namespace Libgame
                             genericTypeArguments.SequenceEqual(
                                 inter.GenericTypeArguments,
                                 new TypeParamComparer())));
+        }
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="PluginManager"/> object.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        static void Dispose(bool freeManaged)
+        {
+            lock (LockObj) {
+                singleInstance = null;
+                if (freeManaged && AddinManager.AddinEngine.IsInitialized) {
+                    // Due to a bug in Mono.Addins it may throw an exception in
+                    // a multi-thread context
+                    try {
+                        AddinManager.Shutdown();
+                    } catch (InvalidOperationException) {
+                    }
+                }
+            }
         }
 
         sealed class TypeParamComparer : IEqualityComparer<Type>
