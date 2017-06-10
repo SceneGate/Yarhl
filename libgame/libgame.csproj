@@ -59,10 +59,10 @@
     <Compile Include="IO\EndianessMode.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="IO\NumericExtension.cs" />
-    <Compile Include="IO\EscapeOutRangeEncoding.cs" />
     <Compile Include="FileFormat\Common\NodeContainerFormat.cs" />
     <Compile Include="FileFormat\Common\BinaryFormat.cs" />
     <Compile Include="FileFormat\Common\XmlExtension.cs" />
+    <Compile Include="IO\Encodings\EscapeOutRangeEncoding.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -70,5 +70,6 @@
     <Folder Include="FileFormat\" />
     <Folder Include="FileSystem\" />
     <Folder Include="FileFormat\Common\" />
+    <Folder Include="IO\Encodings\" />
   </ItemGroup>
 </Project>

@@ -49,6 +49,7 @@
     <Folder Include="FileSystem\" />
     <Folder Include="IO\" />
     <Folder Include="FileFormat\Common\" />
+    <Folder Include="IO\Encodings\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginManagerTests.cs" />
@@ -67,10 +68,10 @@
     <Compile Include="IO\DataWriterTests.cs" />
     <Compile Include="IO\DataReaderTests.cs" />
     <Compile Include="IO\NumericExtensionTests.cs" />
-    <Compile Include="IO\EscapeOutRangeEncodingTests.cs" />
     <Compile Include="FileFormat\Common\BinaryFormatTests.cs" />
     <Compile Include="FileFormat\Common\NodeContainerFormatTests.cs" />
     <Compile Include="FileFormat\Common\XmlExtensionTests.cs" />
+    <Compile Include="IO\Encodings\EscapeOutRangeEncodingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

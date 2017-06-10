@@ -28,7 +28,7 @@ namespace Libgame.UnitTests.IO
     using System;
     using System.Linq;
     using System.Text;
-    using Libgame.IO;
+    using Libgame.IO.Encodings;
     using NUnit.Framework;
 
     [TestFixture]

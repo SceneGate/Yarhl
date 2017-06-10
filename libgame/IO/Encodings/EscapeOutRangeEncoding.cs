@@ -23,7 +23,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Libgame.IO
+namespace Libgame.IO.Encodings
 {
     using System;
     using System.Collections.Generic;
@@ -139,12 +139,21 @@ namespace Libgame.IO
         /// </summary>
         /// <param name="baseEncodingName">Base encoding name.</param>
         public EscapeOutRangeEnconding(string baseEncodingName)
+            : this(GetEncoding(baseEncodingName, new EncoderExceptionFallback(), new EscapeOutRangeDecoderFallback()))
         {
-            baseEncoding = GetEncoding(
-                baseEncodingName,
-                new EncoderExceptionFallback(),
-                new EscapeOutRangeDecoderFallback());
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EscapeOutRangeEnconding"/> class.
+        /// </summary>
+        /// <param name="baseEncoding">Base encoding.</param>
+        /// <remarks>
+        /// For correct usage, make sure that your encoding uses the
+        /// <see cref="EscapeOutRangeDecoderFallback"/> as the decoder fallback.
+        /// </remarks>
+        public EscapeOutRangeEnconding(Encoding baseEncoding)
+        {
+            this.baseEncoding = baseEncoding;
             tokenStart = baseEncoding.GetBytes(TokenStart);
             tokenEnd = baseEncoding.GetBytes(TokenEnd);
             replacement = baseEncoding.GetBytes(Replacement.ToString(CultureInfo.InvariantCulture));
