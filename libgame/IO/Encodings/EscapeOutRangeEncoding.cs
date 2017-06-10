@@ -146,14 +146,17 @@ namespace Libgame.IO.Encodings
         /// <summary>
         /// Initializes a new instance of the <see cref="EscapeOutRangeEnconding"/> class.
         /// </summary>
-        /// <param name="baseEncoding">Base encoding.</param>
+        /// <param name="encoding">Base encoding.</param>
         /// <remarks>
         /// For correct usage, make sure that your encoding uses the
         /// <see cref="EscapeOutRangeDecoderFallback"/> as the decoder fallback.
         /// </remarks>
-        public EscapeOutRangeEnconding(Encoding baseEncoding)
+        public EscapeOutRangeEnconding(Encoding encoding)
         {
-            this.baseEncoding = baseEncoding;
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+
+            baseEncoding = encoding;
             tokenStart = baseEncoding.GetBytes(TokenStart);
             tokenEnd = baseEncoding.GetBytes(TokenEnd);
             replacement = baseEncoding.GetBytes(Replacement.ToString(CultureInfo.InvariantCulture));

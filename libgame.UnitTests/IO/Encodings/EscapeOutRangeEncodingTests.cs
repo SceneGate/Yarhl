@@ -133,6 +133,18 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void EncodingThrowExceptionIfNullEncoding()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EscapeOutRangeEnconding((Encoding)null));
+        }
+
+        [Test]
+        public void EncodingThrowExceptionIfNullStringEncoding()
+        {
+            Assert.Throws<ArgumentNullException>(() => new EscapeOutRangeEnconding((string)null));
+        }
+
+        [Test]
         public void EncodingDoesNotChangeValidUtf8Symbols()
         {
             Encoding encoding = new EscapeOutRangeEnconding("utf-8");

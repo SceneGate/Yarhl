@@ -29,7 +29,7 @@ namespace Libgame
     /// <summary>
     /// Manager for LibGame plugins.
     /// </summary>
-    public class PluginManager : IDisposable
+    public sealed class PluginManager : IDisposable
     {
         const string AddinFolder = ".addins";
 
