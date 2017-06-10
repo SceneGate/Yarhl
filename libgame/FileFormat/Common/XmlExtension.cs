@@ -60,13 +60,20 @@ namespace Libgame.FileFormat.Common
             if (val == null)
                 throw new ArgumentNullException(nameof(val));
 
+            if (indent < 0)
+                throw new ArgumentOutOfRangeException(nameof(indent));
+
             StringBuilder text = new StringBuilder(val);
 
             // Escape 'invalid' spaces
             if (val.Contains("\n")) {
-                ReplaceStartingSpaces(text);
-                ReplaceTrailingSpaces(text);
-                IndentNewLines(text, indent);
+                if (entry.Attribute("ignoreSpaces")?.Value == "true") {
+                    IndentNewLines(text, 0);
+                } else {
+                    ReplaceStartingSpaces(text);
+                    ReplaceTrailingSpaces(text);
+                    IndentNewLines(text, indent);
+                }
             }
 
             // Escape weird ASCII related-spaces chars
@@ -89,15 +96,24 @@ namespace Libgame.FileFormat.Common
 
             // Remove new line indentation
             if (entry.Value.Contains("\n")) {
-                RemoveStartingSpaces(text);
-                RemoveTrailingSpaces(text);
+                if (entry.Attribute("ignoreSpaces")?.Value == "true") {
+                    // Only remove first new line (open tag) and last new line (close tag)
+                    int firstNewLine = text.ToString().IndexOf('\n');
+                    text.Remove(0, firstNewLine + 1);
 
-                text.Replace("\n ", "\n");       // Remove spaces after
-                text.Replace(" \n", "\n");       // and before new line
-                if (text[0] == '\n')             // Remove first new line char
-                    text.Remove(0, 1);
-                if (text[text.Length - 1] == '\n') // Remove last new line char
-                    text.Remove(text.Length - 1, 1);
+                    int lastNewLine = text.ToString().LastIndexOf('\n');
+                    text.Remove(lastNewLine, text.Length - lastNewLine);
+                } else {
+                    RemoveStartingSpaces(text);
+                    RemoveTrailingSpaces(text);
+
+                    text.Replace("\n ", "\n");       // Remove spaces after
+                    text.Replace(" \n", "\n");       // and before new line
+                    if (text[0] == '\n')             // Remove first new line char
+                        text.Remove(0, 1);
+                    if (text[text.Length - 1] == '\n') // Remove last new line char
+                        text.Remove(text.Length - 1, 1);
+                }
             }
 
             text.Replace("{!SP}", " ");
@@ -109,7 +125,9 @@ namespace Libgame.FileFormat.Common
         static void IndentNewLines(StringBuilder text, int indent)
         {
             string indentation = new string(' ', indent * XmlSpacesPerLevel);
-            string indentationEnd = new string(' ', (indent - 1) * XmlSpacesPerLevel);
+            string indentationEnd = indent == 0 ?
+                "  " :
+                new string(' ', (indent - 1) * XmlSpacesPerLevel);
 
             text.Replace("\n", "\n" + indentation)
                 .Insert(0, "\n" + indentation)

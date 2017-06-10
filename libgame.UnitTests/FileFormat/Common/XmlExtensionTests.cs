@@ -70,10 +70,23 @@ namespace Libgame.UnitTests.FileFormat.Common
         }
 
         [Test]
+        public void SettingNegativeIndentationThrowsException()
+        {
+            Assert.Throws<ArgumentOutOfRangeException>(() => entry.SetIndentedValue("", -1));
+        }
+
+        [Test]
         public void GettingNullEntryThrowsException()
         {
             Assert.Throws<ArgumentNullException>(
                 () => ((XElement)null).GetIndentedValue());
+        }
+
+        [Test]
+        public void ZeroIdentation()
+        {
+            TestIndentation("test", "test", 0);
+            TestIndentation("test\nhey", "\ntest\nhey\n  ", 0);
         }
 
         [Test]
@@ -83,6 +96,16 @@ namespace Libgame.UnitTests.FileFormat.Common
             TestIndentation("test   hey", "test   hey");
             TestIndentation("test     hey", "test     hey");
             TestIndentation("test  hey\nhey  test", "\n    test  hey\n    hey  test\n  ");
+        }
+
+        [Test]
+        public void IgnoreSpaces()
+        {
+            entry.SetAttributeValue("ignoreSpaces", true);
+            TestIndentation(" test  hey ", " test  hey ");
+            TestIndentation("test\nhey", "\ntest\nhey\n  ");
+            TestIndentation(" hehe  \n   hey  test   ", "\n hehe  \n   hey  test   \n  ");
+            entry.SetAttributeValue("ignoreSpaces", false);
         }
 
         [Test]
@@ -126,9 +149,9 @@ namespace Libgame.UnitTests.FileFormat.Common
             TestIndentation("hey\vhey\nhehe", "\n    hey[@!!0B]hey\n    hehe\n  ");
         }
 
-        void TestIndentation(string original, string transformed)
+        void TestIndentation(string original, string transformed, int indent = 2)
         {
-            entry.SetIndentedValue(original, 2);
+            entry.SetIndentedValue(original, indent);
             Assert.AreEqual(transformed, entry.Value);
             Assert.AreEqual(original, entry.GetIndentedValue());
         }
