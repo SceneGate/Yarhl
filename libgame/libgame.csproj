@@ -63,6 +63,7 @@
     <Compile Include="FileFormat\Common\BinaryFormat.cs" />
     <Compile Include="FileFormat\Common\XmlExtension.cs" />
     <Compile Include="IO\Encodings\EscapeOutRangeEncoding.cs" />
+    <Compile Include="IO\Encodings\EucJpEncoding.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -71,5 +72,9 @@
     <Folder Include="FileSystem\" />
     <Folder Include="FileFormat\Common\" />
     <Folder Include="IO\Encodings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="IO\Encodings\index-jis0208.txt" />
+    <EmbeddedResource Include="IO\Encodings\index-jis0212.txt" />
   </ItemGroup>
 </Project>
