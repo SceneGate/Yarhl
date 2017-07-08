@@ -17,3 +17,6 @@ echo "Result: $COVERED/$MATCHED ($((COVERED * 100 / MATCHED))%)"
 cov-html $NUNIT.covcfg.covdb Libgame
 rm -rf coverage-report
 mv html coverage-report
+
+cov-gtk $NUNIT.covcfg.covdb
+

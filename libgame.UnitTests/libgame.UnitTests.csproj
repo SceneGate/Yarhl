@@ -37,10 +37,10 @@
     <Reference Include="Mono.Addins">
       <HintPath>..\mono-addins\bin\Mono.Addins.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.6.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -72,6 +72,7 @@
     <Compile Include="FileFormat\Common\NodeContainerFormatTests.cs" />
     <Compile Include="FileFormat\Common\XmlExtensionTests.cs" />
     <Compile Include="IO\Encodings\EscapeOutRangeEncodingTests.cs" />
+    <Compile Include="IO\Encodings\EucJpEncodingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">
