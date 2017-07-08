@@ -39,6 +39,7 @@ namespace Libgame.IO.Encodings
     {
         static Dictionary<int, int> idx2CodePointJs212;
         static Dictionary<int, int> idx2CodePointJs208;
+        static Dictionary<int, int> codePoint2IdxJs212;
         static Dictionary<int, int> codePoint2IdxJs208;
         readonly DecoderFallback decoderFallback;
         readonly EncoderFallback encoderFallback;
@@ -55,17 +56,61 @@ namespace Libgame.IO.Encodings
                 codePoint2IdxJs208);
             
             idx2CodePointJs212 = new Dictionary<int, int>();
+            codePoint2IdxJs212 = new Dictionary<int, int>();
             FillCodecTable(
                 assembly.GetManifestResourceStream("Libgame.IO.Encodings.index-jis0212.txt"),
-                idx2CodePointJs212);
+                idx2CodePointJs212,
+                codePoint2IdxJs212);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EucJpEncoding"/> class.
+        /// </summary>
         public EucJpEncoding()
         {
             decoderFallback = new DecoderExceptionFallback();
             encoderFallback = new EncoderExceptionFallback();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EucJpEncoding"/> class.
+        /// </summary>
+        /// <param name="decFallback">Decoder fallback.</param>
+        /// <param name="encFallback">Encoder fallback.</param>
+        public EucJpEncoding(DecoderFallback decFallback, EncoderFallback encFallback)
+        {
+            if (decFallback == null)
+                throw new ArgumentNullException(nameof(decFallback));
+            if (encFallback == null)
+                throw new ArgumentNullException(nameof(encFallback));
+
+            decoderFallback = decFallback;
+            encoderFallback = encFallback;
+        }
+
+        /// <summary>
+        /// Gets the decoder fallback.
+        /// </summary>
+        /// <value>The decoder fallback.</value>
+        public new DecoderFallback DecoderFallback {
+            get { return decoderFallback; }
+        }
+
+        /// <summary>
+        /// Gets the encoder fallback.
+        /// </summary>
+        /// <value>The encoder fallback.</value>
+        public new EncoderFallback EncoderFallback {
+            get { return encoderFallback; }
+        }
+
+        /// <summary>
+        /// Gets the byte count.
+        /// </summary>
+        /// <returns>The byte count.</returns>
+        /// <param name="chars">Chars to convert.</param>
+        /// <param name="index">Index of the char array.</param>
+        /// <param name="count">Count in the char array.</param>
         public override int GetByteCount(char[] chars, int index, int count)
         {
             if (chars == null)
@@ -81,6 +126,15 @@ namespace Libgame.IO.Encodings
             return length;
         }
 
+        /// <summary>
+        /// Gets the encoded bytes.
+        /// </summary>
+        /// <returns>The encoded bytes.</returns>
+        /// <param name="chars">Chars to convert.</param>
+        /// <param name="charIndex">Index in the char array.</param>
+        /// <param name="charCount">Number of chars to convert.</param>
+        /// <param name="bytes">Output byte array.</param>
+        /// <param name="byteIndex">Indes in the byte array.</param>
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
         {
             if (chars == null)
@@ -102,6 +156,13 @@ namespace Libgame.IO.Encodings
             }
         }
 
+        /// <summary>
+        /// Gets the char count.
+        /// </summary>
+        /// <returns>The char count.</returns>
+        /// <param name="bytes">Bytes to convert.</param>
+        /// <param name="index">Index of the byte array.</param>
+        /// <param name="count">Count of the byte array.</param>
         public override int GetCharCount(byte[] bytes, int index, int count)
         {
             if (bytes == null)
@@ -117,6 +178,15 @@ namespace Libgame.IO.Encodings
             return chars;
         }
 
+        /// <summary>
+        /// Gets the decoded chars.
+        /// </summary>
+        /// <returns>The decoded chars.</returns>
+        /// <param name="bytes">Encoded bytes.</param>
+        /// <param name="byteIndex">Index in the encoded bytes.</param>
+        /// <param name="byteCount">Number of bytes to decoded.</param>
+        /// <param name="chars">Output char array.</param>
+        /// <param name="charIndex">Index in the char array.</param>
         public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
         {
             if (bytes == null)
@@ -139,6 +209,11 @@ namespace Libgame.IO.Encodings
             return text.Length;
         }
 
+        /// <summary>
+        /// Gets the max byte count.
+        /// </summary>
+        /// <returns>The max byte count.</returns>
+        /// <param name="charCount">Char count.</param>
         public override int GetMaxByteCount(int charCount)
         {
             if (charCount < 0)
@@ -147,6 +222,11 @@ namespace Libgame.IO.Encodings
             return charCount * 3;
         }
 
+        /// <summary>
+        /// Gets the max char count.
+        /// </summary>
+        /// <returns>The max char count.</returns>
+        /// <param name="byteCount">Byte count.</param>
         public override int GetMaxCharCount(int byteCount)
         {
             if (byteCount < 0)
@@ -155,6 +235,11 @@ namespace Libgame.IO.Encodings
             return byteCount;
         }
 
+        /// <summary>
+        /// Internal text encoder.
+        /// </summary>
+        /// <param name="text">Text to encode.</param>
+        /// <param name="encodedByte">Callback with the byte encoded.</param>
         protected void EncodeText(string text, Action<Stream, byte> encodedByte)
         {
             if (encodedByte == null)
@@ -188,25 +273,38 @@ namespace Libgame.IO.Encodings
 
                     // 8
                     if (!codePoint2IdxJs208.ContainsKey(codePoint)) {
-                        EncoderFallbackBuffer fallback = encoderFallback.CreateFallbackBuffer();
-                        string ch = char.ConvertFromUtf32(codePoint);
-                        if (ch.Length == 1)
-                            fallback.Fallback(ch[0], 0);
-                        else
-                            fallback.Fallback(ch[0], ch[1], 0);
+                        if (codePoint2IdxJs212.ContainsKey(codePoint)) {
+                            // Fixed, not in the specs
+                            int pointer212 = codePoint2IdxJs212[codePoint];
+                            encodedByte(stream, 0x8F);
+                            encodedByte(stream, (byte)((pointer212 / 94) + 0xA1));
+                            encodedByte(stream, (byte)((pointer212 % 94) + 0xA1));
+                        } else {
+                            var fallback = encoderFallback.CreateFallbackBuffer();
+                            string ch = char.ConvertFromUtf32(codePoint);
+                            if (ch.Length == 1)
+                                fallback.Fallback(ch[0], 0);
+                            else
+                                fallback.Fallback(ch[0], ch[1], 0);
 
-                        while (fallback.Remaining > 0)
-                            encodedByte(stream, (byte)fallback.GetNextChar());
+                            while (fallback.Remaining > 0)
+                                encodedByte(stream, (byte)fallback.GetNextChar());
+                        }
+                    } else {
+                        // 7
+                        int pointer = codePoint2IdxJs208[codePoint];
+                        encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
+                        encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
                     }
-
-                    // 7
-                    int pointer = codePoint2IdxJs208[codePoint];
-                    encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
-                    encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
                 }
             }
         }
 
+        /// <summary>
+        /// Internal text decoder.
+        /// </summary>
+        /// <param name="stream">Stream to decode.</param>
+        /// <param name="decodedText">Callback with decoded text.</param>
         protected void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
             if (stream == null)
@@ -264,7 +362,10 @@ namespace Libgame.IO.Encodings
             }
         }
 
-        static void FillCodecTable(Stream file, IDictionary<int, int> idx2CodePoint, IDictionary<int, int> codePoint2Idx = null)
+        static void FillCodecTable(
+            Stream file,
+            IDictionary<int, int> idx2CodePoint,
+            IDictionary<int, int> codePoint2Idx)
         {
             using (StreamReader reader = new StreamReader(file)) {
                 while (!reader.EndOfStream) {
@@ -279,8 +380,7 @@ namespace Libgame.IO.Encodings
                     int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
 
                     idx2CodePoint[index] = codePoint;
-                    if (codePoint2Idx != null)
-                        codePoint2Idx[codePoint] = index;
+                    codePoint2Idx[codePoint] = index;
                 }
             }
         }

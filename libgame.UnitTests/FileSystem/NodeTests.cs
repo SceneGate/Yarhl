@@ -242,6 +242,14 @@ namespace Libgame.UnitTests.FileSystem
         }
 
         [Test]
+        public void DisposeTwiceDoesNotThrow()
+        {
+            Node node = new Node("mytest", new StringFormatTest("3"));
+            node.Dispose();
+            Assert.DoesNotThrow(node.Dispose);
+        }
+
+        [Test]
         public void SetContainerFormatAddChildren()
         {
             Node node = new Node("MyTest");
