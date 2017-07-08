@@ -68,6 +68,13 @@ namespace Libgame.IO.Encodings
 
         public override int GetByteCount(char[] chars, int index, int count)
         {
+            if (chars == null)
+                throw new ArgumentNullException(nameof(chars));
+            if (count < 0 || count > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index < 0 || index + count > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
             int length = 0;
             string text = new string(chars, index, count);
             EncodeText(text, (str, b) => length++);
@@ -76,7 +83,19 @@ namespace Libgame.IO.Encodings
 
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
         {
-            using (MemoryStream stream = new MemoryStream(bytes, byteIndex, bytes.Length)) {
+            if (chars == null)
+                throw new ArgumentNullException(nameof(chars));
+            if (charCount < 0 || charCount > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charCount));
+            if (charIndex < 0 || charIndex + charCount > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charIndex));
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+            if (byteIndex < 0 || byteIndex >= bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(byteIndex));
+
+            using (var stream = new MemoryStream(bytes, byteIndex, bytes.Length)) {
                 string text = new string(chars, charIndex, charCount);
                 EncodeText(text, (str, b) => stream.WriteByte(b));
                 return (int)stream.Length;
@@ -85,6 +104,13 @@ namespace Libgame.IO.Encodings
 
         public override int GetCharCount(byte[] bytes, int index, int count)
         {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+            if (count < 0 || count > bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(count));
+            if (index < 0 || index + count > bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
             int chars = 0;
             using (MemoryStream stream = new MemoryStream(bytes, index, count))
                 DecodeText(stream, (str, ch) => chars += ch.Length);
@@ -93,6 +119,18 @@ namespace Libgame.IO.Encodings
 
         public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
         {
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+            if (byteCount < 0 || byteCount > bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(byteCount));
+            if (byteIndex < 0 || byteIndex + byteCount > bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(byteIndex));
+
+            if (chars == null)
+                throw new ArgumentNullException(nameof(chars));
+            if (charIndex < 0 || charIndex >= chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charIndex));
+
             StringBuilder text = new StringBuilder();
             using (MemoryStream stream = new MemoryStream(bytes, byteIndex, byteCount))
                 DecodeText(stream, (str, ch) => text.Append(ch));
@@ -103,16 +141,25 @@ namespace Libgame.IO.Encodings
 
         public override int GetMaxByteCount(int charCount)
         {
+            if (charCount < 0)
+                throw new ArgumentOutOfRangeException(nameof(charCount));
+
             return charCount * 3;
         }
 
         public override int GetMaxCharCount(int byteCount)
         {
+            if (byteCount < 0)
+                throw new ArgumentOutOfRangeException(nameof(byteCount));
+
             return byteCount;
         }
 
         protected void EncodeText(string text, Action<Stream, byte> encodedByte)
         {
+            if (encodedByte == null)
+                throw new ArgumentNullException(nameof(encodedByte));
+
             MemoryStream stream = new MemoryStream(UTF32.GetBytes(text));
 
             // 1
@@ -160,8 +207,13 @@ namespace Libgame.IO.Encodings
             }
         }
 
-        protected void DecodeText(Stream stream, Action<Stream, string> deocdedText)
+        protected void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (decodedText == null)
+                throw new ArgumentNullException(nameof(decodedText));
+
             DecoderFallbackBuffer fallback = decoderFallback.CreateFallbackBuffer();
 
             byte lead = 0;
@@ -171,7 +223,7 @@ namespace Libgame.IO.Encodings
                 if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
                     // 3
                     lead = 0;
-                    deocdedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
+                    decodedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
                 } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
                     // 4
                     jis0212 = true;
@@ -181,18 +233,18 @@ namespace Libgame.IO.Encodings
                     if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
                         int tblIdx = ((lead - 0xA1) * 94) + current - 0xA1;
                         int codePoint = jis0212 ? idx2CodePointJs212[tblIdx] : idx2CodePointJs208[tblIdx];
-                        deocdedText(stream, char.ConvertFromUtf32(codePoint));
+                        decodedText(stream, char.ConvertFromUtf32(codePoint));
 
                         lead = 0x00;
                         jis0212 = false;
                     } else {
                         bool result = fallback.Fallback(new byte[] { lead, current }, 0);
                         while (result && fallback.Remaining > 0)
-                            deocdedText(stream, fallback.GetNextChar().ToString());
+                            decodedText(stream, fallback.GetNextChar().ToString());
                     }
                 } else if (current <= 0x7F) {
                     // 6
-                    deocdedText(stream, char.ConvertFromUtf32(current));
+                    decodedText(stream, char.ConvertFromUtf32(current));
                 } else if (IsInRange(current, 0x8E, 0x8F) || IsInRange(current, 0xA1, 0xFE)) {
                     // 7
                     lead = current;
@@ -200,7 +252,7 @@ namespace Libgame.IO.Encodings
                     // 8
                     bool result = fallback.Fallback(new byte[] { current }, 0);
                     while (result && fallback.Remaining > 0)
-                        deocdedText(stream, fallback.GetNextChar().ToString());
+                        decodedText(stream, fallback.GetNextChar().ToString());
                 }
             }
 
@@ -208,27 +260,28 @@ namespace Libgame.IO.Encodings
             if (lead != 0x00) {
                 bool result = fallback.Fallback(new byte[] { lead }, 0);
                 while (result && fallback.Remaining > 0)
-                    deocdedText(stream, fallback.GetNextChar().ToString());
+                    decodedText(stream, fallback.GetNextChar().ToString());
             }
         }
 
         static void FillCodecTable(Stream file, IDictionary<int, int> idx2CodePoint, IDictionary<int, int> codePoint2Idx = null)
         {
-            StreamReader reader = new StreamReader(file);
-            while (!reader.EndOfStream) {
-                string line = reader.ReadLine();
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-                if (line[0] == '#')
-                    continue;
+            using (StreamReader reader = new StreamReader(file)) {
+                while (!reader.EndOfStream) {
+                    string line = reader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+                    if (line[0] == '#')
+                        continue;
 
-                string[] fields = line.Split('\t');
-                int index = System.Convert.ToInt32(fields[0].TrimStart(' '));
-                int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
+                    string[] fields = line.Split('\t');
+                    int index = System.Convert.ToInt32(fields[0].TrimStart(' '), 10);
+                    int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
 
-                idx2CodePoint[index] = codePoint;
-                if (codePoint2Idx != null)
-                    codePoint2Idx[codePoint] = index;
+                    idx2CodePoint[index] = codePoint;
+                    if (codePoint2Idx != null)
+                        codePoint2Idx[codePoint] = index;
+                }
             }
         }
 

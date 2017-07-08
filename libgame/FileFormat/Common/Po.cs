@@ -77,22 +77,28 @@ namespace Libgame.FileFormat.Common
         /// <summary>
         /// Add the specified entry.
         /// </summary>
-        /// <param name="entry">Entry to add. The ID must be unique.</param>
-        public void Add(PoEntry entry)
+        /// <param name="item">Entry to add. The ID must be unique.</param>
+        public void Add(PoEntry item)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Po));
 
-            entries.Add(entry);
+            if (item == null)
+                throw new ArgumentNullException(nameof(item));
+
+            entries.Add(item);
         }
 
         /// <summary>
         /// Add the specified entries.
         /// </summary>
-        /// <param name="entries">Entries to add.</param>
-        public void Add(IEnumerable<PoEntry> entries)
+        /// <param name="items">Entries to add.</param>
+        public void Add(IEnumerable<PoEntry> items)
         {
-            foreach (PoEntry entry in entries)
+            if (items == null)
+                throw new ArgumentNullException(nameof(items));
+
+            foreach (PoEntry entry in items)
                 Add(entry);
         }
     }
