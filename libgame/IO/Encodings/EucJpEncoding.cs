@@ -28,8 +28,8 @@ namespace Libgame.IO.Encodings
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using System.Reflection;
+    using System.Text;
 
     /// <summary>
     /// EUC-JP encoding.
@@ -40,28 +40,30 @@ namespace Libgame.IO.Encodings
         static Dictionary<int, int> idx2CodePointJs212;
         static Dictionary<int, int> idx2CodePointJs208;
         static Dictionary<int, int> codePoint2IdxJs208;
+        readonly DecoderFallback decoderFallback;
+        readonly EncoderFallback encoderFallback;
 
         static EucJpEncoding()
         {
-            Assembly myAssembly = Assembly.GetExecutingAssembly();
+            Assembly assembly = Assembly.GetExecutingAssembly();
 
             idx2CodePointJs208 = new Dictionary<int, int>();
             codePoint2IdxJs208 = new Dictionary<int, int>();
             FillCodecTable(
-                myAssembly.GetManifestResourceStream("Libgame.IO.Encodings.index-jis0208.txt"),
+                assembly.GetManifestResourceStream("Libgame.IO.Encodings.index-jis0208.txt"),
                 idx2CodePointJs208,
                 codePoint2IdxJs208);
             
             idx2CodePointJs212 = new Dictionary<int, int>();
             FillCodecTable(
-                myAssembly.GetManifestResourceStream("Libgame.IO.Encodings.index-jis0212.txt"),
+                assembly.GetManifestResourceStream("Libgame.IO.Encodings.index-jis0212.txt"),
                 idx2CodePointJs212);
         }
 
         public EucJpEncoding()
         {
-            //DecoderFallback = new DecoderExceptionFallback();
-            //EncoderFallback = new EncoderExceptionFallback();
+            decoderFallback = new DecoderExceptionFallback();
+            encoderFallback = new EncoderExceptionFallback();
         }
 
         public override int GetByteCount(char[] chars, int index, int count)
@@ -109,7 +111,108 @@ namespace Libgame.IO.Encodings
             return byteCount;
         }
 
-        static void FillCodecTable(Stream file, Dictionary<int, int> idx2CodePoint, Dictionary<int, int> codePoint2Idx = null)
+        protected void EncodeText(string text, Action<Stream, byte> encodedByte)
+        {
+            MemoryStream stream = new MemoryStream(UTF32.GetBytes(text));
+
+            // 1
+            while (stream.Position < stream.Length) {
+                byte[] buffer = new byte[4];
+                stream.Read(buffer, 0, 4);
+                int codePoint = BitConverter.ToInt32(buffer, 0);
+
+                if (codePoint <= 0x7F) {
+                    // 2
+                    encodedByte(stream, (byte)(codePoint & 0xFF));
+                } else if (codePoint == 0xA5) {
+                    // 3
+                    encodedByte(stream, 0x5C);
+                } else if (codePoint == 0x203E) {
+                    // 4
+                    encodedByte(stream, 0x7E);
+                } else if (IsInRange(codePoint, 0xFF61, 0xFF9F)) {
+                    // 5
+                    encodedByte(stream, 0x8E);
+                    encodedByte(stream, (byte)(codePoint - 0xFF61 + 0xA1));
+                } else {
+                    // 6
+                    if (codePoint == 0x2212)
+                        codePoint = 0xFF0D;
+
+                    // 8
+                    if (!codePoint2IdxJs208.ContainsKey(codePoint)) {
+                        EncoderFallbackBuffer fallback = encoderFallback.CreateFallbackBuffer();
+                        string ch = char.ConvertFromUtf32(codePoint);
+                        if (ch.Length == 1)
+                            fallback.Fallback(ch[0], 0);
+                        else
+                            fallback.Fallback(ch[0], ch[1], 0);
+
+                        while (fallback.Remaining > 0)
+                            encodedByte(stream, (byte)fallback.GetNextChar());
+                    }
+
+                    // 7
+                    int pointer = codePoint2IdxJs208[codePoint];
+                    encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
+                    encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
+                }
+            }
+        }
+
+        protected void DecodeText(Stream stream, Action<Stream, string> deocdedText)
+        {
+            DecoderFallbackBuffer fallback = decoderFallback.CreateFallbackBuffer();
+
+            byte lead = 0;
+            bool jis0212 = false;
+            while (stream.Position < stream.Length) {
+                byte current = (byte)stream.ReadByte();
+                if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
+                    // 3
+                    lead = 0;
+                    deocdedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
+                } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
+                    // 4
+                    jis0212 = true;
+                    lead = current;
+                } else if (lead != 0x00) {
+                    // 5
+                    if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
+                        int tblIdx = ((lead - 0xA1) * 94) + current - 0xA1;
+                        int codePoint = jis0212 ? idx2CodePointJs212[tblIdx] : idx2CodePointJs208[tblIdx];
+                        deocdedText(stream, char.ConvertFromUtf32(codePoint));
+
+                        lead = 0x00;
+                        jis0212 = false;
+                    } else {
+                        bool result = fallback.Fallback(new byte[] { lead, current }, 0);
+                        while (result && fallback.Remaining > 0)
+                            deocdedText(stream, fallback.GetNextChar().ToString());
+                    }
+                } else if (current <= 0x7F) {
+                    // 6
+                    deocdedText(stream, char.ConvertFromUtf32(current));
+                } else if (IsInRange(current, 0x8E, 0x8F) || IsInRange(current, 0xA1, 0xFE)) {
+                    // 7
+                    lead = current;
+                } else {
+                    // 8
+                    bool result = fallback.Fallback(new byte[] { current }, 0);
+                    while (result && fallback.Remaining > 0)
+                        deocdedText(stream, fallback.GetNextChar().ToString());
+                }
+            }
+
+            // 1
+            if (lead != 0x00) {
+                bool result = fallback.Fallback(new byte[] { lead }, 0);
+                while (result && fallback.Remaining > 0)
+                    deocdedText(stream, fallback.GetNextChar().ToString());
+            }
+        }
+
+        static void FillCodecTable(Stream file, IDictionary<int, int> idx2CodePoint, IDictionary<int, int> codePoint2Idx = null)
         {
             StreamReader reader = new StreamReader(file);
             while (!reader.EndOfStream) {
@@ -126,107 +229,6 @@ namespace Libgame.IO.Encodings
                 idx2CodePoint[index] = codePoint;
                 if (codePoint2Idx != null)
                     codePoint2Idx[codePoint] = index;
-            }
-        }
-
-        protected void EncodeText(string text, Action<Stream, byte> onByte)
-        {
-            MemoryStream stream = new MemoryStream(UTF32.GetBytes(text));
-
-            // 1
-            while (stream.Position < stream.Length) {
-                byte[] buffer = new byte[4];
-                stream.Read(buffer, 0, 4);
-                int codePoint = BitConverter.ToInt32(buffer, 0);
-
-                if (codePoint <= 0x7F) {
-                    // 2
-                    onByte(stream, (byte)(codePoint & 0xFF));
-                } else if (codePoint == 0xA5) {
-                    // 3
-                    onByte(stream, 0x5C);
-                } else if (codePoint == 0x203E) {
-                    // 4
-                    onByte(stream, 0x7E);
-                } else if (IsInRange(codePoint, 0xFF61, 0xFF9F)) {
-                    // 5
-                    onByte(stream, 0x8E);
-                    onByte(stream, (byte)(codePoint - 0xFF61 + 0xA1));
-                } else {
-                    // 6
-                    if (codePoint == 0x2212)
-                        codePoint = 0xFF0D;
-
-                    // 8
-                    if (!codePoint2IdxJs208.ContainsKey(codePoint)) {
-                        EncoderFallbackBuffer fallback = EncoderFallback.CreateFallbackBuffer();
-                        string ch = char.ConvertFromUtf32(codePoint);
-                        if (ch.Length == 1)
-                            fallback.Fallback(ch[0], 0);
-                        else
-                            fallback.Fallback(ch[0], ch[1], 0);
-
-                        while (fallback.Remaining > 0)
-                            onByte(stream, (byte)fallback.GetNextChar());
-                    }
-
-                    // 7
-                    int pointer = codePoint2IdxJs208[codePoint];
-                    onByte(stream, (byte)(pointer / 94 + 0xA1)); // 9, 11
-                    onByte(stream, (byte)(pointer % 94 + 0xA1)); // 10, 11
-                }
-            }
-        }
-
-        protected void DecodeText(Stream stream, Action<Stream, string> onText)
-        {
-            DecoderFallbackBuffer fallback = DecoderFallback.CreateFallbackBuffer();
-
-            byte lead = 0;
-            bool jis0212 = false;
-            while (stream.Position < stream.Length) {
-                byte current = (byte)stream.ReadByte();
-                if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
-                    // 3
-                    lead = 0;
-                    onText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
-                } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
-                    // 4
-                    jis0212 = true;
-                    lead = current;
-                } else if (lead != 0x00) {
-                    // 5
-                    if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
-                        int tblIdx = (lead - 0xA1) * 94 + current - 0xA1;
-                        int codePoint = jis0212 ? idx2CodePointJs212[tblIdx] : idx2CodePointJs208[tblIdx];
-                        onText(stream, char.ConvertFromUtf32(codePoint));
-
-                        lead = 0x00;
-                        jis0212 = false;
-                    } else {
-                        bool result = fallback.Fallback(new byte[] { lead, current }, 0);
-                        while (result && fallback.Remaining > 0)
-                            onText(stream, fallback.GetNextChar().ToString());
-                    }
-                } else if (current <= 0x7F) {
-                    // 6
-                    onText(stream, char.ConvertFromUtf32(current));
-                } else if (IsInRange(current, 0x8E, 0x8F) || IsInRange(current, 0xA1, 0xFE)) {
-                    // 7
-                    lead = current;
-                } else {
-                    // 8
-                    bool result = fallback.Fallback(new byte[] { current }, 0);
-                    while (result && fallback.Remaining > 0)
-                        onText(stream, fallback.GetNextChar().ToString());
-                }
-            }
-
-            // 1
-            if (lead != 0x00) {
-                bool result = fallback.Fallback(new byte[] { lead }, 0);
-                while (result && fallback.Remaining > 0)
-                    onText(stream, fallback.GetNextChar().ToString());
             }
         }
 
