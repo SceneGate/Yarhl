@@ -116,10 +116,11 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <returns>The container node.</returns>
         /// <param name="dirPath">Directory path.</param>
-        public static Node FromDirectory(string dirPath)
+        /// <param name="filter">Filter for files in directory.</param>
+        public static Node FromDirectory(string dirPath, string filter = "*")
         {
             string dirName = Path.GetFileName(dirPath);
-            return FromDirectory(dirPath, dirName);
+            return FromDirectory(dirPath, filter, dirName);
         }
 
         /// <summary>
@@ -127,11 +128,12 @@ namespace Libgame.FileSystem
         /// </summary>
         /// <returns>The container node.</returns>
         /// <param name="dirPath">Directory path.</param>
+        /// <param name="filter">Filter for files in directory.</param>
         /// <param name="nodeName">Node name.</param>
-        public static Node FromDirectory(string dirPath, string nodeName)
+        public static Node FromDirectory(string dirPath, string filter, string nodeName)
         {
             Node folder = CreateContainer(nodeName);
-            foreach (string filePath in Directory.GetFiles(dirPath))
+            foreach (string filePath in Directory.GetFiles(dirPath, filter))
                 folder.Add(FromFile(filePath));
 
             return folder;
