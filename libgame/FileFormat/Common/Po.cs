@@ -85,5 +85,15 @@ namespace Libgame.FileFormat.Common
 
             entries.Add(entry);
         }
+
+        /// <summary>
+        /// Add the specified entries.
+        /// </summary>
+        /// <param name="entries">Entries to add.</param>
+        public void Add(IEnumerable<PoEntry> entries)
+        {
+            foreach (PoEntry entry in entries)
+                Add(entry);
+        }
     }
 }
