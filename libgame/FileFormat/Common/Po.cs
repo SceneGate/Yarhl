@@ -60,7 +60,7 @@ namespace Libgame.FileFormat.Common
         /// Gets the format name.
         /// </summary>
         /// <value>The format name.</value>
-        public override string Name => "libgame.po";
+        public override string Name => "libgame.common.po";
 
         /// <summary>
         /// Gets or sets the header.

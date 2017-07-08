@@ -74,7 +74,7 @@ namespace Libgame.FileFormat.Common
         /// </summary>
         /// <value>The format name.</value>
         public override string Name {
-            get { return "libgame.binary"; }
+            get { return "libgame.common.binary"; }
         }
 
         /// <summary>

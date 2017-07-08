@@ -51,7 +51,7 @@ namespace Libgame.FileFormat.Common
         /// </summary>
         /// <value>The format name.</value>
         public override string Name {
-            get { return "libgame.nodecontainer"; }
+            get { return "libgame.common.nodecontainer"; }
         }
 
         /// <summary>
