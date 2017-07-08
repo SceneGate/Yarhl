@@ -16,6 +16,6 @@ install:
     - nuget install NUnit.Runners -OutputDirectory testrunner
 
 script:
-    - xbuild mono-addins/Mono.Addins/Mono.Addins.csproj
-    - xbuild libgame.sln
+    - msbuild mono-addins/Mono.Addins/Mono.Addins.csproj
+    - msbuild libgame.sln
     - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe libgame.UnitTests/bin/Debug/libgame.UnitTests.dll
