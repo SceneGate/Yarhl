@@ -106,28 +106,6 @@ namespace Libgame
         }
 
         /// <summary>
-        /// Finds all the extensions extending a generic extension point class.
-        /// </summary>
-        /// <returns>The extensions.</returns>
-        /// <param name="extension">The generic extension point type.</param>
-        /// <param name="genericTypeArguments">
-        /// The types of the generic extension point.
-        /// </param>
-        public IEnumerable<Type> FindGenericExtensions(
-                Type extension,
-                params Type[] genericTypeArguments)
-        {
-            return FindExtensions(extension)
-                   .Where(type =>
-                       type.GetInterfaces().Any(inter =>
-                            inter.IsGenericType &&
-                            inter.GetGenericTypeDefinition().IsEquivalentTo(extension) &&
-                            genericTypeArguments.SequenceEqual(
-                                inter.GenericTypeArguments,
-                                new TypeParamComparer())));
-        }
-
-        /// <summary>
         /// Releases all resource used by the <see cref="PluginManager"/> object.
         /// </summary>
         public void Dispose()
@@ -148,25 +126,6 @@ namespace Libgame
                     } catch (InvalidOperationException) {
                     }
                 }
-            }
-        }
-
-        sealed class TypeParamComparer : IEqualityComparer<Type>
-        {
-            public bool Equals(Type x, Type y)
-            {
-                if (x == null && y == null)
-                    return true;
-
-                if (x == null || y == null)
-                    return false;
-
-                return x.IsAssignableFrom(y);
-            }
-
-            public int GetHashCode(Type obj)
-            {
-                return obj.GetHashCode();
             }
         }
     }

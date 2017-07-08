@@ -91,15 +91,54 @@ namespace Libgame.UnitTests.FileFormat
         }
 
         [Test]
-        public void ConvertToBase()
+        public void ConvertToBaseWithDerivedConverter()
         {
-            Assert.DoesNotThrow(() => Format.Convert<ushort, Base>(3));
+            // It should use the derived converter
+            // The converter will generate a derived type and will cast-down
+            // to base.
+            Base val = null;
+            Assert.DoesNotThrow(() => val = Format.Convert<ushort, Base>(3));
+            Assert.IsInstanceOf<Derived>(val);
+            Assert.AreEqual(3, val.X);
         }
 
         [Test]
-        public void ConvertFromBase()
+        public void TryToConvertFromBaseWithDerivedConverter()
         {
-            Assert.DoesNotThrow(() => Format.Convert<Base, ushort>(null));
+            // We cannot do the inverse, from base type use the derived converter
+            Base val = new Base { X = 3 };
+            Assert.Throws<InvalidOperationException>(
+                () => Format.Convert<Base, ushort>(val));
+        }
+
+        [Test]
+        public void ConvertDerivedWithDerivedConverter()
+        {
+            // Just to validate converter, derived with derived ocnverter
+            Derived derived = null;
+            Assert.DoesNotThrow(() => derived = Format.Convert<ushort, Derived>(4));
+            Assert.AreEqual(5, derived.Y);
+            Assert.AreEqual(4, derived.X);
+
+            ushort conv = 0;
+            Assert.DoesNotThrow(() => conv = Format.Convert<Derived, ushort>(derived));
+            Assert.AreEqual(5, conv);
+        }
+
+        [Test]
+        public void TryToConvertToDerivedWithBase()
+        {
+            Assert.Throws<InvalidOperationException>(
+                () => Format.Convert<int, Derived>(5));
+        }
+
+        [Test]
+        public void ConvertFromDerivedWithBase()
+        {
+            var format = new Derived { Y = 11, X = 10 };
+            int conv = 0;
+            Assert.DoesNotThrow(() => conv = Format.Convert<Derived, int>(format));
+            Assert.AreEqual(15, conv);
         }
 
         [Test]
@@ -299,24 +338,46 @@ namespace Libgame.UnitTests.FileFormat
 
         public class Base
         {
+            public ushort X { get; set; }
         }
 
         public class Derived : Base
         {
+            public ushort Y { get; set; }
         }
 
         [Extension]
         public class ConvertDerived : 
-        IConverter<ushort, Derived>, IConverter<Derived, ushort>
+            IConverter<ushort, Derived>, IConverter<Derived, ushort>
         {
             public Derived Convert(ushort source)
             {
-                return new Derived();
+                return new Derived {
+                    X = source,
+                    Y = (ushort)(source + 1)
+                };
             }
 
             public ushort Convert(Derived source)
             {
-                return 10;
+                return source.Y;
+            }
+        }
+
+        [Extension]
+        public class ConvertBase :
+            IConverter<int, Base>, IConverter<Base, int>
+        {
+            public Base Convert(int source)
+            {
+                return new Base {
+                    X = (ushort)(source + 2)
+                };
+            }
+
+            public int Convert(Base source)
+            {
+                return source.X + 5;
             }
         }
     }

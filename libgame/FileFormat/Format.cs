@@ -110,9 +110,14 @@ namespace Libgame.FileFormat
             // Search the converter for the giving types and create an instance
             dynamic converter;
             try {
-                Type converterType = PluginManager.Instance
-                    .FindGenericExtensions(typeof(IConverter<,>), srcType, dstType)
-                    .Single();
+                var converterType = PluginManager.Instance
+                    .FindExtensions(typeof(IConverter<,>))
+                    .Single(type =>
+                           type.GetInterfaces().Any(inter =>
+                                inter.IsGenericType &&
+                                inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)) &&
+                                inter.GenericTypeArguments[0].IsAssignableFrom(srcType) &&
+                                dstType.IsAssignableFrom(inter.GenericTypeArguments[1])));
                 converter = Activator.CreateInstance(converterType);
             } catch (InvalidOperationException ex) {
                 throw new InvalidOperationException(
