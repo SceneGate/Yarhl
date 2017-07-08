@@ -29,17 +29,6 @@ namespace Libgame.UnitTests.FileFormat
     [TestFixture]
     public class ConverterTests
     {
-        static List<Type> GetConverters()
-        {
-            List<Type> converterTypes = new List<Type>();
-            Assert.DoesNotThrow(() => {
-                converterTypes = PluginManager.Instance
-                                              .FindExtensions(typeof(IConverter<,>))
-                                              .ToList();
-            });
-            return converterTypes;
-        }
-
         [Test]
         public void FindCorrectType()
         {
@@ -48,7 +37,7 @@ namespace Libgame.UnitTests.FileFormat
                 converterTypes.Any(t =>
                     t.GetInterfaces().All(
                         i => i.IsGenericType &&
-                             i.GetGenericTypeDefinition() != (typeof(IConverter<,>)))));
+                             i.GetGenericTypeDefinition() != typeof(IConverter<,>))));
         }
 
         [Test]
@@ -94,6 +83,16 @@ namespace Libgame.UnitTests.FileFormat
             List<Type> converterTypes = GetConverters();
             Assert.Contains(typeof(DerivedConverter), converterTypes);
         }
+
+        static List<Type> GetConverters()
+        {
+            List<Type> converterTypes = new List<Type>();
+            Assert.DoesNotThrow(() => {
+                converterTypes = PluginManager.Instance
+                                              .FindExtensions(typeof(IConverter<,>))
+                                              .ToList();
+            });
+            return converterTypes;
+        }
     }
 }
-

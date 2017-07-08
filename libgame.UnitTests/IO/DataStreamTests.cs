@@ -774,7 +774,7 @@ namespace Libgame.UnitTests.IO
         {
             MemoryStream baseStream = new MemoryStream(2);
             DataStream stream = new DataStream(baseStream);
-            byte[] buffer = {0x00, 0xCA};
+            byte[] buffer = { 0x00, 0xCA };
             stream.Write(buffer, 1, 1);
             Assert.AreEqual(1, stream.Position);
             stream.Position = 0;
@@ -788,7 +788,7 @@ namespace Libgame.UnitTests.IO
             baseStream.WriteByte(0xFF);
             DataStream stream = new DataStream(baseStream);
             Assert.AreEqual(1, stream.Length);
-            byte[] buffer = {0xCA, 0xFE};
+            byte[] buffer = { 0xCA, 0xFE };
             Assert.DoesNotThrow(() => stream.Write(buffer, 0, 2));
             Assert.AreEqual(2, stream.Position);
             Assert.AreEqual(2, stream.Length);
@@ -801,7 +801,7 @@ namespace Libgame.UnitTests.IO
         public void WriteBufferWhenEOSIncreaseLength()
         {
             DataStream stream = new DataStream();
-            byte[] buffer = {0xCA, 0xFE};
+            byte[] buffer = { 0xCA, 0xFE };
             Assert.DoesNotThrow(() => stream.Write(buffer, 0, 2));
             Assert.AreEqual(2, stream.Position);
             Assert.AreEqual(2, stream.Length);
@@ -814,7 +814,7 @@ namespace Libgame.UnitTests.IO
         public void WriteBufferAfterDisposeThrowException()
         {
             DataStream stream = new DataStream();
-            byte[] buffer = {0xCA};
+            byte[] buffer = { 0xCA };
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(() => stream.Write(buffer, 0, 1));
         }
@@ -826,7 +826,7 @@ namespace Libgame.UnitTests.IO
             baseStream.WriteByte(0xFF);
             DataStream stream = new DataStream(baseStream);
             Assert.AreEqual(1, baseStream.Position);
-            byte[] buffer = {0xCA};
+            byte[] buffer = { 0xCA };
             stream.Write(buffer, 0, 1);
             baseStream.Position = 0;
             Assert.AreEqual(0xCA, baseStream.ReadByte());
@@ -843,7 +843,7 @@ namespace Libgame.UnitTests.IO
         public void WriteBufferOutOfRangeThrowException()
         {
             DataStream stream = new DataStream();
-            byte[] buffer = {0xCA};
+            byte[] buffer = { 0xCA };
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Write(buffer, 10, 1));
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Write(buffer, 0, 10));
         }
@@ -852,7 +852,7 @@ namespace Libgame.UnitTests.IO
         public void WriteBufferWithZeroBytes()
         {
             DataStream stream = new DataStream();
-            byte[] buffer = {0xCA};
+            byte[] buffer = { 0xCA };
             Assert.DoesNotThrow(() => stream.Write(null, 0, 0));
             Assert.AreEqual(0, stream.Position);
             Assert.AreEqual(0, stream.Length);
@@ -909,7 +909,6 @@ namespace Libgame.UnitTests.IO
         [Test]
         public void WriteToAfterDisposeStream()
         {
-
             DataStream stream1 = new DataStream();
             stream1.WriteByte(0xCA);
             stream1.WriteByte(0xFE);
@@ -1035,7 +1034,7 @@ namespace Libgame.UnitTests.IO
             stream1.WriteByte(0xFF);
             Assert.Throws<ArgumentNullException>(
                 () => stream1.WriteTo((string)null));
-            Assert.Throws<ArgumentNullException>(() => stream1.WriteTo(""));
+            Assert.Throws<ArgumentNullException>(() => stream1.WriteTo(string.Empty));
         }
 
         [Test]

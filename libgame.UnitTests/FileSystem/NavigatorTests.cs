@@ -27,8 +27,8 @@ namespace Libgame.UnitTests.FileSystem
 {
     using System;
     using System.Linq;
-    using NUnit.Framework;
     using Libgame.FileSystem;
+    using NUnit.Framework;
 
     [TestFixture]
     public class NavigatorTests
@@ -51,7 +51,7 @@ namespace Libgame.UnitTests.FileSystem
         public void SearchEmptyPath()
         {
             Node node = new Node("MyNode");
-            Assert.Throws<ArgumentNullException>(() => Navigator.SearchFile(node, ""));
+            Assert.Throws<ArgumentNullException>(() => Navigator.SearchFile(node, string.Empty));
         }
 
         [Test]

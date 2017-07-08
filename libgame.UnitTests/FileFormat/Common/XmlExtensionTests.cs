@@ -27,8 +27,8 @@ namespace Libgame.UnitTests.FileFormat.Common
 {
     using System;
     using System.Xml.Linq;
-    using NUnit.Framework;
     using Libgame.FileFormat.Common;
+    using NUnit.Framework;
 
     [TestFixture]
     public class XmlExtensionTests
@@ -72,7 +72,7 @@ namespace Libgame.UnitTests.FileFormat.Common
         [Test]
         public void SettingNegativeIndentationThrowsException()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => entry.SetIndentedValue("", -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() => entry.SetIndentedValue(string.Empty, -1));
         }
 
         [Test]
@@ -133,13 +133,12 @@ namespace Libgame.UnitTests.FileFormat.Common
             TestGetting("test \nhey  \na  b   \n \n", "test\nhey\na  b\n");
             TestGetting("\n    t \n    a  \n  ", "t\na");
             TestGetting(" \n a\n  ", "a");
-
         }
 
         [Test]
         public void JustNewLineOrEmptyLine()
         {
-            TestIndentation("", "");
+            TestIndentation(string.Empty, string.Empty);
             TestIndentation("\n", "\n    \n    \n  ");
         }
 

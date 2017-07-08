@@ -324,7 +324,7 @@ namespace Libgame.UnitTests.IO
             DataWriter writer = new DataWriter(stream);
 
             byte[] buffer = null;
-            Assert.Throws<ArgumentNullException>(() => writer.Write((buffer)));
+            Assert.Throws<ArgumentNullException>(() => writer.Write(buffer));
         }
 
         [Test]
@@ -465,7 +465,8 @@ namespace Libgame.UnitTests.IO
 
             string text = null;
             Assert.Throws<ArgumentNullException>(() => writer.Write(text));
-            Assert.Throws<ArgumentOutOfRangeException>(() => writer.Write("", maxSize: -2));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => writer.Write(string.Empty, maxSize: -2));
         }
 
         [Test]
@@ -597,7 +598,6 @@ namespace Libgame.UnitTests.IO
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
-
         [Test]
         public void WriteTextAndSizeWithMaxSizeAndNullTerminator()
         {
@@ -623,9 +623,12 @@ namespace Libgame.UnitTests.IO
 
             string nullText = null;
             Type nullType = null;
-            Assert.Throws<ArgumentNullException>(() => writer.Write(nullText, typeof(short)));
-            Assert.Throws<ArgumentNullException>(() => writer.Write("", nullType));
-            Assert.Throws<ArgumentOutOfRangeException>(() => writer.Write("", typeof(short), maxSize: -2));
+            Assert.Throws<ArgumentNullException>(
+                () => writer.Write(nullText, typeof(short)));
+            Assert.Throws<ArgumentNullException>(
+                () => writer.Write(string.Empty, nullType));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => writer.Write(string.Empty, typeof(short), maxSize: -2));
         }
 
         [Test]
@@ -720,9 +723,9 @@ namespace Libgame.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            writer.WriteTimes(0xFF, 5 * 1024 + 8);
+            writer.WriteTimes(0xFF, (5 * 1024) + 8);
 
-            byte[] expected = new byte[5 * 1024 + 8];
+            byte[] expected = new byte[(5 * 1024) + 8];
             for (int i = 0; i < expected.Length; i++)
                 expected[i] = 0xFF;
 

@@ -26,8 +26,8 @@
 namespace Libgame.UnitTests.FileFormat.Common
 {
     using System;
-    using Libgame.FileSystem;
     using Libgame.FileFormat.Common;
+    using Libgame.FileSystem;
     using NUnit.Framework;
 
     [TestFixture]

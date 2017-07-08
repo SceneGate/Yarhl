@@ -36,6 +36,10 @@ namespace Libgame.UnitTests
     [TestFixture]
     public class PluginManagerTests
     {
+        public interface IDummyExtensionPoint<T>
+        {
+        }
+
         [Test]
         public void InstanceInitializeAddinManager()
         {
@@ -129,7 +133,7 @@ namespace Libgame.UnitTests
         public void FindGenericExtensionsNotRegisteredReturnsEmpty()
         {
             var extensions = PluginManager.Instance
-                .FindGenericExtensions(typeof(DummyExtensionPoint<>), typeof(uint))
+                .FindGenericExtensions(typeof(IDummyExtensionPoint<>), typeof(uint))
                 .ToList();
             Assert.IsEmpty(extensions);
         }
@@ -176,10 +180,6 @@ namespace Libgame.UnitTests
                 .FindGenericExtensions(typeof(IConverter<,>), null, null)
                 .ToList();
             Assert.IsEmpty(extensions);
-        }
-
-        public interface DummyExtensionPoint<T>
-        {
         }
     }
 }

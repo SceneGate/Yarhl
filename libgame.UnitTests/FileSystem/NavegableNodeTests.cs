@@ -27,8 +27,8 @@ namespace Libgame.UnitTests.FileSystem
 {
     using System;
     using System.Collections.Generic;
-    using NUnit.Framework;
     using Libgame.FileSystem;
+    using NUnit.Framework;
 
     [TestFixture]
     public class NavegableNodeTests
@@ -55,9 +55,10 @@ namespace Libgame.UnitTests.FileSystem
         {
             var ex = Assert.Throws<ArgumentException>(() =>
                 new DummyNavegable("MyT/est"));
-            Assert.AreEqual("Name contains invalid characters" + Environment.NewLine +
-                            "Parameter name: name",
-                            ex.Message);
+            Assert.AreEqual(
+                "Name contains invalid characters" + Environment.NewLine +
+                "Parameter name: name",
+                ex.Message);
         }
 
         [Test]

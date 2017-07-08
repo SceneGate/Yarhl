@@ -30,7 +30,7 @@ namespace Libgame.UnitTests.FileFormat
     using NUnit.Framework;
 
     public abstract class BaseGeneralTests<T>
-        where T: Format
+        where T : Format
     {
         [Test]
         public void FormatIsFound()

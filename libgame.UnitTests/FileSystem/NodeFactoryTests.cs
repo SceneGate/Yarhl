@@ -28,9 +28,9 @@ namespace Libgame.UnitTests.FileSystem
     using System;
     using System.IO;
     using System.Linq;
-    using NUnit.Framework;
     using Libgame.FileFormat.Common;
     using Libgame.FileSystem;
+    using NUnit.Framework;
 
     [TestFixture]
     public class NodeFactoryTests
@@ -123,9 +123,37 @@ namespace Libgame.UnitTests.FileSystem
             Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile2)));
             Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile3)));
 
-            node.Children[0].Dispose();
-            node.Children[1].Dispose();
-            node.Children[2].Dispose();
+            node.Dispose();
+
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
+        public void CreateFromDirectoryWithFilesAndFilter()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, "file1.bin");
+            File.Create(tempFile1).Dispose();
+            string tempFile2 = Path.Combine(tempDir, "arch2.bin");
+            File.Create(tempFile2).Dispose();
+            string tempFile3 = Path.Combine(tempDir, "file3.txt");
+            File.Create(tempFile3).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir, "file*");
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile3)));
+            node.Dispose();
+
+            node = NodeFactory.FromDirectory(tempDir, "*.bin");
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile2)));
+
             node.Dispose();
             Directory.Delete(tempDir, true);
         }
@@ -136,11 +164,41 @@ namespace Libgame.UnitTests.FileSystem
             string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             Directory.CreateDirectory(tempDir);
 
-            Node node = NodeFactory.FromDirectory(tempDir, "MyTempNode");
+            Node node = NodeFactory.FromDirectory(tempDir, "*", "MyTempNode");
             Assert.AreEqual("MyTempNode", node.Name);
             Assert.IsTrue(node.IsContainer);
             Assert.IsEmpty(node.Children);
 
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
+        public void CreateFromDirectoryWithFilesAndNameAndFilter()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, "file1.bin");
+            File.Create(tempFile1).Dispose();
+            string tempFile2 = Path.Combine(tempDir, "arch2.bin");
+            File.Create(tempFile2).Dispose();
+            string tempFile3 = Path.Combine(tempDir, "file3.txt");
+            File.Create(tempFile3).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir, "file*", "MyDir");
+            Assert.AreEqual("MyDir", node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile3)));
+            node.Dispose();
+
+            node = NodeFactory.FromDirectory(tempDir, "*.bin", "MyDir");
+            Assert.AreEqual("MyDir", node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile2)));
+
+            node.Dispose();
             Directory.Delete(tempDir, true);
         }
 
@@ -214,7 +272,7 @@ namespace Libgame.UnitTests.FileSystem
         public void CreateContainersForChildWhenPathIsEmpty()
         {
             Node root = new Node("root");
-            string path = "";
+            string path = string.Empty;
             Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
@@ -259,7 +317,7 @@ namespace Libgame.UnitTests.FileSystem
         public void CreateContainersForChildWhenRootIsNullThrowsException()
         {
             Node root = null;
-            string path = "";
+            string path = string.Empty;
             Node child = new Node("child");
 
             Assert.Throws<ArgumentNullException>(() =>
@@ -281,7 +339,7 @@ namespace Libgame.UnitTests.FileSystem
         public void CreateContainersForChildWhenChildIsNullThrowsException()
         {
             Node root = new Node("root");
-            string path = "";
+            string path = string.Empty;
             Node child = null;
 
             Assert.Throws<ArgumentNullException>(() =>

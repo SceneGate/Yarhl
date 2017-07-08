@@ -26,11 +26,11 @@
 namespace Libgame.UnitTests.FileSystem
 {
     using System;
-    using NUnit.Framework;
+    using FileFormat;
     using Libgame.FileFormat;
     using Libgame.FileFormat.Common;
     using Libgame.FileSystem;
-    using FileFormat;
+    using NUnit.Framework;
 
     [TestFixture]
     public class NodeTests
@@ -45,7 +45,7 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void ConstructorSetNameAndFormat()
         {
-            Format dummyFormat = new StringFormatTest("");
+            Format dummyFormat = new StringFormatTest(string.Empty);
             Node node = new Node("mytest", dummyFormat);
             Assert.AreEqual("mytest", node.Name);
             Assert.AreSame(dummyFormat, node.Format);
@@ -54,7 +54,7 @@ namespace Libgame.UnitTests.FileSystem
         [Test]
         public void ConstructorFormatInProperty()
         {
-            Format dummyFormat = new StringFormatTest("");
+            Format dummyFormat = new StringFormatTest(string.Empty);
             Node node = new Node("mytest", dummyFormat);
             Assert.AreSame(dummyFormat, node.Format);
         }

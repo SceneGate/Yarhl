@@ -26,8 +26,8 @@
 namespace Libgame.UnitTests.FileSystem
 {
     using System.Collections.Generic;
-    using NUnit.Framework;
     using Libgame.FileSystem;
+    using NUnit.Framework;
 
     [TestFixture]
     public class NavegableNodeCollectionTests

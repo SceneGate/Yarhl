@@ -25,8 +25,8 @@
 // THE SOFTWARE.
 namespace Libgame.UnitTests.IO
 {
-    using NUnit.Framework;
     using Libgame.IO;
+    using NUnit.Framework;
 
     [TestFixture]
     public class NumericExtensionTests

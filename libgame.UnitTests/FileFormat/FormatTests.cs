@@ -235,90 +235,89 @@ namespace Libgame.UnitTests.FileFormat
             Assert.DoesNotThrow(format.Dispose);
             Assert.IsTrue(format.Disposed);
         }
-    }
 
-    [Extension]
-    public class FormatTestDuplicatedConverter1 : IConverter<StringFormatTest, short>
-    {
-        public short Convert(StringFormatTest test)
+        [Extension]
+        public class FormatTestDuplicatedConverter1 : IConverter<StringFormatTest, short>
         {
-            return System.Convert.ToInt16(test.Value);
-        }
-    }
-
-    [Extension]
-    public class FormatTestDuplicatedConverter2 : IConverter<StringFormatTest, short>
-    {
-        public short Convert(StringFormatTest test)
-        {
-            return System.Convert.ToInt16(test.Value);
-        }
-    }
-
-    [Extension]
-    public class FormatTestBadConstructor : IConverter<StringFormatTest, ushort>
-    {
-        public FormatTestBadConstructor()
-        {
-            throw new Exception();
+            public short Convert(StringFormatTest test)
+            {
+                return System.Convert.ToInt16(test.Value);
+            }
         }
 
-        public ushort Convert(StringFormatTest test)
+        [Extension]
+        public class FormatTestDuplicatedConverter2 : IConverter<StringFormatTest, short>
         {
-            return 0;
-        }
-    }
-
-    [Extension]
-    public class FormatTestNoConstructor : IConverter<StringFormatTest, long>
-    {
-        public FormatTestNoConstructor(string dummy)
-        {
-            Dummy = dummy;
+            public short Convert(StringFormatTest test)
+            {
+                return System.Convert.ToInt16(test.Value);
+            }
         }
 
-        public string Dummy { get; set; }
-
-        public long Convert(StringFormatTest format)
+        [Extension]
+        public class FormatTestBadConstructor : IConverter<StringFormatTest, ushort>
         {
-            return 0;
-        }
-    }
+            public FormatTestBadConstructor()
+            {
+                throw new Exception();
+            }
 
-    [Extension]
-    public class FormatTestPrivateConstructor : IConverter<StringFormatTest, ulong>
-    {
-        FormatTestPrivateConstructor()
+            public ushort Convert(StringFormatTest test)
+            {
+                return 0;
+            }
+        }
+
+        [Extension]
+        public class FormatTestNoConstructor : IConverter<StringFormatTest, long>
+        {
+            public FormatTestNoConstructor(string dummy)
+            {
+                Dummy = dummy;
+            }
+
+            public string Dummy { get; set; }
+
+            public long Convert(StringFormatTest format)
+            {
+                return 0;
+            }
+        }
+
+        [Extension]
+        public class FormatTestPrivateConstructor : IConverter<StringFormatTest, ulong>
+        {
+            FormatTestPrivateConstructor()
+            {
+            }
+
+            public ulong Convert(StringFormatTest format)
+            {
+                return 0;
+            }
+        }
+
+        public class Base
         {
         }
 
-        public ulong Convert(StringFormatTest format)
+        public class Derived : Base
         {
-            return 0;
         }
-    }
 
-    public class Base
-    {
-    }
-
-    public class Derived : Base
-    {
-    }
-
-    [Extension]
-    public class ConvertDerived : 
+        [Extension]
+        public class ConvertDerived : 
         IConverter<ushort, Derived>, IConverter<Derived, ushort>
-    {
-        public Derived Convert(ushort source)
         {
-            return new Derived();
-        }
+            public Derived Convert(ushort source)
+            {
+                return new Derived();
+            }
 
-        public ushort Convert(Derived source)
-        {
-            return 10;
+            public ushort Convert(Derived source)
+            {
+                return 10;
+            }
         }
     }
 }
-

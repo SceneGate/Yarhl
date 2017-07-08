@@ -29,8 +29,8 @@ namespace Libgame.UnitTests.IO
     using System.IO;
     using System.Linq;
     using System.Text;
-    using NUnit.Framework;
     using Libgame.IO;
+    using NUnit.Framework;
 
     [TestFixture]
     public class DataReaderTests
@@ -383,7 +383,7 @@ namespace Libgame.UnitTests.IO
         [Test]
         public void ReadCharArrayThrowsExceptionForInvalidSymbols()
         {
-            byte[] buffer = { 0xE3, 0x81, 0x42, 0x42, 0x42};
+            byte[] buffer = { 0xE3, 0x81, 0x42, 0x42, 0x42 };
             stream.Write(buffer, 0, buffer.Length);
 
             stream.Position = 0;
