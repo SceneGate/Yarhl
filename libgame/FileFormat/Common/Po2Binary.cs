@@ -26,88 +26,95 @@
 namespace Libgame.FileFormat.Common
 {
     using System;
-    using System.Globalization;
     using Libgame.IO;
     using Mono.Addins;
 
+    /// <summary>
+    /// Po to Binary converter.
+    /// </summary>
     [Extension]
     public class Po2Binary : IConverter<Po, BinaryFormat>
     {
+        /// <summary>
+        /// Convert the specified PO into a Binary stream.
+        /// </summary>
+        /// <returns>The converted stream.</returns>
+        /// <param name="source">Source PO.</param>
         public BinaryFormat Convert(Po source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
             BinaryFormat binary = new BinaryFormat();
-            DataWriter writer = new DataWriter(binary.Stream);
+            TextWriter writer = new TextWriter(binary.Stream);
 
             if (source.Header != null)
                 WriteHeader(source.Header, writer);
 
             foreach (var entry in source.Entries) {
-                writer.Write("\n", false);
+                writer.WriteLine();
                 WriteEntry(entry, writer);
             }
 
             return binary;
         }
 
-        static void WriteHeader(PoHeader header, DataWriter writer)
+        static void WriteHeader(PoHeader header, TextWriter writer)
         {
-            writer.Write("msgid \"\"\n", false);
-            writer.Write("msgstr \"\"\n", false);
-            WriteIfNotEmpty(writer, "\"Project-Id-Version: {0}\\n\"\n", header.ProjectIdVersion);
-            WriteIfNotEmpty(writer, "\"Report-Msgid-Bugs-To: {0}\\n\"\n", header.ReportMsgidBugsTo);
-            WriteIfNotEmpty(writer, "\"POT-Creation-Date: {0}\\n\"\n", header.CreationDate);
-            WriteIfNotEmpty(writer, "\"POT-Revision-Date: {0}\\n\"\n", header.RevisionDate);
-            WriteIfNotEmpty(writer, "\"Last-Translator: {0}\\n\"\n", header.LastTranslator);
-            WriteIfNotEmpty(writer, "\"Language-Team: {0}\\n\"\n", header.LanguageTeam);
-            WriteIfNotEmpty(writer, "\"Language: {0}\\n\"\n", header.Language);
-            WriteIfNotEmpty(writer, "\"Content-Type: {0}\\n\"\n", header.ContentType);
-            WriteIfNotEmpty(writer, "\"Content-Transfer-Encoding: {0}\\n\"\n", header.ContentTransferEncoding);
-            WriteIfNotEmpty(writer, "\"Plural-Forms: {0}\\n\"\n", header.PluralForms);
+            writer.WriteLine(@"msgid """"");
+            writer.WriteLine(@"msgstr """"");
+            writer.WriteLine(@"""Project-Id-Version: {0}\n""", header.ProjectIdVersion ?? string.Empty);
+            writer.WriteLine(@"""Report-Msgid-Bugs-To: {0}\n""", header.ReportMsgidBugsTo ?? string.Empty);
+            writer.WriteLine(@"""POT-Creation-Date: {0}\n""", header.CreationDate ?? string.Empty);
+            writer.WriteLine(@"""POT-Revision-Date: {0}\n""", header.RevisionDate ?? string.Empty);
+            writer.WriteLine(@"""Last-Translator: {0}\n""", header.LastTranslator ?? string.Empty);
+            writer.WriteLine(@"""Language-Team: {0}\n""", header.LanguageTeam ?? string.Empty);
+            writer.WriteLine(@"""Language: {0}\n""", header.Language ?? string.Empty);
+            writer.WriteLine(@"""Content-Type: {0}\n""", header.ContentType);
+            writer.WriteLine(@"""Content-Transfer-Encoding: {0}\n""", header.ContentTransferEncoding);
+            WriteIfNotEmpty(writer, @"""Plural-Forms: {0}\n""", header.PluralForms);
         }
 
-        static void WriteEntry(PoEntry entry, DataWriter writer)
+        static void WriteEntry(PoEntry entry, TextWriter writer)
         {
-            WriteIfNotEmpty(writer, "#  {0}\n", entry.TranslatorComment);
-            WriteIfNotEmpty(writer, "#. {0}\n", entry.ExtractedComments);
-            WriteIfNotEmpty(writer, "#: {0}\n", entry.Reference);
-            WriteIfNotEmpty(writer, "#, {0}\n", entry.Flags);
-            WriteIfNotEmpty(writer, "#| msgctxt {0}\n", entry.PreviousContext);
-            WriteIfNotEmpty(writer, "#| msgid {0}\n", entry.PreviousOriginal);
+            WriteIfNotEmpty(writer, "#  {0}", entry.TranslatorComment);
+            WriteIfNotEmpty(writer, "#. {0}", entry.ExtractedComments);
+            WriteIfNotEmpty(writer, "#: {0}", entry.Reference);
+            WriteIfNotEmpty(writer, "#, {0}", entry.Flags);
+            WriteIfNotEmpty(writer, "#| msgctxt {0}", entry.PreviousContext);
+            WriteIfNotEmpty(writer, "#| msgid {0}", entry.PreviousOriginal);
 
             if (!string.IsNullOrEmpty(entry.Context)) {
-                writer.Write("msgctxt ", false);
+                writer.Write("msgctxt ");
                 WriteWrappedString(writer, entry.Context);
             }
 
-            writer.Write("msgid ", false);
+            writer.Write("msgid ");
             WriteWrappedString(writer, entry.Original);
 
-            writer.Write("msgstr ", false);
+            writer.Write("msgstr ");
             WriteWrappedString(writer, entry.Translated);
         }
 
-        static void WriteIfNotEmpty(DataWriter writer, string format, string content)
+        static void WriteIfNotEmpty(TextWriter writer, string format, string content)
         {
             if (!string.IsNullOrEmpty(content))
-                writer.Write(string.Format(CultureInfo.InvariantCulture, format, content), false);
+                writer.WriteLine(format, content);
         }
 
-        static void WriteWrappedString(DataWriter writer, string content)
+        static void WriteWrappedString(TextWriter writer, string content)
         {
             int idx = 0;
             content = content.Replace("\n", "\\n");
             content = content.Replace("\"", "\\\"");
 
             if (content.Contains("\\n"))
-                writer.Write("\"\"\n", false);
+                writer.WriteLine("\"\"");
 
             do {
                 int nextIdx = content.IndexOf("\\n", idx, StringComparison.InvariantCulture);
                 int end = nextIdx != -1 ? nextIdx + 2 : content.Length;
-                writer.Write("\"" + content.Substring(idx, end - idx) + "\"\n", false);
+                writer.WriteLine("\"{0}\"", content.Substring(idx, end - idx));
 
                 idx = nextIdx + 2;
             } while (idx != 1);
