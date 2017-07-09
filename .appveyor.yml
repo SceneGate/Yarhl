@@ -1,6 +1,10 @@
 ## AppVeyor CI Integration
 version: 1.0.0.{build}-{branch}
 
+environment:
+  SONAR_TOKEN:
+    secure: +3GOgzhn/1Hxf71M6QG7gCzWMDyUI4eRXCv8xyjumU9w2qqIxoGPACJyYoouU/+m
+
 install:
 - cmd: >-
     git submodule update --init --recursive
@@ -12,3 +16,15 @@ before_build:
 
 build:
   project: libgame.sln
+
+after_build:
+
+- cmd: >-
+    choco install "msbuild-sonarqube-runner" -y
+
+    MSBuild.SonarQube.Runner.exe begin /k:"libgame" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
+
+    msbuild /t:Rebuild "libgame.sln"
+
+    MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"
+
