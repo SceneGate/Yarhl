@@ -73,6 +73,10 @@
     <Compile Include="FileFormat\Common\XmlExtensionTests.cs" />
     <Compile Include="IO\Encodings\EscapeOutRangeEncodingTests.cs" />
     <Compile Include="IO\Encodings\EucJpEncodingTests.cs" />
+    <Compile Include="FileFormat\Common\PoTests.cs" />
+    <Compile Include="FileFormat\Common\Po2BinaryTests.cs" />
+    <Compile Include="FileFormat\Common\PoEntryTests.cs" />
+    <Compile Include="FileFormat\Common\PoHeaderTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\libgame\libgame.csproj">

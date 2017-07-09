@@ -36,7 +36,7 @@ namespace Libgame.UnitTests.FileFormat.Common
         [Test]
         public void CorrectName()
         {
-            NameIsCorrect("libgame", "nodecontainer");
+            NameIsCorrect("libgame.common", "nodecontainer");
         }
 
         [Test]

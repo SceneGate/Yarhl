@@ -28,10 +28,13 @@ namespace Libgame.FileFormat.Common
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Linq;
+    using Mono.Addins;
 
     /// <summary>
     /// Portable Object format for translations.
     /// </summary>
+    [Extension]
     public class Po : Format
     {
         readonly IList<PoEntry> entries;
@@ -86,7 +89,13 @@ namespace Libgame.FileFormat.Common
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
-            entries.Add(item);
+            PoEntry sameEntry = entries.FirstOrDefault((entry) =>
+                entry.Original == item.Original &&
+                entry.Context == item.Context);
+            if (sameEntry != null)
+                MergeEntry(sameEntry, item);
+            else
+                entries.Add(item);
         }
 
         /// <summary>
@@ -100,6 +109,17 @@ namespace Libgame.FileFormat.Common
 
             foreach (PoEntry entry in items)
                 Add(entry);
+        }
+
+        void MergeEntry(PoEntry current, PoEntry newEntry)
+        {
+            if (current.Translated != newEntry.Translated)
+                throw new InvalidOperationException(
+                    "Tried to merge Po entries with same original text but " +
+                    "different translations.");
+
+            if (newEntry.Reference != null)
+                current.Reference += "," + newEntry.Reference;
         }
     }
 }

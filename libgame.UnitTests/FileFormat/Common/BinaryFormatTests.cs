@@ -131,7 +131,7 @@ namespace Libgame.UnitTests.FileFormat.Common
         [Test]
         public void CorrectName()
         {
-            NameIsCorrect("libgame", "binary");
+            NameIsCorrect("libgame.common", "binary");
         }
 
         protected override BinaryFormat CreateDummyFormat()
