@@ -55,7 +55,7 @@ namespace Libgame.UnitTests.IO
         {
             Assert.AreSame(stream, writer.Stream);
             Assert.AreSame(Encoding.UTF8, writer.Encoding);
-            Assert.AreEqual(Environment.NewLine, writer.NewLine);
+            Assert.AreEqual("\n", writer.NewLine);
         }
 
         [Test]

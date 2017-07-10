@@ -61,7 +61,7 @@ namespace Libgame.IO
 
             Stream = stream;
             Encoding = encoding;
-            NewLine = Environment.NewLine;
+            NewLine = "\n";
             writer = new DataWriter(stream);
         }
 
@@ -87,7 +87,7 @@ namespace Libgame.IO
         /// Gets or sets the new line character.
         /// </summary>
         /// <value>The new line character.</value>
-        /// <remarks>The default value is OS-dependant.</remarks>
+        /// <remarks>The default value is \n, the Unix new line.</remarks>
         public string NewLine {
             get;
             set;
