@@ -536,6 +536,27 @@ namespace Libgame.UnitTests.IO
         }
 
         [Test]
+        public void PushCurrentPositionDoesNotMovePosition()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            Assert.AreEqual(2, stream.Position);
+            stream.PushCurrentPosition();
+            Assert.AreEqual(2, stream.Position);
+        }
+
+        [Test]
+        public void PushCurrentPositionThrowExceptionAfterDispose()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xA);
+            stream.WriteByte(0xB);
+            stream.Dispose();
+            Assert.Throws<ObjectDisposedException>(stream.PushCurrentPosition);
+        }
+
+        [Test]
         public void PopRestoresPosition()
         {
             DataStream stream = new DataStream();
@@ -543,6 +564,15 @@ namespace Libgame.UnitTests.IO
             stream.WriteByte(0xB);
             Assert.AreEqual(2, stream.Position);
             stream.PushToPosition(-1, SeekMode.Current);
+            Assert.AreEqual(1, stream.Position);
+            stream.PushToPosition(-1, SeekMode.Current);
+            Assert.AreEqual(0, stream.Position);
+            stream.PushCurrentPosition();
+            stream.Position = 2;
+            Assert.AreEqual(2, stream.Position);
+            stream.PopPosition();
+            Assert.AreEqual(0, stream.Position);
+            stream.PopPosition();
             Assert.AreEqual(1, stream.Position);
             stream.PopPosition();
             Assert.AreEqual(2, stream.Position);

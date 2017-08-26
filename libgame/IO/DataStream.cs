@@ -290,6 +290,17 @@ namespace Libgame.IO
         }
 
         /// <summary>
+        /// Push the current position into a stack.
+        /// </summary>
+        public void PushCurrentPosition()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            positionStack.Push(Position);
+        }
+
+        /// <summary>
         /// Pop the last position from the stack and move to it.
         /// </summary>
         public void PopPosition()
