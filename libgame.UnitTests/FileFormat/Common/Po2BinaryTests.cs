@@ -93,8 +93,8 @@ msgstr """"
         public void ConvertNoHeaderEntries()
         {
             var po = new Po();
-            po.Add(new PoEntry("original"));
-            po.Add(new PoEntry("totranslate") { Translated = "translated" });
+            po.Add(new PoEntry { Original = "original" });
+            po.Add(new PoEntry { Original = "totranslate", Translated = "translated" });
 
             string expected = @"
 msgid ""original""
@@ -110,7 +110,8 @@ msgstr ""translated""
         public void ConvertFullEntry()
         {
             var po = new Po();
-            po.Add(new PoEntry("original") {
+            po.Add(new PoEntry {
+                Original = "original",
                 Translated = "translated",
                 TranslatorComment = "a comment",
                 ExtractedComments = "hehe",
@@ -137,7 +138,7 @@ msgstr ""translated""
         public void ConvertSpecialEntry()
         {
             var po = new Po();
-            po.Add(new PoEntry("original") { Translated = "trans\nl\"a\"ted" });
+            po.Add(new PoEntry { Original = "original", Translated = "trans\nl\"a\"ted" });
 
             string expected = @"
 msgid ""original""
@@ -152,7 +153,7 @@ msgstr """"
         public void ConvertEntryAndHeader()
         {
             var po = new Po(new PoHeader("myId", "yo") { CreationDate = "today" });
-            po.Add(new PoEntry("original") { Translated = "translated" });
+            po.Add(new PoEntry { Original = "original", Translated = "translated" });
 
             string expected = @"msgid """"
 msgstr """"
@@ -176,7 +177,7 @@ msgstr ""translated""
         public void NullArgumentThrowException()
         {
             Po2Binary converter = new Po2Binary();
-            Assert.Throws<ArgumentNullException>(() => converter.Convert(null));
+            Assert.Throws<ArgumentNullException>(() => converter.Convert((Po)null));
         }
 
         void CompareText(BinaryFormat binary, string expected)

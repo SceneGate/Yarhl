@@ -35,6 +35,13 @@ namespace Libgame.FileFormat.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="PoHeader"/> class.
         /// </summary>
+        public PoHeader()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PoHeader"/> class.
+        /// </summary>
         /// <param name="id">Identifier of the project.</param>
         /// <param name="reporter">Address to report bugs.</param>
         public PoHeader(string id, string reporter)

@@ -33,7 +33,16 @@ namespace Libgame.FileFormat.Common
         /// <summary>
         /// Initializes a new instance of the <see cref="PoEntry"/> class.
         /// </summary>
-        /// <param name="original">Original content to translate.</param>
+        public PoEntry()
+        {
+            Original = string.Empty;
+            Translated = string.Empty;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PoEntry"/> class.
+        /// </summary>
+        /// <param name="original">Original text to translate.</param>
         public PoEntry(string original)
         {
             Original = original;
@@ -41,10 +50,10 @@ namespace Libgame.FileFormat.Common
         }
 
         /// <summary>
-        /// Gets the original content to translate.
+        /// Gets or sets the original content to translate.
         /// </summary>
         /// <value>The original content.</value>
-        public string Original { get; }
+        public string Original { get; set; }
 
         /// <summary>
         /// Gets or sets the translated content.
