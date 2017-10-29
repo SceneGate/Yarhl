@@ -15,16 +15,15 @@ before_build:
 - cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
 
 build:
-  project: libgame.sln
+  project: yarhl.sln
 
 after_build:
 
 - cmd: >-
     choco install "msbuild-sonarqube-runner" -y
 
-    MSBuild.SonarQube.Runner.exe begin /k:"libgame" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
+    MSBuild.SonarQube.Runner.exe begin /k:"yarhl" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
 
-    msbuild /t:Rebuild "libgame.sln"
+    msbuild /t:Rebuild "yarhl.sln"
 
     MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"
-
