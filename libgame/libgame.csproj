@@ -69,6 +69,7 @@
     <Compile Include="FileFormat\Common\PoEntry.cs" />
     <Compile Include="FileFormat\Common\Po2Binary.cs" />
     <Compile Include="IO\TextWriter.cs" />
+    <Compile Include="IO\TextReader.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
