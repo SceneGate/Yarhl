@@ -119,11 +119,12 @@ namespace Yarhl
             lock (LockObj) {
                 singleInstance = null;
                 if (freeManaged && AddinManager.AddinEngine.IsInitialized) {
-                    // Due to a bug in Mono.Addins it may throw an exception in
-                    // a multi-thread context
                     try {
                         AddinManager.Shutdown();
                     } catch (InvalidOperationException) {
+                        // Due to a bug in Mono.Addins it may throw an exception in
+                        // a multi-thread context. We don't care about not being
+                        // able to dispose the adding manager.
                     }
                 }
             }
