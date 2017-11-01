@@ -188,12 +188,17 @@ msgstr """"
         }
 
         [Test]
-        public void ThrowIfUnknownHeaderField()
+        public void ThrowIfUnknownOrInvalidHeaderField()
         {
             string text = "msgid \"\"\nmsgstr \"\"\n\"Unknown: hehe\"";
             Assert.Throws<FormatException>(
                 () => ConvertStringToPo(text),
                 "Unknown header: Unknown: hehe");
+
+            text = "msgid \"\"\nmsgstr \"\"\n\"Last-Translator:nospace\"";
+            Assert.Throws<FormatException>(
+                () => ConvertStringToPo(text),
+                "Invalid line format: Last-Translator:nospace");
         }
 
         [Test]
@@ -302,6 +307,11 @@ msgstr """"
             Assert.Throws<FormatException>(
                 () => ConvertStringToPo(text),
                 "Unknown line 'unk \"ein?\"'");
+
+            text = "msgid \"\"\nmsgstr \"\"\n\"#:nospace\"";
+            Assert.Throws<FormatException>(
+                () => ConvertStringToPo(text),
+                "Invalid line format: #:nospace");
         }
 
         [Test]
@@ -374,6 +384,15 @@ msgstr """"
         {
             Po2Binary converter = new Po2Binary();
             Assert.Throws<ArgumentNullException>(() => converter.Convert((BinaryFormat)null));
+        }
+
+        [Test]
+        public void FinalSpacesAreIgnored()
+        {
+            string text = "msgid \"test\"\n \n \n";
+            Po newPo = ConvertStringToPo(text);
+            Assert.AreEqual(1, newPo.Entries.Count);
+            Assert.AreEqual("test", newPo.Entries[0].Original);
         }
 
         static void CompareText(BinaryFormat binary, string expected)

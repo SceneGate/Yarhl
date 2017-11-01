@@ -116,8 +116,11 @@ namespace Yarhl.IO
         /// <param name="token">Token to find.</param>
         public string ReadToToken(string token)
         {
-            string text = string.Empty;
+            // If starting is EOF, then return null
+            if (Stream.EndOfStream)
+                return null;
 
+            string text = string.Empty;
             bool found = false;
             while (!found) {
                 if (Stream.EndOfStream)

@@ -239,6 +239,12 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadToTokenWhenEOFReturnsNull()
+        {
+            Assert.IsNull(reader.ReadToToken("3"));
+        }
+
+        [Test]
         public void ReadUnixLine()
         {
             stream.WriteByte(0x35);
@@ -287,6 +293,12 @@ namespace Yarhl.UnitTests.IO
             Assert.DoesNotThrow(() => line = reader.ReadLine());
             Assert.AreEqual("19", line);
             Assert.AreEqual(2, stream.Position);
+        }
+
+        [Test]
+        public void ReadLineWhenEOFReturnsNull()
+        {
+            Assert.IsNull(reader.ReadLine());
         }
 
         [Test]
