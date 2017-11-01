@@ -22,14 +22,18 @@ using System.Reflection;
 using Mono.Addins;
 
 [assembly: AssemblyTitle("yarhl.UnitTests")]
-[assembly: AssemblyDescription("Unit tests for yarhl library")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Benito Palacios Sanchez (pleonex) 2016")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyDescription("Unit tests for Yarhl library")]
+[assembly: AssemblyCompany("SceneGate development team")]
+[assembly: AssemblyProduct("SceneGate")]
+[assembly: AssemblyCopyright("Copyright (c) 2017 Benito Palacios (aka pleonex)")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#elif RELEASE
+[assembly: AssemblyConfiguration("Release")]
+#endif
 
 // Mono.Addins
 [assembly: Addin("yarhl.UnitTests", "1.0")]
