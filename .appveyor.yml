@@ -28,6 +28,6 @@ build_script:
 
     MSBuild.SonarQube.Runner.exe begin /k:"yarhl" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
 
-    msbuild /p:TargetFrameworks=%FRAMEWORK% /t:Rebuild "yarhl.sln"
+    msbuild /p:TargetFrameworks=%FRAMEWORK% /p:AppendTargetFrameworkToOutputPath=false /t:Rebuild "yarhl.sln"
 
     MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"

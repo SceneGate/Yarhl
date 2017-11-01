@@ -5,6 +5,7 @@ solution: yarhl.sln
 matrix:
   include:
     - os: linux
+      dotnet: 2.0.0 # We need dotnet because nuget is old and it can't restore the solution
       mono: latest
       env: DOTNETCORE=0
 
