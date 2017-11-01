@@ -32,6 +32,7 @@ M: System.Void Libgame.IO.DataStream::.ctor()
 M: System.Void Libgame.IO.DataStream::.ctor(System.String,Libgame.IO.FileOpenMode)
 # It's a converter
 M: Libgame.FileFormat.Common.BinaryFormat Libgame.FileFormat.Common.Po2Binary::Convert(Libgame.FileFormat.Common.Po)
+M: Libgame.FileFormat.Common.Po Libgame.FileFormat.Common.Po2Binary::Convert(Libgame.FileFormat.Common.BinaryFormat)
 
 R: Gendarme.Rules.Correctness.DisposableFieldsShouldBeDisposedRule
 # Bug in Gendarme because I am using the ? operator
@@ -65,6 +66,9 @@ T: Libgame.IO.DataStream
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
 # The format parameter is reserved, not used
 M: System.Void Libgame.IO.Encodings.EucJpEncoding::DecodeText(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>)
+# It looks like a bug in Gendarme, we are adding a char to a string
+M: System.String Libgame.IO.TextReader::ReadToToken(System.String)
+
 
 R: Gendarme.Rules.Performance.AvoidRepetitiveCallsToPropertiesRule
 # The property changes all the time
