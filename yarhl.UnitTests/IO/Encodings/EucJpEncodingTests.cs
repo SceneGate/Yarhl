@@ -238,16 +238,6 @@ namespace Yarhl.UnitTests.IO.Encodings
             Assert.AreEqual(expected, encoder.GetBytes(decoded));
         }
 
-        [Test]
-        public void ProtectedMethodsThrowException()
-        {
-            var customEncoder = new ByPassEncoding();
-            Assert.Throws<ArgumentNullException>(customEncoder.TestDecoderNull1);
-            Assert.Throws<ArgumentNullException>(customEncoder.TestDecoderNull2);
-            Assert.Throws<ArgumentNullException>(customEncoder.TestEncoderNull1);
-            Assert.Throws<ArgumentNullException>(customEncoder.TestEncoderNull2);
-        }
-
         void TestEncodingText(string decoded, byte[] encoded)
         {
             Assert.AreEqual(decoded, encoder.GetString(encoded));
@@ -263,32 +253,6 @@ namespace Yarhl.UnitTests.IO.Encodings
             Assert.AreEqual(encoded, encoder.GetBytes(decoded));
             Assert.AreEqual(encoded.Length, encoder.GetByteCount(decoded));
             Assert.LessOrEqual(encoded.Length, encoder.GetMaxByteCount(decoded.Length));
-        }
-
-        class ByPassEncoding : EucJpEncoding
-        {
-            public void TestDecoderNull1()
-            {
-                int count = 0;
-                DecodeText(null, (arg1, arg2) => count++);
-            }
-
-            public void TestDecoderNull2()
-            {
-                var dummy = new System.IO.MemoryStream();
-                DecodeText(dummy, null);
-            }
-
-            public void TestEncoderNull1()
-            {
-                int count = 0;
-                EncodeText(null, (arg1, arg2) => count++);
-            }
-
-            public void TestEncoderNull2()
-            {
-                EncodeText("a", null);
-            }
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Yarhl.IO.Encodings
     /// EUC-JP encoding.
     /// Implemented standard from: https://encoding.spec.whatwg.org/
     /// </summary>
-    public class EucJpEncoding : Encoding
+    public sealed class EucJpEncoding : Encoding
     {
         static Dictionary<int, int> idx2CodePointJs212;
         static Dictionary<int, int> idx2CodePointJs208;
@@ -240,11 +240,8 @@ namespace Yarhl.IO.Encodings
         /// </summary>
         /// <param name="text">Text to encode.</param>
         /// <param name="encodedByte">Callback with the byte encoded.</param>
-        protected void EncodeText(string text, Action<Stream, byte> encodedByte)
+        void EncodeText(string text, Action<Stream, byte> encodedByte)
         {
-            if (encodedByte == null)
-                throw new ArgumentNullException(nameof(encodedByte));
-
             MemoryStream stream = new MemoryStream(UTF32.GetBytes(text));
 
             // 1
@@ -305,13 +302,8 @@ namespace Yarhl.IO.Encodings
         /// </summary>
         /// <param name="stream">Stream to decode.</param>
         /// <param name="decodedText">Callback with decoded text.</param>
-        protected void DecodeText(Stream stream, Action<Stream, string> decodedText)
+        void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (decodedText == null)
-                throw new ArgumentNullException(nameof(decodedText));
-
             DecoderFallbackBuffer fallback = decoderFallback.CreateFallbackBuffer();
 
             byte lead = 0;
