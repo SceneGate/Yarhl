@@ -5,14 +5,12 @@ solution: yarhl.sln
 matrix:
   include:
     - os: linux
-      dist: trusty
-      dotnet: 2.0.2
+      dotnet: 2.0.0
       mono: latest
       env: DOTNETCORE=0
 
     - os: linux
-      dist: trusty
-      dotnet: 2.0.2
+      dotnet: 2.0.0
       mono: none
       env: DOTNETCORE=1
 

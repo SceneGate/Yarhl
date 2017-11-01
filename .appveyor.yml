@@ -7,8 +7,8 @@ environment:
     secure: +3GOgzhn/1Hxf71M6QG7gCzWMDyUI4eRXCv8xyjumU9w2qqIxoGPACJyYoouU/+m
 
   matrix:
-    - DOTNETCORE: 0
-    - DOTNETCORE: 1
+    - FRAMEWORK: net47
+    - FRAMEWORK: netcoreapp2.0
 
 install:
 - cmd: >-
@@ -20,7 +20,7 @@ before_build:
 - cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
 
 build:
-  project: yarhl.sln
+- cmd: msbuild /p:TargetFrameworks=%FRAMEWORK% yarhl.sln
 
 after_build:
 
