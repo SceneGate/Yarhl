@@ -18,8 +18,7 @@ before_build:
 build:
   project: yarhl.sln
 
-after_build:
-
+after_test:
 - cmd: >-
     choco install "msbuild-sonarqube-runner" -y
 
