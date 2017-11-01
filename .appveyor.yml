@@ -6,25 +6,28 @@ environment:
   SONAR_TOKEN:
     secure: +3GOgzhn/1Hxf71M6QG7gCzWMDyUI4eRXCv8xyjumU9w2qqIxoGPACJyYoouU/+m
 
+  matrix:
+    - FRAMEWORK: net47
+    - FRAMEWORK: netcoreapp2.0
+
 install:
 - cmd: >-
     git submodule update --init --recursive
 
     nuget restore
 
-before_build:
-- cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
-
-build:
-  project: yarhl.sln
-
-after_build:
-
+build_script:
 - cmd: >-
+    msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
+
+
+    msbuild /p:TargetFrameworks=%FRAMEWORK% /p:AppendTargetFrameworkToOutputPath=false yarhl.sln
+
+
     choco install "msbuild-sonarqube-runner" -y
 
     MSBuild.SonarQube.Runner.exe begin /k:"yarhl" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
 
-    msbuild /t:Rebuild "yarhl.sln"
+    msbuild /p:TargetFrameworks=%FRAMEWORK% /p:AppendTargetFrameworkToOutputPath=false /t:Rebuild "yarhl.sln"
 
     MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"
