@@ -21,7 +21,7 @@ build_script:
     msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
 
 
-    msbuild /p:TargetFrameworks=%FRAMEWORK% yarhl.sln
+    msbuild /p:TargetFrameworks=%FRAMEWORK% /p:AppendTargetFrameworkToOutputPath=false yarhl.sln
 
 
     choco install "msbuild-sonarqube-runner" -y
