@@ -34,8 +34,8 @@ namespace Yarhl.UnitTests.FileFormat.Common
         [Test]
         public void DefaultValues()
         {
-            PoEntry entry = new PoEntry("orig");
-            Assert.AreEqual("orig", entry.Original);
+            PoEntry entry = new PoEntry();
+            Assert.AreEqual(string.Empty, entry.Original);
             Assert.AreEqual(string.Empty, entry.Translated);
             Assert.IsNull(entry.Context);
             Assert.IsNull(entry.TranslatorComment);
@@ -44,12 +44,16 @@ namespace Yarhl.UnitTests.FileFormat.Common
             Assert.IsNull(entry.Flags);
             Assert.IsNull(entry.PreviousContext);
             Assert.IsNull(entry.PreviousOriginal);
+
+            entry = new PoEntry("original");
+            Assert.AreEqual("original", entry.Original);
         }
 
         [Test]
         public void TestProperties()
         {
-            PoEntry entry = new PoEntry("original") {
+            PoEntry entry = new PoEntry() {
+                Original = "test0",
                 Translated = "test1",
                 Context = "test2",
                 TranslatorComment = "test3",
@@ -60,6 +64,7 @@ namespace Yarhl.UnitTests.FileFormat.Common
                 PreviousOriginal = "test8"
             };
 
+            Assert.AreEqual("test0", entry.Original);
             Assert.AreEqual("test1", entry.Translated);
             Assert.AreEqual("test2", entry.Context);
             Assert.AreEqual("test3", entry.TranslatorComment);
