@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{3525724C-57EC-4C84-ABFC-95780009A304}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Yarhl.UnitTests</RootNamespace>
+    <AssemblyName>yarhl.UnitTests</AssemblyName>
+    <ReleaseVersion>1.0</ReleaseVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <SynchReleaseVersion>false</SynchReleaseVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Mono.Addins">
+      <HintPath>..\mono-addins\bin\Mono.Addins.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.3.7.1\lib\net45\nunit.framework.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <Folder Include="FileFormat\" />
+    <Folder Include="Properties\" />
+    <Folder Include="FileSystem\" />
+    <Folder Include="IO\" />
+    <Folder Include="FileFormat\Common\" />
+    <Folder Include="IO\Encodings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="PluginManagerTests.cs" />
+    <Compile Include="FileFormat\FormatTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FileFormat\ConverterTests.cs" />
+    <Compile Include="FileFormat\Converters.cs" />
+    <Compile Include="FileSystem\NodeTests.cs" />
+    <Compile Include="FileSystem\NavegableNodeTests.cs" />
+    <Compile Include="FileSystem\NavegableNodeCollectionTests.cs" />
+    <Compile Include="FileSystem\NavigatorTests.cs" />
+    <Compile Include="FileSystem\NodeFactoryTests.cs" />
+    <Compile Include="FileFormat\BaseGeneralTests.cs" />
+    <Compile Include="IO\DataStreamTests.cs" />
+    <Compile Include="IO\FileOpenModeTests.cs" />
+    <Compile Include="IO\DataWriterTests.cs" />
+    <Compile Include="IO\DataReaderTests.cs" />
+    <Compile Include="IO\NumericExtensionTests.cs" />
+    <Compile Include="FileFormat\Common\BinaryFormatTests.cs" />
+    <Compile Include="FileFormat\Common\NodeContainerFormatTests.cs" />
+    <Compile Include="FileFormat\Common\XmlExtensionTests.cs" />
+    <Compile Include="IO\Encodings\EscapeOutRangeEncodingTests.cs" />
+    <Compile Include="IO\Encodings\EucJpEncodingTests.cs" />
+    <Compile Include="FileFormat\Common\PoTests.cs" />
+    <Compile Include="FileFormat\Common\Po2BinaryTests.cs" />
+    <Compile Include="FileFormat\Common\PoEntryTests.cs" />
+    <Compile Include="FileFormat\Common\PoHeaderTests.cs" />
+    <Compile Include="IO\TextWriterTests.cs" />
+    <Compile Include="IO\TextReaderTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\yarhl\yarhl.csproj">
+      <Project>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</Project>
+      <Name>yarhl</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+</Project>
