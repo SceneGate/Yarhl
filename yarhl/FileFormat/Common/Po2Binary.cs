@@ -26,6 +26,7 @@
 namespace Yarhl.FileFormat.Common
 {
     using System;
+    using System.Text;
     using Mono.Addins;
     using Yarhl.IO;
 
@@ -33,7 +34,7 @@ namespace Yarhl.FileFormat.Common
     /// Po to Binary converter.
     /// </summary>
     [Extension]
-    public class Po2Binary : IConverter<Po, BinaryFormat>
+    public class Po2Binary : IConverter<Po, BinaryFormat>, IConverter<BinaryFormat, Po>
     {
         /// <summary>
         /// Convert the specified PO into a Binary stream.
@@ -57,6 +58,40 @@ namespace Yarhl.FileFormat.Common
             }
 
             return binary;
+        }
+
+        /// <summary>
+        /// Convert the specified Binary stream into a PO object.
+        /// </summary>
+        /// <returns>The converted PO object.</returns>
+        /// <param name="source">Source binary stream.</param>
+        public Po Convert(BinaryFormat source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            TextReader reader = new TextReader(source.Stream);
+            Po po = new Po();
+
+            // Read the header if any
+            PoEntry entry = ReadEntry(reader);
+            if (entry == null)
+                return po;
+
+            if (entry.Original.Length == 0)
+                po.Header = Entry2Header(entry);
+            else
+                po.Add(entry);
+
+            // Read other entries
+            while ((entry = ReadEntry(reader)) != null) {
+                if (entry.Original.Length != 0)
+                    po.Add(entry);
+                else
+                    throw new FormatException("Original field must be filled");
+            }
+
+            return po;
         }
 
         static void WriteHeader(PoHeader header, TextWriter writer)
@@ -118,6 +153,134 @@ namespace Yarhl.FileFormat.Common
 
                 idx = nextIdx + 2;
             } while (idx != 1);
+        }
+
+        static PoEntry ReadEntry(TextReader reader)
+        {
+            // Skip all the blank lines before the block of text
+            string line = string.Empty;
+            while (!reader.Stream.EndOfStream && string.IsNullOrWhiteSpace(reader.PeekLine()))
+                reader.ReadLine();
+
+            // If nothing to read, EOF
+            if (reader.Stream.EndOfStream)
+                return null;
+
+            PoEntry entry = new PoEntry();
+            StringComparison comparison = StringComparison.Ordinal;
+            while (!reader.Stream.EndOfStream) {
+                // Get the next line
+                line = reader.ReadLine();
+
+                // If it's blank, then this block finished
+                if (string.IsNullOrWhiteSpace(line))
+                    break;
+
+                switch (line.Substring(0, 3)) {
+                case "#  ":
+                    entry.TranslatorComment = line.Substring(3);
+                    break;
+
+                case "#. ":
+                    entry.ExtractedComments = line.Substring(3);
+                    break;
+
+                case "#: ":
+                    entry.Reference = line.Substring(3);
+                    break;
+
+                case "#, ":
+                    entry.Flags = line.Substring(3);
+                    break;
+
+                case "#| ":
+                    if (line.StartsWith("#| msgctxt ", comparison))
+                        entry.PreviousContext = line.Substring("#| msgctxt ".Length);
+                    else if (line.StartsWith("#| msgid ", comparison))
+                        entry.PreviousOriginal = line.Substring("#| msgid ".Length);
+                    else
+                        throw new FormatException("Unknown line '" + line + "'");
+                    break;
+
+                case "msg":
+                    if (line.StartsWith("msgctxt ", comparison))
+                        entry.Context = ReadMultiLineContent(reader, line);
+                    else if (line.StartsWith("msgid ", comparison))
+                        entry.Original = ReadMultiLineContent(reader, line);
+                    else if (line.StartsWith("msgstr ", comparison))
+                        entry.Translated = ReadMultiLineContent(reader, line);
+                    else
+                        throw new FormatException("Unknown line '" + line + "'");
+                    break;
+
+                default:
+                    throw new FormatException("Unknown line '" + line + "'");
+                }
+            }
+
+            return entry;
+        }
+
+        static PoHeader Entry2Header(PoEntry entry)
+        {
+            StringComparison comparison = StringComparison.Ordinal;
+            PoHeader header = new PoHeader();
+            foreach (string line in entry.Translated.Split('\n')) {
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                if (line.StartsWith("Project-Id-Version: ", comparison))
+                    header.ProjectIdVersion = line.Substring("Project-Id-Version: ".Length);
+                else if (line.StartsWith("Report-Msgid-Bugs-To: ", comparison))
+                    header.ReportMsgidBugsTo = line.Substring("Report-Msgid-Bugs-To: ".Length);
+                else if (line.StartsWith("POT-Creation-Date: ", comparison))
+                    header.CreationDate = line.Substring("POT-Creation-Date: ".Length);
+                else if (line.StartsWith("POT-Revision-Date: ", comparison))
+                    header.RevisionDate = line.Substring("POT-Revision-Date: ".Length);
+                else if (line.StartsWith("Last-Translator: ", comparison))
+                    header.LastTranslator = line.Substring("Last-Translator: ".Length);
+                else if (line.StartsWith("Language-Team: ", comparison))
+                    header.LanguageTeam = line.Substring("Language-Team: ".Length);
+                else if (line.StartsWith("Language: ", comparison))
+                    header.Language = line.Substring("Language: ".Length);
+                else if (line.StartsWith("Plural-Forms: ", comparison))
+                    header.PluralForms = line.Substring("Plural-Forms: ".Length);
+                else if (line.StartsWith("Content-Type: ", comparison)) {
+                    if (line != "Content-Type: text/plain; charset=UTF-8")
+                        throw new FormatException("Invalid Content-Type");
+                } else if (line.StartsWith("Content-Transfer-Encoding: ", comparison)) {
+                    if (line != "Content-Transfer-Encoding: 8bit")
+                        throw new FormatException("Invalid Content-Transfer-Encoding");
+                } else
+                    throw new FormatException("Unknown header: " + line);
+            }
+
+            return header;
+        }
+
+        static string ReadMultiLineContent(TextReader reader, string currentLine)
+        {
+            // Remove the line ID (msgid, msgstr, msgctxt) and quotes
+            currentLine = currentLine.Substring(currentLine.IndexOf(' ') + 1);
+            currentLine = ParseMultiLine(currentLine);
+
+            StringBuilder content = new StringBuilder(currentLine);
+            while (!reader.Stream.EndOfStream && reader.Peek() == '"')
+                content.Append(ParseMultiLine(reader.ReadLine()));
+
+            return content.ToString();
+        }
+
+        static string ParseMultiLine(string line)
+        {
+            if (line.Length < 2)
+                throw new FormatException("Invalid line quotes");
+
+            if (line[0] != '"' || line[line.Length - 1] != '"')
+                throw new FormatException("Line quotes in invalid position");
+
+            line = line.Substring(1, line.Length - 2);
+            return line.Replace("\\n", "\n").Replace("\\\"", "\"");
         }
     }
 }

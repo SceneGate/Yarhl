@@ -59,7 +59,7 @@ namespace Yarhl.UnitTests.FileFormat.Common
         public void AddIsAddingEntries()
         {
             var po = CreateDummyFormat();
-            var entry = new PoEntry("orig");
+            var entry = new PoEntry();
             po.Add(entry);
             Assert.AreEqual(1, po.Entries.Count);
             Assert.Contains(entry, po.Entries);

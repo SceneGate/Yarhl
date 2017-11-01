@@ -35,7 +35,11 @@ namespace Yarhl.UnitTests.FileFormat.Common
         [Test]
         public void DefaultValues()
         {
-            var header = new PoHeader("myID", "yo");
+            var header = new PoHeader();
+            Assert.IsNull(header.ProjectIdVersion);
+            Assert.IsNull(header.ReportMsgidBugsTo);
+
+            header = new PoHeader("myID", "yo");
             Assert.AreEqual("myID", header.ProjectIdVersion);
             Assert.AreEqual("yo", header.ReportMsgidBugsTo);
             Assert.AreEqual(DateTime.Now.ToShortDateString(), header.CreationDate);
