@@ -1,5 +1,6 @@
 ## AppVeyor CI Integration
 version: 1.0.0.{build}-{branch}
+image: Visual Studio 2017
 
 environment:
   SONAR_TOKEN:
