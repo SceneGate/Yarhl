@@ -24,7 +24,7 @@ after_test:
 - ps: >-
     $opencover = (Resolve-Path "testrunner/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    & $opencover -register:user -target:nunit3-console.exe "-targetargs:""yarhl.UnitTests\bin\Debug\yarhl.UnitTests.dll""" -filter:"+[Yarhl*]*" -output:opencoverCoverage.xml
+    & $opencover -register:user -target:nunit3-console.exe "-targetargs:""yarhl.UnitTests\bin\Debug\yarhl.UnitTests.dll""" -output:opencoverCoverage.xml
 
     $env:APPVEYOR_BUILD_NUMBER
 
