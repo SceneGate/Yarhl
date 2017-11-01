@@ -6,12 +6,13 @@ matrix:
   include:
     - os: linux
       dist: trusty
-      dotnet: 2.0
+      dotnet: 2.0.2
       mono: latest
+      env: DOTNETCORE=0
 
     - os: linux
       dist: trusty
-      dotnet: 2.0
+      dotnet: 2.0.2
       mono: none
       env: DOTNETCORE=1
 

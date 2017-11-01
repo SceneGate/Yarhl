@@ -7,7 +7,7 @@ msbuild /p:Configuration=Release mono-addins/Mono.Addins/Mono.Addins.csproj
 dotnet restore
 
 if [[ "$DOTNETCORE" -ne "1" ]]; then
-    msbuild
+    msbuild /p:TargetFrameworks=net47
 else
-    dotnet build
+    dotnet build -f netcoreapp2.0
 fi
