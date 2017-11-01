@@ -305,7 +305,7 @@ namespace Yarhl.IO.Encodings
         void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
             byte lead = 0;
-            bool jis0212 = false;
+            Dictionary<int, int> codePointTable = idx2CodePointJs208;
             while (stream.Position < stream.Length) {
                 byte current = (byte)stream.ReadByte();
                 if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
@@ -314,16 +314,16 @@ namespace Yarhl.IO.Encodings
                     decodedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
                 } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
                     // 4
-                    jis0212 = true;
+                    codePointTable = idx2CodePointJs212;
                     lead = current;
                 } else if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
                     // 5
                     int tblIdx = ((lead - 0xA1) * 94) + current - 0xA1;
-                    int codePoint = jis0212 ? idx2CodePointJs212[tblIdx] : idx2CodePointJs208[tblIdx];
+                    int codePoint = codePointTable[tblIdx];
                     decodedText(stream, char.ConvertFromUtf32(codePoint));
 
                     lead = 0x00;
-                    jis0212 = false;
+                    codePointTable = idx2CodePointJs208;
                 } else if (lead != 0x00) {
                     DecodeInvalidBytes(stream, decodedText, lead, current);
                 } else if (current <= 0x7F) {
