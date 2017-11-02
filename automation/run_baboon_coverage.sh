@@ -1,7 +1,6 @@
 #!/bin/bash
-
-msbuild /v:minimal yarhl.sln
-if [ $? -ne 0 ] ; then exit 3; fi
+REPO_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/..
+pushd "$REPO_DIR"
 
 NUNIT=`ls testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe`
 echo '^Yarhl\.[^U][\.A-Za-z0-9`]+$' > $NUNIT.covcfg
@@ -19,3 +18,5 @@ rm -rf coverage-report
 mv html coverage-report
 
 cov-gtk $NUNIT.covcfg.covdb
+
+popd

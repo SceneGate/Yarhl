@@ -8,7 +8,7 @@ testrunner/
 .addins
 
 TestResult.xml
-gendarme_report.html
+gendarme_*_report.html
 StyleCopViolations.xml
 StyleCop.Cache
 coverage-report/
