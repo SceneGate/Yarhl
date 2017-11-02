@@ -22,7 +22,7 @@ namespace Yarhl.FileSystem
 {
     using System;
     using System.IO;
-    using FileFormat.Common;
+    using FileFormat;
     using IO;
 
     /// <summary>

@@ -30,9 +30,6 @@ M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromDirectory(System.Stri
 # In the DataStream we are sure we will dispose the streams created in the ctor.
 M: System.Void Yarhl.IO.DataStream::.ctor()
 M: System.Void Yarhl.IO.DataStream::.ctor(System.String,Yarhl.IO.FileOpenMode)
-# It's a converter
-M: Yarhl.FileFormat.Common.BinaryFormat Yarhl.FileFormat.Common.Po2Binary::Convert(Yarhl.FileFormat.Common.Po)
-M: Yarhl.FileFormat.Common.Po Yarhl.FileFormat.Common.Po2Binary::Convert(Yarhl.FileFormat.Common.BinaryFormat)
 
 R: Gendarme.Rules.Correctness.DisposableFieldsShouldBeDisposedRule
 # Bug in Gendarme because I am using the ? operator
@@ -64,12 +61,5 @@ R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 T: Yarhl.IO.DataStream
 
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
-# The format parameter is reserved, not used
-M: System.Void Yarhl.IO.Encodings.EucJpEncoding::DecodeText(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>)
 # It looks like a bug in Gendarme, we are adding a char to a string
 M: System.String Yarhl.IO.TextReader::ReadToToken(System.String)
-
-R: Gendarme.Rules.Performance.AvoidRepetitiveCallsToPropertiesRule
-# The property changes all the time
-M: System.Void Yarhl.IO.Encodings.EucJpEncoding::DecodeText(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>)
-

@@ -33,8 +33,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Addins">
@@ -59,28 +57,15 @@
     <Compile Include="IO\EndianessMode.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="IO\NumericExtension.cs" />
-    <Compile Include="FileFormat\Common\NodeContainerFormat.cs" />
-    <Compile Include="FileFormat\Common\BinaryFormat.cs" />
-    <Compile Include="FileFormat\Common\XmlExtension.cs" />
-    <Compile Include="IO\Encodings\EscapeOutRangeEncoding.cs" />
-    <Compile Include="IO\Encodings\EucJpEncoding.cs" />
-    <Compile Include="FileFormat\Common\Po.cs" />
-    <Compile Include="FileFormat\Common\PoHeader.cs" />
-    <Compile Include="FileFormat\Common\PoEntry.cs" />
-    <Compile Include="FileFormat\Common\Po2Binary.cs" />
     <Compile Include="IO\TextWriter.cs" />
     <Compile Include="IO\TextReader.cs" />
+    <Compile Include="FileSystem\NodeContainerFormat.cs" />
+    <Compile Include="FileFormat\BinaryFormat.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
     <Folder Include="IO\" />
     <Folder Include="FileFormat\" />
     <Folder Include="FileSystem\" />
-    <Folder Include="FileFormat\Common\" />
-    <Folder Include="IO\Encodings\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="IO\Encodings\index-jis0208.txt" />
-    <EmbeddedResource Include="IO\Encodings\index-jis0212.txt" />
   </ItemGroup>
 </Project>

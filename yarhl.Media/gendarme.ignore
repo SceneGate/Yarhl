@@ -1,0 +1,12 @@
+R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
+# It's a converter
+M: Yarhl.FileFormat.BinaryFormat Yarhl.Media.Text.Po2Binary::Convert(Yarhl.Media.Text.Po)
+M: Yarhl.Media.Text.Po Yarhl.Media.Text.Po2Binary::Convert(Yarhl.FileFormat.BinaryFormat)
+
+R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
+# The format parameter is reserved, not used
+M: System.Void Yarhl.Media.Text.Encodings.EucJpEncoding::DecodeInvalidBytes(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>,System.Byte[])
+
+R: Gendarme.Rules.Performance.AvoidRepetitiveCallsToPropertiesRule
+# The property changes all the time
+M: System.Void Yarhl.Media.Text.Encodings.EucJpEncoding::DecodeText(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>)
