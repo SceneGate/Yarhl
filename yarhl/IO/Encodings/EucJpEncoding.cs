@@ -54,7 +54,7 @@ namespace Yarhl.IO.Encodings
                 assembly.GetManifestResourceStream("Yarhl.IO.Encodings.index-jis0208.txt"),
                 idx2CodePointJs208,
                 codePoint2IdxJs208);
-            
+
             idx2CodePointJs212 = new Dictionary<int, int>();
             codePoint2IdxJs212 = new Dictionary<int, int>();
             FillCodecTable(
@@ -235,6 +235,34 @@ namespace Yarhl.IO.Encodings
             return byteCount;
         }
 
+        static void FillCodecTable(
+            Stream file,
+            IDictionary<int, int> idx2CodePoint,
+            IDictionary<int, int> codePoint2Idx)
+        {
+            using (StreamReader reader = new StreamReader(file)) {
+                while (!reader.EndOfStream) {
+                    string line = reader.ReadLine();
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+                    if (line[0] == '#')
+                        continue;
+
+                    string[] fields = line.Split('\t');
+                    int index = System.Convert.ToInt32(fields[0].TrimStart(' '), 10);
+                    int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
+
+                    idx2CodePoint[index] = codePoint;
+                    codePoint2Idx[codePoint] = index;
+                }
+            }
+        }
+
+        static bool IsInRange(int val, int min, int max)
+        {
+            return val >= min && val <= max;
+        }
+
         /// <summary>
         /// Internal text encoder.
         /// </summary>
@@ -280,7 +308,7 @@ namespace Yarhl.IO.Encodings
                     encodedByte(stream, (byte)((pointer212 % 94) + 0xA1));
                 } else {
                     EncodeInvalidChar(codePoint, stream, encodedByte);
-                } 
+                }
             }
         }
 
@@ -349,34 +377,6 @@ namespace Yarhl.IO.Encodings
             bool result = fallback.Fallback(data, 0);
             while (result && fallback.Remaining > 0)
                 decodedText(stream, fallback.GetNextChar().ToString());
-        }
-
-        static void FillCodecTable(
-            Stream file,
-            IDictionary<int, int> idx2CodePoint,
-            IDictionary<int, int> codePoint2Idx)
-        {
-            using (StreamReader reader = new StreamReader(file)) {
-                while (!reader.EndOfStream) {
-                    string line = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    if (line[0] == '#')
-                        continue;
-
-                    string[] fields = line.Split('\t');
-                    int index = System.Convert.ToInt32(fields[0].TrimStart(' '), 10);
-                    int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
-
-                    idx2CodePoint[index] = codePoint;
-                    codePoint2Idx[codePoint] = index;
-                }
-            }
-        }
-
-        static bool IsInRange(int val, int min, int max)
-        {
-            return val >= min && val <= max;
         }
     }
 }
