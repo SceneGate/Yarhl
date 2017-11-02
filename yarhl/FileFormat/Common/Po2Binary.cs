@@ -26,6 +26,7 @@
 namespace Yarhl.FileFormat.Common
 {
     using System;
+    using System.Linq;
     using System.Text;
     using Mono.Addins;
     using Yarhl.IO;
@@ -159,7 +160,7 @@ namespace Yarhl.FileFormat.Common
         {
             // Skip all the blank lines before the block of text
             string line = string.Empty;
-            while (!reader.Stream.EndOfStream && string.IsNullOrWhiteSpace(reader.PeekLine()))
+            while (reader.PeekLine()?.Trim().Length == 0)
                 reader.ReadLine();
 
             // If nothing to read, EOF
@@ -167,7 +168,6 @@ namespace Yarhl.FileFormat.Common
                 return null;
 
             PoEntry entry = new PoEntry();
-            StringComparison comparison = StringComparison.Ordinal;
             while (!reader.Stream.EndOfStream) {
                 // Get the next line
                 line = reader.ReadLine();
@@ -176,83 +176,108 @@ namespace Yarhl.FileFormat.Common
                 if (string.IsNullOrWhiteSpace(line))
                     break;
 
-                switch (line.Substring(0, 3)) {
-                case "#  ":
-                    entry.TranslatorComment = line.Substring(3);
-                    break;
-
-                case "#. ":
-                    entry.ExtractedComments = line.Substring(3);
-                    break;
-
-                case "#: ":
-                    entry.Reference = line.Substring(3);
-                    break;
-
-                case "#, ":
-                    entry.Flags = line.Substring(3);
-                    break;
-
-                case "#| ":
-                    if (line.StartsWith("#| msgctxt ", comparison))
-                        entry.PreviousContext = line.Substring("#| msgctxt ".Length);
-                    else if (line.StartsWith("#| msgid ", comparison))
-                        entry.PreviousOriginal = line.Substring("#| msgid ".Length);
-                    else
-                        throw new FormatException("Unknown line '" + line + "'");
-                    break;
-
-                case "msg":
-                    if (line.StartsWith("msgctxt ", comparison))
-                        entry.Context = ReadMultiLineContent(reader, line);
-                    else if (line.StartsWith("msgid ", comparison))
-                        entry.Original = ReadMultiLineContent(reader, line);
-                    else if (line.StartsWith("msgstr ", comparison))
-                        entry.Translated = ReadMultiLineContent(reader, line);
-                    else
-                        throw new FormatException("Unknown line '" + line + "'");
-                    break;
-
-                default:
-                    throw new FormatException("Unknown line '" + line + "'");
-                }
+                ParseLine(reader, entry, line);
             }
 
             return entry;
         }
 
+        static void ParseLine(TextReader reader, PoEntry entry, string line)
+        {
+            string[] fields = line.Split(new[] { ' ' }, 2);
+            if (fields.Length != 2)
+                throw new FormatException("Invalid line format: " + line);
+
+            switch (fields[0]) {
+                case "#":
+                    entry.TranslatorComment = fields[1].TrimStart();
+                    break;
+                case "#.":
+                    entry.ExtractedComments = fields[1];
+                    break;
+                case "#:":
+                    entry.Reference = fields[1];
+                    break;
+                case "#,":
+                    entry.Flags = fields[1];
+                    break;
+
+                case "#|":
+                    string[] subfields = fields[1].Split(new[] { ' ' }, 2);
+                    if (subfields[0] == "msgctxt")
+                        entry.PreviousContext = subfields[1];
+                    else if (subfields[0] == "msgid")
+                        entry.PreviousOriginal = subfields[1];
+                    else
+                        throw new FormatException("Unknown previous field: " + line);
+                    break;
+
+                case "msgctxt":
+                    entry.Context = ReadMultiLineContent(reader, fields[1]);
+                    break;
+                case "msgid":
+                    entry.Original = ReadMultiLineContent(reader, fields[1]);
+                    break;
+                case "msgstr":
+                    entry.Translated = ReadMultiLineContent(reader, fields[1]);
+                    break;
+                default:
+                    throw new FormatException("Unknown line '" + line + "'");
+            }
+        }
+
         static PoHeader Entry2Header(PoEntry entry)
         {
-            StringComparison comparison = StringComparison.Ordinal;
             PoHeader header = new PoHeader();
             foreach (string line in entry.Translated.Split('\n')) {
                 if (string.IsNullOrWhiteSpace(line))
                     continue;
 
-                if (line.StartsWith("Project-Id-Version: ", comparison))
-                    header.ProjectIdVersion = line.Substring("Project-Id-Version: ".Length);
-                else if (line.StartsWith("Report-Msgid-Bugs-To: ", comparison))
-                    header.ReportMsgidBugsTo = line.Substring("Report-Msgid-Bugs-To: ".Length);
-                else if (line.StartsWith("POT-Creation-Date: ", comparison))
-                    header.CreationDate = line.Substring("POT-Creation-Date: ".Length);
-                else if (line.StartsWith("POT-Revision-Date: ", comparison))
-                    header.RevisionDate = line.Substring("POT-Revision-Date: ".Length);
-                else if (line.StartsWith("Last-Translator: ", comparison))
-                    header.LastTranslator = line.Substring("Last-Translator: ".Length);
-                else if (line.StartsWith("Language-Team: ", comparison))
-                    header.LanguageTeam = line.Substring("Language-Team: ".Length);
-                else if (line.StartsWith("Language: ", comparison))
-                    header.Language = line.Substring("Language: ".Length);
-                else if (line.StartsWith("Plural-Forms: ", comparison))
-                    header.PluralForms = line.Substring("Plural-Forms: ".Length);
-                else if (line.StartsWith("Content-Type: ", comparison)) {
-                    if (line != "Content-Type: text/plain; charset=UTF-8")
-                        throw new FormatException("Invalid Content-Type");
-                } else if (line.StartsWith("Content-Transfer-Encoding: ", comparison)) {
-                    if (line != "Content-Transfer-Encoding: 8bit")
-                        throw new FormatException("Invalid Content-Transfer-Encoding");
-                } else
-                    throw new FormatException("Unknown header: " + line);
+                var fields = line.Split(new[] { ' ' }, 2);
+                if (fields.Length != 2)
+                    throw new FormatException("Invalid format line: " + line);
+
+                switch (fields[0]) {
+                    case "Project-Id-Version:":
+                        header.ProjectIdVersion = fields[1];
+                        break;
+                    case "Report-Msgid-Bugs-To:":
+                        header.ReportMsgidBugsTo = fields[1];
+                        break;
+
+                    case "POT-Creation-Date:":
+                        header.CreationDate = fields[1];
+                        break;
+                    case "POT-Revision-Date:":
+                        header.RevisionDate = fields[1];
+                        break;
+
+                    case "Last-Translator:":
+                        header.LastTranslator = fields[1];
+                        break;
+                    case "Language-Team:":
+                        header.LanguageTeam = fields[1];
+                        break;
+                    case "Language:":
+                        header.Language = fields[1];
+                        break;
+
+                    case "Plural-Forms:":
+                        header.PluralForms = fields[1];
+                        break;
+
+                    case "Content-Type:":
+                        if (line != "Content-Type: text/plain; charset=UTF-8")
+                            throw new FormatException("Invalid Content-Type");
+                        break;
+                    case "Content-Transfer-Encoding:":
+                        if (line != "Content-Transfer-Encoding: 8bit")
+                            throw new FormatException("Invalid Content-Transfer-Encoding");
+                        break;
+
+                    default:
+                        throw new FormatException("Unknown header line: " + line);
+                }
             }
 
             return header;
@@ -260,11 +285,8 @@ namespace Yarhl.FileFormat.Common
 
         static string ReadMultiLineContent(TextReader reader, string currentLine)
         {
-            // Remove the line ID (msgid, msgstr, msgctxt) and quotes
-            currentLine = currentLine.Substring(currentLine.IndexOf(' ') + 1);
-            currentLine = ParseMultiLine(currentLine);
+            StringBuilder content = new StringBuilder(ParseMultiLine(currentLine));
 
-            StringBuilder content = new StringBuilder(currentLine);
             while (!reader.Stream.EndOfStream && reader.Peek() == '"')
                 content.Append(ParseMultiLine(reader.ReadLine()));
 

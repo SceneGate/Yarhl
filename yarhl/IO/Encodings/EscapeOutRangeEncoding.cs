@@ -290,7 +290,7 @@ namespace Yarhl.IO.Encodings
             return true;
         }
 
-        static string UnescapeText(string text, IList<byte> symbols = null)
+        static string UnescapeText(string text, ICollection<byte> symbols = null)
         {
             StringBuilder transformed = new StringBuilder(text);
             StringComparison culture = StringComparison.InvariantCulture;

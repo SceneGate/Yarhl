@@ -5,12 +5,14 @@ image: Visual Studio 2017
 environment:
   SONAR_TOKEN:
     secure: +3GOgzhn/1Hxf71M6QG7gCzWMDyUI4eRXCv8xyjumU9w2qqIxoGPACJyYoouU/+m
+  COVERALLS_REPO_TOKEN:
+    secure: 24h5OfNB3BIsJs7B6KwyDJW2HZ6dennZpAJaS4N8KCsk+KFOkpZB8+lOxQNW7bXU
 
 install:
-- cmd: >-
-    git submodule update --init --recursive
-
-    nuget restore
+- cmd: git submodule update --init --recursive
+- cmd: nuget restore
+- cmd: nuget install OpenCover -OutputDirectory testrunner
+- cmd: nuget install coveralls.net -OutputDirectory testrunner
 
 before_build:
 - cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
@@ -18,7 +20,17 @@ before_build:
 build:
   project: yarhl.sln
 
-after_build:
+after_test:
+- ps: >-
+    $opencover = (Resolve-Path "testrunner/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+
+    & $opencover -register:user -target:nunit3-console.exe "-targetargs:""yarhl.UnitTests\bin\Debug\yarhl.UnitTests.dll""" -filter:"+[yarhl*]* -[yarhl.UnitTests*]*" -output:opencoverCoverage.xml
+
+    $env:APPVEYOR_BUILD_NUMBER
+
+    $coveralls = (Resolve-Path "testrunner/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+
+    & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
 
 - cmd: >-
     choco install "msbuild-sonarqube-runner" -y

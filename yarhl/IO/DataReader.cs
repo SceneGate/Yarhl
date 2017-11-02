@@ -103,9 +103,9 @@ namespace Yarhl.IO
         public ushort ReadUInt16()
         {
             if (Endianness == EndiannessMode.LittleEndian)
-                return (ushort)((ReadByte() << 0) | (ReadByte() << 8));
+                return (ushort)((ReadByte()) | (ReadByte() << 8));
             if (Endianness == EndiannessMode.BigEndian)
-                return (ushort)((ReadByte() << 8) | (ReadByte() << 0));
+                return (ushort)((ReadByte() << 8) | (ReadByte()));
 
             return 0xFFFF;
         }
@@ -126,9 +126,9 @@ namespace Yarhl.IO
         public int ReadInt24()
         {
             if (Endianness == EndiannessMode.LittleEndian)
-                return (ReadByte() << 0) | (ReadByte() << 8) | (ReadByte() << 16);
+                return (ReadByte()) | (ReadByte() << 8) | (ReadByte() << 16);
             if (Endianness == EndiannessMode.BigEndian)
-                return (ReadByte() << 16) | (ReadByte() << 8) | (ReadByte() << 0);
+                return (ReadByte() << 16) | (ReadByte() << 8) | (ReadByte());
 
             return -1;
         }
@@ -141,9 +141,9 @@ namespace Yarhl.IO
         public uint ReadUInt32()
         {
             if (Endianness == EndiannessMode.LittleEndian)
-                return (uint)((ReadUInt16() << 00) | (ReadUInt16() << 16));
+                return (uint)((ReadUInt16()) | (ReadUInt16() << 16));
             if (Endianness == EndiannessMode.BigEndian)
-                return (uint)((ReadUInt16() << 16) | (ReadUInt16() << 00));
+                return (uint)((ReadUInt16() << 16) | (ReadUInt16()));
 
             return 0xFFFFFFFF;
         }
@@ -165,9 +165,9 @@ namespace Yarhl.IO
         public ulong ReadUInt64()
         {
             if (Endianness == EndiannessMode.LittleEndian)
-                return (ReadUInt32() << 00) | ((ulong)ReadUInt32() << 32);
+                return (ReadUInt32()) | ((ulong)ReadUInt32() << 32);
             if (Endianness == EndiannessMode.BigEndian)
-                return ((ulong)ReadUInt32() << 32) | (ReadUInt32() << 00);
+                return ((ulong)ReadUInt32() << 32) | (ReadUInt32());
 
             return 0xFFFFFFFFFFFFFFFF;
         }

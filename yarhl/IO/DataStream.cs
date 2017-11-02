@@ -39,9 +39,9 @@ namespace Yarhl.IO
     public class DataStream : IDisposable
     {
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
+        readonly Stack<long> positionStack;
         long position;
         long length;
-        Stack<long> positionStack;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class.

@@ -35,7 +35,7 @@ namespace Yarhl.IO.Encodings
     /// EUC-JP encoding.
     /// Implemented standard from: https://encoding.spec.whatwg.org/
     /// </summary>
-    public class EucJpEncoding : Encoding
+    public sealed class EucJpEncoding : Encoding
     {
         static Dictionary<int, int> idx2CodePointJs212;
         static Dictionary<int, int> idx2CodePointJs208;
@@ -240,11 +240,8 @@ namespace Yarhl.IO.Encodings
         /// </summary>
         /// <param name="text">Text to encode.</param>
         /// <param name="encodedByte">Callback with the byte encoded.</param>
-        protected void EncodeText(string text, Action<Stream, byte> encodedByte)
+        void EncodeText(string text, Action<Stream, byte> encodedByte)
         {
-            if (encodedByte == null)
-                throw new ArgumentNullException(nameof(encodedByte));
-
             MemoryStream stream = new MemoryStream(UTF32.GetBytes(text));
 
             // 1
@@ -252,6 +249,10 @@ namespace Yarhl.IO.Encodings
                 byte[] buffer = new byte[4];
                 stream.Read(buffer, 0, 4);
                 int codePoint = BitConverter.ToInt32(buffer, 0);
+
+                // 6
+                if (codePoint == 0x2212)
+                    codePoint = 0xFF0D;
 
                 if (codePoint <= 0x7F) {
                     // 2
@@ -266,38 +267,34 @@ namespace Yarhl.IO.Encodings
                     // 5
                     encodedByte(stream, 0x8E);
                     encodedByte(stream, (byte)(codePoint - 0xFF61 + 0xA1));
+                } else if (codePoint2IdxJs208.ContainsKey(codePoint)) {
+                    // 7
+                    int pointer = codePoint2IdxJs208[codePoint];
+                    encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
+                    encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
+                } else if (codePoint2IdxJs212.ContainsKey(codePoint)) {
+                    // 8, Fixed, not in the specs
+                    int pointer212 = codePoint2IdxJs212[codePoint];
+                    encodedByte(stream, 0x8F);
+                    encodedByte(stream, (byte)((pointer212 / 94) + 0xA1));
+                    encodedByte(stream, (byte)((pointer212 % 94) + 0xA1));
                 } else {
-                    // 6
-                    if (codePoint == 0x2212)
-                        codePoint = 0xFF0D;
-
-                    // 8
-                    if (!codePoint2IdxJs208.ContainsKey(codePoint)) {
-                        if (codePoint2IdxJs212.ContainsKey(codePoint)) {
-                            // Fixed, not in the specs
-                            int pointer212 = codePoint2IdxJs212[codePoint];
-                            encodedByte(stream, 0x8F);
-                            encodedByte(stream, (byte)((pointer212 / 94) + 0xA1));
-                            encodedByte(stream, (byte)((pointer212 % 94) + 0xA1));
-                        } else {
-                            var fallback = encoderFallback.CreateFallbackBuffer();
-                            string ch = char.ConvertFromUtf32(codePoint);
-                            if (ch.Length == 1)
-                                fallback.Fallback(ch[0], 0);
-                            else
-                                fallback.Fallback(ch[0], ch[1], 0);
-
-                            while (fallback.Remaining > 0)
-                                encodedByte(stream, (byte)fallback.GetNextChar());
-                        }
-                    } else {
-                        // 7
-                        int pointer = codePoint2IdxJs208[codePoint];
-                        encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
-                        encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
-                    }
-                }
+                    EncodeInvalidChar(codePoint, stream, encodedByte);
+                } 
             }
+        }
+
+        void EncodeInvalidChar(int codePoint, Stream stream, Action<Stream, byte> encodedByte)
+        {
+            var fallback = encoderFallback.CreateFallbackBuffer();
+            string ch = char.ConvertFromUtf32(codePoint);
+            if (ch.Length == 1)
+                fallback.Fallback(ch[0], 0);
+            else
+                fallback.Fallback(ch[0], ch[1], 0);
+
+            while (fallback.Remaining > 0)
+                encodedByte(stream, (byte)fallback.GetNextChar());
         }
 
         /// <summary>
@@ -305,17 +302,10 @@ namespace Yarhl.IO.Encodings
         /// </summary>
         /// <param name="stream">Stream to decode.</param>
         /// <param name="decodedText">Callback with decoded text.</param>
-        protected void DecodeText(Stream stream, Action<Stream, string> decodedText)
+        void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (decodedText == null)
-                throw new ArgumentNullException(nameof(decodedText));
-
-            DecoderFallbackBuffer fallback = decoderFallback.CreateFallbackBuffer();
-
             byte lead = 0;
-            bool jis0212 = false;
+            Dictionary<int, int> codePointTable = idx2CodePointJs208;
             while (stream.Position < stream.Length) {
                 byte current = (byte)stream.ReadByte();
                 if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
@@ -324,22 +314,18 @@ namespace Yarhl.IO.Encodings
                     decodedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
                 } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
                     // 4
-                    jis0212 = true;
+                    codePointTable = idx2CodePointJs212;
                     lead = current;
-                } else if (lead != 0x00) {
+                } else if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
                     // 5
-                    if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
-                        int tblIdx = ((lead - 0xA1) * 94) + current - 0xA1;
-                        int codePoint = jis0212 ? idx2CodePointJs212[tblIdx] : idx2CodePointJs208[tblIdx];
-                        decodedText(stream, char.ConvertFromUtf32(codePoint));
+                    int tblIdx = ((lead - 0xA1) * 94) + current - 0xA1;
+                    int codePoint = codePointTable[tblIdx];
+                    decodedText(stream, char.ConvertFromUtf32(codePoint));
 
-                        lead = 0x00;
-                        jis0212 = false;
-                    } else {
-                        bool result = fallback.Fallback(new byte[] { lead, current }, 0);
-                        while (result && fallback.Remaining > 0)
-                            decodedText(stream, fallback.GetNextChar().ToString());
-                    }
+                    lead = 0x00;
+                    codePointTable = idx2CodePointJs208;
+                } else if (lead != 0x00) {
+                    DecodeInvalidBytes(stream, decodedText, lead, current);
                 } else if (current <= 0x7F) {
                     // 6
                     decodedText(stream, char.ConvertFromUtf32(current));
@@ -348,18 +334,21 @@ namespace Yarhl.IO.Encodings
                     lead = current;
                 } else {
                     // 8
-                    bool result = fallback.Fallback(new byte[] { current }, 0);
-                    while (result && fallback.Remaining > 0)
-                        decodedText(stream, fallback.GetNextChar().ToString());
+                    DecodeInvalidBytes(stream, decodedText, current);
                 }
             }
 
             // 1
-            if (lead != 0x00) {
-                bool result = fallback.Fallback(new byte[] { lead }, 0);
-                while (result && fallback.Remaining > 0)
-                    decodedText(stream, fallback.GetNextChar().ToString());
-            }
+            if (lead != 0x00)
+                DecodeInvalidBytes(stream, decodedText, lead);
+        }
+
+        void DecodeInvalidBytes(Stream stream, Action<Stream, string> decodedText, params byte[] data)
+        {
+            DecoderFallbackBuffer fallback = decoderFallback.CreateFallbackBuffer();
+            bool result = fallback.Fallback(data, 0);
+            while (result && fallback.Remaining > 0)
+                decodedText(stream, fallback.GetNextChar().ToString());
         }
 
         static void FillCodecTable(

@@ -28,7 +28,7 @@ namespace Yarhl.FileFormat
     /// <typeparam name="TSrc">Source format.</typeparam>
     /// <typeparam name="TDst">Destination format.</typeparam>
     [TypeExtensionPoint]
-    public interface IConverter<TSrc, TDst>
+    public interface IConverter<in TSrc, out TDst>
     {
         /// <summary>
         /// Converts the specified source into the given type.
