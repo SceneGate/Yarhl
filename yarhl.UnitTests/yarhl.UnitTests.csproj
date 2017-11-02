@@ -71,15 +71,15 @@
     <Compile Include="IO\NumericExtensionTests.cs" />
     <Compile Include="IO\TextWriterTests.cs" />
     <Compile Include="IO\TextReaderTests.cs" />
-    <Compile Include="Media\Po2BinaryTests.cs" />
-    <Compile Include="Media\PoEntryTests.cs" />
-    <Compile Include="Media\PoHeaderTests.cs" />
-    <Compile Include="Media\PoTests.cs" />
-    <Compile Include="Media\XmlExtensionTests.cs" />
     <Compile Include="FileFormat\BinaryFormatTests.cs" />
     <Compile Include="FileSystem\NodeContainerFormatTests.cs" />
     <Compile Include="Media\Text\Encodings\EscapeOutRangeEncodingTests.cs" />
     <Compile Include="Media\Text\Encodings\EucJpEncodingTests.cs" />
+    <Compile Include="Media\Text\Po2BinaryTests.cs" />
+    <Compile Include="Media\Text\PoEntryTests.cs" />
+    <Compile Include="Media\Text\PoHeaderTests.cs" />
+    <Compile Include="Media\Text\PoTests.cs" />
+    <Compile Include="Media\Text\XmlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\yarhl\yarhl.csproj">

@@ -23,10 +23,10 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Yarhl.UnitTests.Media
+namespace Yarhl.UnitTests.Media.Text
 {
     using NUnit.Framework;
-    using Yarhl.Media;
+    using Yarhl.Media.Text;
 
     [TestFixture]
     public class PoEntryTests
