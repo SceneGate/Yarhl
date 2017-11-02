@@ -1,6 +1,7 @@
 bin/
 obj/
-yarhl.userprefs
+*.userprefs
+*.user
 packages/
 nuget.exe
 testrunner/

@@ -27,7 +27,7 @@ namespace Yarhl.UnitTests.FileFormat.Common
 {
     using System;
     using NUnit.Framework;
-    using Yarhl.FileFormat.Common;
+    using Yarhl.Media;
 
     [TestFixture]
     public class PoTests : BaseGeneralTests<Po>

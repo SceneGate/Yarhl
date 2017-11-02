@@ -30,7 +30,6 @@ namespace Yarhl.UnitTests.IO
     using Mono.Addins;
     using NUnit.Framework;
     using Yarhl.FileFormat;
-    using Yarhl.FileFormat.Common;
     using Yarhl.IO;
 
     [TestFixture]

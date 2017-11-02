@@ -1,0 +1,4 @@
+R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
+# It's a converter
+M: Yarhl.FileFormat.BinaryFormat Yarhl.Media.Po2Binary::Convert(Yarhl.Media.Po)
+M: Yarhl.Media.Po Yarhl.Media.Po2Binary::Convert(Yarhl.FileFormat.BinaryFormat)

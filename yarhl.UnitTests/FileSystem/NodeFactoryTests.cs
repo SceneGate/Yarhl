@@ -29,7 +29,7 @@ namespace Yarhl.UnitTests.FileSystem
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
-    using Yarhl.FileFormat.Common;
+    using Yarhl.FileFormat;
     using Yarhl.FileSystem;
 
     [TestFixture]

@@ -48,8 +48,8 @@
     <Folder Include="Properties\" />
     <Folder Include="FileSystem\" />
     <Folder Include="IO\" />
-    <Folder Include="FileFormat\Common\" />
     <Folder Include="IO\Encodings\" />
+    <Folder Include="Media\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginManagerTests.cs" />
@@ -68,22 +68,26 @@
     <Compile Include="IO\DataWriterTests.cs" />
     <Compile Include="IO\DataReaderTests.cs" />
     <Compile Include="IO\NumericExtensionTests.cs" />
-    <Compile Include="FileFormat\Common\BinaryFormatTests.cs" />
-    <Compile Include="FileFormat\Common\NodeContainerFormatTests.cs" />
-    <Compile Include="FileFormat\Common\XmlExtensionTests.cs" />
     <Compile Include="IO\Encodings\EscapeOutRangeEncodingTests.cs" />
     <Compile Include="IO\Encodings\EucJpEncodingTests.cs" />
-    <Compile Include="FileFormat\Common\PoTests.cs" />
-    <Compile Include="FileFormat\Common\Po2BinaryTests.cs" />
-    <Compile Include="FileFormat\Common\PoEntryTests.cs" />
-    <Compile Include="FileFormat\Common\PoHeaderTests.cs" />
     <Compile Include="IO\TextWriterTests.cs" />
     <Compile Include="IO\TextReaderTests.cs" />
+    <Compile Include="Media\Po2BinaryTests.cs" />
+    <Compile Include="Media\PoEntryTests.cs" />
+    <Compile Include="Media\PoHeaderTests.cs" />
+    <Compile Include="Media\PoTests.cs" />
+    <Compile Include="Media\XmlExtensionTests.cs" />
+    <Compile Include="FileFormat\BinaryFormatTests.cs" />
+    <Compile Include="FileSystem\NodeContainerFormatTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\yarhl\yarhl.csproj">
       <Project>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</Project>
       <Name>yarhl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\yarhl.Media\yarhl.Media.csproj">
+      <Project>{D518538F-7B50-41A0-839C-C1D6A287DFA3}</Project>
+      <Name>yarhl.Media</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
