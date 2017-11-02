@@ -44,6 +44,8 @@
     <Compile Include="Text\PoEntry.cs" />
     <Compile Include="Text\PoHeader.cs" />
     <Compile Include="Text\XmlExtension.cs" />
+    <Compile Include="Text\Encodings\EscapeOutRangeEncoding.cs" />
+    <Compile Include="Text\Encodings\EucJpEncoding.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\yarhl\yarhl.csproj">
@@ -53,6 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Text\" />
+    <Folder Include="Text\Encodings\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Text\Encodings\index-jis0208.txt" />
+    <EmbeddedResource Include="Text\Encodings\index-jis0212.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

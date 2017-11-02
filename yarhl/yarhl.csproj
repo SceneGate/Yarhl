@@ -57,8 +57,6 @@
     <Compile Include="IO\EndianessMode.cs" />
     <Compile Include="IO\FileOpenMode.cs" />
     <Compile Include="IO\NumericExtension.cs" />
-    <Compile Include="IO\Encodings\EscapeOutRangeEncoding.cs" />
-    <Compile Include="IO\Encodings\EucJpEncoding.cs" />
     <Compile Include="IO\TextWriter.cs" />
     <Compile Include="IO\TextReader.cs" />
     <Compile Include="FileSystem\NodeContainerFormat.cs" />
@@ -69,10 +67,5 @@
     <Folder Include="IO\" />
     <Folder Include="FileFormat\" />
     <Folder Include="FileSystem\" />
-    <Folder Include="IO\Encodings\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="IO\Encodings\index-jis0208.txt" />
-    <EmbeddedResource Include="IO\Encodings\index-jis0212.txt" />
   </ItemGroup>
 </Project>

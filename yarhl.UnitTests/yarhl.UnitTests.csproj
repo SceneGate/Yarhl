@@ -48,8 +48,9 @@
     <Folder Include="Properties\" />
     <Folder Include="FileSystem\" />
     <Folder Include="IO\" />
-    <Folder Include="IO\Encodings\" />
     <Folder Include="Media\" />
+    <Folder Include="Media\Text\" />
+    <Folder Include="Media\Text\Encodings\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="PluginManagerTests.cs" />
@@ -68,8 +69,6 @@
     <Compile Include="IO\DataWriterTests.cs" />
     <Compile Include="IO\DataReaderTests.cs" />
     <Compile Include="IO\NumericExtensionTests.cs" />
-    <Compile Include="IO\Encodings\EscapeOutRangeEncodingTests.cs" />
-    <Compile Include="IO\Encodings\EucJpEncodingTests.cs" />
     <Compile Include="IO\TextWriterTests.cs" />
     <Compile Include="IO\TextReaderTests.cs" />
     <Compile Include="Media\Po2BinaryTests.cs" />
@@ -79,6 +78,8 @@
     <Compile Include="Media\XmlExtensionTests.cs" />
     <Compile Include="FileFormat\BinaryFormatTests.cs" />
     <Compile Include="FileSystem\NodeContainerFormatTests.cs" />
+    <Compile Include="Media\Text\Encodings\EscapeOutRangeEncodingTests.cs" />
+    <Compile Include="Media\Text\Encodings\EucJpEncodingTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\yarhl\yarhl.csproj">

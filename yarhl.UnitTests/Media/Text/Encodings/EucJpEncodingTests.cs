@@ -23,12 +23,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Yarhl.UnitTests.IO.Encodings
+namespace Yarhl.UnitTests.Media.Text.Encodings
 {
     using System;
     using System.Text;
     using NUnit.Framework;
-    using Yarhl.IO.Encodings;
+    using Yarhl.Media.Text.Encodings;
 
     [TestFixture]
     public class EucJpEncodingTests

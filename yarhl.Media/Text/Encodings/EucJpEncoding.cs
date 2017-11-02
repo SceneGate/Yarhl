@@ -23,7 +23,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Yarhl.IO.Encodings
+namespace Yarhl.Media.Text.Encodings
 {
     using System;
     using System.Collections.Generic;
@@ -51,14 +51,14 @@ namespace Yarhl.IO.Encodings
             idx2CodePointJs208 = new Dictionary<int, int>();
             codePoint2IdxJs208 = new Dictionary<int, int>();
             FillCodecTable(
-                assembly.GetManifestResourceStream("Yarhl.IO.Encodings.index-jis0208.txt"),
+                assembly.GetManifestResourceStream("Yarhl.Media.Text.Encodings.index-jis0208.txt"),
                 idx2CodePointJs208,
                 codePoint2IdxJs208);
 
             idx2CodePointJs212 = new Dictionary<int, int>();
             codePoint2IdxJs212 = new Dictionary<int, int>();
             FillCodecTable(
-                assembly.GetManifestResourceStream("Yarhl.IO.Encodings.index-jis0212.txt"),
+                assembly.GetManifestResourceStream("Yarhl.Media.Text.Encodings.index-jis0212.txt"),
                 idx2CodePointJs212,
                 codePoint2IdxJs212);
         }

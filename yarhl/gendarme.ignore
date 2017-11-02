@@ -61,12 +61,5 @@ R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 T: Yarhl.IO.DataStream
 
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
-# The format parameter is reserved, not used
-M: System.Void Yarhl.IO.Encodings.EucJpEncoding::DecodeInvalidBytes(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>,System.Byte[])
 # It looks like a bug in Gendarme, we are adding a char to a string
 M: System.String Yarhl.IO.TextReader::ReadToToken(System.String)
-
-R: Gendarme.Rules.Performance.AvoidRepetitiveCallsToPropertiesRule
-# The property changes all the time
-M: System.Void Yarhl.IO.Encodings.EucJpEncoding::DecodeText(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>)
-
