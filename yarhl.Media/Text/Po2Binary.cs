@@ -102,7 +102,7 @@ namespace Yarhl.Media.Text
             writer.WriteLine(@"""Project-Id-Version: {0}\n""", header.ProjectIdVersion ?? string.Empty);
             writer.WriteLine(@"""Report-Msgid-Bugs-To: {0}\n""", header.ReportMsgidBugsTo ?? string.Empty);
             writer.WriteLine(@"""POT-Creation-Date: {0}\n""", header.CreationDate ?? string.Empty);
-            writer.WriteLine(@"""POT-Revision-Date: {0}\n""", header.RevisionDate ?? string.Empty);
+            writer.WriteLine(@"""PO-Revision-Date: {0}\n""", header.RevisionDate ?? string.Empty);
             writer.WriteLine(@"""Last-Translator: {0}\n""", header.LastTranslator ?? string.Empty);
             writer.WriteLine(@"""Language-Team: {0}\n""", header.LanguageTeam ?? string.Empty);
             writer.WriteLine(@"""Language: {0}\n""", header.Language ?? string.Empty);
@@ -248,7 +248,7 @@ namespace Yarhl.Media.Text
                     case "POT-Creation-Date:":
                         header.CreationDate = fields[1];
                         break;
-                    case "POT-Revision-Date:":
+                    case "PO-Revision-Date:":
                         header.RevisionDate = fields[1];
                         break;
 
