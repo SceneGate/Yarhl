@@ -52,6 +52,9 @@ namespace Yarhl.Media.Text
         /// <summary>
         /// Gets or sets the original content to translate.
         /// </summary>
+        /// <remarks>
+        /// Entris with the same original content will be merged.
+        /// </remarks>
         /// <value>The original content.</value>
         public string Original { get; set; }
 
@@ -64,23 +67,27 @@ namespace Yarhl.Media.Text
         /// <summary>
         /// Gets or sets the context.
         /// </summary>
+        /// <remarks>
+        /// It's possible to have multiple entries with the same
+        /// <see cref="Original"/> content if the context is different.
+        /// </remarks>
         /// <value>The context.</value>
         public string Context { get; set; }
 
         /// <summary>
-        /// Gets or sets the translator comment.
+        /// Gets or sets the translators' comments.
         /// </summary>
         /// <value>The translator comment.</value>
         public string TranslatorComment { get; set; }
 
         /// <summary>
-        /// Gets or sets the extracted comments.
+        /// Gets or sets the programmers' comments.
         /// </summary>
         /// <value>The extracted comments.</value>
         public string ExtractedComments { get; set; }
 
         /// <summary>
-        /// Gets or sets the reference.
+        /// Gets or sets the comments with reference to the origin of the content.
         /// </summary>
         /// <value>The reference.</value>
         public string Reference { get; set; }

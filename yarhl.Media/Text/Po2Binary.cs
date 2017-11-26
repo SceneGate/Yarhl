@@ -276,6 +276,9 @@ namespace Yarhl.Media.Text
                         break;
 
                     default:
+                        // Ignore extended / tool-specific fields
+                        if (fields[0].Substring(0, 2) == "X-")
+                            break;
                         throw new FormatException("Unknown header line: " + line);
                 }
             }

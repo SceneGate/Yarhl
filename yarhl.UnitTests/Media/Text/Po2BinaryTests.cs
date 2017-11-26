@@ -203,6 +203,18 @@ msgstr """"
         }
 
         [Test]
+        public void IgnoreExtendedHeaderEntriesd()
+        {
+            string text = "msgid \"\"\nmsgstr \"\"\n\"X-Generator: libgame\"";
+            Assert.DoesNotThrow(() => ConvertStringToPo(text));
+
+            text = "msgid \"\"\nmsgstr \"\"\n\"X: libgame\"";
+            Assert.Throws<FormatException>(
+                () => ConvertStringToPo(text),
+                "Unknown header: Unknown: X");
+        }
+
+        [Test]
         public void ConvertNoHeaderEntries()
         {
             var testPo = new Po();
