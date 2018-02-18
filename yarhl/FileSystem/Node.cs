@@ -110,6 +110,9 @@ namespace Yarhl.FileSystem
         public T GetFormatAs<T>()
             where T : Format
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
             return Format as T;
         }
 
@@ -118,11 +121,8 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>This node.</returns>
         /// <param name="dst">Format to convert.</param>
-        /// <param name="disposeOldFormat">
-        /// If set to <c>true</c> dispose the previous format.
-        /// </param>
         /// <param name="converter">The format converter to use.</param>
-        public Node Transform(Type dst, bool disposeOldFormat = true, dynamic converter = null)
+        public Node Transform(Type dst, dynamic converter = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -132,16 +132,10 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            Format newFormat;
             if (converter == null)
-                newFormat = Format.ConvertTo(dst);
+                Format = (Format)Format.ConvertTo(dst);
             else
-                newFormat = FileFormat.Format.ConvertWith(Format, dst, converter);
-
-            if (disposeOldFormat)
-                Format.Dispose();
-
-            Format = newFormat;
+                Format = (Format)Format.ConvertWith(converter, dst);
 
             return this;
         }
@@ -150,53 +144,60 @@ namespace Yarhl.FileSystem
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>
-        /// <param name="disposeOldFormat">
-        /// If set to <c>true</c> dispose the previous format.
-        /// </param>
-        /// <param name="converter">The format converter to use.</param>
         /// <typeparam name="T">The new node format.</typeparam>
-        public Node Transform<T>(bool disposeOldFormat = true, dynamic converter = null)
+        public Node Transform<T>()
             where T : Format
         {
-            return Transform(typeof(T), disposeOldFormat, converter);
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            Format = Format.ConvertTo<T>(Format);
+            return this;
         }
 
         /// <summary>
         /// Transform the node format to another format with a converter of that type.
         /// </summary>
         /// <returns>This node.</returns>
-        /// <param name="disposeOldFormat">
-        /// If set to <c>true</c> dispose the previous format.
-        /// </param>
+        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
         /// <typeparam name="TSrc">The type of the current format.</typeparam>
         /// <typeparam name="TDst">The type of the new format.</typeparam>
-        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
-        public Node Transform<TSrc, TDst, TConv>(bool disposeOldFormat = true)
+        public Node Transform<TConv, TSrc, TDst>()
             where TSrc : Format
             where TDst : Format
             where TConv : IConverter<TSrc, TDst>, new()
         {
-            return Transform<TDst>(disposeOldFormat, new TConv());
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            Format = Format.ConvertWith<TConv, TSrc, TDst>();
+            return this;
         }
 
-        /// <summary>
-        /// Removes all the children from the node.
-        /// </summary>
-        public override void RemoveChildren()
+        public Node Transform<TSrc, TDst>(IConverter<TSrc, TDst> converter)
+            where TSrc : Format
+            where TDst : Format
         {
-            foreach (var child in Children)
-                child.Dispose();
-            base.RemoveChildren();
-        }
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
 
-        /// <summary>
-        /// Releases all resource used by the <see cref="Node"/>
-        /// object.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);              // Dispose me everything (L)
-            GC.SuppressFinalize(this);  // Don't dispose again!
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            Format = Format.ConvertWith(converter);
+            return this;
         }
 
         /// <summary>
