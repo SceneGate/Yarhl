@@ -433,6 +433,7 @@ namespace Yarhl.IO
             if (string.IsNullOrEmpty(fileOut))
                 throw new ArgumentNullException(nameof(fileOut));
 
+            Directory.CreateDirectory(Path.GetDirectoryName(fileOut));
             using (var stream = new DataStream(fileOut, FileOpenMode.Write))
                 WriteTo(stream);
         }
