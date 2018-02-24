@@ -27,14 +27,14 @@ namespace Yarhl.FileSystem
     /// Node with navigation features inside a FileSystem.
     /// </summary>
     /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
-    public abstract class NavegableNode<T>
+    public abstract class NavegableNode<T> : IDisposable
         where T : NavegableNode<T>
     {    
         readonly List<T> children;
 
         protected NavegableNode(string name)
         {
-            if (name == null)
+            if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
 
             if (name.Contains(NodeSystem.PathSeparator)) {
@@ -47,6 +47,18 @@ namespace Yarhl.FileSystem
             Tags = new Dictionary<string, dynamic>();
             children = new List<T>();
             Children = new NavegableNodeCollection<T>(children);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the
+        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> class.
+        /// Releases unmanaged resources and performs other cleanup operations before the
+        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> is reclaimed by
+        /// garbage collection.
+        /// </summary>
+        ~NavegableNode()
+        {
+            Dispose(false);
         }
 
         /// <summary>
@@ -100,6 +112,15 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
+        /// Gets a value indicating whether this node is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
+        public bool Disposed {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Add a node.
         /// </summary>
         /// <remarks>
@@ -110,6 +131,9 @@ namespace Yarhl.FileSystem
         /// <param name="node">Node to add.</param>
         public void Add(T node)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavegableNode<T>));
+
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
@@ -118,10 +142,12 @@ namespace Yarhl.FileSystem
 
             // If we have already a child with the same, replace it. Otherwise add.
             int index = children.FindIndex((child) => child.Name == node.Name);
-            if (index == -1)
+            if (index == -1) {
                 children.Add(node);
-            else
+            } else {
+                children[index].Dispose();
                 children[index] = node;
+            }
         }
         
         /// <summary>
@@ -130,6 +156,9 @@ namespace Yarhl.FileSystem
         /// <param name="nodes">List of nodes to add.</param>
         public void Add(IEnumerable<T> nodes)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavegableNode<T>));
+
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
 
@@ -140,9 +169,41 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Removes all the children from the node.
         /// </summary>
-        public virtual void RemoveChildren()
+        public void RemoveChildren()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavegableNode<T>));
+
+            foreach (var child in Children)
+                child.Dispose();
             children.Clear();
+        }
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="Node"/>
+        /// object.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);              // Dispose me everything (L)
+            GC.SuppressFinalize(this);  // Don't dispose again!
+        }
+
+        /// <summary>
+        /// Releases all resource used by the
+        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> object.
+        /// </summary>
+        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
+        /// managed resources also.</param>
+        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        {
+            if (Disposed)
+                return;
+
+            if (freeManagedResourcesAlso)
+                RemoveChildren();
+
+            Disposed = true;
         }
     }
 }

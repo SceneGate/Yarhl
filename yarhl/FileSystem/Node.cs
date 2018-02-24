@@ -22,11 +22,12 @@ namespace Yarhl.FileSystem
 {
     using System;
     using FileFormat;
+    using IO;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavegableNode<Node>, IDisposable
+    public class Node : NavegableNode<Node>
     {
         Format format;
 
@@ -51,25 +52,6 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="Node"/> class.
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Node"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~Node()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Format"/> is disposed.
-        /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        public bool Disposed {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Gets or sets the current format of the node.
         /// </summary>
         /// <value>The current format.</value>
@@ -86,12 +68,17 @@ namespace Yarhl.FileSystem
                 if (IsContainer)
                     RemoveChildren();
 
+                format?.Dispose();
                 format = value;
 
                 // If now it's a container, add its children
                 if (IsContainer)
                     AddContainerChildren();
             }
+        }
+
+        public DataStream Stream {
+            get { return GetFormatAs<BinaryFormat>()?.Stream; }
         }
 
         /// <summary>
@@ -206,16 +193,11 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
         /// managed resources also.</param>
-        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        protected override void Dispose(bool freeManagedResourcesAlso)
         {
-            if (Disposed)
-                return;
-
-            Disposed = true;
-
+            base.Dispose(freeManagedResourcesAlso);
             if (freeManagedResourcesAlso) {
                 format?.Dispose();
-                RemoveChildren();
             }
         }
 
