@@ -13,8 +13,10 @@ M: System.Void Yarhl.IO.DataWriter::Write(System.String,System.Type,System.Boole
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
-M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::Transform(System.Boolean,System.Object)
-M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::Transform(System.Boolean)
+M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::Transform()
+M: TDst Yarhl.FileFormat.Format::ConvertWith(TSrc)
+M: TDst Yarhl.FileFormat.Format::ConvertWith()
+M: System.Collections.Generic.IEnumerable`1<System.Type> Yarhl.PluginManager::FindExtensions()
 M: System.Collections.Generic.IEnumerable`1<System.Type> Yarhl.PluginManager::FindExtensions()
 M: System.Object Yarhl.IO.DataReader::Read()
 
@@ -26,7 +28,7 @@ T: Yarhl.FileSystem.NavegableNodeCollection`1
 R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromFile(System.String,System.String)
-M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromDirectory(System.String,System.String,System.String)
+M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromDirectory(System.String,System.String,System.String,System.Boolean)
 # In the DataStream we are sure we will dispose the streams created in the ctor.
 M: System.Void Yarhl.IO.DataStream::.ctor()
 M: System.Void Yarhl.IO.DataStream::.ctor(System.String,Yarhl.IO.FileOpenMode)
@@ -63,3 +65,5 @@ T: Yarhl.IO.DataStream
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
 # It looks like a bug in Gendarme, we are adding a char to a string
 M: System.String Yarhl.IO.TextReader::ReadToToken(System.String)
+# It seems a bug in Gendarme with new $ string formatting
+M: System.Object Yarhl.FileFormat.Format::ConvertTo(System.Type,System.Object)

@@ -412,9 +412,8 @@ namespace Yarhl.UnitTests.FileSystem
                 () => NodeFactory.FromMemory(null),
                 Throws.TypeOf<ArgumentNullException>());
             Assert.That(
-                () => NodeFactory.FromMemory(""),
-                Throws.TypeOf<ArgumentNullException>()
-            );
+                () => NodeFactory.FromMemory(string.Empty),
+                Throws.TypeOf<ArgumentNullException>());
         }
     }
 }

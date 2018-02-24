@@ -49,7 +49,8 @@ namespace Yarhl.UnitTests.FileSystem
         {
             Assert.Throws<ArgumentNullException>(() => new DummyNavegable(null));
             Assert.That(
-                () => new DummyNavegable(""), Throws.TypeOf<ArgumentNullException>());
+                () => new DummyNavegable(string.Empty),
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]

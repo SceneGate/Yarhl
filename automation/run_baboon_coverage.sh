@@ -17,6 +17,6 @@ cov-html $NUNIT.covcfg.covdb Yarhl
 rm -rf coverage-report
 mv html coverage-report
 
-cov-gtk $NUNIT.covcfg.covdb
+cov-gtk $NUNIT.covcfg.covdb >/dev/null 2>&1
 
 popd
