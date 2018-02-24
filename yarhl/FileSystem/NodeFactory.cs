@@ -100,7 +100,17 @@ namespace Yarhl.FileSystem
         /// <param name="nodeName">Node name.</param>
         public static Node FromFile(string filePath, string nodeName)
         {
-            return new Node(nodeName, new BinaryFormat(filePath));
+            // We need to catch if the node creation fails
+            // for instance for null names, to dispose the stream.
+            var format = new BinaryFormat(filePath);
+            Node node;
+            try {
+                node = new Node(nodeName, format);
+            } catch {
+                format.Dispose();
+                throw;
+            }
+            return node;
         }
 
         /// <summary>

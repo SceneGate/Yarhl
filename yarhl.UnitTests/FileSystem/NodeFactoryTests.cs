@@ -80,10 +80,19 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void CreateFromFileAndNullName()
+        public void CreateFromFileAndNullNameThrowsException()
         {
             string tempFile = Path.GetTempFileName();
             Assert.Throws<ArgumentNullException>(() => NodeFactory.FromFile(tempFile, null));
+            File.Delete(tempFile);
+        }
+
+        public void CreateFromFileDisposeFormatsIfFails()
+        {
+            string tempFile = Path.GetTempFileName();
+            int numStreams = Yarhl.IO.DataStream.ActiveStreams;
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromFile(tempFile, null));
+            Assert.That(Yarhl.IO.DataStream.ActiveStreams, Is.EqualTo(numStreams));
             File.Delete(tempFile);
         }
 
@@ -232,7 +241,7 @@ namespace Yarhl.UnitTests.FileSystem
             string tempFile1 = Path.Combine(tempDir, "file1.bin");
             File.Create(tempFile1).Dispose();
             string tempFolder = Path.Combine(tempDir, "folder");
-            Directory.CreateDirectory(tempFolder);
+            Assert.That(Directory.CreateDirectory(tempFolder).Exists, Is.True);
             string tempFile2 = Path.Combine(tempFolder, "file2.txt");
             File.Create(tempFile2).Dispose();
 
