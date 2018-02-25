@@ -6,9 +6,11 @@ packages/
 nuget.exe
 testrunner/
 .addins
+*.vs
 
 TestResult.xml
 gendarme_*_report.html
 StyleCopViolations.xml
 StyleCop.Cache
 coverage-report/
+opencoverCoverage.xml
