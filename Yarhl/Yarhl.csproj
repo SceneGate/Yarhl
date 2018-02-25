@@ -6,7 +6,7 @@
     <ProjectGuid>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Yarhl</RootNamespace>
-    <AssemblyName>yarhl</AssemblyName>
+    <AssemblyName>Yarhl</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>

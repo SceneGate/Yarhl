@@ -18,13 +18,13 @@ before_build:
 - cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
 
 build:
-  project: yarhl.sln
+  project: Yarhl.sln
 
 after_test:
 - ps: >-
     $opencover = (Resolve-Path "testrunner/OpenCover.*/tools/OpenCover.Console.exe").ToString()
 
-    & $opencover -register:user -target:nunit3-console.exe -targetargs:yarhl.UnitTests\bin\Debug\yarhl.UnitTests.dll -filter:"+[yarhl*]* -[yarhl.UnitTests*]*" -output:opencoverCoverage.xml
+    & $opencover -register:user -target:nunit3-console.exe -targetargs:Yarhl.UnitTests\bin\Debug\Yarhl.UnitTests.dll -filter:"+[Yarhl*]* -[Yarhl.UnitTests*]*" -output:opencoverCoverage.xml
 
     $env:APPVEYOR_BUILD_NUMBER
 
@@ -37,6 +37,6 @@ after_test:
 
     MSBuild.SonarQube.Runner.exe begin /k:"yarhl" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
 
-    msbuild /t:Rebuild "yarhl.sln"
+    msbuild /t:Rebuild "Yarhl.sln"
 
     MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"

@@ -64,7 +64,7 @@ namespace Yarhl.Media.Text
         /// Gets the format name.
         /// </summary>
         /// <value>The format name.</value>
-        public override string Name => "yarhl.common.po";
+        public override string Name => "Yarhl.common.po";
 
         /// <summary>
         /// Gets or sets the header.

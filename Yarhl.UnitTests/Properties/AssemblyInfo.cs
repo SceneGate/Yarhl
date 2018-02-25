@@ -21,8 +21,8 @@
 using System.Reflection;
 using Mono.Addins;
 
-[assembly: AssemblyTitle("yarhl.UnitTests")]
-[assembly: AssemblyDescription("Unit tests for yarhl library")]
+[assembly: AssemblyTitle("Yarhl.UnitTests")]
+[assembly: AssemblyDescription("Unit tests for Yarhl library")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
@@ -32,5 +32,5 @@ using Mono.Addins;
 [assembly: AssemblyVersion("1.0.*")]
 
 // Mono.Addins
-[assembly: Addin("yarhl.UnitTests", "1.0")]
-[assembly: AddinDependency("yarhl", "1.0")]
+[assembly: Addin("Yarhl.UnitTests", "1.0")]
+[assembly: AddinDependency("Yarhl", "1.0")]

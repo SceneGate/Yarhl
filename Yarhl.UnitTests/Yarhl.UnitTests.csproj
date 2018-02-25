@@ -8,7 +8,7 @@
     <ProjectGuid>{3525724C-57EC-4C84-ABFC-95780009A304}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
-    <AssemblyName>yarhl.UnitTests</AssemblyName>
+    <AssemblyName>Yarhl.UnitTests</AssemblyName>
     <ReleaseVersion>1.0</ReleaseVersion>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
@@ -82,13 +82,13 @@
     <Compile Include="Media\Text\XmlExtensionTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\yarhl\yarhl.csproj">
+    <ProjectReference Include="..\Yarhl\Yarhl.csproj">
       <Project>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</Project>
-      <Name>yarhl</Name>
+      <Name>Yarhl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\yarhl.Media\yarhl.Media.csproj">
+    <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj">
       <Project>{D518538F-7B50-41A0-839C-C1D6A287DFA3}</Project>
-      <Name>yarhl.Media</Name>
+      <Name>Yarhl.Media</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

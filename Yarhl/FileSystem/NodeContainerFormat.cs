@@ -51,7 +51,7 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <value>The format name.</value>
         public override string Name {
-            get { return "yarhl.common.nodecontainer"; }
+            get { return "Yarhl.common.nodecontainer"; }
         }
 
         /// <summary>

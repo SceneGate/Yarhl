@@ -1,6 +1,6 @@
 ## Travis CI Integration
 language: csharp
-solution: yarhl.sln
+solution: Yarhl.sln
 
 matrix:
   include:
@@ -12,10 +12,10 @@ matrix:
       mono: latest
 
 install:
-    - nuget restore yarhl.sln
+    - nuget restore Yarhl.sln
     - nuget install NUnit.Runners -OutputDirectory testrunner
 
 script:
     - msbuild mono-addins/Mono.Addins/Mono.Addins.csproj
-    - msbuild yarhl.sln
-    - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe yarhl.UnitTests/bin/Debug/yarhl.UnitTests.dll
+    - msbuild Yarhl.sln
+    - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe Yarhl.UnitTests/bin/Debug/Yarhl.UnitTests.dll

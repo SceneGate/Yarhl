@@ -29,17 +29,17 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Mono.Addins;
 
-[assembly: AssemblyTitle("yarhl")]
+[assembly: AssemblyTitle("Yarhl")]
 [assembly: AssemblyDescription("ROM Hacking library")]
-[assembly: AssemblyCompany("yarhl development team")]
-[assembly: AssemblyProduct("yarhl")]
+[assembly: AssemblyCompany("Yarhl development team")]
+[assembly: AssemblyProduct("Yarhl")]
 [assembly: AssemblyCopyright("Copyright (c) 2017 Benito Palacios (aka pleonex)")]
 [assembly: Guid("cf6865f7-7161-41c5-92b8-46049634bc23")]
 [assembly: AssemblyVersion("1.0.0.*")]
 [assembly: AssemblyFileVersion("1.0.0")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]
-[assembly: InternalsVisibleTo("yarhl.UnitTests")]
+[assembly: InternalsVisibleTo("Yarhl.UnitTests")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
@@ -47,4 +47,4 @@ using Mono.Addins;
 [assembly: AssemblyConfiguration("Release")]
 #endif
 
-[assembly: AddinRoot("yarhl", "1.0")]
+[assembly: AddinRoot("Yarhl", "1.0")]

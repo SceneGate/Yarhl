@@ -7,7 +7,7 @@ echo '^Yarhl\.[^U][\.A-Za-z0-9`]+$' > $NUNIT.covcfg
 
 # From https://github.com/inorton/XR.Baboon/
 echo 'Running covem'
-covem $NUNIT yarhl.UnitTests/bin/Debug/yarhl.UnitTests.dll --process:Single > /dev/null
+covem $NUNIT Yarhl.UnitTests/bin/Debug/Yarhl.UnitTests.dll --process:Single > /dev/null
 
 echo 'Getting results'
 MATCHED=`sqlite3 $NUNIT.covcfg.covdb "select count(hits) from lines;"`

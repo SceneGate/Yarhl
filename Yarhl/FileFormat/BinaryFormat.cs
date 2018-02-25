@@ -74,7 +74,7 @@ namespace Yarhl.FileFormat
         /// </summary>
         /// <value>The format name.</value>
         public override string Name {
-            get { return "yarhl.common.binary"; }
+            get { return "Yarhl.common.binary"; }
         }
 
         /// <summary>

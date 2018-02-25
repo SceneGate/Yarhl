@@ -29,16 +29,16 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Mono.Addins;
 
-[assembly: AssemblyTitle("yarhl.Media")]
+[assembly: AssemblyTitle("Yarhl.Media")]
 [assembly: AssemblyDescription("Media formats for Yarhl")]
-[assembly: AssemblyCompany("yarhl development team")]
-[assembly: AssemblyProduct("yarhl")]
+[assembly: AssemblyCompany("Yarhl development team")]
+[assembly: AssemblyProduct("Yarhl")]
 [assembly: AssemblyCopyright("Copyright (c) 2017 Benito Palacios (aka pleonex)")]
 [assembly: AssemblyVersion("1.0.0.*")]
 [assembly: AssemblyFileVersion("1.0.0")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]
-[assembly: InternalsVisibleTo("yarhl.UnitTests")]
+[assembly: InternalsVisibleTo("Yarhl.UnitTests")]
 
 #if DEBUG
 [assembly: AssemblyConfiguration("Debug")]
@@ -47,5 +47,5 @@ using Mono.Addins;
 #endif
 
 // Mono.Addins
-[assembly: Addin("yarhl.Media", "1.0")]
-[assembly: AddinDependency("yarhl", "1.0")]
+[assembly: Addin("Yarhl.Media", "1.0")]
+[assembly: AddinDependency("Yarhl", "1.0")]
