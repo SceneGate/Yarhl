@@ -78,20 +78,6 @@ namespace Yarhl.UnitTests
         }
 
         [Test]
-        public void DisposeInMultiThreadDoesNotThrowException()
-        {
-            var task1 = Task.Run(
-                () => Assert.That(PluginManager.Instance.Dispose, Throws.Nothing));
-            var task2 = Task.Run(
-                () => Assert.That(PluginManager.Instance.Dispose, Throws.Nothing));
-            var task3 = Task.Run(
-                () => Assert.That(PluginManager.Instance.FindExtensions<Format>, Throws.Nothing));
-            var task4 = Task.Run(
-                () => Assert.That(PluginManager.Instance.Dispose, Throws.Nothing));
-            Task.WaitAll(task1, task2, task3, task4);
-        }
-
-        [Test]
         public void FindExtensionByGenericType()
         {
             var extensions = PluginManager.Instance
