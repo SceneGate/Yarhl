@@ -57,58 +57,31 @@ namespace Yarhl.FileFormat
         /// </summary>
         /// <returns>The new format.</returns>
         /// <param name="source">Format to convert.</param>
-        /// <param name="dstType">Destination format type.</param>
-        /// <typeparam name="TSrc">The type of the source format.</typeparam>
-        public static dynamic ConvertFrom<TSrc>(TSrc source, Type dstType)
-        {
-            return Convert(typeof(TSrc), source, dstType);
-        }
-
-        /// <summary>
-        /// Converts the format to the specified type.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="source">Format to convert.</param>
         /// <typeparam name="TDst">The destination format type.</typeparam>
         public static TDst ConvertTo<TDst>(dynamic source)
         {
-            return Convert(source.GetType(), source, typeof(TDst));
+            return ConvertTo(typeof(TDst), source);
         }
 
-        /// <summary>
-        /// Converts the format to the specified type.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="source">Format to convert.</param>
-        /// <param name="dstType">The destination format type.</param>
-        public static dynamic ConvertTo(dynamic source, Type dstType)
+        public static TDst ConvertTo<TDst, TSrc>(TSrc source)
         {
-            return Convert(source.GetType(), source, dstType);
+            return ConvertTo(typeof(TDst), source);
         }
 
         /// <summary>
         /// Converts the format into the specified type.
         /// </summary>
         /// <returns>The new format.</returns>
-        /// <param name="source">Format to convert.</param>
-        /// <typeparam name="TSrc">The source format type.</typeparam>
-        /// <typeparam name="TDst">The destination format type.</typeparam>
-        public static TDst Convert<TSrc, TDst>(TSrc source)
-        {
-            return Convert(typeof(TSrc), source, typeof(TDst));
-        }
-
-        /// <summary>
-        /// Converts the format into the specified type.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="srcType">Type of the format to convert.</param>
-        /// <param name="src">Format to convert.</param>
         /// <param name="dstType">Type of the destination format.</param>
-        public static dynamic Convert(Type srcType, dynamic src, Type dstType)
+        /// <param name="src">Format to convert.</param>
+        public static dynamic ConvertTo(Type dstType, dynamic src)
         {
+            if (dstType == null)
+                throw new ArgumentNullException(nameof(dstType));
+
             // Search the converter for the giving types and create an instance
             dynamic converter;
+            Type srcType = src.GetType();
             try {
                 var converterType = PluginManager.Instance
                     .FindExtensions(typeof(IConverter<,>))
@@ -121,7 +94,7 @@ namespace Yarhl.FileFormat
                 converter = Activator.CreateInstance(converterType);
             } catch (InvalidOperationException ex) {
                 throw new InvalidOperationException(
-                    "No single converter for " + srcType + " -> " + dstType,
+                    $"No single converter for: {srcType} -> {dstType}",
                     ex);
             } catch (System.Reflection.TargetInvocationException ex) {
                 throw new InvalidOperationException(
@@ -138,26 +111,53 @@ namespace Yarhl.FileFormat
         }
 
         /// <summary>
-        /// Converts the format using the specified converter.
+        /// Converts the format using the specified converter type.
         /// </summary>
         /// <returns>The new format.</returns>
-        /// <param name="src">Format to convert.</param>
-        /// <param name="converter">Convert to use.</param>
-        /// <typeparam name="T">The type of the destination format type.</typeparam>
-        public static T ConvertWith<T>(dynamic src, dynamic converter)
+        /// <param name="source">Format to converter.</param>
+        /// <typeparam name="TConv">Type of the converter.</typeparam>
+        /// <typeparam name="TSrc">Type of the source format.</typeparam>
+        /// <typeparam name="TDst">Type of the destination format.</typeparam>
+        public static TDst ConvertWith<TConv, TSrc, TDst>(TSrc source)
+            where TConv : IConverter<TSrc, TDst>, new()
         {
-            return Format.ConvertWith(src, typeof(T), converter);
+            TConv converter = new TConv();
+            return converter.Convert(source);
         }
 
         /// <summary>
         /// Converts the format using the specified converter.
         /// </summary>
         /// <returns>The new format.</returns>
+        /// <param name="converter">Convert to use.</param>
+        /// <param name="src">Format to convert.</param>
+        /// <typeparam name="TSrc">Type of the source format.</typeparam>
+        /// <typeparam name="TDst">The type of the destination format type.</typeparam>
+        public static TDst ConvertWith<TSrc, TDst>(
+            IConverter<TSrc, TDst> converter,
+            TSrc src)
+        {
+            if (converter == null)
+                throw new ArgumentNullException(nameof(converter));
+
+            return converter.Convert(src);
+        }
+
+        /// <summary>
+        /// Converts the format using the specified converter.
+        /// </summary>
+        /// <returns>The new format.</returns>
+        /// <param name="converter">Converter to use.</param>
         /// <param name="src">Format to convert.</param>
         /// <param name="dstType">Type of the destination format.</param>
-        /// <param name="converter">Converter to use.</param>
-        public static dynamic ConvertWith(dynamic src, Type dstType, dynamic converter)
+        public static object ConvertWith(dynamic converter, dynamic src, Type dstType)
         {
+            if (converter == null)
+                throw new ArgumentNullException(nameof(converter));
+
+            if (dstType == null)
+                throw new ArgumentNullException(nameof(dstType));
+
             Type[] converterInterfaces = converter.GetType().GetInterfaces();
             bool implementConverter = converterInterfaces.Any(i =>
                 i.IsGenericType &&
@@ -184,13 +184,13 @@ namespace Yarhl.FileFormat
         /// Converts into the specified type.
         /// </summary>
         /// <returns>The new format.</returns>
-        /// <typeparam name="T">The type of the destination format.</typeparam>
-        public T ConvertTo<T>()
+        /// <typeparam name="TDst">The type of the destination format.</typeparam>
+        public TDst ConvertTo<TDst>()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Format));
 
-            return ConvertTo<T>(this);
+            return ConvertTo<TDst>(this);
         }
 
         /// <summary>
@@ -203,7 +203,20 @@ namespace Yarhl.FileFormat
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Format));
 
-            return ConvertTo(this, dstType);
+            if (dstType == null)
+                throw new ArgumentNullException(nameof(dstType));
+
+            return ConvertTo(dstType, this);
+        }
+
+        public TDst ConvertWith<TConv, TSrc, TDst>()
+            where TSrc : Format
+            where TConv : IConverter<TSrc, TDst>, new()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Format));
+
+            return ConvertWith<TConv, TSrc, TDst>((TSrc)this);
         }
 
         /// <summary>
@@ -211,13 +224,32 @@ namespace Yarhl.FileFormat
         /// </summary>
         /// <returns>The new format.</returns>
         /// <param name="converter">Converter to use.</param>
-        /// <typeparam name="T">The type of the destination format.</typeparam>
-        public T ConvertWith<T>(dynamic converter)
+        /// <typeparam name="TSrc">The type of the current format.</typeparam>
+        /// <typeparam name="TDst">The type of the destination format.</typeparam>
+        public TDst ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst> converter)
+            where TSrc : Format
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Format));
 
-            return ConvertWith<T>(this, converter);
+            if (converter == null)
+                throw new ArgumentNullException(nameof(converter));
+
+            return ConvertWith(converter, (TSrc)this);
+        }
+
+        public dynamic ConvertWith(dynamic converter, Type dstType)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Format));
+
+            if (converter == null)
+                throw new ArgumentNullException(nameof(converter));
+
+            if (dstType == null)
+                throw new ArgumentNullException(nameof(dstType));
+
+            return ConvertWith(converter, this, dstType);
         }
 
         /// <summary>

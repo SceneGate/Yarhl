@@ -22,11 +22,12 @@ namespace Yarhl.FileSystem
 {
     using System;
     using FileFormat;
+    using IO;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavegableNode<Node>, IDisposable
+    public class Node : NavegableNode<Node>
     {
         Format format;
 
@@ -51,25 +52,6 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Finalizes an instance of the <see cref="Node"/> class.
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Node"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~Node()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Format"/> is disposed.
-        /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        public bool Disposed {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Gets or sets the current format of the node.
         /// </summary>
         /// <value>The current format.</value>
@@ -86,12 +68,17 @@ namespace Yarhl.FileSystem
                 if (IsContainer)
                     RemoveChildren();
 
+                format?.Dispose();
                 format = value;
 
                 // If now it's a container, add its children
                 if (IsContainer)
                     AddContainerChildren();
             }
+        }
+
+        public DataStream Stream {
+            get { return GetFormatAs<BinaryFormat>()?.Stream; }
         }
 
         /// <summary>
@@ -110,6 +97,9 @@ namespace Yarhl.FileSystem
         public T GetFormatAs<T>()
             where T : Format
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
             return Format as T;
         }
 
@@ -118,11 +108,8 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>This node.</returns>
         /// <param name="dst">Format to convert.</param>
-        /// <param name="disposeOldFormat">
-        /// If set to <c>true</c> dispose the previous format.
-        /// </param>
         /// <param name="converter">The format converter to use.</param>
-        public Node Transform(Type dst, bool disposeOldFormat = true, dynamic converter = null)
+        public Node Transform(Type dst, dynamic converter = null)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -132,16 +119,10 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            Format newFormat;
             if (converter == null)
-                newFormat = Format.ConvertTo(dst);
+                Format = (Format)Format.ConvertTo(dst);
             else
-                newFormat = FileFormat.Format.ConvertWith(Format, dst, converter);
-
-            if (disposeOldFormat)
-                Format.Dispose();
-
-            Format = newFormat;
+                Format = (Format)Format.ConvertWith(converter, dst);
 
             return this;
         }
@@ -150,53 +131,60 @@ namespace Yarhl.FileSystem
         /// Transforms the node format to the specified format.
         /// </summary>
         /// <returns>This node.</returns>
-        /// <param name="disposeOldFormat">
-        /// If set to <c>true</c> dispose the previous format.
-        /// </param>
-        /// <param name="converter">The format converter to use.</param>
         /// <typeparam name="T">The new node format.</typeparam>
-        public Node Transform<T>(bool disposeOldFormat = true, dynamic converter = null)
+        public Node Transform<T>()
             where T : Format
         {
-            return Transform(typeof(T), disposeOldFormat, converter);
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            Format = Format.ConvertTo<T>(Format);
+            return this;
         }
 
         /// <summary>
         /// Transform the node format to another format with a converter of that type.
         /// </summary>
         /// <returns>This node.</returns>
-        /// <param name="disposeOldFormat">
-        /// If set to <c>true</c> dispose the previous format.
-        /// </param>
+        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
         /// <typeparam name="TSrc">The type of the current format.</typeparam>
         /// <typeparam name="TDst">The type of the new format.</typeparam>
-        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
-        public Node Transform<TSrc, TDst, TConv>(bool disposeOldFormat = true)
+        public Node Transform<TConv, TSrc, TDst>()
             where TSrc : Format
             where TDst : Format
             where TConv : IConverter<TSrc, TDst>, new()
         {
-            return Transform<TDst>(disposeOldFormat, new TConv());
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            Format = Format.ConvertWith<TConv, TSrc, TDst>();
+            return this;
         }
 
-        /// <summary>
-        /// Removes all the children from the node.
-        /// </summary>
-        public override void RemoveChildren()
+        public Node Transform<TSrc, TDst>(IConverter<TSrc, TDst> converter)
+            where TSrc : Format
+            where TDst : Format
         {
-            foreach (var child in Children)
-                child.Dispose();
-            base.RemoveChildren();
-        }
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
 
-        /// <summary>
-        /// Releases all resource used by the <see cref="Node"/>
-        /// object.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);              // Dispose me everything (L)
-            GC.SuppressFinalize(this);  // Don't dispose again!
+            if (Format == null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            Format = Format.ConvertWith(converter);
+            return this;
         }
 
         /// <summary>
@@ -205,16 +193,11 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
         /// managed resources also.</param>
-        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        protected override void Dispose(bool freeManagedResourcesAlso)
         {
-            if (Disposed)
-                return;
-
-            Disposed = true;
-
+            base.Dispose(freeManagedResourcesAlso);
             if (freeManagedResourcesAlso) {
                 format?.Dispose();
-                RemoveChildren();
             }
         }
 

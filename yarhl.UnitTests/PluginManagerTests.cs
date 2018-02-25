@@ -28,12 +28,13 @@ namespace Yarhl.UnitTests
     using System;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using FileFormat;
     using Mono.Addins;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
-    [TestFixture]
+    [TestFixture, SingleThreaded]
     public class PluginManagerTests
     {
         public interface IDummyExtensionPoint<T>

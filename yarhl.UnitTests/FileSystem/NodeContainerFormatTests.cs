@@ -56,12 +56,13 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void AddAfterDisposeDoesNotThrowException()
+        public void AddAfterDisposeThrowsException()
         {
             NodeContainerFormat format = CreateDummyFormat();
             format.Dispose();
             Node child = new Node("Child");
-            Assert.DoesNotThrow(() => format.Root.Add(child));
+            Assert.Throws<ObjectDisposedException>(
+                () => format.Root.Add(child));
         }
 
         [Test]

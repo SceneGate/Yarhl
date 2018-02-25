@@ -1054,6 +1054,27 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteToFileCreatesParentFolder()
+        {
+            string tempFile = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetRandomFileName(),
+                Path.GetRandomFileName());
+
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteTo(tempFile);
+
+            DataStream fileStream = new DataStream(tempFile, FileOpenMode.Read);
+            Assert.That(() => stream.Compare(fileStream), Is.True);
+
+            fileStream.Dispose();
+            File.Delete(tempFile);
+            stream.Dispose();
+        }
+
+        [Test]
         public void WriteToNullFile()
         {
             DataStream stream1 = new DataStream();

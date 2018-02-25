@@ -58,6 +58,9 @@ namespace Yarhl.FileSystem
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
 
+            // Replace wrong slashes to support native Windows paths
+            path = path.Replace("\\", NodeSystem.PathSeparator);
+
             string[] parentNames = path.Split(
                 new[] { NodeSystem.PathSeparator[0] },
                 StringSplitOptions.RemoveEmptyEntries);
@@ -74,6 +77,11 @@ namespace Yarhl.FileSystem
             }
 
             currentNode.Add(child);
+        }
+
+        public static Node FromMemory(string name)
+        {
+            return new Node(name, new BinaryFormat());
         }
 
         /// <summary>
@@ -95,12 +103,10 @@ namespace Yarhl.FileSystem
         /// <param name="nodeName">Node name.</param>
         public static Node FromFile(string filePath, string nodeName)
         {
-            // The basestream won't be disposed since the BinaryFormat creates a substream
+            // We need to catch if the node creation fails
+            // for instance for null names, to dispose the stream.
+            var format = new BinaryFormat(filePath);
             Node node;
-            BinaryFormat format;
-            using (DataStream stream = new DataStream(filePath, FileOpenMode.ReadWrite))
-                format = new BinaryFormat(stream);
-
             try {
                 node = new Node(nodeName, format);
             } catch {
@@ -130,11 +136,24 @@ namespace Yarhl.FileSystem
         /// <param name="dirPath">Directory path.</param>
         /// <param name="filter">Filter for files in directory.</param>
         /// <param name="nodeName">Node name.</param>
-        public static Node FromDirectory(string dirPath, string filter, string nodeName)
+        /// <param name="subDirectories">
+        /// If <c>true</c> it searchs recursively in subdirectories.
+        /// </param>
+        public static Node FromDirectory(
+            string dirPath,
+            string filter,
+            string nodeName,
+            bool subDirectories = false)
         {
+            var options = subDirectories ?
+                SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
             Node folder = CreateContainer(nodeName);
-            foreach (string filePath in Directory.GetFiles(dirPath, filter))
-                folder.Add(FromFile(filePath));
+            foreach (string filePath in Directory.GetFiles(dirPath, filter, options)) {
+                string relParent = Path.GetDirectoryName(filePath)
+                                       .Replace(dirPath, string.Empty);
+                CreateContainersForChild(folder, relParent, FromFile(filePath));
+            }
 
             return folder;
         }

@@ -80,10 +80,19 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void CreateFromFileAndNullName()
+        public void CreateFromFileAndNullNameThrowsException()
         {
             string tempFile = Path.GetTempFileName();
             Assert.Throws<ArgumentNullException>(() => NodeFactory.FromFile(tempFile, null));
+            File.Delete(tempFile);
+        }
+
+        public void CreateFromFileDisposeFormatsIfFails()
+        {
+            string tempFile = Path.GetTempFileName();
+            int numStreams = Yarhl.IO.DataStream.ActiveStreams;
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromFile(tempFile, null));
+            Assert.That(Yarhl.IO.DataStream.ActiveStreams, Is.EqualTo(numStreams));
             File.Delete(tempFile);
         }
 
@@ -125,6 +134,27 @@ namespace Yarhl.UnitTests.FileSystem
 
             node.Dispose();
 
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
+        public void CreateFromDirectoryWithFilesAndFolders()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile = Path.Combine(tempDir, Path.GetRandomFileName());
+            File.Create(tempFile).Dispose();
+            string tempFolder = Path.Combine(tempDir, Path.GetRandomFileName());
+            Directory.CreateDirectory(tempFolder);
+
+            Node node = NodeFactory.FromDirectory(tempDir);
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.IsTrue(node.IsContainer);
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile)));
+
+            node.Dispose();
             Directory.Delete(tempDir, true);
         }
 
@@ -203,6 +233,34 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CreateFromDirectoryWithSubfolders()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, "file1.bin");
+            File.Create(tempFile1).Dispose();
+            string tempFolder = Path.Combine(tempDir, "folder");
+            Assert.That(Directory.CreateDirectory(tempFolder).Exists, Is.True);
+            string tempFile2 = Path.Combine(tempFolder, "file2.txt");
+            File.Create(tempFile2).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir, "*", "MyDir", true);
+            Assert.AreEqual("MyDir", node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.That(node.Children["file1.bin"], Is.Not.Null);
+            Assert.That(node.Children["folder"], Is.Not.Null);
+            Assert.That(node.Children["folder"].Children.Count, Is.EqualTo(1));
+            Assert.That(node.Children["folder"].Children["file2.txt"], Is.Not.Null);
+            Assert.That(
+                node.Children["folder"].Children["file2.txt"].Path,
+                Is.EqualTo("/MyDir/folder/file2.txt"));
+
+            node.Dispose();
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
         public void CreateFromDirectoryDoesNotExist()
         {
             Assert.Throws<DirectoryNotFoundException>(() =>
@@ -242,6 +300,22 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreEqual(1, root.Children[0].Children[0].Children.Count);
             Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
             Assert.AreEqual("/root/parent1/parent2/child", child.Path);
+        }
+
+        [Test]
+        public void CreateContainerWithWindowsPaths()
+        {
+            Node root = new Node("root");
+            string path = @"\parent1\parent2\";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.That(root.Children["parent1"], Is.Not.Null);
+            Assert.That(root.Children["parent1"].Children["parent2"], Is.Not.Null);
+            Assert.That(
+                root.Children["parent1"].Children["parent2"].Children["child"],
+                Is.EqualTo(child));
+            Assert.That(child.Path, Is.EqualTo("/root/parent1/parent2/child"));
         }
 
         [Test]
@@ -344,6 +418,27 @@ namespace Yarhl.UnitTests.FileSystem
 
             Assert.Throws<ArgumentNullException>(() =>
                 NodeFactory.CreateContainersForChild(root, path, child));
+        }
+
+        [Test]
+        public void CreateFromMemory()
+        {
+            Node node = NodeFactory.FromMemory("node");
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
+            Assert.That(node.Stream, Is.Not.Null);
+            Assert.That(node.Stream.BaseStream, Is.TypeOf<MemoryStream>());
+        }
+
+        [Test]
+        public void CreateFromMemoryWithInvalidNameThrowsException()
+        {
+            Assert.That(
+                () => NodeFactory.FromMemory(null),
+                Throws.TypeOf<ArgumentNullException>());
+            Assert.That(
+                () => NodeFactory.FromMemory(string.Empty),
+                Throws.TypeOf<ArgumentNullException>());
         }
     }
 }

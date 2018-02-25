@@ -45,9 +45,12 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void ExceptionIfNullName()
+        public void ExceptionIfInvalidName()
         {
             Assert.Throws<ArgumentNullException>(() => new DummyNavegable(null));
+            Assert.That(
+                () => new DummyNavegable(string.Empty),
+                Throws.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -141,6 +144,26 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void ReplaceDisposePreviousChild()
+        {
+            var child1 = new DummyNavegable("MyChild1");
+            var child2 = new DummyNavegable("MyChild1");
+            var parent = new DummyNavegable("MyParent");
+
+            parent.Add(child1);
+            Assert.AreEqual(1, parent.Children.Count);
+            Assert.AreSame(child1, parent.Children[0]);
+            Assert.That(child1.Disposed, Is.False);
+
+            parent.Add(child2);
+            Assert.AreEqual(1, parent.Children.Count);
+            Assert.AreSame(child2, parent.Children[0]);
+            Assert.AreNotSame(child1, parent.Children[0]);
+            Assert.That(child1.Disposed, Is.True);
+            Assert.That(child2.Disposed, Is.False);
+        }
+
+        [Test]
         public void AddAllChildren()
         {
             var children = new List<DummyNavegable>();
@@ -157,11 +180,33 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void AddThrowsExceptionAfterDispose()
+        {
+            var node = new DummyNavegable("MyParent");
+            DummyNavegable child = null;
+            node.Dispose();
+            Assert.That(
+                () => node.Add(child),
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
         public void AddChildrenThrowExceptionIfNull()
         {
             var node = new DummyNavegable("MyParent");
             List<DummyNavegable> children = null;
             Assert.Throws<ArgumentNullException>(() => node.Add(children));
+        }
+
+        [Test]
+        public void AddChildrenThrowsExceptionAfterDispose()
+        {
+            var node = new DummyNavegable("MyParent");
+            var children = new List<DummyNavegable> { new DummyNavegable("child") }; 
+            node.Dispose();
+            Assert.That(
+                () => node.Add(children),
+                Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
@@ -178,6 +223,92 @@ namespace Yarhl.UnitTests.FileSystem
 
             parent.RemoveChildren();
             Assert.IsEmpty(parent.Children);
+        }
+
+        [Test]
+        public void RemoveChildrenRemovesInnerChildren()
+        {
+            DummyNavegable parent = new DummyNavegable("Parent");
+            DummyNavegable child1 = new DummyNavegable("Child1");
+            DummyNavegable child2 = new DummyNavegable("Child2");
+            DummyNavegable subchild1 = new DummyNavegable("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            parent.RemoveChildren();
+            Assert.IsEmpty(parent.Children);
+            Assert.IsEmpty(child1.Children);
+        }
+
+        [Test]
+        public void RemoveChildrenDisposeChildren()
+        {
+            DummyNavegable parent = new DummyNavegable("Parent");
+            DummyNavegable child1 = new DummyNavegable("Child1");
+            DummyNavegable child2 = new DummyNavegable("Child2");
+            DummyNavegable subchild1 = new DummyNavegable("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            Assert.IsFalse(parent.Disposed);
+            Assert.IsFalse(child1.Disposed);
+            Assert.IsFalse(child2.Disposed);
+            Assert.IsFalse(subchild1.Disposed);
+
+            parent.RemoveChildren();
+            Assert.IsFalse(parent.Disposed);
+            Assert.IsTrue(child1.Disposed);
+            Assert.IsTrue(child2.Disposed);
+            Assert.IsTrue(subchild1.Disposed);
+        }
+
+        [Test]
+        public void RemoveChildrenAfterDisposeThrowsException()
+        {
+            var node = new DummyNavegable("node");
+            node.Add(new DummyNavegable("child"));
+            node.Dispose();
+            Assert.That(node.RemoveChildren, Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void DisposeChangesProperty()
+        {
+            var node = new DummyNavegable("node");
+            Assert.That(node.Disposed, Is.False);
+            node.Dispose();
+            Assert.That(node.Disposed, Is.True);
+        }
+
+        [Test]
+        public void DisposeTwiceDoesNotThrowException()
+        {
+            var node = new DummyNavegable("node");
+            node.Dispose();
+            Assert.That(node.Dispose, Throws.Nothing);
+        }
+
+        [Test]
+        public void DisposeRemoveChildrens()
+        {
+            DummyNavegable parent = new DummyNavegable("Parent");
+            DummyNavegable child1 = new DummyNavegable("Child1");
+            DummyNavegable child2 = new DummyNavegable("Child2");
+            DummyNavegable subchild1 = new DummyNavegable("Subchild1");
+            child1.Add(subchild1);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            parent.Dispose();
+            Assert.IsEmpty(parent.Children);
+            Assert.IsEmpty(child1.Children);
+
+            Assert.IsTrue(parent.Disposed);
+            Assert.IsTrue(child1.Disposed);
+            Assert.IsTrue(child2.Disposed);
+            Assert.IsTrue(subchild1.Disposed);
         }
 
         class DummyNavegable : NavegableNode<DummyNavegable>
