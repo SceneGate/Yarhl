@@ -303,6 +303,22 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CreateContainerWithWindowsPaths()
+        {
+            Node root = new Node("root");
+            string path = @"\parent1\parent2\";
+            Node child = new Node("child");
+
+            NodeFactory.CreateContainersForChild(root, path, child);
+            Assert.That(root.Children["parent1"], Is.Not.Null);
+            Assert.That(root.Children["parent1"].Children["parent2"], Is.Not.Null);
+            Assert.That(
+                root.Children["parent1"].Children["parent2"].Children["child"],
+                Is.EqualTo(child));
+            Assert.That(child.Path, Is.EqualTo("/root/parent1/parent2/child"));
+        }
+
+        [Test]
         public void CreateContainersWithEmptyParents()
         {
             Node root = new Node("root");

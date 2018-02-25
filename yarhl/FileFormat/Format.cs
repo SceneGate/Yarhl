@@ -60,7 +60,7 @@ namespace Yarhl.FileFormat
         /// <typeparam name="TDst">The destination format type.</typeparam>
         public static TDst ConvertTo<TDst>(dynamic source)
         {
-            return (TDst)ConvertTo(typeof(TDst), source);
+            return ConvertTo(typeof(TDst), source);
         }
 
         public static TDst ConvertTo<TDst, TSrc>(TSrc source)
@@ -133,7 +133,9 @@ namespace Yarhl.FileFormat
         /// <param name="src">Format to convert.</param>
         /// <typeparam name="TSrc">Type of the source format.</typeparam>
         /// <typeparam name="TDst">The type of the destination format type.</typeparam>
-        public static TDst ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst> converter, TSrc src)
+        public static TDst ConvertWith<TSrc, TDst>(
+            IConverter<TSrc, TDst> converter,
+            TSrc src)
         {
             if (converter == null)
                 throw new ArgumentNullException(nameof(converter));
@@ -240,6 +242,9 @@ namespace Yarhl.FileFormat
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Format));
+
+            if (converter == null)
+                throw new ArgumentNullException(nameof(converter));
 
             if (dstType == null)
                 throw new ArgumentNullException(nameof(dstType));

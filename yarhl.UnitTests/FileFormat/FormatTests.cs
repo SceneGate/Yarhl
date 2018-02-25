@@ -29,229 +29,6 @@ namespace Yarhl.UnitTests.FileFormat
     public class FormatTests
     {
         [Test]
-        public void Convert()
-        {
-            Assert.AreEqual(Format.ConvertTo(typeof(int), "3"), 3);
-            Assert.AreEqual(Format.ConvertTo(typeof(string), 3), "3");
-        }
-
-        [Test]
-        public void ConvertThrowsExceptionIfTwoConverters()
-        {
-            var test = new StringFormatTest("3");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                Format.ConvertTo(typeof(short), test));
-            Assert.AreEqual(
-                "No single converter for: " +
-                "Yarhl.UnitTests.FileFormat.StringFormatTest -> System.Int16",
-                ex.Message);
-        }
-
-        [Test]
-        public void ConvertThrowsExceptionIfNoConverters()
-        {
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                Format.ConvertTo(typeof(short), (short)3));
-            Assert.AreEqual(
-                "No single converter for: System.Int16 -> System.Int16",
-                ex.Message);
-        }
-
-        [Test]
-        public void ConvertThrowsExceptionIfConstructorFails()
-        {
-            var test = new StringFormatTest("3");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                Format.ConvertTo(typeof(ushort), test));
-            Assert.AreEqual("Exception in converter constructor", ex.Message);
-        }
-
-        [Test]
-        public void ConvertThrowsExceptionIfNoConstructorWithNoArgs()
-        {
-            var test = new StringFormatTest("3");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                Format.ConvertTo(typeof(long), test));
-            Assert.AreEqual(
-                "The converter has no constructor without arguments.\n" +
-                "Create the converter object and use ConvertWith<T>.",
-                ex.Message);
-        }
-
-        [Test]
-        public void ConvertThrowsExceptionIfNoPublicConstructor()
-        {
-            var test = new StringFormatTest("3");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                Format.ConvertTo(typeof(ulong), test));
-            Assert.AreEqual(
-                "The converter has no constructor without arguments.\n" +
-                "Create the converter object and use ConvertWith<T>.",
-                ex.Message);
-        }
-
-        [Test]
-        public void ConvertToBaseWithDerivedConverter()
-        {
-            // It should use the derived converter
-            // The converter will generate a derived type and will cast-down
-            // to base.
-            Base val = null;
-            Assert.DoesNotThrow(() => val = Format.ConvertTo<Base>((ushort)3));
-            Assert.IsInstanceOf<Derived>(val);
-            Assert.AreEqual(3, val.X);
-        }
-
-        [Test]
-        public void TryToConvertFromBaseWithDerivedConverter()
-        {
-            // We cannot do the inverse, from base type use the derived converter
-            Base val = new Base { X = 3 };
-            Assert.Throws<InvalidOperationException>(
-                () => Format.ConvertTo<ushort>(val));
-        }
-
-        [Test]
-        public void ConvertDerivedWithDerivedConverter()
-        {
-            // Just to validate converter, derived with derived ocnverter
-            Derived derived = null;
-            Assert.DoesNotThrow(() => derived = Format.ConvertTo<Derived>((ushort)4));
-            Assert.AreEqual(5, derived.Y);
-            Assert.AreEqual(4, derived.X);
-
-            ushort conv = 0;
-            Assert.DoesNotThrow(() => conv = Format.ConvertTo<ushort>(derived));
-            Assert.AreEqual(5, conv);
-        }
-
-        [Test]
-        public void TryToConvertToDerivedWithBase()
-        {
-            Assert.Throws<InvalidOperationException>(
-                () => Format.ConvertTo<Derived>(5));
-        }
-
-        [Test]
-        public void ConvertFromDerivedWithBase()
-        {
-            var format = new Derived { Y = 11, X = 10 };
-            int conv = 0;
-            Assert.DoesNotThrow(() => conv = Format.ConvertTo<int>(format));
-            Assert.AreEqual(15, conv);
-        }
-
-        [Test]
-        public void ConvertToGeneric()
-        {
-            Assert.AreEqual(Format.ConvertTo<int>("3"), 3);
-        }
-
-        [Test]
-        public void ConvertTo()
-        {
-            Assert.AreEqual(Format.ConvertTo(typeof(int), "3"), 3);
-        }
-
-        [Test]
-        public void ConvertGeneric()
-        {
-            Assert.AreEqual(Format.ConvertTo<int>("3"), 3);
-        }
-
-        [Test]
-        public void ConvertWithGeneric()
-        {
-            var format = new StringFormatTest("3");
-            var converter = new FormatTestDuplicatedConverter2();
-            Assert.AreEqual(Format.ConvertWith(converter, format), 3);
-        }
-
-        [Test]
-        public void ConvertWith()
-        {
-            var format = new StringFormatTest("3");
-            var converter = new FormatTestDuplicatedConverter2();
-            Assert.AreEqual(
-                Format.ConvertWith(converter, format, typeof(short)),
-                3);
-        }
-
-        [Test]
-        public void ConvertWithThrowsExceptionIfNoImplementIConverter()
-        {
-            var format = new StringFormatTest("3");
-            double converter = 0;
-            var ex = Assert.Throws<ArgumentException>(() =>
-                Format.ConvertWith(converter, format, typeof(short)));
-            Assert.AreEqual(
-                "Converter doesn't implement IConverter<,>" +
-                Environment.NewLine + "Parameter name: converter",
-                ex.Message);
-        }
-
-        [Test]
-        public void ConvertWithThrowsExceptionIfInvalidConverter()
-        {
-            var format = new StringFormatTest("3");
-            var converter = new StringFormatTest2IntFormatTestConverter();
-            var ex = Assert.Throws<ArgumentException>(() =>
-                Format.ConvertWith(converter, format, typeof(short)));
-            Assert.AreEqual(
-                "Converter cannot convert from/to the type" +
-                Environment.NewLine + "Parameter name: converter",
-                ex.Message);
-        }
-
-        [Test]
-        public void ClassConvertToGeneric()
-        {
-            var format = new StringFormatTest("3");
-            Assert.AreEqual(format.ConvertTo<int>(), 3);
-        }
-
-        [Test]
-        public void ClassConvertToGenericThrowExceptionIfDisposed()
-        {
-            var format = new StringFormatTest("3");
-            format.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => format.ConvertTo<int>());
-        }
-
-        [Test]
-        public void ClassConvertTo()
-        {
-            var format = new StringFormatTest("3");
-            Assert.AreEqual(format.ConvertTo(typeof(int)), 3);
-        }
-
-        [Test]
-        public void ClassConvertToThrowExceptionIfDisposed()
-        {
-            var format = new StringFormatTest("3");
-            format.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => format.ConvertTo(typeof(int)));
-        }
-
-        [Test]
-        public void ClassConvertWith()
-        {
-            var format = new StringFormatTest("3");
-            var converter = new FormatTestDuplicatedConverter2();
-            Assert.AreEqual(format.ConvertWith(converter), 3);
-        }
-
-        [Test]
-        public void ClassConvertWithThrowsExceptionIfDisposed()
-        {
-            var format = new StringFormatTest("3");
-            var converter = new FormatTestDuplicatedConverter2();
-            format.Dispose();
-            Assert.Throws<ObjectDisposedException>(() =>
-                format.ConvertWith(converter));
-        }
-
-        [Test]
         public void DisposeChangesDisposed()
         {
             var format = new StringFormatTest("3");
@@ -267,6 +44,342 @@ namespace Yarhl.UnitTests.FileFormat
             format.Dispose();
             Assert.DoesNotThrow(format.Dispose);
             Assert.IsTrue(format.Disposed);
+        }
+
+        [Test]
+        public void StaticGenericConvertToConverts()
+        {
+            Assert.AreEqual(Format.ConvertTo<int>("3"), 3);
+        }
+
+        [Test]
+        public void StaticTypedArgConvertToConverts()
+        {
+            Assert.That(Format.ConvertTo<int, string>("3"), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void StaticConvertToConverts()
+        {
+            Assert.AreEqual(Format.ConvertTo(typeof(int), "3"), 3);
+            Assert.AreEqual(Format.ConvertTo(typeof(string), 3), "3");
+        }
+
+         [Test]
+        public void StaticConvertToThrowsIfTypeIsNull()
+        {
+            Type dstType = null;
+            Assert.That(
+                () => Format.ConvertTo(dstType, "3"),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void StaticConvertToThrowsIfThereAreTwoEqualConverters()
+        {
+            var test = new StringFormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.ConvertTo(typeof(short), test));
+            Assert.AreEqual(
+                "No single converter for: " +
+                "Yarhl.UnitTests.FileFormat.StringFormatTest -> System.Int16",
+                ex.Message);
+        }
+
+        [Test]
+        public void StaticConvertToThrowsIfNoConverter()
+        {
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.ConvertTo(typeof(short), (short)3));
+            Assert.AreEqual(
+                "No single converter for: System.Int16 -> System.Int16",
+                ex.Message);
+        }
+
+        [Test]
+        public void StaticConvertToThrowsIfConstructorFails()
+        {
+            var test = new StringFormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.ConvertTo(typeof(ushort), test));
+            Assert.AreEqual("Exception in converter constructor", ex.Message);
+        }
+
+        [Test]
+        public void StaticConvertToThrowsExceptionIfConstructorsHaveArgs()
+        {
+            var test = new StringFormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.ConvertTo(typeof(long), test));
+            Assert.AreEqual(
+                "The converter has no constructor without arguments.\n" +
+                "Create the converter object and use ConvertWith<T>.",
+                ex.Message);
+        }
+
+        [Test]
+        public void StaticConvertToThrowsIfNoPublicConstructor()
+        {
+            var test = new StringFormatTest("3");
+            var ex = Assert.Throws<InvalidOperationException>(() =>
+                Format.ConvertTo(typeof(ulong), test));
+            Assert.AreEqual(
+                "The converter has no constructor without arguments.\n" +
+                "Create the converter object and use ConvertWith<T>.",
+                ex.Message);
+        }
+
+        [Test]
+        public void ConvertToBaseWithDerivedConverter()
+        {
+            // It should use the converter: ushort -> Derived
+            // The converter will generate a derived type and will cast-down
+            // to base.
+            Base val = null;
+            Assert.DoesNotThrow(() => val = Format.ConvertTo<Base>((ushort)3));
+            Assert.IsInstanceOf<Derived>(val);
+            Assert.AreEqual(3, val.X);
+        }
+
+        [Test]
+        public void ConvertFromBaseWithDerivedConverterThrows()
+        {
+            // We cannot do the inverse, from base type use the derived converter
+            Base val = new Base { X = 3 };
+            Assert.Throws<InvalidOperationException>(
+                () => Format.ConvertTo<ushort>(val));
+        }
+
+        [Test]
+        public void ConvertToDerivedWithDerivedConverter()
+        {
+            // Just to validate converter, derived with derived ocnverter
+            Derived derived = null;
+            Assert.DoesNotThrow(() => derived = Format.ConvertTo<Derived>((ushort)4));
+            Assert.AreEqual(5, derived.Y);
+            Assert.AreEqual(4, derived.X);
+
+            ushort conv = 0;
+            Assert.DoesNotThrow(() => conv = Format.ConvertTo<ushort>(derived));
+            Assert.AreEqual(5, conv);
+        }
+
+        [Test]
+        public void ConvertToDerivedWithBaseConverterThrows()
+        {
+            Assert.Throws<InvalidOperationException>(
+                () => Format.ConvertTo<Derived>(5));
+        }
+
+        [Test]
+        public void ConvertFromDerivedWithBaseConverter()
+        {
+            var format = new Derived { Y = 11, X = 10 };
+            int conv = 0;
+            Assert.DoesNotThrow(() => conv = Format.ConvertTo<int>(format));
+            Assert.AreEqual(15, conv);
+        }
+
+        [Test]
+        public void StaticGenericConvertiWithCreatesConverterAndConverts()
+        {
+            var format = new StringFormatTest("3");
+            Assert.That(
+                Format.ConvertWith<FormatTestDuplicatedConverter2, StringFormatTest, short>(format),
+                Is.EqualTo(3));
+        }
+
+        [Test]
+        public void StaticGenericConvertWithConverts()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.AreEqual(
+                Format.ConvertWith<StringFormatTest, short>(converter, format),
+                3);
+        }
+
+        [Test]
+        public void StaticConvertWithConverts()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.AreEqual(
+                Format.ConvertWith(converter, format, typeof(short)),
+                3);
+        }
+
+        [Test]
+        public void StaticConvertWithThrowsExceptionIfConverterIsNull()
+        {
+            TwoConvertersExample converter = null;
+            Assert.That(
+                () => Format.ConvertWith<string, int>(converter, "3"),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => Format.ConvertWith(converter, "3", typeof(int)),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void StaticConvertWithThrowsExceptionIfDstTypeIsNull()
+        {
+            var converter = new TwoConvertersExample();
+            Assert.That(
+                () => Format.ConvertWith(converter, "3", null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void StaticConvertWithThrowsExceptionIfNoImplementIConverter()
+        {
+            var format = new StringFormatTest("3");
+            double converter = 0;
+            var ex = Assert.Throws<ArgumentException>(() =>
+                Format.ConvertWith(converter, format, typeof(short)));
+            Assert.AreEqual(
+                "Converter doesn't implement IConverter<,>" +
+                Environment.NewLine + "Parameter name: converter",
+                ex.Message);
+        }
+
+        [Test]
+        public void StaticConvertWithThrowsExceptionIfInvalidConverter()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new StringFormatTest2IntFormatTestConverter();
+            var ex = Assert.Throws<ArgumentException>(() =>
+                Format.ConvertWith(converter, format, typeof(short)));
+            Assert.AreEqual(
+                "Converter cannot convert from/to the type" +
+                Environment.NewLine + "Parameter name: converter",
+                ex.Message);
+        }
+
+        [Test]
+        public void GenericConvertToConverts()
+        {
+            var format = new StringFormatTest("3");
+            Assert.AreEqual(format.ConvertTo<int>(), 3);
+        }
+
+        [Test]
+        public void GenericConvertToThrowExceptionIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => format.ConvertTo<int>());
+        }
+
+        [Test]
+        public void ConvertToConverts()
+        {
+            var format = new StringFormatTest("3");
+            Assert.AreEqual(format.ConvertTo(typeof(int)), 3);
+        }
+
+        [Test]
+        public void ConvertToThrowsIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => format.ConvertTo(typeof(int)));
+        }
+
+        [Test]
+        public void ConvertToThrowsIfDstTypeIsNull()
+        {
+            var format = new StringFormatTest("3");
+            Assert.That(() => format.ConvertTo(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void GenericConvertWithCreatesConverterAndConverts()
+        {
+            var format = new StringFormatTest("3");
+            Assert.That(
+                format.ConvertWith<FormatTestDuplicatedConverter2, StringFormatTest, short>,
+                Is.EqualTo(3));
+        }
+
+        [Test]
+        public void GenericConvertWithCreatingConverterThrowsIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            format.Dispose();
+            Assert.That(
+                format.ConvertWith<FormatTestDuplicatedConverter2, StringFormatTest, short>,
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void GenericConvertWithConverts()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.AreEqual(
+                format.ConvertWith<StringFormatTest, short>(converter),
+                3);
+        }
+
+        [Test]
+        public void GenericConvertWithThrowsIfConverterIsNull()
+        {
+            var format = new StringFormatTest("3");
+            Assert.That(
+                () => format.ConvertWith<StringFormatTest, short>(null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void GenericConvertWithThrowsIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            format.Dispose();
+            Assert.Throws<ObjectDisposedException>(() =>
+                format.ConvertWith<StringFormatTest, short>(converter));
+        }
+
+        [Test]
+        public void ConvertWithConverts()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Assert.That(
+                () => format.ConvertWith(converter, typeof(short)),
+                Is.EqualTo(3));
+        }
+
+        [Test]
+        public void ConvertWithThrowsIfDisposed()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            format.Dispose();
+            Assert.That(
+                () => format.ConvertWith(converter, typeof(short)),
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void ConvertWithThrowsIfDstTypeIsNull()
+        {
+            var format = new StringFormatTest("3");
+            var converter = new FormatTestDuplicatedConverter2();
+            Type dstType = null;
+            Assert.That(
+                () => format.ConvertWith(converter, dstType),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ConvertWithThrowsIfConverterIsNull()
+        {
+            var format = new StringFormatTest("3");
+            Assert.That(
+                () => format.ConvertWith(null, typeof(short)),
+                Throws.ArgumentNullException);
         }
 
         [Extension]

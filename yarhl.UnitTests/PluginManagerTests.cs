@@ -28,12 +28,13 @@ namespace Yarhl.UnitTests
     using System;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using FileFormat;
     using Mono.Addins;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
-    [TestFixture]
+    [TestFixture, SingleThreaded]
     public class PluginManagerTests
     {
         public interface IDummyExtensionPoint<T>
@@ -74,6 +75,20 @@ namespace Yarhl.UnitTests
             Assert.IsTrue(AddinManager.IsInitialized);
             PluginManager.Instance.Dispose();
             Assert.IsFalse(AddinManager.IsInitialized);
+        }
+
+        [Test]
+        public void DisposeInMultiThreadDoesNotThrowException()
+        {
+            var task1 = Task.Run(
+                () => Assert.That(PluginManager.Instance.Dispose, Throws.Nothing));
+            var task2 = Task.Run(
+                () => Assert.That(PluginManager.Instance.Dispose, Throws.Nothing));
+            var task3 = Task.Run(
+                () => Assert.That(PluginManager.Instance.FindExtensions<Format>, Throws.Nothing));
+            var task4 = Task.Run(
+                () => Assert.That(PluginManager.Instance.Dispose, Throws.Nothing));
+            Task.WaitAll(task1, task2, task3, task4);
         }
 
         [Test]

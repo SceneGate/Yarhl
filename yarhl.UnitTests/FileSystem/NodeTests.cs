@@ -90,12 +90,43 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformAfterDisposeThrowsException()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+            node.Dispose();
+
+            Assert.That(
+                node.Transform<IntFormatTest>,
+                Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(
+                () => node.Transform(typeof(IntFormatTest)),
+                Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(
+                node.Transform<PrivateConverter, StringFormatTest, IntFormatTest>,
+                Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(
+                () => node.Transform<StringFormatTest, IntFormatTest>(new PrivateConverter()),
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
         public void TransformWithoutFormatThrowException()
         {
+            string msg = "Cannot transform a node without format";
             Node node = new Node("mytest");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
-                node.Transform<IntFormatTest>());
-            Assert.AreEqual("Cannot transform a node without format", ex.Message);
+            Assert.That(
+                node.Transform<IntFormatTest>,
+                Throws.InvalidOperationException.With.Message.EqualTo(msg));
+            Assert.That(
+                () => node.Transform(typeof(IntFormatTest)),
+                Throws.InvalidOperationException.With.Message.EqualTo(msg));
+            Assert.That(
+                node.Transform<PrivateConverter, StringFormatTest, IntFormatTest>,
+                Throws.InvalidOperationException.With.Message.EqualTo(msg));
+            Assert.That(
+                () => node.Transform<StringFormatTest, IntFormatTest>(new PrivateConverter()),
+                Throws.InvalidOperationException.With.Message.EqualTo(msg));
         }
 
         [Test]
@@ -129,16 +160,6 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void TransformDisposesFormat()
-        {
-            Format dummyFormat = new StringFormatTest("3");
-            Node node = new Node("mytest", dummyFormat);
-            node.Transform<IntFormatTest>();
-            Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(node.Format.Disposed);
-        }
-
-        [Test]
         public void TransformWithConverterChangeFormat()
         {
             PrivateConverter converter = new PrivateConverter();
@@ -146,6 +167,18 @@ namespace Yarhl.UnitTests.FileSystem
             Node node = new Node("mytest", dummyFormat);
 
             node.Transform<StringFormatTest, IntFormatTest>(converter);
+            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            Assert.AreNotSame(dummyFormat, node.Format);
+            Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
+        }
+        
+        [Test]
+        public void TransformCreatingConverterChangeFormat()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+
+            node.Transform<PrivateConverter, StringFormatTest, IntFormatTest>();
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
@@ -176,16 +209,6 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
-        }
-
-        [Test]
-        public void TransformThrowsExceptionIfDisposed()
-        {
-            Format dummyFormat = new IntFormatTest(3);
-            Node node = new Node("mytest", dummyFormat);
-
-            node.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => node.Transform<StringFormatTest>());
         }
 
         [Test]
@@ -363,6 +386,17 @@ namespace Yarhl.UnitTests.FileSystem
             StringFormatTest format = new StringFormatTest("3");
             Node node = new Node("NodeTest", format);
             Assert.IsNull(node.GetFormatAs<IntFormatTest>());
+        }
+
+        [Test]
+        public void GetFormatAsAfterDisposeThrowsException()
+        {
+            StringFormatTest format = new StringFormatTest("3");
+            Node node = new Node("NodeTest", format);
+            node.Dispose();
+            Assert.That(
+                node.GetFormatAs<StringFormatTest>,
+                Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]

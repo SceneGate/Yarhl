@@ -229,10 +229,8 @@ namespace Yarhl.Media.Text
         static PoHeader Entry2Header(PoEntry entry)
         {
             PoHeader header = new PoHeader();
-            foreach (string line in entry.Translated.Split('\n')) {
-                if (string.IsNullOrWhiteSpace(line))
-                    continue;
-
+            var option = StringSplitOptions.RemoveEmptyEntries;
+            foreach (string line in entry.Translated.Split(new[] { '\n' }, option)) {
                 var fields = line.Split(new[] { ' ' }, 2);
                 if (fields.Length != 2)
                     throw new FormatException("Invalid format line: " + line);

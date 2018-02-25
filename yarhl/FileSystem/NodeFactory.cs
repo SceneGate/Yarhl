@@ -58,6 +58,9 @@ namespace Yarhl.FileSystem
             if (path == null)
                 throw new ArgumentNullException(nameof(path));
 
+            // Replace wrong slashes to support native Windows paths
+            path = path.Replace("\\", NodeSystem.PathSeparator);
+
             string[] parentNames = path.Split(
                 new[] { NodeSystem.PathSeparator[0] },
                 StringSplitOptions.RemoveEmptyEntries);
@@ -110,6 +113,7 @@ namespace Yarhl.FileSystem
                 format.Dispose();
                 throw;
             }
+
             return node;
         }
 
