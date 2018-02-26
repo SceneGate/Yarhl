@@ -27,6 +27,7 @@ namespace Yarhl.IO
 {
     using System;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -149,6 +150,32 @@ namespace Yarhl.IO
         public void Write(ulong val)
         {
             WriteNumber(val, 64);
+        }
+
+        /// <summary>
+        /// Write the specified 32-bits IEEE 754 single precision
+        /// floating point value.
+        /// </summary>
+        /// <param name="val">Single precision floating point value.</param>
+        public void Write(float val)
+        {
+            if (Endianness == EndiannessMode.LittleEndian)
+                Write(BitConverter.GetBytes(val));
+            else if (Endianness == EndiannessMode.BigEndian)
+                Write(BitConverter.GetBytes(val).Reverse().ToArray());
+        }
+
+        /// <summary>
+        /// Write the specified 64-bits IEEE 754 double precision
+        /// floating point value.
+        /// </summary>
+        /// <param name="val">Double precision floating point value.</param>
+        public void Write(double val)
+        {
+            if (Endianness == EndiannessMode.LittleEndian)
+                Write(BitConverter.GetBytes(val));
+            else if (Endianness == EndiannessMode.BigEndian)
+                Write(BitConverter.GetBytes(val).Reverse().ToArray());
         }
 
         /// <summary>

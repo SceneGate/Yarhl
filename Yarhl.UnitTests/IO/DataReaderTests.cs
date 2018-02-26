@@ -299,6 +299,64 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadSingleLE()
+        {
+            byte[] buffer = { 0xC3, 0xF5, 0x48, 0x40 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            Assert.That(reader.ReadSingle(), Is.EqualTo(3.14f));
+        }
+
+        [Test]
+        public void ReadSingleBE()
+        {
+            byte[] buffer = { 0xC0, 0x48, 0xF5, 0xC3 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = EndiannessMode.BigEndian;
+            Assert.That(reader.ReadSingle(), Is.EqualTo(-3.14f));
+        }
+
+        [Test]
+        public void ReadSingleInvalidEndianness()
+        {
+            byte[] buffer = { 0x40, 0x48, 0xF5, 0xC3 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = (EndiannessMode)0x100;
+            Assert.That(reader.ReadSingle(), Is.EqualTo(float.NaN));
+        }
+
+        [Test]
+        public void ReadDoubleLE()
+        {
+            byte[] buffer = { 0x1F, 0x85, 0xEB, 0x51, 0xB8, 0x1E, 0x09, 0xC0 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            Assert.That(reader.ReadDouble, Is.EqualTo(-3.14d));
+        }
+
+        [Test]
+        public void ReadDoubleBE()
+        {
+            byte[] buffer = { 0x40, 0x09, 0x1E, 0xB8, 0x51, 0xEB, 0x85, 0x1F };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = EndiannessMode.BigEndian;
+            Assert.That(reader.ReadDouble, Is.EqualTo(3.14d));
+        }
+
+        [Test]
+        public void ReadDoubleInvalidEndianness()
+        {
+            byte[] buffer = { 0x40, 0x09, 0x1E, 0xB8, 0x51, 0xEB, 0x85, 0x1F };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = (EndiannessMode)0x100;
+            Assert.That(reader.ReadDouble, Is.EqualTo(double.NaN));
+        }
+
+        [Test]
         public void ReadByteArray()
         {
             byte[] buffer = { 0xF7, 0xC6, 0xB8, 0xF3, 0xC2, 0x7F, 0x55, 0x52 };

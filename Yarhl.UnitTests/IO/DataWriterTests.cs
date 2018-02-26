@@ -301,6 +301,82 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSingleLittle()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+            writer.Endianness = EndiannessMode.LittleEndian;
+
+            writer.Write(3.14f);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(4));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xC3));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xF5));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x48));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x40));
+        }
+
+        [Test]
+        public void WriteSingleBig()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+            writer.Endianness = EndiannessMode.BigEndian;
+
+            writer.Write(-3.14f);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(4));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xC0));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x48));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xF5));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xC3));
+        }
+
+        [Test]
+        public void WriteDoubleLittle()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+            writer.Endianness = EndiannessMode.LittleEndian;
+
+            writer.Write(-3.14d);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(8));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x1F));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x85));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xEB));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x51));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xB8));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x1E));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x09));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xC0));
+        }
+
+        [Test]
+        public void WriteDoubleBig()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+            writer.Endianness = EndiannessMode.BigEndian;
+
+            writer.Write(3.14d);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(8));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x40));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x09));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x1E));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xB8));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x51));
+            Assert.That(stream.ReadByte, Is.EqualTo(0xEB));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x85));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x1F));
+        }
+
+        [Test]
         public void WriteByteArray()
         {
             DataStream stream = new DataStream();

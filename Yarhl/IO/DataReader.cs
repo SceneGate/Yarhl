@@ -28,6 +28,7 @@ namespace Yarhl.IO
     using System;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -179,6 +180,34 @@ namespace Yarhl.IO
         public long ReadInt64()
         {
             return (long)ReadUInt64();
+        }
+
+        /// <summary>
+        /// Reads a 32-bits IEEE 754 single precision floating-point number.
+        /// </summary>
+        /// <returns>The next float number.</returns>
+        public float ReadSingle()
+        {
+            if (Endianness == EndiannessMode.LittleEndian)
+                return BitConverter.ToSingle(ReadBytes(4), 0);
+            if (Endianness == EndiannessMode.BigEndian)
+                return BitConverter.ToSingle(ReadBytes(4).Reverse().ToArray(), 0);
+
+            return float.NaN;
+        }
+
+        /// <summary>
+        /// Reads a 64-bits IEEE 754 double precision floating-point number.
+        /// </summary>
+        /// <returns>The next double number.</returns>
+        public double ReadDouble()
+        {
+            if (Endianness == EndiannessMode.LittleEndian)
+                return BitConverter.ToDouble(ReadBytes(8), 0);
+            if (Endianness == EndiannessMode.BigEndian)
+                return BitConverter.ToDouble(ReadBytes(8).Reverse().ToArray(), 0);
+
+            return double.NaN;
         }
 
         /// <summary>
