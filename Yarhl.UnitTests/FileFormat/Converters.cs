@@ -84,7 +84,7 @@ namespace Yarhl.UnitTests.FileFormat
     {
     }
 
-    [Extension]
+    [Format("Yarhl.UnitTests.StringFormat")]
     public class StringFormatTest : Format
     {
         public StringFormatTest(string str)
@@ -93,13 +93,9 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         public string Value { get; private set; }
-
-        public override string Name {
-            get { return "unittest.strformat"; }
-        }
     }
 
-    [Extension]
+    [Format]
     public class IntFormatTest : Format
     {
         public IntFormatTest(int val)
@@ -108,10 +104,6 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         public int Value { get; private set; }
-
-        public override string Name {
-            get { return "unittest.intformat"; }
-        }
     }
 
     [Extension]

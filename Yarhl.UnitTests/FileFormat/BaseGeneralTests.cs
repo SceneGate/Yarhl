@@ -41,9 +41,11 @@ namespace Yarhl.UnitTests.FileFormat
 
         public void NameIsCorrect(string packageName, string formatName)
         {
-            T format = CreateDummyFormat();
-            Assert.AreEqual(packageName + "." + formatName, format.Name);
-            format.Dispose();
+            var attr = typeof(T).GetCustomAttributes(typeof(FormatAttribute), true);
+            Assert.That(attr, Has.One.Items);
+
+            var formatAttr = attr[0] as FormatAttribute;
+            Assert.That(formatAttr.Name, Is.EqualTo(packageName + "." + formatName));
         }
 
         [Test]

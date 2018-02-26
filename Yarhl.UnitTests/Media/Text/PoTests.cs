@@ -36,7 +36,7 @@ namespace Yarhl.UnitTests.Media.Text
         [Test]
         public void CorrectName()
         {
-            NameIsCorrect("Yarhl.common", "po");
+            NameIsCorrect("Yarhl.Common", "Po");
         }
 
         [Test]

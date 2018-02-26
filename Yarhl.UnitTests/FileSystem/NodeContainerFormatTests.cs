@@ -36,7 +36,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CorrectName()
         {
-            NameIsCorrect("Yarhl.common", "nodecontainer");
+            NameIsCorrect("Yarhl.Common", "NodeContainer");
         }
 
         [Test]

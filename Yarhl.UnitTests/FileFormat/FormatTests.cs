@@ -382,6 +382,28 @@ namespace Yarhl.UnitTests.FileFormat
                 Throws.ArgumentNullException);
         }
 
+        [Test]
+        public void FormatAttributeSetsName()
+        {
+            var attr = typeof(StringFormatTest)
+                .GetCustomAttributes(typeof(FormatAttribute), true);
+            Assert.That(attr, Has.One.Items);
+
+            var formatAttr = attr[0] as FormatAttribute;
+            Assert.That(formatAttr.Name, Is.EqualTo("Yarhl.UnitTests.StringFormat"));
+        }
+
+        [Test]
+        public void FormatAttributeWithoutConstructorHasNullName()
+        {
+            var attr = typeof(IntFormatTest)
+                .GetCustomAttributes(typeof(FormatAttribute), true);
+            Assert.That(attr, Has.One.Items);
+
+            var formatAttr = attr[0] as FormatAttribute;
+            Assert.That(formatAttr.Name, Is.Null);
+        }
+
         [Extension]
         public class FormatTestDuplicatedConverter1 : IConverter<StringFormatTest, short>
         {

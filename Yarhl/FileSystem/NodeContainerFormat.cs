@@ -32,7 +32,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
-    [Extension]
+    [Format("Yarhl.Common.NodeContainer")]
     public class NodeContainerFormat : Format
     {
         bool manageRoot;
@@ -44,14 +44,6 @@ namespace Yarhl.FileSystem
         {
             Root = new Node("NodeContainerRoot");
             manageRoot = true;
-        }
-
-        /// <summary>
-        /// Gets the format name.
-        /// </summary>
-        /// <value>The format name.</value>
-        public override string Name {
-            get { return "Yarhl.common.nodecontainer"; }
         }
 
         /// <summary>

@@ -27,7 +27,7 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Abstract file format.
     /// </summary>
-    [TypeExtensionPoint]
+    [TypeExtensionPoint(ExtensionAttributeType = typeof(FormatAttribute))]
     public abstract class Format : IDisposable
     {
         /// <summary>
@@ -39,12 +39,6 @@ namespace Yarhl.FileFormat
         {
             Dispose(false);
         }
-
-        /// <summary>
-        /// Gets the name of the format.
-        /// </summary>
-        /// <value>The format name.</value>
-        public abstract string Name { get; }
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="Format"/> is disposed.

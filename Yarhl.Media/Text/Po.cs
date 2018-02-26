@@ -35,7 +35,7 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Portable Object format for translations.
     /// </summary>
-    [Extension]
+    [Format("Yarhl.Common.Po")]
     public class Po : Format
     {
         readonly IList<PoEntry> entries;
@@ -59,12 +59,6 @@ namespace Yarhl.Media.Text
         {
             Header = header;
         }
-
-        /// <summary>
-        /// Gets the format name.
-        /// </summary>
-        /// <value>The format name.</value>
-        public override string Name => "Yarhl.common.po";
 
         /// <summary>
         /// Gets or sets the header.

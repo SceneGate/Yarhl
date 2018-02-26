@@ -26,7 +26,7 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Binary format.
     /// </summary>
-    [Extension]
+    [Format("Yarhl.Common.Binary")]
     public class BinaryFormat : Format
     {
         /// <summary>
@@ -67,14 +67,6 @@ namespace Yarhl.FileFormat
         public BinaryFormat(string filePath)
         {
             Stream = new DataStream(filePath, FileOpenMode.ReadWrite);
-        }
-
-        /// <summary>
-        /// Gets the format name.
-        /// </summary>
-        /// <value>The format name.</value>
-        public override string Name {
-            get { return "Yarhl.common.binary"; }
         }
 
         /// <summary>

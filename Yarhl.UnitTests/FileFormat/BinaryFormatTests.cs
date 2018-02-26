@@ -131,7 +131,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void CorrectName()
         {
-            NameIsCorrect("Yarhl.common", "binary");
+            NameIsCorrect("Yarhl.Common", "Binary");
         }
 
         protected override BinaryFormat CreateDummyFormat()

@@ -45,6 +45,7 @@
     <Compile Include="IO\DataStream.cs" />
     <Compile Include="IO\DataWriter.cs" />
     <Compile Include="FileFormat\Format.cs" />
+    <Compile Include="FileFormat\FormatAttribute.cs" />
     <Compile Include="FileFormat\IConverter.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="FileSystem\Node.cs" />
