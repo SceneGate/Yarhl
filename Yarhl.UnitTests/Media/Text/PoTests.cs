@@ -146,6 +146,73 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.Throws<ArgumentNullException>(() => po.Add((PoEntry[])null));
         }
 
+        [Test]
+        public void AddMultipleEntriesAfterDisposeThrows()
+        {
+            var po = CreateDummyFormat();
+            po.Dispose();
+            Assert.That(
+                () => po.Add(new[] { new PoEntry("t1") }),
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void FindEntryReturnsEntry()
+        {
+            var po = CreateDummyFormat();
+            var entries = new[] { new PoEntry("org1"), new PoEntry("org2") };
+            po.Add(entries);
+
+            Assert.That(po.FindEntry("org1"), Is.SameAs(entries[0]));
+            Assert.That(po.FindEntry("org2"), Is.SameAs(entries[1]));
+        }
+
+        [Test]
+        public void FindEntryWithSameOriginalDifferentContextReturnsCorrect()
+        {
+            var po = CreateDummyFormat();
+            po.Add(new PoEntry("t1") { Context = "ctx1" });
+            po.Add(new PoEntry("t1") { Context = "ctx2" });
+
+            Assert.That(po.FindEntry("t1", "ctx1"), Is.SameAs(po.Entries[0]));
+            Assert.That(po.FindEntry("t1", "ctx2"), Is.SameAs(po.Entries[1]));
+        }
+
+        [Test]
+        public void FindUnknownEntryFromIndexerReturnsNull()
+        {
+            var po = CreateDummyFormat();
+            Assert.That(po.FindEntry("unknown"), Is.Null);
+        }
+
+        [Test]
+        public void FindEntryWithSameOriginalAndUnknownContextReturnsNull()
+        {
+            var po = CreateDummyFormat();
+            po.Add(new PoEntry("t1") { Context = "ctx1" });
+            po.Add(new PoEntry("t1") { Context = "ctx2" });
+
+            Assert.That(po.FindEntry("t1", "unk"), Is.Null);
+        }
+
+        [Test]
+        public void FindEntryAfterDisposeThrows()
+        {
+            var po = CreateDummyFormat();
+            po.Dispose();
+            Assert.That(
+                () => po.FindEntry("t1"),
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void FindEntryNullOriginalThrows()
+        {
+            var po = CreateDummyFormat();
+            Assert.That(() => po.FindEntry(null), Throws.ArgumentNullException);
+            Assert.That(() => po.FindEntry(string.Empty), Throws.ArgumentNullException);
+        }
+
         protected override Po CreateDummyFormat()
         {
             return new Po();

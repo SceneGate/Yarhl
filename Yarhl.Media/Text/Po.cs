@@ -99,11 +99,32 @@ namespace Yarhl.Media.Text
         /// <param name="items">Entries to add.</param>
         public void Add(IEnumerable<PoEntry> items)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Po));
+
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
             foreach (PoEntry entry in items)
                 Add(entry);
+        }
+
+        /// <summary>
+        /// Gets a <see cref="PoEntry"/> from the original text.
+        /// </summary>
+        /// <param name="original">Original text from the entry.</param>
+        /// <param name="context">Context text from the entry.</param>
+        /// <returns>The found entry or null if not found.</returns>
+        public PoEntry FindEntry(string original, string context = null)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Po));
+
+            if (string.IsNullOrEmpty(original))
+                throw new ArgumentNullException(nameof(original));
+
+            return entries.SingleOrDefault(
+                entry => entry.Original == original && entry.Context == context);
         }
 
         void MergeEntry(PoEntry current, PoEntry newEntry)
