@@ -320,7 +320,7 @@ namespace Yarhl.IO
             if (maxSize != -1 && textSize > maxSize)
                 textSize = maxSize;
 
-            Write(sizeType, textSize);
+            WriteOfType(sizeType, textSize);
             Write(text, textSize, nullTerminator, encoding);
         }
 
@@ -333,7 +333,7 @@ namespace Yarhl.IO
         /// The supported types are: long, ulong, int, uint, short, ushort, byte, sbyte,
         /// char and string.
         /// </remarks>
-        public void Write(Type type, dynamic val)
+        public void WriteOfType(Type type, dynamic val)
         {
             if (val == null)
                 throw new ArgumentNullException(nameof(val));
@@ -364,6 +364,16 @@ namespace Yarhl.IO
                 Write((string)val);
             else
                 throw new FormatException("Unsupported type");
+        }
+
+        /// <summary>
+        /// Write the specified value forcing the type in the generic.
+        /// </summary>
+        /// <param name="val">Value to write.</param>
+        /// <typeparam name="T">The type of the value.</typeparam>
+        public void WriteOfType<T>(T val)
+        {
+            WriteOfType(typeof(T), val);
         }
 
         /// <summary>

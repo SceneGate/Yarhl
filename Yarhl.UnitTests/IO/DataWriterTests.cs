@@ -713,17 +713,56 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            writer.Write(typeof(long), "3");
-            writer.Write(typeof(ulong), 2);
-            writer.Write(typeof(int), 1);
-            writer.Write(typeof(uint), 4);
-            writer.Write(typeof(short), 5);
-            writer.Write(typeof(ushort), 6);
-            writer.Write(typeof(byte), 7);
-            writer.Write(typeof(sbyte), 8);
-            writer.Write(typeof(string), 9);
-            writer.Write(typeof(char), 'a');
-            writer.Write(typeof(string), "8");
+            writer.WriteOfType(typeof(long), "3");
+            writer.WriteOfType(typeof(ulong), 2);
+            writer.WriteOfType(typeof(int), 1);
+            writer.WriteOfType(typeof(uint), 4);
+            writer.WriteOfType(typeof(short), 5);
+            writer.WriteOfType(typeof(ushort), 6);
+            writer.WriteOfType(typeof(byte), 7);
+            writer.WriteOfType(typeof(sbyte), 8);
+            writer.WriteOfType(typeof(string), 9);
+            writer.WriteOfType(typeof(char), 'a');
+            writer.WriteOfType(typeof(string), "8");
+
+            byte[] expected = {
+                0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x01, 0x00, 0x00, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+                0x05, 0x00,
+                0x06, 0x00,
+                0x07,
+                0x08,
+                0x39, 0x00,
+                0x61,
+                0x38, 0x00
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteGenericObject()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<long>(3);
+            writer.WriteOfType<ulong>(2);
+            writer.WriteOfType<int>(1);
+            writer.WriteOfType<uint>(4);
+            writer.WriteOfType<short>(5);
+            writer.WriteOfType<ushort>(6);
+            writer.WriteOfType<byte>(7);
+            writer.WriteOfType<sbyte>(8);
+            writer.WriteOfType<string>("9");
+            writer.WriteOfType<char>('a');
+            writer.WriteOfType<string>("8");
 
             byte[] expected = {
                 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -752,7 +791,7 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            Assert.Throws<InvalidCastException>(() => writer.Write(typeof(DateTime), 1));
+            Assert.Throws<InvalidCastException>(() => writer.WriteOfType(typeof(DateTime), 1));
         }
 
         [Test]
@@ -761,7 +800,7 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            Assert.Throws<FormatException>(() => writer.Write(typeof(bool), true));
+            Assert.Throws<FormatException>(() => writer.WriteOfType(typeof(bool), true));
         }
 
         [Test]
@@ -772,8 +811,8 @@ namespace Yarhl.UnitTests.IO
 
             Type nullType = null;
             string nullValue = null;
-            Assert.Throws<ArgumentNullException>(() => writer.Write(nullType, 1));
-            Assert.Throws<ArgumentNullException>(() => writer.Write(typeof(string), nullValue));
+            Assert.Throws<ArgumentNullException>(() => writer.WriteOfType(nullType, 1));
+            Assert.Throws<ArgumentNullException>(() => writer.WriteOfType(typeof(string), nullValue));
         }
 
         [Test]
