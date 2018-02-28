@@ -23,7 +23,6 @@ namespace Yarhl.FileSystem
     using System;
     using System.IO;
     using FileFormat;
-    using IO;
 
     /// <summary>
     /// Node factory.

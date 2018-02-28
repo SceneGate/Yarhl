@@ -27,7 +27,6 @@ namespace Yarhl.FileSystem
 {
     using System;
     using FileFormat;
-    using Mono.Addins;
 
     /// <summary>
     /// Node container format for unpack / pack files.

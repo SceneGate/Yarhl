@@ -21,7 +21,6 @@
 namespace Yarhl.FileFormat
 {
     using IO;
-    using Mono.Addins;
 
     /// <summary>
     /// Binary format.

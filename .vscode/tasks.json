@@ -1,0 +1,35 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "msbuild",
+            "args": [
+                "/property:GenerateFullPaths=true",
+                "/t:build"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "silent"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "test",
+            "type": "shell",
+            "command": "automation/run_linters.sh && automation/run_unittests.sh",
+            "group": {
+                "isDefault": true,
+                "kind": "test"
+            },
+            "presentation": {
+                "reveal": "always"
+            },
+            "dependsOn": "build"
+        }
+    ]
+}
