@@ -132,7 +132,7 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void IterateRecursivelyTwoLevels()
+        public void IterateRecursivelyTwoLevelsDefaultIsBreadthFirst()
         {
             Node subChild1 = new Node("SubChild1");
             Node child1 = new Node("Child1");
@@ -147,6 +147,53 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreSame(child1, iteration[0]);
             Assert.AreSame(child2, iteration[1]);
             Assert.AreSame(subChild1, iteration[2]);
+        }
+
+        [Test]
+        public void IterateBreadthFirst()
+        {
+            Node node = new Node("A");
+            node.Add(new Node("B")); 
+            node.Add(new Node("C"));
+            node.Add(new Node("D"));
+            node.Children["B"].Add(new Node("E"));
+            node.Children["C"].Add(new Node("F"));
+            node.Children["C"].Add(new Node("G"));
+
+            var navigationOrder = new[] { "B", "C", "D", "E", "F", "G" };
+
+            Assert.That(
+                Navigator.IterateNodes(node, NavigationMode.BreadthFirst)
+                    .Select(n => n.Name),
+                Is.EqualTo(navigationOrder));
+        }
+
+        [Test]
+        public void IterateRecursiveDepthFirst()
+        {
+            Node node = new Node("A");
+            node.Add(new Node("B")); 
+            node.Add(new Node("C"));
+            node.Add(new Node("D"));
+            node.Children["B"].Add(new Node("E"));
+            node.Children["C"].Add(new Node("F"));
+            node.Children["C"].Add(new Node("G"));
+
+            var navigationOrder = new[] { "B", "E", "C", "F", "G", "D" };
+
+            Assert.That(
+                Navigator.IterateNodes(node, NavigationMode.DepthFirst)
+                    .Select(n => n.Name),
+                Is.EqualTo(navigationOrder));
+        }
+
+        [Test]
+        public void IterateRecursiveInvalidMode()
+        {
+            Node node = new Node("A");
+            Assert.That(
+                () => Navigator.IterateNodes(node, (NavigationMode)0x100),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
         }
     }
 }

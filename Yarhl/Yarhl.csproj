@@ -51,6 +51,7 @@
     <Compile Include="FileSystem\Node.cs" />
     <Compile Include="FileSystem\NavegableNode.cs" />
     <Compile Include="FileSystem\Navigator.cs" />
+    <Compile Include="FileSystem\NavigationMode.cs" />    
     <Compile Include="FileSystem\NavegableNodeCollection.cs" />
     <Compile Include="FileSystem\NodeFactory.cs" />
     <Compile Include="FileSystem\NodeSystem.cs" />

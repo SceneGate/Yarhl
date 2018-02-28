@@ -27,6 +27,7 @@ namespace Yarhl.FileSystem
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// FileSystem navigator.
@@ -72,14 +73,28 @@ namespace Yarhl.FileSystem
         /// Iterates the nodes recursively.
         /// </summary>
         /// <param name="rootNode">The root node to start iterating.</param>
+        /// <param name="mode">The navigation mode.</param>
         /// <returns>The nodes.</returns>
         /// <typeparam name="T">NavegableNode type</typeparam>
-        public static IEnumerable<T> IterateNodes<T>(T rootNode)
+        public static IEnumerable<T> IterateNodes<T>(
+            T rootNode,
+            NavigationMode mode = NavigationMode.BreadthFirst)
             where T : NavegableNode<T>
         {
             if (rootNode == null)
                 throw new ArgumentNullException(nameof(rootNode));
 
+            if (mode == NavigationMode.BreadthFirst)
+                return IterateBreadthFirst(rootNode);
+            else if (mode == NavigationMode.DepthFirst)
+                return IterateDepthFirst(rootNode);
+            else
+                throw new ArgumentOutOfRangeException(nameof(mode));
+        }
+
+        static IEnumerable<T> IterateBreadthFirst<T>(T rootNode)
+            where T : NavegableNode<T>
+        {
             var queue = new Queue<T>();
             queue.Enqueue(rootNode);
 
@@ -90,6 +105,20 @@ namespace Yarhl.FileSystem
                     queue.Enqueue(child);
                     yield return child;
                 }
+            }
+        }
+
+        static IEnumerable<T> IterateDepthFirst<T>(T rootNode)
+            where T : NavegableNode<T>
+        {
+            var stack = new Stack<T>(rootNode.Children.Reverse());
+
+            while (stack.Count > 0) {
+                T currentNode = stack.Pop();
+                yield return currentNode;
+
+                foreach (var child in currentNode.Children.Reverse())
+                    stack.Push(child);
             }
         }
     }
