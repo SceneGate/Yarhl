@@ -4,11 +4,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "msbuild",
-            "args": [
-                "/property:GenerateFullPaths=true",
-                "/t:build"
-            ],
+            "command": "automation/build.sh",
             "group": {
                 "kind": "build",
                 "isDefault": true

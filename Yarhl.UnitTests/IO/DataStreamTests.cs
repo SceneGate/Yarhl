@@ -476,6 +476,27 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void SeekDefaultIsStart()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.Seek(0);
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.AbsolutePosition, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void SeekWihtInvalidModeThrows()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            Assert.That(
+                () => stream.Seek(0, (SeekMode)0x100),
+                Throws.TypeOf<ArgumentOutOfRangeException>());
+        }
+
+        [Test]
         public void SeekWhenDisposedThrowsException()
         {
             Stream baseStream = new MemoryStream();
@@ -521,6 +542,17 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(2, stream.Position);
             stream.PushToPosition(-1, SeekMode.Current);
             Assert.AreEqual(1, stream.Position);
+        }
+
+        [Test]
+        public void PushToPositionDefaultIsStart()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.PushToPosition(0);
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.AbsolutePosition, Is.EqualTo(0));
         }
 
         [Test]
@@ -595,6 +627,56 @@ namespace Yarhl.UnitTests.IO
             stream.PushToPosition(-1, SeekMode.Current);
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(stream.PopPosition);
+        }
+
+        [Test]
+        public void RunInPositionMoves()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0xBA);
+            stream.WriteByte(0xBE);
+            stream.RunInPosition(
+                () => Assert.That(stream.ReadByte(), Is.EqualTo(0xBA)),
+                -2,
+                SeekMode.Current);
+        }
+
+        [Test]
+        public void RunInPositionMoveAndReset()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0xBA);
+            stream.WriteByte(0xBE);
+            stream.RunInPosition(
+                () => Assert.That(stream.ReadByte(), Is.EqualTo(0xFE)),
+                1,
+                SeekMode.Start);
+            Assert.That(stream.Position, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void RunInPositionDefaultIsStart()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0xBA);
+            stream.WriteByte(0xBE);
+            stream.RunInPosition(
+                () => Assert.That(stream.ReadByte(), Is.EqualTo(0xFE)),
+                1);
+        }
+
+        [Test]
+        public void RunInPositionWithNullMethodThrows()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            Assert.That(() => stream.RunInPosition(null, 0), Throws.ArgumentNullException);
         }
 
         [Test]

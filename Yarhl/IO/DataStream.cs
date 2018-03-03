@@ -257,7 +257,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="shift">Distance to move position.</param>
         /// <param name="mode">Mode to move position.</param>
-        public void Seek(long shift, SeekMode mode)
+        public void Seek(long shift, SeekMode mode = SeekMode.Start)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -272,6 +272,8 @@ namespace Yarhl.IO
             case SeekMode.End:
                 Position = Length - shift;
                 break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(mode));
             }
         }
 
@@ -280,7 +282,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="shift">Distance to move position.</param>
         /// <param name="mode">Mode to move position.</param>
-        public void PushToPosition(long shift, SeekMode mode)
+        public void PushToPosition(long shift, SeekMode mode = SeekMode.Start)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -312,6 +314,27 @@ namespace Yarhl.IO
                 throw new InvalidOperationException("Position stack is empty");
 
             Position = positionStack.Pop();
+        }
+
+        /// <summary>
+        /// Run a method in a specific position.
+        /// This command will move into the position, run the method and return
+        /// to the current position.
+        /// </summary>
+        /// <param name="action">Action to run.</param>
+        /// <param name="position">Position to move.</param>
+        /// <param name="mode">Mode to move position.</param>
+        public void RunInPosition(
+            Action action,
+            long position,
+            SeekMode mode = SeekMode.Start)
+        {
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+            PushToPosition(position, mode);
+            action();
+            PopPosition();
         }
 
         /// <summary>
