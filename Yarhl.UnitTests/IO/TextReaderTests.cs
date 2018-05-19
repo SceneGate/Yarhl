@@ -55,7 +55,8 @@ namespace Yarhl.UnitTests.IO
         {
             Assert.AreSame(stream, reader.Stream);
             Assert.AreSame(Encoding.UTF8, reader.Encoding);
-            Assert.AreEqual("\n", reader.NewLine);
+            Assert.AreEqual(Environment.NewLine, reader.NewLine);
+            Assert.IsTrue(reader.AutoNewLine);
         }
 
         [Test]
@@ -64,7 +65,8 @@ namespace Yarhl.UnitTests.IO
             reader = new TextReader(stream, Encoding.ASCII);
             Assert.AreSame(stream, reader.Stream);
             Assert.AreSame(Encoding.ASCII, reader.Encoding);
-            Assert.AreEqual("\n", reader.NewLine);
+            Assert.AreEqual(Environment.NewLine, reader.NewLine);
+            Assert.IsTrue(reader.AutoNewLine);
         }
 
         [Test]
@@ -84,6 +86,9 @@ namespace Yarhl.UnitTests.IO
 
             reader.NewLine = "a";
             Assert.AreEqual("a", reader.NewLine);
+
+            reader.AutoNewLine = false;
+            Assert.IsFalse(reader.AutoNewLine);
         }
 
         [Test]
@@ -253,6 +258,8 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x31);
             stream.Position = 0;
 
+            reader.AutoNewLine = false;
+            reader.NewLine = "\n";
             var line = reader.ReadLine();
 
             Assert.AreEqual("59", line);
@@ -274,11 +281,58 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
+            reader.AutoNewLine = false;
             reader.NewLine = "\r\n";
             reader.Encoding = Encoding.GetEncoding("utf-16");
             var line = reader.ReadLine();
 
             Assert.AreEqual("51", line);
+            Assert.AreEqual(8, stream.Position);
+        }
+
+        [Test]
+        public void ReadAutoNewLine()
+        {
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x0D);
+            stream.WriteByte(0x0A);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x32);
+            stream.WriteByte(0x0A);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            Assert.That(reader.ReadLine(), Is.EqualTo("51"));
+            Assert.AreEqual(4, stream.Position);
+
+            Assert.That(reader.ReadLine(), Is.EqualTo("12"));
+            Assert.AreEqual(7, stream.Position);
+
+            Assert.That(reader.ReadLine(), Is.EqualTo("0"));
+            Assert.AreEqual(8, stream.Position);
+        }
+
+        [Test]
+        public void ReadCustonNewLine()
+        {
+            stream.WriteByte((byte)'5');
+            stream.WriteByte((byte)'1');
+            stream.WriteByte((byte)'<');
+            stream.WriteByte((byte)'b');
+            stream.WriteByte((byte)'r');
+            stream.WriteByte((byte)'/');
+            stream.WriteByte((byte)'>');
+            stream.WriteByte((byte)'0');
+            stream.Position = 0;
+
+            reader.NewLine = "<br/>";
+            reader.AutoNewLine = false;
+
+            Assert.That(reader.ReadLine(), Is.EqualTo("51"));
+            Assert.AreEqual(7, stream.Position);
+
+            Assert.That(reader.ReadLine(), Is.EqualTo("0"));
             Assert.AreEqual(8, stream.Position);
         }
 
@@ -298,6 +352,9 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ReadLineWhenEOFReturnsNull()
         {
+            Assert.IsNull(reader.ReadLine());
+
+            reader.AutoNewLine = false;
             Assert.IsNull(reader.ReadLine());
         }
 

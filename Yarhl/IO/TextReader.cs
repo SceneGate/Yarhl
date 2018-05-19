@@ -56,7 +56,8 @@ namespace Yarhl.IO
             reader = new DataReader(stream);
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
-            NewLine = "\n";
+            NewLine = Environment.NewLine;
+            AutoNewLine = true;
         }
 
         /// <summary>
@@ -83,6 +84,19 @@ namespace Yarhl.IO
         /// <value>The new line.</value>
         /// <remarks>The default value is OS-dependant.</remarks>
         public string NewLine {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether reads any kind of
+        /// NewLine format (\r\n or \n). If true, this ignore the
+        /// <cref href="NewLine" /> field.
+        /// </summary>
+        /// <returns>If true, it will treat new lines any matching of \r\n or
+        /// \n. Otherwhise false.
+        /// </returns>
+        public bool AutoNewLine {
             get;
             set;
         }
@@ -139,7 +153,20 @@ namespace Yarhl.IO
         /// <returns>The line.</returns>
         public string ReadLine()
         {
-            return ReadToToken(NewLine);
+            string line;
+
+            // We search for \n new lines.
+            if (AutoNewLine) {
+                line = ReadToToken("\n");
+
+                // In the case of Windows, the last char will be \r. We remove it.
+                if (!string.IsNullOrEmpty(line) && line[line.Length - 1] == '\r')
+                    line = line.Remove(line.Length - 1, 1);
+            } else {
+                line = ReadToToken(NewLine);
+            }
+
+            return line;
         }
 
         /// <summary>

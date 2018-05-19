@@ -57,6 +57,7 @@ R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
 # We are implementing a general streams
 T: Yarhl.IO.DataStream
 T: Yarhl.IO.DataWriter
+T: Yarhl.IO.TextReader
 
 R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 # I allow this to happen only for constructors
