@@ -456,7 +456,12 @@ namespace Yarhl.IO
             if (string.IsNullOrEmpty(fileOut))
                 throw new ArgumentNullException(nameof(fileOut));
 
-            Directory.CreateDirectory(Path.GetDirectoryName(fileOut));
+            // Parent dir can be empty if we just specified the file name.
+            // In that case, the folder (cwd) already exists.
+            string parentDir = Path.GetDirectoryName(fileOut);
+            if (!string.IsNullOrEmpty(parentDir))
+                Directory.CreateDirectory(parentDir);
+
             using (var stream = new DataStream(fileOut, FileOpenMode.Write))
                 WriteTo(stream);
         }
