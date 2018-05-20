@@ -80,6 +80,7 @@
     <Compile Include="Media\Text\PoHeaderTests.cs" />
     <Compile Include="Media\Text\PoTests.cs" />
     <Compile Include="Media\Text\XmlExtensionTests.cs" />
+    <Compile Include="Media\Text\ReplacerTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj">

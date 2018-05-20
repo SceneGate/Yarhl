@@ -45,6 +45,8 @@
     <Compile Include="Text\PoEntry.cs" />
     <Compile Include="Text\PoHeader.cs" />
     <Compile Include="Text\XmlExtension.cs" />
+    <Compile Include="Text\Replacer.cs" />
+    <Compile Include="Text\ReplacerEntry.cs" />
     <Compile Include="Text\Encodings\EscapeOutRangeEncoding.cs" />
     <Compile Include="Text\Encodings\EucJpEncoding.cs" />
   </ItemGroup>
