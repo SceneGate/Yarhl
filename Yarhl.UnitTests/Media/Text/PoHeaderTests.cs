@@ -47,6 +47,7 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.AreEqual(null, header.LastTranslator);
             Assert.AreEqual(null, header.LanguageTeam);
             Assert.AreEqual(null, header.Language);
+            Assert.AreEqual("1.0", header.MimeVersion);
             Assert.AreEqual("text/plain; charset=UTF-8", header.ContentType);
             Assert.AreEqual("8bit", header.ContentTransferEncoding);
             Assert.AreEqual(null, header.PluralForms);
@@ -73,6 +74,7 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.AreEqual("test5", header.LastTranslator);
             Assert.AreEqual("test6", header.LanguageTeam);
             Assert.AreEqual("test7", header.Language);
+            Assert.AreEqual("1.0", header.MimeVersion);
             Assert.AreEqual("text/plain; charset=UTF-8", header.ContentType);
             Assert.AreEqual("8bit", header.ContentTransferEncoding);
             Assert.AreEqual("test8", header.PluralForms);

@@ -116,6 +116,7 @@ msgstr """"
 ""Last-Translator: \n""
 ""Language-Team: \n""
 ""Language: \n""
+""MIME-Version: 1.0\n""
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 ";
@@ -152,6 +153,7 @@ msgstr """"
 ""Last-Translator: she\n""
 ""Language-Team: bestteam\n""
 ""Language: SC\n""
+""MIME-Version: 1.0\n""
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 ""Plural-Forms: pl\n""
@@ -168,6 +170,7 @@ msgstr """"
             Assert.AreEqual(header.LastTranslator, newHeader.LastTranslator);
             Assert.AreEqual(header.LanguageTeam, newHeader.LanguageTeam);
             Assert.AreEqual(header.Language, newHeader.Language);
+            Assert.AreEqual(header.MimeVersion, newHeader.MimeVersion);
             Assert.AreEqual(header.ContentType, newHeader.ContentType);
             Assert.AreEqual(header.ContentTransferEncoding, newHeader.ContentTransferEncoding);
             Assert.AreEqual(header.PluralForms, newHeader.PluralForms);
@@ -186,6 +189,11 @@ msgstr """"
             Assert.Throws<FormatException>(
                 () => ConvertStringToPo(text),
                 "Invalid Content-Transfer-Encoding");
+
+            text = "msgid \"\"\nmsgstr \"\"\n\"MIME-Version: hehe\"";
+            Assert.Throws<FormatException>(
+                () => ConvertStringToPo(text),
+                "Invalid MIME-Version");
         }
 
         [Test]
@@ -342,6 +350,7 @@ msgstr """"
 ""Last-Translator: \n""
 ""Language-Team: \n""
 ""Language: \n""
+""MIME-Version: 1.0\n""
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 
@@ -376,6 +385,7 @@ msgstr """"
 ""Last-Translator: \n""
 ""Language-Team: \n""
 ""Language: \n""
+""MIME-Version: 1.0\n""
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 ";

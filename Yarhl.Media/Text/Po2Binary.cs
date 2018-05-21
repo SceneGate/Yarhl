@@ -106,6 +106,7 @@ namespace Yarhl.Media.Text
             writer.WriteLine(@"""Last-Translator: {0}\n""", header.LastTranslator ?? string.Empty);
             writer.WriteLine(@"""Language-Team: {0}\n""", header.LanguageTeam ?? string.Empty);
             writer.WriteLine(@"""Language: {0}\n""", header.Language ?? string.Empty);
+            writer.WriteLine(@"""MIME-Version: {0}\n""", header.MimeVersion);
             writer.WriteLine(@"""Content-Type: {0}\n""", header.ContentType);
             writer.WriteLine(@"""Content-Transfer-Encoding: {0}\n""", header.ContentTransferEncoding);
             WriteIfNotEmpty(writer, @"""Plural-Forms: {0}\n""", header.PluralForms);
@@ -262,6 +263,11 @@ namespace Yarhl.Media.Text
 
                     case "Plural-Forms:":
                         header.PluralForms = fields[1];
+                        break;
+
+                    case "MIME-Version:":
+                        if (line != "MIME-Version: 1.0")
+                            throw new FormatException("Invalid MIME version");
                         break;
 
                     case "Content-Type:":

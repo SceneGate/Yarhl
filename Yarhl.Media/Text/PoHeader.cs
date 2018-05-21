@@ -106,6 +106,12 @@ namespace Yarhl.Media.Text
         public string ContentTransferEncoding => "8bit";
 
         /// <summary>
+        /// Gets the version of MIME.
+        /// </summary>
+        /// <value>The version of MIME.</value>
+        public string MimeVersion => "1.0";
+
+        /// <summary>
         /// Gets or sets the plural forms.
         /// </summary>
         /// <value>The plural forms.</value>
