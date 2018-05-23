@@ -104,7 +104,7 @@ namespace Yarhl.Media.Text
         /// <returns>The transformed text.</returns>
         public string Transform(string text, bool originalText)
         {
-            if (string.IsNullOrEmpty(text))
+            if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
             // Get a list of matches by order of the map

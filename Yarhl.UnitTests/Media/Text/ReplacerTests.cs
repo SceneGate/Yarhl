@@ -159,10 +159,44 @@ namespace Yarhl.UnitTests.Media.Text
         }
 
         [Test]
+        public void TransformWithModifiedInOriginal()
+        {
+            Replacer replacer = new Replacer();
+            replacer.Add("a", "b");
+            replacer.Add("b", "c");
+
+            Assert.That(replacer.Transform("aabaa", true), Is.EqualTo("bbcbb"));
+            Assert.That(replacer.Transform("bbcbb", false), Is.EqualTo("aabaa"));
+
+            replacer.Add("b", "a");
+
+            Assert.That(replacer.Transform("aabaa", true), Is.EqualTo("bbabb"));
+            Assert.That(replacer.Transform("bbabb", false), Is.EqualTo("aabaa"));
+        }
+
+        [Test]
         public void TransformWithoutMapReturnsOriginal()
         {
             Replacer replacer = new Replacer();
             Assert.That(replacer.Transform("abc", true), Is.EqualTo("abc"));
+        }
+
+        [Test]
+        public void TransformEmptyLineDoesNotThrowException()
+        {
+            Replacer replacer = new Replacer();
+            replacer.Add("a", "b");
+
+            Assert.That(replacer.Transform(string.Empty, true), Is.EqualTo(string.Empty));
+        }
+
+        [Test]
+        public void TransformNullThrowException()
+        {
+            Replacer replacer = new Replacer();
+            replacer.Add("a", "b");
+
+            Assert.That(() => replacer.Transform(null, true), Throws.ArgumentNullException);
         }
     }
 }
