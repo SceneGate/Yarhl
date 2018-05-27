@@ -124,6 +124,12 @@ namespace Yarhl.FileSystem
         /// <param name="filter">Filter for files in directory.</param>
         public static Node FromDirectory(string dirPath, string filter = "*")
         {
+            if (string.IsNullOrEmpty(dirPath))
+                throw new ArgumentNullException(nameof(dirPath));
+
+            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar)
+                dirPath = dirPath.Remove(dirPath.Length - 1);
+
             string dirName = Path.GetFileName(dirPath);
             return FromDirectory(dirPath, filter, dirName);
         }

@@ -138,6 +138,36 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CreateFromDirectoryWithFinalSlash()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, Path.GetRandomFileName());
+            File.Create(tempFile1).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir + Path.DirectorySeparatorChar);
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.IsTrue(node.IsContainer);
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+
+            node.Dispose();
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
+        public void CreateFromDirectoryNull()
+        {
+            Assert.That(
+                () => NodeFactory.FromDirectory(null),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => NodeFactory.FromDirectory(string.Empty),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void CreateFromDirectoryWithFilesAndFolders()
         {
             string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
