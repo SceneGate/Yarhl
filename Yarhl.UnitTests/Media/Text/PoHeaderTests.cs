@@ -39,14 +39,14 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.IsNull(header.ProjectIdVersion);
             Assert.IsNull(header.ReportMsgidBugsTo);
 
-            header = new PoHeader("myID", "yo");
+            header = new PoHeader("myID", "yo", "es");
             Assert.AreEqual("myID", header.ProjectIdVersion);
             Assert.AreEqual("yo", header.ReportMsgidBugsTo);
             Assert.AreEqual(DateTime.Now.ToShortDateString(), header.CreationDate);
             Assert.AreEqual(null, header.RevisionDate);
             Assert.AreEqual(null, header.LastTranslator);
             Assert.AreEqual(null, header.LanguageTeam);
-            Assert.AreEqual(null, header.Language);
+            Assert.AreEqual("es", header.Language);
             Assert.AreEqual("1.0", header.MimeVersion);
             Assert.AreEqual("text/plain; charset=UTF-8", header.ContentType);
             Assert.AreEqual("8bit", header.ContentTransferEncoding);
@@ -56,7 +56,7 @@ namespace Yarhl.UnitTests.Media.Text
         [Test]
         public void TestProperties()
         {
-            var header = new PoHeader("myID", "yo") {
+            var header = new PoHeader("myID", "yo", "us") {
                 ProjectIdVersion = "test1",
                 ReportMsgidBugsTo = "test2",
                 CreationDate = "test3",

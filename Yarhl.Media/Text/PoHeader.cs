@@ -44,10 +44,12 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <param name="id">Identifier of the project.</param>
         /// <param name="reporter">Address to report bugs.</param>
-        public PoHeader(string id, string reporter)
+        /// <param name="lang">Translation language.</param>
+        public PoHeader(string id, string reporter, string lang)
         {
             ProjectIdVersion = id;
             ReportMsgidBugsTo = reporter;
+            Language = lang;
             CreationDate = DateTime.Now.ToShortDateString();
         }
 

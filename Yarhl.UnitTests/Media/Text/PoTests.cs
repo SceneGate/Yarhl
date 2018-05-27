@@ -50,7 +50,7 @@ namespace Yarhl.UnitTests.Media.Text
         [Test]
         public void ConstructorWithHeader()
         {
-            PoHeader header = new PoHeader("id", "yo");
+            PoHeader header = new PoHeader("id", "yo", "es");
             var po = new Po(header);
             Assert.IsNotNull(po.Header);
             Assert.AreSame(header, po.Header);

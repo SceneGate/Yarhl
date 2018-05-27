@@ -106,7 +106,7 @@ namespace Yarhl.UnitTests.Media.Text
         [Test]
         public void ConvertBasicHeaderNoEntries()
         {
-            var po = new Po(new PoHeader("myId", "yo") { CreationDate = "today" });
+            var po = new Po(new PoHeader("myId", "yo", "es") { CreationDate = "today" });
             string text = @"msgid """"
 msgstr """"
 ""Project-Id-Version: myId\n""
@@ -115,7 +115,7 @@ msgstr """"
 ""PO-Revision-Date: \n""
 ""Last-Translator: \n""
 ""Language-Team: \n""
-""Language: \n""
+""Language: es\n""
 ""MIME-Version: 1.0\n""
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
@@ -127,6 +127,7 @@ msgstr """"
             Assert.AreEqual(po.Header.ProjectIdVersion, newPo.Header.ProjectIdVersion);
             Assert.AreEqual(po.Header.ReportMsgidBugsTo, newPo.Header.ReportMsgidBugsTo);
             Assert.AreEqual(po.Header.CreationDate, newPo.Header.CreationDate);
+            Assert.AreEqual(po.Header.Language, newPo.Header.Language);
             Assert.IsEmpty(newPo.Header.LastTranslator);
             Assert.IsEmpty(newPo.Entries);
         }
@@ -134,12 +135,11 @@ msgstr """"
         [Test]
         public void ConvertFullHeaderNoEntries()
         {
-            var header = new PoHeader("myId", "yo") {
+            var header = new PoHeader("myId", "yo", "SC") {
                 CreationDate = "today",
                 RevisionDate = "tomorrow",
                 LastTranslator = "she",
                 LanguageTeam = "bestteam",
-                Language = "SC",
                 PluralForms = "pl"
             };
             var testPo = new Po(header);
@@ -338,7 +338,7 @@ msgstr """"
         [Test]
         public void ConvertEntryAndHeader()
         {
-            var testPo = new Po(new PoHeader("myId", "yo") { CreationDate = "today" });
+            var testPo = new Po(new PoHeader("myId", "yo", "es") { CreationDate = "today" });
             testPo.Add(new PoEntry { Original = "original", Translated = "translated" });
 
             string text = @"msgid """"
@@ -349,7 +349,7 @@ msgstr """"
 ""PO-Revision-Date: \n""
 ""Last-Translator: \n""
 ""Language-Team: \n""
-""Language: \n""
+""Language: es\n""
 ""MIME-Version: 1.0\n""
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
@@ -363,6 +363,7 @@ msgstr ""translated""
             CompareText(testPo.ConvertTo<BinaryFormat>(), text);
             Assert.AreEqual(testPo.Header.ProjectIdVersion, newPo.Header.ProjectIdVersion);
             Assert.AreEqual(testPo.Header.ReportMsgidBugsTo, newPo.Header.ReportMsgidBugsTo);
+            Assert.AreEqual(testPo.Header.Language, newPo.Header.Language);
             Assert.AreEqual(testPo.Header.CreationDate, newPo.Header.CreationDate);
             Assert.AreEqual(1, newPo.Entries.Count);
             Assert.AreEqual(testPo.Entries[0].Original, newPo.Entries[0].Original);
