@@ -1,4 +1,4 @@
-//
+﻿//
 // Po.cs
 //
 // Author:
@@ -107,7 +107,7 @@ namespace Yarhl.UnitTests.Media.Text
         public void AddIsAddingEntries()
         {
             var po = CreateDummyFormat();
-            var entry = new PoEntry();
+            var entry = new PoEntry("test");
             po.Add(entry);
             Assert.AreEqual(1, po.Entries.Count);
             Assert.Contains(entry, po.Entries);
@@ -121,6 +121,17 @@ namespace Yarhl.UnitTests.Media.Text
 
             po.Dispose();
             Assert.Throws<ObjectDisposedException>(() => po.Add((PoEntry)null));
+        }
+
+        [Test]
+        public void AddThrowsIfOriginalIsEmpty()
+        {
+            var po = CreateDummyFormat();
+            var entry = new PoEntry();
+
+            var exception = Throws.InstanceOf<FormatException>()
+                .With.Message.EqualTo("Original is empty");
+            Assert.That(() => po.Add(entry), exception);
         }
 
         [Test]

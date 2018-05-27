@@ -1,4 +1,4 @@
-//
+﻿//
 // Po.cs
 //
 // Author:
@@ -74,16 +74,16 @@ namespace Yarhl.Media.Text
                 if (value == null) {
                     header = null;
                 } else {
-                if (string.IsNullOrEmpty(value.ProjectIdVersion))
-                    throw new FormatException(nameof(value.ProjectIdVersion) + " is empty");
-                if (string.IsNullOrEmpty(value.ReportMsgidBugsTo))
-                    throw new FormatException(nameof(value.ReportMsgidBugsTo) + " is empty");
-                if (string.IsNullOrEmpty(value.Language))
-                    throw new FormatException(nameof(value.Language) + " is empty");
+                    if (string.IsNullOrEmpty(value.ProjectIdVersion))
+                        throw new FormatException(nameof(value.ProjectIdVersion) + " is empty");
+                    if (string.IsNullOrEmpty(value.ReportMsgidBugsTo))
+                        throw new FormatException(nameof(value.ReportMsgidBugsTo) + " is empty");
+                    if (string.IsNullOrEmpty(value.Language))
+                        throw new FormatException(nameof(value.Language) + " is empty");
 
-                header = value;
+                    header = value;
+                }
             }
-        }
         }
 
         /// <summary>
@@ -105,6 +105,8 @@ namespace Yarhl.Media.Text
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
+            if (string.IsNullOrEmpty(item.Original))
+                throw new FormatException(nameof(item.Original) + " is empty");
 
             string key = GetKey(item);
             if (entries.ContainsKey(key))

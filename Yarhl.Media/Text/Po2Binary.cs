@@ -86,10 +86,7 @@ namespace Yarhl.Media.Text
 
             // Read other entries
             while ((entry = ReadEntry(reader)) != null) {
-                if (entry.Original.Length != 0)
-                    po.Add(entry);
-                else
-                    throw new FormatException("Original field must be filled");
+                po.Add(entry);
             }
 
             return po;
