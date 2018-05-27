@@ -108,16 +108,7 @@ namespace Yarhl.Media.Text
                 throw new ArgumentNullException(nameof(text));
 
             // Get a list of matches by order of the map
-            var comparison = StringComparison.InvariantCulture;
-            var matches = new Dictionary<int, int>();
-            for (int i = 0; i < map.Count; i++) {
-                string original = originalText ? map[i].Original : map[i].Modified;
-                int matchIdx = text.IndexOf(original, comparison);
-                while (matchIdx != -1) {
-                    matches[matchIdx] = i;
-                    matchIdx = text.IndexOf(original, matchIdx + 1, comparison);
-                }
-            }
+            IDictionary<int, int> matches = MatchMap(text, originalText);
 
             // From the list of matches, rebuild the string
             StringBuilder builder = new StringBuilder();
@@ -137,6 +128,22 @@ namespace Yarhl.Media.Text
             }
 
             return builder.ToString();
+        }
+
+        IDictionary<int, int> MatchMap(string text, bool originalText)
+        {
+            var comparison = StringComparison.InvariantCulture;
+            var matches = new Dictionary<int, int>();
+            for (int i = 0; i < map.Count; i++) {
+                string original = originalText ? map[i].Original : map[i].Modified;
+                int matchIdx = text.IndexOf(original, comparison);
+                while (matchIdx != -1) {
+                    matches[matchIdx] = i;
+                    matchIdx = text.IndexOf(original, matchIdx + 1, comparison);
+                }
+            }
+
+            return matches;
         }
 
         int FindMapEntry(string key, bool source)
