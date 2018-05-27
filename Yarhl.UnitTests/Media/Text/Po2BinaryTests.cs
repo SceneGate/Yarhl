@@ -142,6 +142,9 @@ msgstr """"
                 LanguageTeam = "bestteam",
                 PluralForms = "pl"
             };
+            header.Extensions["Generator"] = "yarhl";
+            header.Extensions["Hey"] = "hoy";
+
             var testPo = new Po(header);
 
             string text = @"msgid """"
@@ -157,6 +160,8 @@ msgstr """"
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 ""Plural-Forms: pl\n""
+""X-Generator: yarhl\n""
+""X-Hey: hoy\n""
 ";
 
             var newPo = ConvertStringToPo(text);
@@ -174,6 +179,8 @@ msgstr """"
             Assert.AreEqual(header.ContentType, newHeader.ContentType);
             Assert.AreEqual(header.ContentTransferEncoding, newHeader.ContentTransferEncoding);
             Assert.AreEqual(header.PluralForms, newHeader.PluralForms);
+            Assert.That(header.Extensions["Generator"], Is.EqualTo(newHeader.Extensions["Generator"]));
+            Assert.That(header.Extensions["Hey"], Is.EqualTo(newHeader.Extensions["Hey"]));
             Assert.IsEmpty(newPo.Entries);
         }
 
@@ -211,7 +218,7 @@ msgstr """"
         }
 
         [Test]
-        public void IgnoreExtendedHeaderEntriesd()
+        public void ParseExtendedHeaderEntriesd()
         {
                         string text = @"
 msgid """"
@@ -221,12 +228,19 @@ msgstr """"
 ""Language: SC\n""
 ""X-Generator: libgame""
 ";
-            Assert.DoesNotThrow(() => ConvertStringToPo(text));
+            Po testPo = null;
+            Assert.DoesNotThrow(() => testPo = ConvertStringToPo(text));
+            Assert.That(testPo?.Header?.Extensions["Generator"], Is.EqualTo("libgame"));
 
             text = "msgid \"\"\nmsgstr \"\"\n\"X: libgame\"";
             Assert.Throws<FormatException>(
                 () => ConvertStringToPo(text),
                 "Unknown header: Unknown: X");
+
+            text = "msgid \"\"\nmsgstr \"\"\n\"X-: libgame\"";
+            Assert.Throws<FormatException>(
+                () => ConvertStringToPo(text),
+                "Unknown header: Unknown: X-");
         }
 
         [Test]

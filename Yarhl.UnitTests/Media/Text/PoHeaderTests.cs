@@ -51,6 +51,8 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.AreEqual("text/plain; charset=UTF-8", header.ContentType);
             Assert.AreEqual("8bit", header.ContentTransferEncoding);
             Assert.AreEqual(null, header.PluralForms);
+            Assert.IsNotNull(header.Extensions);
+            Assert.IsEmpty(header.Extensions);
         }
 
         [Test]
@@ -66,6 +68,7 @@ namespace Yarhl.UnitTests.Media.Text
                 Language = "test7",
                 PluralForms = "test8"
             };
+            header.Extensions["X-MyExt"] = "the value";
 
             Assert.AreEqual("test1", header.ProjectIdVersion);
             Assert.AreEqual("test2", header.ReportMsgidBugsTo);
@@ -78,6 +81,7 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.AreEqual("text/plain; charset=UTF-8", header.ContentType);
             Assert.AreEqual("8bit", header.ContentTransferEncoding);
             Assert.AreEqual("test8", header.PluralForms);
+            Assert.That(header.Extensions["X-MyExt"], Is.EqualTo("the value"));
         }
     }
 }

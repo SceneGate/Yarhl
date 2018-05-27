@@ -107,6 +107,9 @@ namespace Yarhl.Media.Text
             writer.WriteLine(@"""Content-Type: {0}\n""", header.ContentType);
             writer.WriteLine(@"""Content-Transfer-Encoding: {0}\n""", header.ContentTransferEncoding);
             WriteIfNotEmpty(writer, @"""Plural-Forms: {0}\n""", header.PluralForms);
+
+            foreach (var entry in header.Extensions)
+                writer.WriteLine(@"""X-{0}: {1}\n""", entry.Key, entry.Value);
         }
 
         static void WriteEntry(PoEntry entry, TextWriter writer)
@@ -229,62 +232,70 @@ namespace Yarhl.Media.Text
             PoHeader header = new PoHeader();
             var option = StringSplitOptions.RemoveEmptyEntries;
             foreach (string line in entry.Translated.Split(new[] { '\n' }, option)) {
-                var fields = line.Split(new[] { ' ' }, 2);
+                var fields = line.Split(new[] { ": " }, 2, StringSplitOptions.None);
                 if (fields.Length != 2)
                     throw new FormatException("Invalid format line: " + line);
 
-                switch (fields[0]) {
-                    case "Project-Id-Version:":
-                        header.ProjectIdVersion = fields[1];
-                        break;
-                    case "Report-Msgid-Bugs-To:":
-                        header.ReportMsgidBugsTo = fields[1];
-                        break;
-
-                    case "POT-Creation-Date:":
-                        header.CreationDate = fields[1];
-                        break;
-                    case "PO-Revision-Date:":
-                        header.RevisionDate = fields[1];
-                        break;
-
-                    case "Last-Translator:":
-                        header.LastTranslator = fields[1];
-                        break;
-                    case "Language-Team:":
-                        header.LanguageTeam = fields[1];
-                        break;
-                    case "Language:":
-                        header.Language = fields[1];
-                        break;
-
-                    case "Plural-Forms:":
-                        header.PluralForms = fields[1];
-                        break;
-
-                    case "MIME-Version:":
-                        if (line != "MIME-Version: 1.0")
-                            throw new FormatException("Invalid MIME version");
-                        break;
-
-                    case "Content-Type:":
-                        if (line != "Content-Type: text/plain; charset=UTF-8")
-                            throw new FormatException("Invalid Content-Type");
-                        break;
-                    case "Content-Transfer-Encoding:":
-                        if (line != "Content-Transfer-Encoding: 8bit")
-                            throw new FormatException("Invalid Content-Transfer-Encoding");
-                        break;
-
-                    default:
-                        // Ignore extended / tool-specific fields
-                        if (fields[0].Substring(0, 2) == "X-")
-                            break;
-                        throw new FormatException("Unknown header line: " + line);
-                }
+                ParseHeaderLine(header, fields[0], fields[1]);
             }
 
             return header;
+        }
+
+        static void ParseHeaderLine(PoHeader header, string key, string value)
+        {
+            switch (key) {
+                case "Project-Id-Version":
+                    header.ProjectIdVersion = value;
+                    break;
+                case "Report-Msgid-Bugs-To":
+                    header.ReportMsgidBugsTo = value;
+                    break;
+
+                case "POT-Creation-Date":
+                    header.CreationDate = value;
+                    break;
+                case "PO-Revision-Date":
+                    header.RevisionDate = value;
+                    break;
+
+                case "Last-Translator":
+                    header.LastTranslator = value;
+                    break;
+                case "Language-Team":
+                    header.LanguageTeam = value;
+                    break;
+                case "Language":
+                    header.Language = value;
+                    break;
+
+                case "Plural-Forms":
+                    header.PluralForms = value;
+                    break;
+
+                case "MIME-Version":
+                    if (value != "1.0")
+                        throw new FormatException("Invalid MIME version");
+                    break;
+
+                case "Content-Type":
+                    if (value != "text/plain; charset=UTF-8")
+                        throw new FormatException("Invalid Content-Type");
+                    break;
+                case "Content-Transfer-Encoding":
+                    if (value != "8bit")
+                        throw new FormatException("Invalid Content-Transfer-Encoding");
+                    break;
+
+                default:
+                    // Ignore extended / tool-specific fields
+                    if (key.Length > 2 && key.Substring(0, 2) == "X-") {
+                        header.Extensions[key.Substring(2)] = value;
+                        break;
+                    }
+
+                    throw new FormatException("Unknown header key: " + key);
+            }
         }
 
         static string ReadMultiLineContent(TextReader reader, string currentLine)

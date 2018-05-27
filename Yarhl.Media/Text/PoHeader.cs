@@ -26,6 +26,7 @@
 namespace Yarhl.Media.Text
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Header for PO translation format.
@@ -37,6 +38,7 @@ namespace Yarhl.Media.Text
         /// </summary>
         public PoHeader()
         {
+            Extensions = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -46,6 +48,7 @@ namespace Yarhl.Media.Text
         /// <param name="reporter">Address to report bugs.</param>
         /// <param name="lang">Translation language.</param>
         public PoHeader(string id, string reporter, string lang)
+            : this()
         {
             ProjectIdVersion = id;
             ReportMsgidBugsTo = reporter;
@@ -118,5 +121,7 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <value>The plural forms.</value>
         public string PluralForms { get; set; }
+
+        public IDictionary<string, string> Extensions { get; private set; }
     }
 }
