@@ -1,4 +1,4 @@
-﻿//
+//
 // Po.cs
 //
 // Author:
@@ -54,6 +54,53 @@ namespace Yarhl.UnitTests.Media.Text
             var po = new Po(header);
             Assert.IsNotNull(po.Header);
             Assert.AreSame(header, po.Header);
+        }
+
+        [Test]
+        public void SetHeader()
+        {
+            var po = CreateDummyFormat();
+            PoHeader header = new PoHeader("id", "yo", "es");
+            Assert.That(() => po.Header = header, Throws.Nothing);
+        }
+
+        [Test]
+        public void SetHeaderAfterDisposeThrowsException()
+        {
+            PoHeader header = new PoHeader("id", "yo", "es");
+            var po = CreateDummyFormat();
+            po.Dispose();
+            Assert.That(
+                () => po.Header = header,
+                Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void SetNullHeaderDoesNotThrowsException()
+        {
+            var po = CreateDummyFormat();
+            Assert.That(() => po.Header = null, Throws.Nothing);
+        }
+
+        [Test]
+        public void SetHeaderWithMissingFieldsThrowsException()
+        {
+            var po = CreateDummyFormat();
+            var header = new PoHeader();
+
+            var exception = Throws.InstanceOf<FormatException>()
+                .With.Message.EqualTo("ProjectIdVersion is empty");
+            Assert.That(() => po.Header = header, exception);
+
+            header.ProjectIdVersion = "id";
+            exception = Throws.InstanceOf<FormatException>()
+                .With.Message.EqualTo("ReportMsgidBugsTo is empty");
+            Assert.That(() => po.Header = header, exception);
+
+            header.ReportMsgidBugsTo = "yo";
+            exception = Throws.InstanceOf<FormatException>()
+                .With.Message.EqualTo("Language is empty");
+            Assert.That(() => po.Header = header, exception);
         }
 
         [Test]

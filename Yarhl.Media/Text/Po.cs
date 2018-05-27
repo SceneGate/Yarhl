@@ -1,4 +1,4 @@
-﻿//
+//
 // Po.cs
 //
 // Author:
@@ -39,6 +39,7 @@ namespace Yarhl.Media.Text
     {
         readonly IList<PoEntry> entries;
         readonly ReadOnlyCollection<PoEntry> readOnlyEntries;
+        PoHeader header;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Po"/> class.
@@ -52,18 +53,40 @@ namespace Yarhl.Media.Text
         /// <summary>
         /// Initializes a new instance of the <see cref="Po"/> class.
         /// </summary>
-        /// <param name="header">PO header.</param>
-        public Po(PoHeader header)
+        /// <param name="headerArg">PO header.</param>
+        public Po(PoHeader headerArg)
             : this()
         {
-            Header = header;
+            Header = headerArg;
         }
 
         /// <summary>
         /// Gets or sets the header.
         /// </summary>
         /// <value>The header.</value>
-        public PoHeader Header { get; set; }
+        public PoHeader Header {
+            get {
+                return header;
+            }
+
+            set {
+                if (Disposed)
+                    throw new ObjectDisposedException(nameof(Po));
+
+                if (value == null) {
+                    header = null;
+                } else {
+                if (string.IsNullOrEmpty(value.ProjectIdVersion))
+                    throw new FormatException(nameof(value.ProjectIdVersion) + " is empty");
+                if (string.IsNullOrEmpty(value.ReportMsgidBugsTo))
+                    throw new FormatException(nameof(value.ReportMsgidBugsTo) + " is empty");
+                if (string.IsNullOrEmpty(value.Language))
+                    throw new FormatException(nameof(value.Language) + " is empty");
+
+                header = value;
+            }
+        }
+        }
 
         /// <summary>
         /// Gets the entries.

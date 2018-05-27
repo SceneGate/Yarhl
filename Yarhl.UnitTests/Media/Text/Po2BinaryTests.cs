@@ -213,7 +213,14 @@ msgstr """"
         [Test]
         public void IgnoreExtendedHeaderEntriesd()
         {
-            string text = "msgid \"\"\nmsgstr \"\"\n\"X-Generator: libgame\"";
+                        string text = @"
+msgid """"
+msgstr """"
+""Project-Id-Version: myId\n""
+""Report-Msgid-Bugs-To: yo\n""
+""Language: SC\n""
+""X-Generator: libgame""
+";
             Assert.DoesNotThrow(() => ConvertStringToPo(text));
 
             text = "msgid \"\"\nmsgstr \"\"\n\"X: libgame\"";
