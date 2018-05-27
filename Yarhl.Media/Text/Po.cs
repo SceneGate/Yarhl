@@ -37,7 +37,9 @@ namespace Yarhl.Media.Text
     [Format("Yarhl.Common.Po")]
     public class Po : Format
     {
-        readonly IDictionary<string, PoEntry> entries;
+        readonly IList<PoEntry> entries;
+        readonly ReadOnlyCollection<PoEntry> readonlyEntries;
+        readonly IDictionary<string, PoEntry> searchEntries;
         PoHeader header;
 
         /// <summary>
@@ -45,7 +47,9 @@ namespace Yarhl.Media.Text
         /// </summary>
         public Po()
         {
-            entries = new Dictionary<string, PoEntry>();
+            entries = new List<PoEntry>();
+            readonlyEntries = new ReadOnlyCollection<PoEntry>(entries);
+            searchEntries = new Dictionary<string, PoEntry>();
         }
 
         /// <summary>
@@ -90,8 +94,7 @@ namespace Yarhl.Media.Text
         /// Gets the entries.
         /// </summary>
         /// <value>The entries.</value>
-        public ReadOnlyCollection<PoEntry> Entries =>
-            new ReadOnlyCollection<PoEntry>(entries.Values.ToList());
+        public ReadOnlyCollection<PoEntry> Entries => readonlyEntries;
 
         /// <summary>
         /// Add the specified entry.
@@ -109,10 +112,12 @@ namespace Yarhl.Media.Text
                 throw new FormatException(nameof(item.Original) + " is empty");
 
             string key = GetKey(item);
-            if (entries.ContainsKey(key))
-                MergeEntry(entries[key], item);
-            else
-                entries[key] = item;
+            if (searchEntries.ContainsKey(key)) {
+                MergeEntry(searchEntries[key], item);
+            } else {
+                searchEntries[key] = item;
+                entries.Add(item);
+            }
         }
 
         /// <summary>
@@ -146,7 +151,7 @@ namespace Yarhl.Media.Text
                 throw new ArgumentNullException(nameof(original));
 
             string key = GetKey(original, context);
-            return entries.ContainsKey(key) ? entries[key] : null;
+            return searchEntries.ContainsKey(key) ? searchEntries[key] : null;
         }
 
         string GetKey(PoEntry entry)
