@@ -10,3 +10,7 @@ M: System.Void Yarhl.Media.Text.Encodings.EucJpEncoding::DecodeInvalidBytes(Syst
 R: Gendarme.Rules.Performance.AvoidRepetitiveCallsToPropertiesRule
 # The property changes all the time
 M: System.Void Yarhl.Media.Text.Encodings.EucJpEncoding::DecodeText(System.IO.Stream,System.Action`2<System.IO.Stream,System.String>)
+
+R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
+# In a Format this may have sense
+T: Yarhl.Media.Text.Po

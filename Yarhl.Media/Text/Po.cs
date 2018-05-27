@@ -37,8 +37,7 @@ namespace Yarhl.Media.Text
     [Format("Yarhl.Common.Po")]
     public class Po : Format
     {
-        readonly IList<PoEntry> entries;
-        readonly ReadOnlyCollection<PoEntry> readOnlyEntries;
+        readonly IDictionary<string, PoEntry> entries;
         PoHeader header;
 
         /// <summary>
@@ -46,8 +45,7 @@ namespace Yarhl.Media.Text
         /// </summary>
         public Po()
         {
-            entries = new List<PoEntry>();
-            readOnlyEntries = new ReadOnlyCollection<PoEntry>(entries);
+            entries = new Dictionary<string, PoEntry>();
         }
 
         /// <summary>
@@ -92,7 +90,8 @@ namespace Yarhl.Media.Text
         /// Gets the entries.
         /// </summary>
         /// <value>The entries.</value>
-        public ReadOnlyCollection<PoEntry> Entries => readOnlyEntries;
+        public ReadOnlyCollection<PoEntry> Entries =>
+            new ReadOnlyCollection<PoEntry>(entries.Values.ToList());
 
         /// <summary>
         /// Add the specified entry.
@@ -106,13 +105,12 @@ namespace Yarhl.Media.Text
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
-            PoEntry sameEntry = entries.FirstOrDefault((entry) =>
-                entry.Original == item.Original &&
-                entry.Context == item.Context);
-            if (sameEntry != null)
-                MergeEntry(sameEntry, item);
+
+            string key = GetKey(item);
+            if (entries.ContainsKey(key))
+                MergeEntry(entries[key], item);
             else
-                entries.Add(item);
+                entries[key] = item;
         }
 
         /// <summary>
@@ -145,8 +143,18 @@ namespace Yarhl.Media.Text
             if (string.IsNullOrEmpty(original))
                 throw new ArgumentNullException(nameof(original));
 
-            return entries.SingleOrDefault(
-                entry => entry.Original == original && entry.Context == context);
+            string key = GetKey(original, context);
+            return entries.ContainsKey(key) ? entries[key] : null;
+        }
+
+        string GetKey(PoEntry entry)
+        {
+            return GetKey(entry.Original, entry.Context);
+        }
+
+        string GetKey(string original, string context)
+        {
+            return original + "||" + (context ?? string.Empty);
         }
 
         void MergeEntry(PoEntry current, PoEntry newEntry)
