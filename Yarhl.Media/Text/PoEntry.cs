@@ -65,6 +65,19 @@ namespace Yarhl.Media.Text
         public string Translated { get; set; }
 
         /// <summary>
+        /// Gets the translated text if any, otherwise the original text.
+        /// </summary>
+        /// <returns>The final text.</returns>
+        public string Text {
+            get {
+                if (string.IsNullOrEmpty(Translated))
+                    return Original;
+                else
+                    return Translated;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the context.
         /// </summary>
         /// <remarks>

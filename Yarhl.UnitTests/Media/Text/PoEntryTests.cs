@@ -74,5 +74,18 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.AreEqual("test7", entry.PreviousContext);
             Assert.AreEqual("test8", entry.PreviousOriginal);
         }
+
+        [Test]
+        public void TextShowsOriginalOrTranslated()
+        {
+            PoEntry entry = new PoEntry();
+            Assert.That(entry.Text, Is.EqualTo(string.Empty));
+
+            entry.Original = "original";
+            Assert.That(entry.Text, Is.EqualTo(entry.Original));
+
+            entry.Translated = "translated";
+            Assert.That(entry.Text, Is.EqualTo(entry.Translated));
+        }
     }
 }
