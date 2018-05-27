@@ -258,6 +258,72 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadToNullOrEmptyToken()
+        {
+            Assert.That(() => reader.ReadToToken(null), Throws.ArgumentNullException);
+            Assert.That(() => reader.ReadToToken(string.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ReadToTokenMultipleBuffers()
+        {
+            for (int i = 0; i < 150; i++)
+                stream.WriteByte(0x30);
+
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x38);
+            stream.Position = 0;
+
+            string text = reader.ReadToToken("5");
+
+            Assert.That(text, Is.EqualTo(new string('0', 150)));
+            Assert.That(stream.Position, Is.EqualTo(151));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedTail()
+        {
+            stream.WriteByte(0x30);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x61);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0xe6);
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0xe5);  // half encoded
+            stream.Position = 0;
+
+            reader.Encoding = Encoding.GetEncoding("utf-16");
+            string text = reader.ReadToToken("a");
+
+            Assert.That(text, Is.EqualTo("01"));
+            Assert.That(stream.Position, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedBetweenBuffers()
+        {
+            // first buffer
+            for (int i = 0; i < 127; i++)
+                stream.WriteByte(0x30);
+            stream.WriteByte(0xe6);
+
+            // second buffer
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0x08);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            string text = reader.ReadToToken("\x08");
+
+            Assert.That(text, Is.EqualTo(new string('0', 127) + '漢'));
+            Assert.That(stream.Position, Is.EqualTo(131));
+        }
+
+        [Test]
         public void ReadUnixLine()
         {
             stream.WriteByte(0x35);

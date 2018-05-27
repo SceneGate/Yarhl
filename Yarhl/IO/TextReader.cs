@@ -1,4 +1,4 @@
-//
+﻿//
 // TextReader.cs
 //
 // Author:
@@ -27,6 +27,8 @@
 namespace Yarhl.IO
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -87,7 +89,7 @@ namespace Yarhl.IO
         public string NewLine {
             get {
                 return newLine;
-        }
+            }
 
             set {
                 newLine = value;
@@ -137,21 +139,49 @@ namespace Yarhl.IO
         /// <param name="token">Token to find.</param>
         public string ReadToToken(string token)
         {
+            if (string.IsNullOrEmpty(token))
+                throw new ArgumentNullException(nameof(token));
+
             // If starting is EOF, then return null
             if (Stream.EndOfStream)
                 return null;
 
-            string text = string.Empty;
-            bool found = false;
-            while (!found) {
+            const int BufferSize = 128;
+            byte[] buffer = new byte[BufferSize];
+
+            // Gather bytes from buffer to buffer into a list and try to
+            // convert to find the token. This approach is faster since we
+            // read blocks and it avoids issues with half-encoded chars.
+            long startPos = Stream.Position;
+            List<byte> textBuffer = new List<byte>();
+            int matchIndex = -1;
+            while (matchIndex == -1) {
                 if (Stream.EndOfStream)
                     break;
 
-                text += reader.ReadChar(Encoding);
-                found = text.EndsWith(token, StringComparison.InvariantCulture);
+                // Read buffer size if possible, otherwise remaining bytes
+                int size = Stream.Position + BufferSize <= Stream.Length ?
+                    BufferSize :
+                    (int)(Stream.Length - Stream.Position);
+
+                int read = Stream.Read(buffer, 0, size);
+                textBuffer.AddRange(buffer.Take(read));
+
+                matchIndex = Encoding.GetString(textBuffer.ToArray())
+                    .IndexOf(token, StringComparison.InvariantCulture);
             }
 
-            return found ? text.Substring(0, text.Length - token.Length) : text;
+            string result = Encoding.GetString(textBuffer.ToArray());
+            if (matchIndex != -1) {
+                // We skip the bytes of the token too
+                string fullResult = result.Substring(0, matchIndex + token.Length);
+                Stream.Position = startPos + Encoding.GetByteCount(fullResult);
+
+                // Result without token
+                result = result.Substring(0, matchIndex);
+            }
+
+            return result;
         }
 
         /// <summary>
