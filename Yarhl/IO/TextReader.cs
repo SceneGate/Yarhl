@@ -1,4 +1,4 @@
-﻿//
+//
 // TextReader.cs
 //
 // Author:
@@ -35,6 +35,7 @@ namespace Yarhl.IO
     public class TextReader
     {
         readonly DataReader reader;
+        string newLine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextReader"/> class.
@@ -79,13 +80,19 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Gets or sets the new line.
+        /// Gets or sets the new line and set to false AutoNewLine.
         /// </summary>
         /// <value>The new line.</value>
         /// <remarks>The default value is OS-dependant.</remarks>
         public string NewLine {
-            get;
-            set;
+            get {
+                return newLine;
+        }
+
+            set {
+                newLine = value;
+                AutoNewLine = false;
+            }
         }
 
         /// <summary>

@@ -92,6 +92,14 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void AutoNewLineIsFalseAfterSettingNewLine()
+        {
+            Assert.IsTrue(reader.AutoNewLine);
+            reader.NewLine = "a";
+            Assert.IsFalse(reader.AutoNewLine);
+        }
+
+        [Test]
         public void ReadChar()
         {
             stream.WriteByte(0x61);
