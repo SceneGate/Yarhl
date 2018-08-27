@@ -1,0 +1,27 @@
+var class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests =
+[
+    [ "AddChecksForErrors", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a8c3ded70257a0c279b49b633fc369d66", null ],
+    [ "AddIsAddingEntries", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a9b3120964b8b11586dc72fdf099913cf", null ],
+    [ "AddMultipleCheksForError", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a9a9ce80e66661d371ba1a95e2e8a87fa", null ],
+    [ "AddMultipleEntries", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#aaee8e5caa7c2324b510f77ab4e6730bf", null ],
+    [ "AddMultipleEntriesAfterDisposeThrows", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#ae5df37ae0f7f1e96c2e349d885ac8655", null ],
+    [ "AddThrowsIfOriginalIsEmpty", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a084af2d3389106cf401e2135d3d08afd", null ],
+    [ "CanAddMultipleEntriesSameIdDifferentContext", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#abb724649639bc8ae084b9ff768f6c9d6", null ],
+    [ "ConstructorWithHeader", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#af09071509444133824fd1b2339542495", null ],
+    [ "CorrectName", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a70c7e0fa8912071a4c72fb280403c48f", null ],
+    [ "CreateDummyFormat", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a6ba1e094b7c9dbc7651668253e83a472", null ],
+    [ "DefaultValues", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a6408434a5db26a6de34a615e5761c830", null ],
+    [ "FindEntryAfterDisposeThrows", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#adf18589a2830e5c6cac8812bdc407a0b", null ],
+    [ "FindEntryNullOriginalThrows", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a2799d0bcf3229b8061fe6f0a1aa79a65", null ],
+    [ "FindEntryReturnsEntry", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a5b2e953fd5c3a6eacb9f530667366dd5", null ],
+    [ "FindEntryWithSameOriginalAndUnknownContextReturnsNull", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a327b2a5bb41735bcf357a7315ea42f78", null ],
+    [ "FindEntryWithSameOriginalDifferentContextReturnsCorrect", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a3a08e5e468c3ee664332ef983145b005", null ],
+    [ "FindUnknownEntryFromIndexerReturnsNull", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#aff85593d9d4d838907301b93655bd190", null ],
+    [ "MergeEntriesIfWithSameId", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#af3076a6f4459883e54812647df13e2a4", null ],
+    [ "MergeEntriesIfWithSameIdAndSameContext", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#ac829fea8f9c149e4d21eff1efe1bd489", null ],
+    [ "MultipleEntriesDifferentTranslationThrows", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a3d42fcdc455ad45c640895ec127a4be0", null ],
+    [ "SetHeader", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a9af55156367fbce736387ec872bbc44f", null ],
+    [ "SetHeaderAfterDisposeThrowsException", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#aefd02cb79545921bed2320a906045444", null ],
+    [ "SetHeaderWithMissingFieldsThrowsException", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#a0fcecd36cd54a89603b52d5f0a6d4e2c", null ],
+    [ "SetNullHeaderDoesNotThrowsException", "class_yarhl_1_1_unit_tests_1_1_media_1_1_text_1_1_po_tests.html#ae40af8608091cd5073e819bacb44b9d1", null ]
+];

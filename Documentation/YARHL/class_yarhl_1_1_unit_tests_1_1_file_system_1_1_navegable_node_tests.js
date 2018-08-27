@@ -1,0 +1,26 @@
+var class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests =
+[
+    [ "AddAllChildren", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#ac237599a296affee315def81bbda2c8a", null ],
+    [ "AddChildrenThrowExceptionIfNull", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#adfe877f12f06dd0de5d47ddbd15dd5ba", null ],
+    [ "AddChildrenThrowsExceptionAfterDispose", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#ad90b92d2d82b8b84ff5938a34132f700", null ],
+    [ "AddChildUpdatesChildrenAndParent", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a255d77888d42581f0e80181acbad8ec1", null ],
+    [ "AddThrowsExceptionAfterDispose", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a175336d10bfa7abd621ea0d5541c4106", null ],
+    [ "ChildrenGetsByName", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a7fe3cb5b4ff849e52bf9cf53a478c376", null ],
+    [ "DefaultValues", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a2a4748cc184378c893c4375653e88c11", null ],
+    [ "DisposeChangesProperty", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#ae3862846abbf5a4a714afab1443fd327", null ],
+    [ "DisposeRemoveChildrens", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#af3b769d8754b1c10a436037da50479f2", null ],
+    [ "DisposeTwiceDoesNotThrowException", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#af460e326c97bb9c37af2127df7f84076", null ],
+    [ "ExceptionIfInvalidCharacters", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#afc03babc805f508fc428be9a86c709a1", null ],
+    [ "ExceptionIfInvalidName", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#afdd533ebaed011cb5c810253dd6ea0ef", null ],
+    [ "ExceptionIfNullChild", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#acb0c57bfa7300b7136e80e0ef3a5ec5a", null ],
+    [ "NameProperty", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#af07c4c1ae32683da53fcc9351af9a99f", null ],
+    [ "PathIfParentIsNull", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a7f48c4d5d7c187ae7f9b6479b3a8468f", null ],
+    [ "PathWithParent", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a8209da20df951b1c6f3eed81eb473f6d", null ],
+    [ "RemoveChildren", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#ac2c6104d72b711d18af535791da30653", null ],
+    [ "RemoveChildrenAfterDisposeThrowsException", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a3f6f332bc3487bdc821fb7c80f5753d3", null ],
+    [ "RemoveChildrenDisposeChildren", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a87c0200c5cff529b63fadd46f27d2caa", null ],
+    [ "RemoveChildrenRemovesInnerChildren", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#afdcb3f925432b23b6507830dda49f60e", null ],
+    [ "ReplaceDisposePreviousChild", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#aca6f0bbba6ee8921348e6407ec852834", null ],
+    [ "ReplaceIfSameName", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a4b5009ff07ab40546e6cc6f19996b20c", null ],
+    [ "TagsAllowAdding", "class_yarhl_1_1_unit_tests_1_1_file_system_1_1_navegable_node_tests.html#a67cb09603cdb0e36f8e2d39e5adf3c10", null ]
+];

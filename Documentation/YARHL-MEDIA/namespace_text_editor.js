@@ -1,0 +1,26 @@
+var namespace_text_editor =
+[
+    [ "CompilerService", "namespace_text_editor_1_1_compiler_service.html", "namespace_text_editor_1_1_compiler_service" ],
+    [ "Xml", "namespace_text_editor_1_1_xml.html", "namespace_text_editor_1_1_xml" ],
+    [ "CopyCommand", "class_text_editor_1_1_copy_command.html", "class_text_editor_1_1_copy_command" ],
+    [ "CutCommand", "class_text_editor_1_1_cut_command.html", "class_text_editor_1_1_cut_command" ],
+    [ "ExitCommand", "class_text_editor_1_1_exit_command.html", "class_text_editor_1_1_exit_command" ],
+    [ "FileTemplateNode", "class_text_editor_1_1_file_template_node.html", "class_text_editor_1_1_file_template_node" ],
+    [ "ICommand", "interface_text_editor_1_1_i_command.html", "interface_text_editor_1_1_i_command" ],
+    [ "MainClass", "class_text_editor_1_1_main_class.html", null ],
+    [ "MenuItemNode", "class_text_editor_1_1_menu_item_node.html", "class_text_editor_1_1_menu_item_node" ],
+    [ "MenuNode", "class_text_editor_1_1_menu_node.html", "class_text_editor_1_1_menu_node" ],
+    [ "MenuSeparatorNode", "class_text_editor_1_1_menu_separator_node.html", "class_text_editor_1_1_menu_separator_node" ],
+    [ "NewCommand", "class_text_editor_1_1_new_command.html", "class_text_editor_1_1_new_command" ],
+    [ "OpenCommand", "class_text_editor_1_1_open_command.html", "class_text_editor_1_1_open_command" ],
+    [ "OpenFileCondition", "class_text_editor_1_1_open_file_condition.html", "class_text_editor_1_1_open_file_condition" ],
+    [ "PasteCommand", "class_text_editor_1_1_paste_command.html", "class_text_editor_1_1_paste_command" ],
+    [ "SaveCommand", "class_text_editor_1_1_save_command.html", "class_text_editor_1_1_save_command" ],
+    [ "SetupCommand", "class_text_editor_1_1_setup_command.html", "class_text_editor_1_1_setup_command" ],
+    [ "SubmenuNode", "class_text_editor_1_1_submenu_node.html", "class_text_editor_1_1_submenu_node" ],
+    [ "TemplateCategoryNode", "class_text_editor_1_1_template_category_node.html", "class_text_editor_1_1_template_category_node" ],
+    [ "TextEditorApp", "class_text_editor_1_1_text_editor_app.html", null ],
+    [ "ToolbarNode", "class_text_editor_1_1_toolbar_node.html", "class_text_editor_1_1_toolbar_node" ],
+    [ "ToolButtonNode", "class_text_editor_1_1_tool_button_node.html", "class_text_editor_1_1_tool_button_node" ],
+    [ "ToolSeparatorNode", "class_text_editor_1_1_tool_separator_node.html", "class_text_editor_1_1_tool_separator_node" ]
+];

@@ -1,0 +1,27 @@
+var class_mono_1_1_addins_1_1_runtime_addin =
+[
+    [ "CreateInstance", "class_mono_1_1_addins_1_1_runtime_addin.html#afee9f516d7a4393ec608c78b3533a8da", null ],
+    [ "CreateInstance", "class_mono_1_1_addins_1_1_runtime_addin.html#a472f5368eb5763e75e091b5d09f87a44", null ],
+    [ "GetFilePath", "class_mono_1_1_addins_1_1_runtime_addin.html#aaa60d68a61813c04ef7d648ad5c3e0d3", null ],
+    [ "GetFilePath", "class_mono_1_1_addins_1_1_runtime_addin.html#a1aa6880f8766890072914571cb200729", null ],
+    [ "GetResource", "class_mono_1_1_addins_1_1_runtime_addin.html#adc48f167375a75dc0949c365b60dfe1a", null ],
+    [ "GetResource", "class_mono_1_1_addins_1_1_runtime_addin.html#a5c5e9ebc33a6beaa97b6a9e818cde3b1", null ],
+    [ "GetResourceInfo", "class_mono_1_1_addins_1_1_runtime_addin.html#ae06cf360fcc6aaba86ea9735739bce7a", null ],
+    [ "GetResourceObject", "class_mono_1_1_addins_1_1_runtime_addin.html#aa31bd4bdd8bed664b0c11b2350caa513", null ],
+    [ "GetResourceObject", "class_mono_1_1_addins_1_1_runtime_addin.html#a752c4f897e1e8c78d3b6bd587f76f5d2", null ],
+    [ "GetResourceObject", "class_mono_1_1_addins_1_1_runtime_addin.html#a9c527b2b4048cc1d82a72fb4b8f54fe9", null ],
+    [ "GetResourceString", "class_mono_1_1_addins_1_1_runtime_addin.html#a67ce8a3a53fd3de36db9354a8d63858f", null ],
+    [ "GetResourceString", "class_mono_1_1_addins_1_1_runtime_addin.html#a68a445cd277cdb161b18a29fb6141e20", null ],
+    [ "GetResourceString", "class_mono_1_1_addins_1_1_runtime_addin.html#a8e33f5e5e173132629e6a968a17575e3", null ],
+    [ "GetType", "class_mono_1_1_addins_1_1_runtime_addin.html#ac1316304d3c39078ffdfe4be8d659e62", null ],
+    [ "GetType", "class_mono_1_1_addins_1_1_runtime_addin.html#a67e7553024d1724ac535a6b41236532d", null ],
+    [ "ToString", "class_mono_1_1_addins_1_1_runtime_addin.html#a2fa3594fd5e0698c368f7b5319f3d73b", null ],
+    [ "Addin", "class_mono_1_1_addins_1_1_runtime_addin.html#aa9590bf1d905673eb6499cf4576fe576", null ],
+    [ "Assemblies", "class_mono_1_1_addins_1_1_runtime_addin.html#ae374681e21c4dbf4f1dc0dc130d56e9c", null ],
+    [ "AssembliesLoaded", "class_mono_1_1_addins_1_1_runtime_addin.html#a29a08b75f0acdb5c925a22e25cf39354", null ],
+    [ "Id", "class_mono_1_1_addins_1_1_runtime_addin.html#a78c3fa0173ea1c6ea6c3921082ddad8f", null ],
+    [ "Localizer", "class_mono_1_1_addins_1_1_runtime_addin.html#a16faf010d707d1b7590d116a652ccd7a", null ],
+    [ "Module", "class_mono_1_1_addins_1_1_runtime_addin.html#a32aa2bbce16ed6c9d2adf1a695524e0d", null ],
+    [ "PrivateDataPath", "class_mono_1_1_addins_1_1_runtime_addin.html#aa4b231cbc2e1f4563ac130fda2dd11db", null ],
+    [ "Version", "class_mono_1_1_addins_1_1_runtime_addin.html#ac4397f7181708180e52bb7c25286de64", null ]
+];
