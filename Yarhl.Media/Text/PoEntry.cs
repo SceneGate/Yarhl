@@ -72,8 +72,7 @@ namespace Yarhl.Media.Text
             get {
                 if (string.IsNullOrEmpty(Translated))
                     return Original;
-                else
-                    return Translated;
+                return Translated;
             }
         }
 
