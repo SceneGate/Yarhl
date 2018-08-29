@@ -1,4 +1,0 @@
-var class_yarhl_1_1_unit_tests_1_1_file_format_1_1_format_tests_1_1_format_test_duplicated_converter2 =
-[
-    [ "Convert", "class_yarhl_1_1_unit_tests_1_1_file_format_1_1_format_tests_1_1_format_test_duplicated_converter2.html#a65f2de4df87f7a343910b0bf4a259cd2", null ]
-];
