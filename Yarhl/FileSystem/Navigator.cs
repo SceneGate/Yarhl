@@ -86,10 +86,9 @@ namespace Yarhl.FileSystem
 
             if (mode == NavigationMode.BreadthFirst)
                 return IterateBreadthFirst(rootNode);
-            else if (mode == NavigationMode.DepthFirst)
+            if (mode == NavigationMode.DepthFirst)
                 return IterateDepthFirst(rootNode);
-            else
-                throw new ArgumentOutOfRangeException(nameof(mode));
+            throw new ArgumentOutOfRangeException(nameof(mode));
         }
 
         static IEnumerable<T> IterateBreadthFirst<T>(T rootNode)

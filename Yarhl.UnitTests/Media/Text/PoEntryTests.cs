@@ -52,7 +52,7 @@ namespace Yarhl.UnitTests.Media.Text
         [Test]
         public void TestProperties()
         {
-            PoEntry entry = new PoEntry() {
+            PoEntry entry = new PoEntry {
                 Original = "test0",
                 Translated = "test1",
                 Context = "test2",
