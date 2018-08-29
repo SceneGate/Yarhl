@@ -12,7 +12,7 @@ install:
 - cmd: git submodule update --init --recursive
 - cmd: nuget restore
 - cmd: nuget install OpenCover -OutputDirectory testrunner
-- cmd: nuget install coveralls.net -OutputDirectory testrunner
+- cmd: dotnet tool install coveralls.net --tool-path tools
 
 before_build:
 - cmd: msbuild mono-addins\Mono.Addins\Mono.Addins.csproj
@@ -28,7 +28,7 @@ after_test:
 
     $env:APPVEYOR_BUILD_NUMBER
 
-    $coveralls = (Resolve-Path "testrunner/coveralls.net.*/tools/csmacnz.coveralls.exe").ToString()
+    $coveralls = (Resolve-Path "tools/csmacnz.Coveralls").ToString()
 
     & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
 

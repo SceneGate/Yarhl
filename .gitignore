@@ -14,3 +14,5 @@ StyleCopViolations.xml
 StyleCop.Cache
 coverage-report/
 opencoverCoverage.xml
+tools/
+
