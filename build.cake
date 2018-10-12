@@ -104,7 +104,8 @@ Task("Run-AltCover")
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
         AssemblyFilter = new[] { "nunit.framework", "Mono.Addins" },
-        XmlReport = "coverage.xml"
+        XmlReport = "coverage.xml",
+        OpenCover = true
     };
     Prepare(altcoverArgs);
 
@@ -143,7 +144,7 @@ Task("Run-Coveralls")
     .Does(() =>
 {
     CoverallsIo(
-        "coverage.xml",
+        MakeAbsolute(File("coverage.xml")).FullPath,
         new CoverallsIoSettings {
             RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN")
         });

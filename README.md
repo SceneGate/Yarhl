@@ -1,6 +1,9 @@
 # Yarhl - Yet Another ROM Hacking Library
 
-**Yarhl** is a library for *ROM Hacking* and translation projects. It provides a virtual file system, file format and format conversion facilities and plugin support. It's built in C# / .NET and works in Windows, Linux and Mac OS.
+**Yarhl** is a library for *ROM Hacking* and translation projects.
+It provides a virtual file system, file format and format conversion facilities
+and plugin support. It's built in C# / .NET and works in Windows, Linux and
+Mac OS X.
 
 | Build & Test | [![Travis Build Status](https://travis-ci.org/SceneGate/Yarhl.svg?branch=master)](https://travis-ci.org/SceneGate/Yarhl) [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/master?svg=true)](https://ci.appveyor.com/project/pleonex/libgame/branch/master) |
 | ----- | ------ |
@@ -14,13 +17,22 @@
 
 ### Linux
 
-1.  Download the [repository](https://github.com/SceneGate/Yarhl/archive/master.zip) or clone it with git: `git clone https://github.com/SceneGate/Yarhl --recursive`
-2.  Install [Mono](http://www.mono-project.com/docs/getting-started/install/linux/).
-3.  Run `automation/build.sh`
+Requirements:
+[*Mono*](http://www.mono-project.com/docs/getting-started/install/linux/).
+
+1. Download the [repository](https://github.com/SceneGate/Yarhl/archive/master.zip)
+   or clone it with git: `git clone https://github.com/SceneGate/Yarhl --recursive`
+
+2. Run `./build.sh`
 
 ### Windows
 
-1.  Clone the repository with the [GitHub client](https://windows.github.com/) or download the [zip](https://github.com/SceneGate/Yarhl/archive/master.zip).
-2.  Download and install *Xamarin Studio* from [here](http://www.monodevelop.com/download/) and open the solution. It should work with *Visual Studio* and [*SharpDevelop*](http://www.icsharpcode.net/OpenSource/SD/Download/) too.
-3.  Compile Mono.Addins dependency project: *mono-addins/Mono.Addins/Mono.Addins.csproj*
-4.  Compile Yarhl
+Requirements:
+*Visual Studio*,
+[Xamarin Studio](http://www.monodevelop.com/download/) or
+[*SharpDevelop*](http://www.icsharpcode.net/OpenSource/SD/Download/).
+
+1. Clone the repository with the [GitHub client](https://windows.github.com/)
+   or download the [zip](https://github.com/SceneGate/Yarhl/archive/master.zip).
+
+2. Run `.\build.ps1`
