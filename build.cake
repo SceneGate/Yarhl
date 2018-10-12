@@ -25,7 +25,7 @@
 #addin nuget:?package=Cake.FileHelpers
 #addin nuget:?package=altcover.api
 #tool "nuget:?package=ReportGenerator"
-#tool "nuget:?package=OpenCover"
+#tool coveralls.net
 #addin Cake.Coveralls
 #addin "nuget:?package=Cake.Sonar"
 #tool "nuget:?package=MSBuild.SonarQube.Runner.Tool"
@@ -139,21 +139,30 @@ Task("Test-Quality")
 
 
 Task("Run-Coveralls")
-    .IsDependentOn("Build")
+    .IsDependentOn("Run-AltCover")
     .Does(() =>
 {
-    // $opencover = (Resolve-Path "testrunner/OpenCover.*/tools/OpenCover.Console.exe").ToString()
-    // & $opencover -register:user -target:nunit3-console.exe -targetargs:Yarhl.UnitTests\bin\Debug\Yarhl.UnitTests.dll -filter:"+[Yarhl*]* -[Yarhl.UnitTests*]*" -output:opencoverCoverage.xml
-    // $env:APPVEYOR_BUILD_NUMBER
-    // $coveralls = (Resolve-Path "tools/csmacnz.Coveralls").ToString()
-    // & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
+    CoverallsNet(
+        "coverage.xml",
+        CoverallsNetReportType.OpenCover,
+        new CoverallsNetSettings {
+            RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN"),
+            UseRelativePaths = true,
+            CommitId = EnvironmentVariable("APPVEYOR_REPO_COMMIT"),
+            CommitBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH"),
+            CommitAuthor = EnvironmentVariable("APPVEYOR_REPO_COMMIT_AUTHOR"),
+            CommitEmail = EnvironmentVariable("APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL"),
+            CommitMessage = EnvironmentVariable("APPVEYOR_REPO_COMMIT_MESSAGE"),
+            JobId = EnvironmentVariable("APPVEYOR_BUILD_NUMBER"),
+            ServiceName = "appveyor"
+        });
 });
 
 Task("Run-Sonar")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var sonar_token = EnvironmentVariable("SONAR_TOKEN")
+    var sonar_token = EnvironmentVariable("SONAR_TOKEN");
     SonarBegin(new SonarBeginSettings{
         Url = "https://sonarqube.com",
         Key = "yarhl",
