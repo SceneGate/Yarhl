@@ -149,13 +149,26 @@ Task("Run-Coveralls")
     // & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
 });
 
-Task("Run-SonarQube")
+Task("Run-Sonar")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    // MSBuild.SonarQube.Runner.exe begin /k:"yarhl" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
-    // msbuild /t:Rebuild "Yarhl.sln"
-    // MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"
+    var sonar_token = EnvironmentVariable("SONAR_TOKEN")
+    SonarBegin(new SonarBeginSettings{
+        Url = "https://sonarqube.com",
+        Key = "yarhl",
+        Login = sonar_token,
+        Organization = "pleonex-github",
+        Verbose = true
+     });
+
+    MSBuild("src/Yarhl.sln", configurator =>
+            configurator.SetConfiguration(configuration)
+                .WithTarget("Rebuild"));
+
+     SonarEnd(new SonarEndSettings{
+        Login = sonar_token
+     });
 });
 
 Task("Default")
@@ -172,6 +185,6 @@ Task("AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-Coveralls")
-    .IsDependentOn("Run-SonarQube");
+    .IsDependentOn("Run-Sonar");
 
 RunTarget(target);
