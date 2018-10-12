@@ -11,5 +11,6 @@ environment:
 install:
 - cmd: git submodule update --init --recursive
 
-build:
-  ps: .\build.ps1 --target=AppVeyor --verbosity=diagnostic
+build_script:
+
+- ps: .\build.ps1 --target=AppVeyor --verbosity=diagnostic
