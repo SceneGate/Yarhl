@@ -1,6 +1,5 @@
 ## Travis CI Integration
 language: csharp
-solution: Yarhl.sln
 
 matrix:
   include:
