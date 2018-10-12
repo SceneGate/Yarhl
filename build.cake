@@ -111,23 +111,38 @@ Task("Run-AltCover")
         new NUnit3Settings { NoResults = true });
 
     // Create the report
-    ReportGenerator("coverage.xml", "coveragereport");
+    ReportGenerator(
+        "coverage.xml",
+        "coveragereport",
+        new ReportGeneratorSettings {
+            ReportTypes = new[] {
+                ReportGeneratorReportType.Html,
+                ReportGeneratorReportType.TextSummary,
+                ReportGeneratorReportType.XmlSummary } });
+
+    // Get final result
+    var xml = System.Xml.Linq.XDocument.Load("coveragereport/Summary.xml");
+    var coverage = xml.Root.Element("Summary").Element("Linecoverage").Value;
+    if (coverage == "100%") {
+        Information("Full coverage!");
+    } else {
+        Warning($"Missing coverage: {coverage}");
+    }
 });
 
-Task("Run-Linters")
-    .IsDependentOn("Build")
-    .IsDependentOn("Run-Linter-Gendarme");
+Task("Test-Quality")
+    .IsDependentOn("Run-Linter-Gendarme")
+    .IsDependentOn("Run-AltCover");
 
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Linters");
+    .IsDependentOn("Test-Quality");
 
 Task("Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Linters")
-    .IsDependentOn("Run-AltCover");
+    .IsDependentOn("Test-Quality");
 
 Task("AppVeyor")
     .IsDependentOn("Build")
