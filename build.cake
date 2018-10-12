@@ -25,7 +25,7 @@
 #addin nuget:?package=Cake.FileHelpers
 #addin nuget:?package=altcover.api
 #tool "nuget:?package=ReportGenerator"
-#tool coveralls.net
+#tool coveralls.io
 #addin Cake.Coveralls
 #addin "nuget:?package=Cake.Sonar"
 #tool "nuget:?package=MSBuild.SonarQube.Runner.Tool"
@@ -142,19 +142,10 @@ Task("Run-Coveralls")
     .IsDependentOn("Run-AltCover")
     .Does(() =>
 {
-    CoverallsNet(
+    CoverallsIo(
         "coverage.xml",
-        CoverallsNetReportType.OpenCover,
-        new CoverallsNetSettings {
-            RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN"),
-            UseRelativePaths = true,
-            CommitId = EnvironmentVariable("APPVEYOR_REPO_COMMIT"),
-            CommitBranch = EnvironmentVariable("APPVEYOR_REPO_BRANCH"),
-            CommitAuthor = EnvironmentVariable("APPVEYOR_REPO_COMMIT_AUTHOR"),
-            CommitEmail = EnvironmentVariable("APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL"),
-            CommitMessage = EnvironmentVariable("APPVEYOR_REPO_COMMIT_MESSAGE"),
-            JobId = EnvironmentVariable("APPVEYOR_BUILD_NUMBER"),
-            ServiceName = "appveyor"
+        new CoverallsIoSettings {
+            RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN")
         });
 });
 
