@@ -14,5 +14,8 @@ StyleCopViolations.xml
 StyleCop.Cache
 coverage-report/
 opencoverCoverage.xml
-tools/
+coverage.xml
+coveragereport/
 
+# Cake
+tools/

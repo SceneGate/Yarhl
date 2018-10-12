@@ -1,6 +1,5 @@
 ## Travis CI Integration
 language: csharp
-solution: Yarhl.sln
 
 matrix:
   include:
@@ -8,14 +7,8 @@ matrix:
       dist: trusty
       mono: latest
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode10
       mono: latest
 
-install:
-    - nuget restore Yarhl.sln
-    - nuget install NUnit.Runners -OutputDirectory testrunner
-
 script:
-    - msbuild mono-addins/Mono.Addins/Mono.Addins.csproj
-    - msbuild Yarhl.sln
-    - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe Yarhl.UnitTests/bin/Debug/Yarhl.UnitTests.dll
+  - ./build.sh --target=Travis --verbosity=diagnostic

@@ -36,7 +36,7 @@
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Mono.Addins">
-      <HintPath>..\mono-addins\bin\Mono.Addins.dll</HintPath>
+      <HintPath>..\..\mono-addins\bin\Mono.Addins.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -51,7 +51,7 @@
     <Compile Include="FileSystem\Node.cs" />
     <Compile Include="FileSystem\NavegableNode.cs" />
     <Compile Include="FileSystem\Navigator.cs" />
-    <Compile Include="FileSystem\NavigationMode.cs" />    
+    <Compile Include="FileSystem\NavigationMode.cs" />
     <Compile Include="FileSystem\NavegableNodeCollection.cs" />
     <Compile Include="FileSystem\NodeFactory.cs" />
     <Compile Include="FileSystem\NodeSystem.cs" />
@@ -70,4 +70,8 @@
     <Folder Include="FileFormat\" />
     <Folder Include="FileSystem\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
 </Project>
