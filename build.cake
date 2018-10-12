@@ -25,7 +25,10 @@
 #addin nuget:?package=Cake.FileHelpers
 #addin nuget:?package=altcover.api
 #tool "nuget:?package=ReportGenerator"
-using AltCover;
+#tool "nuget:?package=OpenCover"
+#addin Cake.Coveralls
+#addin "nuget:?package=Cake.Sonar"
+#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool"
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -67,7 +70,7 @@ Task("Run-Linter-Gendarme")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var mono_tools = DownloadFile("https://github.com/pleonex/mono-tools/releases/download/v4.2.1/mono-tools-v4.2.1.zip");
+    var mono_tools = DownloadFile("https://github.com/pleonex/mono-tools/releases/download/v4.2.2/mono-tools-v4.2.2.zip");
     ZipUncompress(mono_tools, "tools/mono_tools");
     var gendarme = "tools/mono_tools/bin/gendarme";
     if (!IsRunningOnWindows()) {
@@ -97,7 +100,7 @@ Task("Run-AltCover")
     var outputDir = $"{inputDir}/__Instrumented";
 
     // Create new assemblies with the instrumentation
-    var altcoverArgs = new PrepareArgs {
+    var altcoverArgs = new AltCover.PrepareArgs {
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
         AssemblyFilter = new[] { "nunit.framework", "Mono.Addins" },
@@ -134,6 +137,27 @@ Task("Test-Quality")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover");
 
+
+Task("Run-Coveralls")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    // $opencover = (Resolve-Path "testrunner/OpenCover.*/tools/OpenCover.Console.exe").ToString()
+    // & $opencover -register:user -target:nunit3-console.exe -targetargs:Yarhl.UnitTests\bin\Debug\Yarhl.UnitTests.dll -filter:"+[Yarhl*]* -[Yarhl.UnitTests*]*" -output:opencoverCoverage.xml
+    // $env:APPVEYOR_BUILD_NUMBER
+    // $coveralls = (Resolve-Path "tools/csmacnz.Coveralls").ToString()
+    // & $coveralls --opencover -i opencoverCoverage.xml --repoToken $env:COVERALLS_REPO_TOKEN --useRelativePaths --commitId $env:APPVEYOR_REPO_COMMIT --commitBranch $env:APPVEYOR_REPO_BRANCH --commitAuthor $env:APPVEYOR_REPO_COMMIT_AUTHOR --commitEmail $env:APPVEYOR_REPO_COMMIT_AUTHOR_EMAIL --commitMessage $env:APPVEYOR_REPO_COMMIT_MESSAGE --jobId $env:APPVEYOR_BUILD_NUMBER --serviceName appveyor
+});
+
+Task("Run-SonarQube")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    // MSBuild.SonarQube.Runner.exe begin /k:"yarhl" /d:"sonar.host.url=https://sonarqube.com" /d:"sonar.login=%SONAR_TOKEN%" /d:"sonar.organization=pleonex-github"
+    // msbuild /t:Rebuild "Yarhl.sln"
+    // MSBuild.SonarQube.Runner.exe end /d:"sonar.login=%SONAR_TOKEN%"
+});
+
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
@@ -146,8 +170,8 @@ Task("Travis")
 
 Task("AppVeyor")
     .IsDependentOn("Build")
-    .IsDependentOn("Run-Unit-Tests");
-    // .IsDependentOn("Run-Coveralls")
-    // .IsDependentOn("Run-SonarQube");
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Coveralls")
+    .IsDependentOn("Run-SonarQube");
 
 RunTarget(target);
