@@ -1,21 +1,27 @@
+# Output
 bin/
 obj/
+.addins
+
+# IDE
 *.userprefs
 *.user
-packages/
-nuget.exe
-testrunner/
-.addins
 *.vs
 
+# Dependencies
+packages/
+
+# Linters and Tests
 TestResult.xml
-gendarme_*_report.html
 StyleCopViolations.xml
 StyleCop.Cache
-coverage-report/
-opencoverCoverage.xml
 coverage.xml
 coveragereport/
 
 # Cake
 tools/
+
+# Docs
+docs/_site/
+docs/api/
+doc-branch/

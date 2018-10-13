@@ -29,6 +29,8 @@
 #addin Cake.Coveralls
 #addin "nuget:?package=Cake.Sonar"
 #tool "nuget:?package=MSBuild.SonarQube.Runner.Tool"
+#addin Cake.DocFx
+#tool nuget:?package=docfx.console
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -172,6 +174,31 @@ Task("Run-Sonar")
      });
 });
 
+Task("Build-Doc")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    // Workaround for
+    // https://github.com/dotnet/docfx/issues/3389
+    NuGetInstall("SQLitePCLRaw.core", new NuGetInstallSettings {
+        ExcludeVersion  = true,
+        OutputDirectory = "./tools"
+    });
+    CopyFileToDirectory(
+        "tools/SQLitePCLRaw.core/lib/net45/SQLitePCLRaw.core.dll",
+        GetDirectories("tools/docfx.console.*").Single().Combine("tools"));
+
+    DocFxMetadata("docs/docfx.json");
+    DocFxBuild("docs/docfx.json");
+});
+
+Task("Serve-Doc")
+    .IsDependentOn("Build-Doc")
+    .Does(() =>
+{
+    DocFxBuild("docs/docfx.json", new DocFxBuildSettings { Serve = true });
+});
+
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
@@ -180,7 +207,8 @@ Task("Default")
 Task("Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Test-Quality");
+    .IsDependentOn("Test-Quality")
+    .IsDependentOn("Build-Doc");  // Try to build the doc but don't deploy
 
 Task("AppVeyor")
     .IsDependentOn("Build")

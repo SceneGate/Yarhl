@@ -27,7 +27,7 @@ namespace Yarhl
     using Mono.Addins;
 
     /// <summary>
-    /// Manager for LibGame plugins.
+    /// Manager for Yarhl plugins.
     /// </summary>
     public sealed class PluginManager : IDisposable
     {
