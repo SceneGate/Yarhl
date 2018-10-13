@@ -100,7 +100,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets a value indicating whether reads any kind of
         /// NewLine format (\r\n or \n). If true, this ignore the
-        /// <cref href="NewLine" /> field.
+        /// NewLine field.
         /// </summary>
         /// <returns>If true, it will treat new lines any matching of \r\n or
         /// \n. Otherwhise false.
