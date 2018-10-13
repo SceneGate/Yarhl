@@ -1,0 +1,3383 @@
+### YamlMime:XRefMap
+sorted: true
+references:
+- uid: README
+  name: 'Yarhl: Yet Another ROM Hacking Library '
+  href: index.html
+- uid: Yarhl
+  name: Yarhl
+  href: api/Yarhl.html
+  commentId: N:Yarhl
+  fullName: Yarhl
+  nameWithType: Yarhl
+- uid: Yarhl.FileFormat
+  name: Yarhl.FileFormat
+  href: api/Yarhl.FileFormat.html
+  commentId: N:Yarhl.FileFormat
+  fullName: Yarhl.FileFormat
+  nameWithType: Yarhl.FileFormat
+- uid: Yarhl.FileFormat.BinaryFormat
+  name: BinaryFormat
+  href: api/Yarhl.FileFormat.BinaryFormat.html
+  commentId: T:Yarhl.FileFormat.BinaryFormat
+  fullName: Yarhl.FileFormat.BinaryFormat
+  nameWithType: BinaryFormat
+- uid: Yarhl.FileFormat.BinaryFormat.#ctor
+  name: BinaryFormat()
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat__ctor
+  commentId: M:Yarhl.FileFormat.BinaryFormat.#ctor
+  fullName: Yarhl.FileFormat.BinaryFormat.BinaryFormat()
+  nameWithType: BinaryFormat.BinaryFormat()
+- uid: Yarhl.FileFormat.BinaryFormat.#ctor(System.String)
+  name: BinaryFormat(String)
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat__ctor_System_String_
+  commentId: M:Yarhl.FileFormat.BinaryFormat.#ctor(System.String)
+  fullName: Yarhl.FileFormat.BinaryFormat.BinaryFormat(System.String)
+  nameWithType: BinaryFormat.BinaryFormat(String)
+- uid: Yarhl.FileFormat.BinaryFormat.#ctor(Yarhl.IO.DataStream)
+  name: BinaryFormat(DataStream)
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat__ctor_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.FileFormat.BinaryFormat.#ctor(Yarhl.IO.DataStream)
+  fullName: Yarhl.FileFormat.BinaryFormat.BinaryFormat(Yarhl.IO.DataStream)
+  nameWithType: BinaryFormat.BinaryFormat(DataStream)
+- uid: Yarhl.FileFormat.BinaryFormat.#ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)
+  name: BinaryFormat(DataStream, Int64, Int64)
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat__ctor_Yarhl_IO_DataStream_System_Int64_System_Int64_
+  commentId: M:Yarhl.FileFormat.BinaryFormat.#ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)
+  fullName: Yarhl.FileFormat.BinaryFormat.BinaryFormat(Yarhl.IO.DataStream, System.Int64, System.Int64)
+  nameWithType: BinaryFormat.BinaryFormat(DataStream, Int64, Int64)
+- uid: Yarhl.FileFormat.BinaryFormat.#ctor*
+  name: BinaryFormat
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat__ctor_
+  commentId: Overload:Yarhl.FileFormat.BinaryFormat.#ctor
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.BinaryFormat.BinaryFormat
+  nameWithType: BinaryFormat.BinaryFormat
+- uid: Yarhl.FileFormat.BinaryFormat.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat_Dispose_System_Boolean_
+  commentId: M:Yarhl.FileFormat.BinaryFormat.Dispose(System.Boolean)
+  fullName: Yarhl.FileFormat.BinaryFormat.Dispose(System.Boolean)
+  nameWithType: BinaryFormat.Dispose(Boolean)
+- uid: Yarhl.FileFormat.BinaryFormat.Dispose*
+  name: Dispose
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat_Dispose_
+  commentId: Overload:Yarhl.FileFormat.BinaryFormat.Dispose
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.BinaryFormat.Dispose
+  nameWithType: BinaryFormat.Dispose
+- uid: Yarhl.FileFormat.BinaryFormat.Stream
+  name: Stream
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat_Stream
+  commentId: P:Yarhl.FileFormat.BinaryFormat.Stream
+  fullName: Yarhl.FileFormat.BinaryFormat.Stream
+  nameWithType: BinaryFormat.Stream
+- uid: Yarhl.FileFormat.BinaryFormat.Stream*
+  name: Stream
+  href: api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat_Stream_
+  commentId: Overload:Yarhl.FileFormat.BinaryFormat.Stream
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.BinaryFormat.Stream
+  nameWithType: BinaryFormat.Stream
+- uid: Yarhl.FileFormat.Format
+  name: Format
+  href: api/Yarhl.FileFormat.Format.html
+  commentId: T:Yarhl.FileFormat.Format
+  fullName: Yarhl.FileFormat.Format
+  nameWithType: Format
+- uid: Yarhl.FileFormat.Format.ConvertTo(System.Type)
+  name: ConvertTo(Type)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertTo_System_Type_
+  commentId: M:Yarhl.FileFormat.Format.ConvertTo(System.Type)
+  fullName: Yarhl.FileFormat.Format.ConvertTo(System.Type)
+  nameWithType: Format.ConvertTo(Type)
+- uid: Yarhl.FileFormat.Format.ConvertTo(System.Type,System.Object)
+  name: ConvertTo(Type, Object)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertTo_System_Type_System_Object_
+  commentId: M:Yarhl.FileFormat.Format.ConvertTo(System.Type,System.Object)
+  fullName: Yarhl.FileFormat.Format.ConvertTo(System.Type, System.Object)
+  nameWithType: Format.ConvertTo(Type, Object)
+- uid: Yarhl.FileFormat.Format.ConvertTo*
+  name: ConvertTo
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertTo_
+  commentId: Overload:Yarhl.FileFormat.Format.ConvertTo
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.Format.ConvertTo
+  nameWithType: Format.ConvertTo
+- uid: Yarhl.FileFormat.Format.ConvertTo``1
+  name: ConvertTo<TDst>()
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertTo__1
+  commentId: M:Yarhl.FileFormat.Format.ConvertTo``1
+  name.vb: ConvertTo(Of TDst)()
+  fullName: Yarhl.FileFormat.Format.ConvertTo<TDst>()
+  fullName.vb: Yarhl.FileFormat.Format.ConvertTo(Of TDst)()
+  nameWithType: Format.ConvertTo<TDst>()
+  nameWithType.vb: Format.ConvertTo(Of TDst)()
+- uid: Yarhl.FileFormat.Format.ConvertTo``1(System.Object)
+  name: ConvertTo<TDst>(Object)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertTo__1_System_Object_
+  commentId: M:Yarhl.FileFormat.Format.ConvertTo``1(System.Object)
+  name.vb: ConvertTo(Of TDst)(Object)
+  fullName: Yarhl.FileFormat.Format.ConvertTo<TDst>(System.Object)
+  fullName.vb: Yarhl.FileFormat.Format.ConvertTo(Of TDst)(System.Object)
+  nameWithType: Format.ConvertTo<TDst>(Object)
+  nameWithType.vb: Format.ConvertTo(Of TDst)(Object)
+- uid: Yarhl.FileFormat.Format.ConvertTo``2(``1)
+  name: ConvertTo<TDst, TSrc>(TSrc)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertTo__2___1_
+  commentId: M:Yarhl.FileFormat.Format.ConvertTo``2(``1)
+  name.vb: ConvertTo(Of TDst, TSrc)(TSrc)
+  fullName: Yarhl.FileFormat.Format.ConvertTo<TDst, TSrc>(TSrc)
+  fullName.vb: Yarhl.FileFormat.Format.ConvertTo(Of TDst, TSrc)(TSrc)
+  nameWithType: Format.ConvertTo<TDst, TSrc>(TSrc)
+  nameWithType.vb: Format.ConvertTo(Of TDst, TSrc)(TSrc)
+- uid: Yarhl.FileFormat.Format.ConvertWith(System.Object,System.Object,System.Type)
+  name: ConvertWith(Object, Object, Type)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith_System_Object_System_Object_System_Type_
+  commentId: M:Yarhl.FileFormat.Format.ConvertWith(System.Object,System.Object,System.Type)
+  fullName: Yarhl.FileFormat.Format.ConvertWith(System.Object, System.Object, System.Type)
+  nameWithType: Format.ConvertWith(Object, Object, Type)
+- uid: Yarhl.FileFormat.Format.ConvertWith(System.Object,System.Type)
+  name: ConvertWith(Object, Type)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith_System_Object_System_Type_
+  commentId: M:Yarhl.FileFormat.Format.ConvertWith(System.Object,System.Type)
+  fullName: Yarhl.FileFormat.Format.ConvertWith(System.Object, System.Type)
+  nameWithType: Format.ConvertWith(Object, Type)
+- uid: Yarhl.FileFormat.Format.ConvertWith*
+  name: ConvertWith
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith_
+  commentId: Overload:Yarhl.FileFormat.Format.ConvertWith
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.Format.ConvertWith
+  nameWithType: Format.ConvertWith
+- uid: Yarhl.FileFormat.Format.ConvertWith``2(Yarhl.FileFormat.IConverter{``0,``1})
+  name: ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst>)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith__2_Yarhl_FileFormat_IConverter___0___1__
+  commentId: M:Yarhl.FileFormat.Format.ConvertWith``2(Yarhl.FileFormat.IConverter{``0,``1})
+  name.vb: ConvertWith(Of TSrc, TDst)(IConverter(Of TSrc, TDst))
+  fullName: Yarhl.FileFormat.Format.ConvertWith<TSrc, TDst>(Yarhl.FileFormat.IConverter<TSrc, TDst>)
+  fullName.vb: Yarhl.FileFormat.Format.ConvertWith(Of TSrc, TDst)(Yarhl.FileFormat.IConverter(Of TSrc, TDst))
+  nameWithType: Format.ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst>)
+  nameWithType.vb: Format.ConvertWith(Of TSrc, TDst)(IConverter(Of TSrc, TDst))
+- uid: Yarhl.FileFormat.Format.ConvertWith``2(Yarhl.FileFormat.IConverter{``0,``1},``0)
+  name: ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst>, TSrc)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith__2_Yarhl_FileFormat_IConverter___0___1____0_
+  commentId: M:Yarhl.FileFormat.Format.ConvertWith``2(Yarhl.FileFormat.IConverter{``0,``1},``0)
+  name.vb: ConvertWith(Of TSrc, TDst)(IConverter(Of TSrc, TDst), TSrc)
+  fullName: Yarhl.FileFormat.Format.ConvertWith<TSrc, TDst>(Yarhl.FileFormat.IConverter<TSrc, TDst>, TSrc)
+  fullName.vb: Yarhl.FileFormat.Format.ConvertWith(Of TSrc, TDst)(Yarhl.FileFormat.IConverter(Of TSrc, TDst), TSrc)
+  nameWithType: Format.ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst>, TSrc)
+  nameWithType.vb: Format.ConvertWith(Of TSrc, TDst)(IConverter(Of TSrc, TDst), TSrc)
+- uid: Yarhl.FileFormat.Format.ConvertWith``3
+  name: ConvertWith<TConv, TSrc, TDst>()
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith__3
+  commentId: M:Yarhl.FileFormat.Format.ConvertWith``3
+  name.vb: ConvertWith(Of TConv, TSrc, TDst)()
+  fullName: Yarhl.FileFormat.Format.ConvertWith<TConv, TSrc, TDst>()
+  fullName.vb: Yarhl.FileFormat.Format.ConvertWith(Of TConv, TSrc, TDst)()
+  nameWithType: Format.ConvertWith<TConv, TSrc, TDst>()
+  nameWithType.vb: Format.ConvertWith(Of TConv, TSrc, TDst)()
+- uid: Yarhl.FileFormat.Format.ConvertWith``3(``1)
+  name: ConvertWith<TConv, TSrc, TDst>(TSrc)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_ConvertWith__3___1_
+  commentId: M:Yarhl.FileFormat.Format.ConvertWith``3(``1)
+  name.vb: ConvertWith(Of TConv, TSrc, TDst)(TSrc)
+  fullName: Yarhl.FileFormat.Format.ConvertWith<TConv, TSrc, TDst>(TSrc)
+  fullName.vb: Yarhl.FileFormat.Format.ConvertWith(Of TConv, TSrc, TDst)(TSrc)
+  nameWithType: Format.ConvertWith<TConv, TSrc, TDst>(TSrc)
+  nameWithType.vb: Format.ConvertWith(Of TConv, TSrc, TDst)(TSrc)
+- uid: Yarhl.FileFormat.Format.Dispose
+  name: Dispose()
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Dispose
+  commentId: M:Yarhl.FileFormat.Format.Dispose
+  fullName: Yarhl.FileFormat.Format.Dispose()
+  nameWithType: Format.Dispose()
+- uid: Yarhl.FileFormat.Format.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Dispose_System_Boolean_
+  commentId: M:Yarhl.FileFormat.Format.Dispose(System.Boolean)
+  fullName: Yarhl.FileFormat.Format.Dispose(System.Boolean)
+  nameWithType: Format.Dispose(Boolean)
+- uid: Yarhl.FileFormat.Format.Dispose*
+  name: Dispose
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Dispose_
+  commentId: Overload:Yarhl.FileFormat.Format.Dispose
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.Format.Dispose
+  nameWithType: Format.Dispose
+- uid: Yarhl.FileFormat.Format.Disposed
+  name: Disposed
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Disposed
+  commentId: P:Yarhl.FileFormat.Format.Disposed
+  fullName: Yarhl.FileFormat.Format.Disposed
+  nameWithType: Format.Disposed
+- uid: Yarhl.FileFormat.Format.Disposed*
+  name: Disposed
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Disposed_
+  commentId: Overload:Yarhl.FileFormat.Format.Disposed
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.Format.Disposed
+  nameWithType: Format.Disposed
+- uid: Yarhl.FileFormat.Format.Finalize
+  name: Finalize()
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Finalize
+  commentId: M:Yarhl.FileFormat.Format.Finalize
+  fullName: Yarhl.FileFormat.Format.Finalize()
+  nameWithType: Format.Finalize()
+- uid: Yarhl.FileFormat.Format.Finalize*
+  name: Finalize
+  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Finalize_
+  commentId: Overload:Yarhl.FileFormat.Format.Finalize
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.Format.Finalize
+  nameWithType: Format.Finalize
+- uid: Yarhl.FileFormat.FormatAttribute
+  name: FormatAttribute
+  href: api/Yarhl.FileFormat.FormatAttribute.html
+  commentId: T:Yarhl.FileFormat.FormatAttribute
+  fullName: Yarhl.FileFormat.FormatAttribute
+  nameWithType: FormatAttribute
+- uid: Yarhl.FileFormat.FormatAttribute.#ctor
+  name: FormatAttribute()
+  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute__ctor
+  commentId: M:Yarhl.FileFormat.FormatAttribute.#ctor
+  fullName: Yarhl.FileFormat.FormatAttribute.FormatAttribute()
+  nameWithType: FormatAttribute.FormatAttribute()
+- uid: Yarhl.FileFormat.FormatAttribute.#ctor(System.String)
+  name: FormatAttribute(String)
+  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute__ctor_System_String_
+  commentId: M:Yarhl.FileFormat.FormatAttribute.#ctor(System.String)
+  fullName: Yarhl.FileFormat.FormatAttribute.FormatAttribute(System.String)
+  nameWithType: FormatAttribute.FormatAttribute(String)
+- uid: Yarhl.FileFormat.FormatAttribute.#ctor*
+  name: FormatAttribute
+  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute__ctor_
+  commentId: Overload:Yarhl.FileFormat.FormatAttribute.#ctor
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.FormatAttribute.FormatAttribute
+  nameWithType: FormatAttribute.FormatAttribute
+- uid: Yarhl.FileFormat.FormatAttribute.Name
+  name: Name
+  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute_Name
+  commentId: P:Yarhl.FileFormat.FormatAttribute.Name
+  fullName: Yarhl.FileFormat.FormatAttribute.Name
+  nameWithType: FormatAttribute.Name
+- uid: Yarhl.FileFormat.FormatAttribute.Name*
+  name: Name
+  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute_Name_
+  commentId: Overload:Yarhl.FileFormat.FormatAttribute.Name
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.FormatAttribute.Name
+  nameWithType: FormatAttribute.Name
+- uid: Yarhl.FileFormat.IConverter`2
+  name: IConverter<TSrc, TDst>
+  href: api/Yarhl.FileFormat.IConverter-2.html
+  commentId: T:Yarhl.FileFormat.IConverter`2
+  name.vb: IConverter(Of TSrc, TDst)
+  fullName: Yarhl.FileFormat.IConverter<TSrc, TDst>
+  fullName.vb: Yarhl.FileFormat.IConverter(Of TSrc, TDst)
+  nameWithType: IConverter<TSrc, TDst>
+  nameWithType.vb: IConverter(Of TSrc, TDst)
+- uid: Yarhl.FileFormat.IConverter`2.Convert(`0)
+  name: Convert(TSrc)
+  href: api/Yarhl.FileFormat.IConverter-2.html#Yarhl_FileFormat_IConverter_2_Convert__0_
+  commentId: M:Yarhl.FileFormat.IConverter`2.Convert(`0)
+  fullName: Yarhl.FileFormat.IConverter<TSrc, TDst>.Convert(TSrc)
+  fullName.vb: Yarhl.FileFormat.IConverter(Of TSrc, TDst).Convert(TSrc)
+  nameWithType: IConverter<TSrc, TDst>.Convert(TSrc)
+  nameWithType.vb: IConverter(Of TSrc, TDst).Convert(TSrc)
+- uid: Yarhl.FileFormat.IConverter`2.Convert*
+  name: Convert
+  href: api/Yarhl.FileFormat.IConverter-2.html#Yarhl_FileFormat_IConverter_2_Convert_
+  commentId: Overload:Yarhl.FileFormat.IConverter`2.Convert
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.IConverter<TSrc, TDst>.Convert
+  fullName.vb: Yarhl.FileFormat.IConverter(Of TSrc, TDst).Convert
+  nameWithType: IConverter<TSrc, TDst>.Convert
+  nameWithType.vb: IConverter(Of TSrc, TDst).Convert
+- uid: Yarhl.FileSystem
+  name: Yarhl.FileSystem
+  href: api/Yarhl.FileSystem.html
+  commentId: N:Yarhl.FileSystem
+  fullName: Yarhl.FileSystem
+  nameWithType: Yarhl.FileSystem
+- uid: Yarhl.FileSystem.NavegableNode`1
+  name: NavegableNode<T>
+  href: api/Yarhl.FileSystem.NavegableNode-1.html
+  commentId: T:Yarhl.FileSystem.NavegableNode`1
+  name.vb: NavegableNode(Of T)
+  fullName: Yarhl.FileSystem.NavegableNode<T>
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T)
+  nameWithType: NavegableNode<T>
+  nameWithType.vb: NavegableNode(Of T)
+- uid: Yarhl.FileSystem.NavegableNode`1.#ctor(System.String)
+  name: NavegableNode(String)
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1__ctor_System_String_
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.#ctor(System.String)
+  fullName: Yarhl.FileSystem.NavegableNode<T>.NavegableNode(System.String)
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).NavegableNode(System.String)
+  nameWithType: NavegableNode<T>.NavegableNode(String)
+  nameWithType.vb: NavegableNode(Of T).NavegableNode(String)
+- uid: Yarhl.FileSystem.NavegableNode`1.#ctor*
+  name: NavegableNode
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1__ctor_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.#ctor
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.NavegableNode
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).NavegableNode
+  nameWithType: NavegableNode<T>.NavegableNode
+  nameWithType.vb: NavegableNode(Of T).NavegableNode
+- uid: Yarhl.FileSystem.NavegableNode`1.Add(`0)
+  name: Add(T)
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Add__0_
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.Add(`0)
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Add(T)
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Add(T)
+  nameWithType: NavegableNode<T>.Add(T)
+  nameWithType.vb: NavegableNode(Of T).Add(T)
+- uid: Yarhl.FileSystem.NavegableNode`1.Add(System.Collections.Generic.IEnumerable{`0})
+  name: Add(IEnumerable<T>)
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Add_System_Collections_Generic_IEnumerable__0__
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.Add(System.Collections.Generic.IEnumerable{`0})
+  name.vb: Add(IEnumerable(Of T))
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Add(System.Collections.Generic.IEnumerable<T>)
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Add(System.Collections.Generic.IEnumerable(Of T))
+  nameWithType: NavegableNode<T>.Add(IEnumerable<T>)
+  nameWithType.vb: NavegableNode(Of T).Add(IEnumerable(Of T))
+- uid: Yarhl.FileSystem.NavegableNode`1.Add*
+  name: Add
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Add_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Add
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Add
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Add
+  nameWithType: NavegableNode<T>.Add
+  nameWithType.vb: NavegableNode(Of T).Add
+- uid: Yarhl.FileSystem.NavegableNode`1.Children
+  name: Children
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Children
+  commentId: P:Yarhl.FileSystem.NavegableNode`1.Children
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Children
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Children
+  nameWithType: NavegableNode<T>.Children
+  nameWithType.vb: NavegableNode(Of T).Children
+- uid: Yarhl.FileSystem.NavegableNode`1.Children*
+  name: Children
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Children_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Children
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Children
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Children
+  nameWithType: NavegableNode<T>.Children
+  nameWithType.vb: NavegableNode(Of T).Children
+- uid: Yarhl.FileSystem.NavegableNode`1.Dispose
+  name: Dispose()
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Dispose
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.Dispose
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Dispose()
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Dispose()
+  nameWithType: NavegableNode<T>.Dispose()
+  nameWithType.vb: NavegableNode(Of T).Dispose()
+- uid: Yarhl.FileSystem.NavegableNode`1.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Dispose_System_Boolean_
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.Dispose(System.Boolean)
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Dispose(System.Boolean)
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Dispose(System.Boolean)
+  nameWithType: NavegableNode<T>.Dispose(Boolean)
+  nameWithType.vb: NavegableNode(Of T).Dispose(Boolean)
+- uid: Yarhl.FileSystem.NavegableNode`1.Dispose*
+  name: Dispose
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Dispose_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Dispose
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Dispose
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Dispose
+  nameWithType: NavegableNode<T>.Dispose
+  nameWithType.vb: NavegableNode(Of T).Dispose
+- uid: Yarhl.FileSystem.NavegableNode`1.Disposed
+  name: Disposed
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Disposed
+  commentId: P:Yarhl.FileSystem.NavegableNode`1.Disposed
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Disposed
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Disposed
+  nameWithType: NavegableNode<T>.Disposed
+  nameWithType.vb: NavegableNode(Of T).Disposed
+- uid: Yarhl.FileSystem.NavegableNode`1.Disposed*
+  name: Disposed
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Disposed_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Disposed
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Disposed
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Disposed
+  nameWithType: NavegableNode<T>.Disposed
+  nameWithType.vb: NavegableNode(Of T).Disposed
+- uid: Yarhl.FileSystem.NavegableNode`1.Finalize
+  name: Finalize()
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Finalize
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.Finalize
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Finalize()
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Finalize()
+  nameWithType: NavegableNode<T>.Finalize()
+  nameWithType.vb: NavegableNode(Of T).Finalize()
+- uid: Yarhl.FileSystem.NavegableNode`1.Finalize*
+  name: Finalize
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Finalize_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Finalize
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Finalize
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Finalize
+  nameWithType: NavegableNode<T>.Finalize
+  nameWithType.vb: NavegableNode(Of T).Finalize
+- uid: Yarhl.FileSystem.NavegableNode`1.Name
+  name: Name
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Name
+  commentId: P:Yarhl.FileSystem.NavegableNode`1.Name
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Name
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Name
+  nameWithType: NavegableNode<T>.Name
+  nameWithType.vb: NavegableNode(Of T).Name
+- uid: Yarhl.FileSystem.NavegableNode`1.Name*
+  name: Name
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Name_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Name
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Name
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Name
+  nameWithType: NavegableNode<T>.Name
+  nameWithType.vb: NavegableNode(Of T).Name
+- uid: Yarhl.FileSystem.NavegableNode`1.Parent
+  name: Parent
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Parent
+  commentId: P:Yarhl.FileSystem.NavegableNode`1.Parent
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Parent
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Parent
+  nameWithType: NavegableNode<T>.Parent
+  nameWithType.vb: NavegableNode(Of T).Parent
+- uid: Yarhl.FileSystem.NavegableNode`1.Parent*
+  name: Parent
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Parent_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Parent
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Parent
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Parent
+  nameWithType: NavegableNode<T>.Parent
+  nameWithType.vb: NavegableNode(Of T).Parent
+- uid: Yarhl.FileSystem.NavegableNode`1.Path
+  name: Path
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Path
+  commentId: P:Yarhl.FileSystem.NavegableNode`1.Path
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Path
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Path
+  nameWithType: NavegableNode<T>.Path
+  nameWithType.vb: NavegableNode(Of T).Path
+- uid: Yarhl.FileSystem.NavegableNode`1.Path*
+  name: Path
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Path_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Path
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Path
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Path
+  nameWithType: NavegableNode<T>.Path
+  nameWithType.vb: NavegableNode(Of T).Path
+- uid: Yarhl.FileSystem.NavegableNode`1.RemoveChildren
+  name: RemoveChildren()
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_RemoveChildren
+  commentId: M:Yarhl.FileSystem.NavegableNode`1.RemoveChildren
+  fullName: Yarhl.FileSystem.NavegableNode<T>.RemoveChildren()
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).RemoveChildren()
+  nameWithType: NavegableNode<T>.RemoveChildren()
+  nameWithType.vb: NavegableNode(Of T).RemoveChildren()
+- uid: Yarhl.FileSystem.NavegableNode`1.RemoveChildren*
+  name: RemoveChildren
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_RemoveChildren_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.RemoveChildren
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.RemoveChildren
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).RemoveChildren
+  nameWithType: NavegableNode<T>.RemoveChildren
+  nameWithType.vb: NavegableNode(Of T).RemoveChildren
+- uid: Yarhl.FileSystem.NavegableNode`1.Tags
+  name: Tags
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Tags
+  commentId: P:Yarhl.FileSystem.NavegableNode`1.Tags
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Tags
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Tags
+  nameWithType: NavegableNode<T>.Tags
+  nameWithType.vb: NavegableNode(Of T).Tags
+- uid: Yarhl.FileSystem.NavegableNode`1.Tags*
+  name: Tags
+  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Tags_
+  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Tags
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNode<T>.Tags
+  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Tags
+  nameWithType: NavegableNode<T>.Tags
+  nameWithType.vb: NavegableNode(Of T).Tags
+- uid: Yarhl.FileSystem.NavegableNodeCollection`1
+  name: NavegableNodeCollection<T>
+  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html
+  commentId: T:Yarhl.FileSystem.NavegableNodeCollection`1
+  name.vb: NavegableNodeCollection(Of T)
+  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>
+  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T)
+  nameWithType: NavegableNodeCollection<T>
+  nameWithType.vb: NavegableNodeCollection(Of T)
+- uid: Yarhl.FileSystem.NavegableNodeCollection`1.#ctor(System.Collections.Generic.IList{`0})
+  name: NavegableNodeCollection(IList<T>)
+  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1__ctor_System_Collections_Generic_IList__0__
+  commentId: M:Yarhl.FileSystem.NavegableNodeCollection`1.#ctor(System.Collections.Generic.IList{`0})
+  name.vb: NavegableNodeCollection(IList(Of T))
+  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.NavegableNodeCollection(System.Collections.Generic.IList<T>)
+  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).NavegableNodeCollection(System.Collections.Generic.IList(Of T))
+  nameWithType: NavegableNodeCollection<T>.NavegableNodeCollection(IList<T>)
+  nameWithType.vb: NavegableNodeCollection(Of T).NavegableNodeCollection(IList(Of T))
+- uid: Yarhl.FileSystem.NavegableNodeCollection`1.#ctor*
+  name: NavegableNodeCollection
+  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1__ctor_
+  commentId: Overload:Yarhl.FileSystem.NavegableNodeCollection`1.#ctor
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.NavegableNodeCollection
+  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).NavegableNodeCollection
+  nameWithType: NavegableNodeCollection<T>.NavegableNodeCollection
+  nameWithType.vb: NavegableNodeCollection(Of T).NavegableNodeCollection
+- uid: Yarhl.FileSystem.NavegableNodeCollection`1.Item(System.String)
+  name: Item[String]
+  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1_Item_System_String_
+  commentId: P:Yarhl.FileSystem.NavegableNodeCollection`1.Item(System.String)
+  name.vb: Item(String)
+  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.Item[System.String]
+  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).Item(System.String)
+  nameWithType: NavegableNodeCollection<T>.Item[String]
+  nameWithType.vb: NavegableNodeCollection(Of T).Item(String)
+- uid: Yarhl.FileSystem.NavegableNodeCollection`1.Item*
+  name: Item
+  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1_Item_
+  commentId: Overload:Yarhl.FileSystem.NavegableNodeCollection`1.Item
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.Item
+  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).Item
+  nameWithType: NavegableNodeCollection<T>.Item
+  nameWithType.vb: NavegableNodeCollection(Of T).Item
+- uid: Yarhl.FileSystem.NavigationMode
+  name: NavigationMode
+  href: api/Yarhl.FileSystem.NavigationMode.html
+  commentId: T:Yarhl.FileSystem.NavigationMode
+  fullName: Yarhl.FileSystem.NavigationMode
+  nameWithType: NavigationMode
+- uid: Yarhl.FileSystem.NavigationMode.BreadthFirst
+  name: BreadthFirst
+  href: api/Yarhl.FileSystem.NavigationMode.html#Yarhl_FileSystem_NavigationMode_BreadthFirst
+  commentId: F:Yarhl.FileSystem.NavigationMode.BreadthFirst
+  fullName: Yarhl.FileSystem.NavigationMode.BreadthFirst
+  nameWithType: NavigationMode.BreadthFirst
+- uid: Yarhl.FileSystem.NavigationMode.DepthFirst
+  name: DepthFirst
+  href: api/Yarhl.FileSystem.NavigationMode.html#Yarhl_FileSystem_NavigationMode_DepthFirst
+  commentId: F:Yarhl.FileSystem.NavigationMode.DepthFirst
+  fullName: Yarhl.FileSystem.NavigationMode.DepthFirst
+  nameWithType: NavigationMode.DepthFirst
+- uid: Yarhl.FileSystem.Navigator
+  name: Navigator
+  href: api/Yarhl.FileSystem.Navigator.html
+  commentId: T:Yarhl.FileSystem.Navigator
+  fullName: Yarhl.FileSystem.Navigator
+  nameWithType: Navigator
+- uid: Yarhl.FileSystem.Navigator.IterateNodes*
+  name: IterateNodes
+  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_IterateNodes_
+  commentId: Overload:Yarhl.FileSystem.Navigator.IterateNodes
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Navigator.IterateNodes
+  nameWithType: Navigator.IterateNodes
+- uid: Yarhl.FileSystem.Navigator.IterateNodes``1(``0,Yarhl.FileSystem.NavigationMode)
+  name: IterateNodes<T>(T, NavigationMode)
+  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_IterateNodes__1___0_Yarhl_FileSystem_NavigationMode_
+  commentId: M:Yarhl.FileSystem.Navigator.IterateNodes``1(``0,Yarhl.FileSystem.NavigationMode)
+  name.vb: IterateNodes(Of T)(T, NavigationMode)
+  fullName: Yarhl.FileSystem.Navigator.IterateNodes<T>(T, Yarhl.FileSystem.NavigationMode)
+  fullName.vb: Yarhl.FileSystem.Navigator.IterateNodes(Of T)(T, Yarhl.FileSystem.NavigationMode)
+  nameWithType: Navigator.IterateNodes<T>(T, NavigationMode)
+  nameWithType.vb: Navigator.IterateNodes(Of T)(T, NavigationMode)
+- uid: Yarhl.FileSystem.Navigator.SearchFile*
+  name: SearchFile
+  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchFile_
+  commentId: Overload:Yarhl.FileSystem.Navigator.SearchFile
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Navigator.SearchFile
+  nameWithType: Navigator.SearchFile
+- uid: Yarhl.FileSystem.Navigator.SearchFile``1(``0,System.String)
+  name: SearchFile<T>(T, String)
+  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchFile__1___0_System_String_
+  commentId: M:Yarhl.FileSystem.Navigator.SearchFile``1(``0,System.String)
+  name.vb: SearchFile(Of T)(T, String)
+  fullName: Yarhl.FileSystem.Navigator.SearchFile<T>(T, System.String)
+  fullName.vb: Yarhl.FileSystem.Navigator.SearchFile(Of T)(T, System.String)
+  nameWithType: Navigator.SearchFile<T>(T, String)
+  nameWithType.vb: Navigator.SearchFile(Of T)(T, String)
+- uid: Yarhl.FileSystem.Node
+  name: Node
+  href: api/Yarhl.FileSystem.Node.html
+  commentId: T:Yarhl.FileSystem.Node
+  fullName: Yarhl.FileSystem.Node
+  nameWithType: Node
+- uid: Yarhl.FileSystem.Node.#ctor(System.String)
+  name: Node(String)
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node__ctor_System_String_
+  commentId: M:Yarhl.FileSystem.Node.#ctor(System.String)
+  fullName: Yarhl.FileSystem.Node.Node(System.String)
+  nameWithType: Node.Node(String)
+- uid: Yarhl.FileSystem.Node.#ctor(System.String,Yarhl.FileFormat.Format)
+  name: Node(String, Format)
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node__ctor_System_String_Yarhl_FileFormat_Format_
+  commentId: M:Yarhl.FileSystem.Node.#ctor(System.String,Yarhl.FileFormat.Format)
+  fullName: Yarhl.FileSystem.Node.Node(System.String, Yarhl.FileFormat.Format)
+  nameWithType: Node.Node(String, Format)
+- uid: Yarhl.FileSystem.Node.#ctor*
+  name: Node
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node__ctor_
+  commentId: Overload:Yarhl.FileSystem.Node.#ctor
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.Node
+  nameWithType: Node.Node
+- uid: Yarhl.FileSystem.Node.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Dispose_System_Boolean_
+  commentId: M:Yarhl.FileSystem.Node.Dispose(System.Boolean)
+  fullName: Yarhl.FileSystem.Node.Dispose(System.Boolean)
+  nameWithType: Node.Dispose(Boolean)
+- uid: Yarhl.FileSystem.Node.Dispose*
+  name: Dispose
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Dispose_
+  commentId: Overload:Yarhl.FileSystem.Node.Dispose
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.Dispose
+  nameWithType: Node.Dispose
+- uid: Yarhl.FileSystem.Node.Format
+  name: Format
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Format
+  commentId: P:Yarhl.FileSystem.Node.Format
+  fullName: Yarhl.FileSystem.Node.Format
+  nameWithType: Node.Format
+- uid: Yarhl.FileSystem.Node.Format*
+  name: Format
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Format_
+  commentId: Overload:Yarhl.FileSystem.Node.Format
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.Format
+  nameWithType: Node.Format
+- uid: Yarhl.FileSystem.Node.GetFormatAs*
+  name: GetFormatAs
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_GetFormatAs_
+  commentId: Overload:Yarhl.FileSystem.Node.GetFormatAs
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.GetFormatAs
+  nameWithType: Node.GetFormatAs
+- uid: Yarhl.FileSystem.Node.GetFormatAs``1
+  name: GetFormatAs<T>()
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_GetFormatAs__1
+  commentId: M:Yarhl.FileSystem.Node.GetFormatAs``1
+  name.vb: GetFormatAs(Of T)()
+  fullName: Yarhl.FileSystem.Node.GetFormatAs<T>()
+  fullName.vb: Yarhl.FileSystem.Node.GetFormatAs(Of T)()
+  nameWithType: Node.GetFormatAs<T>()
+  nameWithType.vb: Node.GetFormatAs(Of T)()
+- uid: Yarhl.FileSystem.Node.IsContainer
+  name: IsContainer
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_IsContainer
+  commentId: P:Yarhl.FileSystem.Node.IsContainer
+  fullName: Yarhl.FileSystem.Node.IsContainer
+  nameWithType: Node.IsContainer
+- uid: Yarhl.FileSystem.Node.IsContainer*
+  name: IsContainer
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_IsContainer_
+  commentId: Overload:Yarhl.FileSystem.Node.IsContainer
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.IsContainer
+  nameWithType: Node.IsContainer
+- uid: Yarhl.FileSystem.Node.Stream
+  name: Stream
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Stream
+  commentId: P:Yarhl.FileSystem.Node.Stream
+  fullName: Yarhl.FileSystem.Node.Stream
+  nameWithType: Node.Stream
+- uid: Yarhl.FileSystem.Node.Stream*
+  name: Stream
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Stream_
+  commentId: Overload:Yarhl.FileSystem.Node.Stream
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.Stream
+  nameWithType: Node.Stream
+- uid: Yarhl.FileSystem.Node.Transform(System.Type,System.Object)
+  name: Transform(Type, Object)
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Transform_System_Type_System_Object_
+  commentId: M:Yarhl.FileSystem.Node.Transform(System.Type,System.Object)
+  fullName: Yarhl.FileSystem.Node.Transform(System.Type, System.Object)
+  nameWithType: Node.Transform(Type, Object)
+- uid: Yarhl.FileSystem.Node.Transform*
+  name: Transform
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Transform_
+  commentId: Overload:Yarhl.FileSystem.Node.Transform
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.Node.Transform
+  nameWithType: Node.Transform
+- uid: Yarhl.FileSystem.Node.Transform``1
+  name: Transform<T>()
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Transform__1
+  commentId: M:Yarhl.FileSystem.Node.Transform``1
+  name.vb: Transform(Of T)()
+  fullName: Yarhl.FileSystem.Node.Transform<T>()
+  fullName.vb: Yarhl.FileSystem.Node.Transform(Of T)()
+  nameWithType: Node.Transform<T>()
+  nameWithType.vb: Node.Transform(Of T)()
+- uid: Yarhl.FileSystem.Node.Transform``2(Yarhl.FileFormat.IConverter{``0,``1})
+  name: Transform<TSrc, TDst>(IConverter<TSrc, TDst>)
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Transform__2_Yarhl_FileFormat_IConverter___0___1__
+  commentId: M:Yarhl.FileSystem.Node.Transform``2(Yarhl.FileFormat.IConverter{``0,``1})
+  name.vb: Transform(Of TSrc, TDst)(IConverter(Of TSrc, TDst))
+  fullName: Yarhl.FileSystem.Node.Transform<TSrc, TDst>(Yarhl.FileFormat.IConverter<TSrc, TDst>)
+  fullName.vb: Yarhl.FileSystem.Node.Transform(Of TSrc, TDst)(Yarhl.FileFormat.IConverter(Of TSrc, TDst))
+  nameWithType: Node.Transform<TSrc, TDst>(IConverter<TSrc, TDst>)
+  nameWithType.vb: Node.Transform(Of TSrc, TDst)(IConverter(Of TSrc, TDst))
+- uid: Yarhl.FileSystem.Node.Transform``3
+  name: Transform<TConv, TSrc, TDst>()
+  href: api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Transform__3
+  commentId: M:Yarhl.FileSystem.Node.Transform``3
+  name.vb: Transform(Of TConv, TSrc, TDst)()
+  fullName: Yarhl.FileSystem.Node.Transform<TConv, TSrc, TDst>()
+  fullName.vb: Yarhl.FileSystem.Node.Transform(Of TConv, TSrc, TDst)()
+  nameWithType: Node.Transform<TConv, TSrc, TDst>()
+  nameWithType.vb: Node.Transform(Of TConv, TSrc, TDst)()
+- uid: Yarhl.FileSystem.NodeContainerFormat
+  name: NodeContainerFormat
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html
+  commentId: T:Yarhl.FileSystem.NodeContainerFormat
+  fullName: Yarhl.FileSystem.NodeContainerFormat
+  nameWithType: NodeContainerFormat
+- uid: Yarhl.FileSystem.NodeContainerFormat.#ctor
+  name: NodeContainerFormat()
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat__ctor
+  commentId: M:Yarhl.FileSystem.NodeContainerFormat.#ctor
+  fullName: Yarhl.FileSystem.NodeContainerFormat.NodeContainerFormat()
+  nameWithType: NodeContainerFormat.NodeContainerFormat()
+- uid: Yarhl.FileSystem.NodeContainerFormat.#ctor*
+  name: NodeContainerFormat
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat__ctor_
+  commentId: Overload:Yarhl.FileSystem.NodeContainerFormat.#ctor
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeContainerFormat.NodeContainerFormat
+  nameWithType: NodeContainerFormat.NodeContainerFormat
+- uid: Yarhl.FileSystem.NodeContainerFormat.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat_Dispose_System_Boolean_
+  commentId: M:Yarhl.FileSystem.NodeContainerFormat.Dispose(System.Boolean)
+  fullName: Yarhl.FileSystem.NodeContainerFormat.Dispose(System.Boolean)
+  nameWithType: NodeContainerFormat.Dispose(Boolean)
+- uid: Yarhl.FileSystem.NodeContainerFormat.Dispose*
+  name: Dispose
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat_Dispose_
+  commentId: Overload:Yarhl.FileSystem.NodeContainerFormat.Dispose
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeContainerFormat.Dispose
+  nameWithType: NodeContainerFormat.Dispose
+- uid: Yarhl.FileSystem.NodeContainerFormat.MoveChildrenTo(Yarhl.FileSystem.Node)
+  name: MoveChildrenTo(Node)
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat_MoveChildrenTo_Yarhl_FileSystem_Node_
+  commentId: M:Yarhl.FileSystem.NodeContainerFormat.MoveChildrenTo(Yarhl.FileSystem.Node)
+  fullName: Yarhl.FileSystem.NodeContainerFormat.MoveChildrenTo(Yarhl.FileSystem.Node)
+  nameWithType: NodeContainerFormat.MoveChildrenTo(Node)
+- uid: Yarhl.FileSystem.NodeContainerFormat.MoveChildrenTo*
+  name: MoveChildrenTo
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat_MoveChildrenTo_
+  commentId: Overload:Yarhl.FileSystem.NodeContainerFormat.MoveChildrenTo
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeContainerFormat.MoveChildrenTo
+  nameWithType: NodeContainerFormat.MoveChildrenTo
+- uid: Yarhl.FileSystem.NodeContainerFormat.Root
+  name: Root
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat_Root
+  commentId: P:Yarhl.FileSystem.NodeContainerFormat.Root
+  fullName: Yarhl.FileSystem.NodeContainerFormat.Root
+  nameWithType: NodeContainerFormat.Root
+- uid: Yarhl.FileSystem.NodeContainerFormat.Root*
+  name: Root
+  href: api/Yarhl.FileSystem.NodeContainerFormat.html#Yarhl_FileSystem_NodeContainerFormat_Root_
+  commentId: Overload:Yarhl.FileSystem.NodeContainerFormat.Root
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeContainerFormat.Root
+  nameWithType: NodeContainerFormat.Root
+- uid: Yarhl.FileSystem.NodeFactory
+  name: NodeFactory
+  href: api/Yarhl.FileSystem.NodeFactory.html
+  commentId: T:Yarhl.FileSystem.NodeFactory
+  fullName: Yarhl.FileSystem.NodeFactory
+  nameWithType: NodeFactory
+- uid: Yarhl.FileSystem.NodeFactory.CreateContainer(System.String)
+  name: CreateContainer(String)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_CreateContainer_System_String_
+  commentId: M:Yarhl.FileSystem.NodeFactory.CreateContainer(System.String)
+  fullName: Yarhl.FileSystem.NodeFactory.CreateContainer(System.String)
+  nameWithType: NodeFactory.CreateContainer(String)
+- uid: Yarhl.FileSystem.NodeFactory.CreateContainer*
+  name: CreateContainer
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_CreateContainer_
+  commentId: Overload:Yarhl.FileSystem.NodeFactory.CreateContainer
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeFactory.CreateContainer
+  nameWithType: NodeFactory.CreateContainer
+- uid: Yarhl.FileSystem.NodeFactory.CreateContainersForChild(Yarhl.FileSystem.Node,System.String,Yarhl.FileSystem.Node)
+  name: CreateContainersForChild(Node, String, Node)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_CreateContainersForChild_Yarhl_FileSystem_Node_System_String_Yarhl_FileSystem_Node_
+  commentId: M:Yarhl.FileSystem.NodeFactory.CreateContainersForChild(Yarhl.FileSystem.Node,System.String,Yarhl.FileSystem.Node)
+  fullName: Yarhl.FileSystem.NodeFactory.CreateContainersForChild(Yarhl.FileSystem.Node, System.String, Yarhl.FileSystem.Node)
+  nameWithType: NodeFactory.CreateContainersForChild(Node, String, Node)
+- uid: Yarhl.FileSystem.NodeFactory.CreateContainersForChild*
+  name: CreateContainersForChild
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_CreateContainersForChild_
+  commentId: Overload:Yarhl.FileSystem.NodeFactory.CreateContainersForChild
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeFactory.CreateContainersForChild
+  nameWithType: NodeFactory.CreateContainersForChild
+- uid: Yarhl.FileSystem.NodeFactory.FromDirectory(System.String,System.String)
+  name: FromDirectory(String, String)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromDirectory_System_String_System_String_
+  commentId: M:Yarhl.FileSystem.NodeFactory.FromDirectory(System.String,System.String)
+  fullName: Yarhl.FileSystem.NodeFactory.FromDirectory(System.String, System.String)
+  nameWithType: NodeFactory.FromDirectory(String, String)
+- uid: Yarhl.FileSystem.NodeFactory.FromDirectory(System.String,System.String,System.String,System.Boolean)
+  name: FromDirectory(String, String, String, Boolean)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromDirectory_System_String_System_String_System_String_System_Boolean_
+  commentId: M:Yarhl.FileSystem.NodeFactory.FromDirectory(System.String,System.String,System.String,System.Boolean)
+  fullName: Yarhl.FileSystem.NodeFactory.FromDirectory(System.String, System.String, System.String, System.Boolean)
+  nameWithType: NodeFactory.FromDirectory(String, String, String, Boolean)
+- uid: Yarhl.FileSystem.NodeFactory.FromDirectory*
+  name: FromDirectory
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromDirectory_
+  commentId: Overload:Yarhl.FileSystem.NodeFactory.FromDirectory
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeFactory.FromDirectory
+  nameWithType: NodeFactory.FromDirectory
+- uid: Yarhl.FileSystem.NodeFactory.FromFile(System.String)
+  name: FromFile(String)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromFile_System_String_
+  commentId: M:Yarhl.FileSystem.NodeFactory.FromFile(System.String)
+  fullName: Yarhl.FileSystem.NodeFactory.FromFile(System.String)
+  nameWithType: NodeFactory.FromFile(String)
+- uid: Yarhl.FileSystem.NodeFactory.FromFile(System.String,System.String)
+  name: FromFile(String, String)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromFile_System_String_System_String_
+  commentId: M:Yarhl.FileSystem.NodeFactory.FromFile(System.String,System.String)
+  fullName: Yarhl.FileSystem.NodeFactory.FromFile(System.String, System.String)
+  nameWithType: NodeFactory.FromFile(String, String)
+- uid: Yarhl.FileSystem.NodeFactory.FromFile*
+  name: FromFile
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromFile_
+  commentId: Overload:Yarhl.FileSystem.NodeFactory.FromFile
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeFactory.FromFile
+  nameWithType: NodeFactory.FromFile
+- uid: Yarhl.FileSystem.NodeFactory.FromMemory(System.String)
+  name: FromMemory(String)
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromMemory_System_String_
+  commentId: M:Yarhl.FileSystem.NodeFactory.FromMemory(System.String)
+  fullName: Yarhl.FileSystem.NodeFactory.FromMemory(System.String)
+  nameWithType: NodeFactory.FromMemory(String)
+- uid: Yarhl.FileSystem.NodeFactory.FromMemory*
+  name: FromMemory
+  href: api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromMemory_
+  commentId: Overload:Yarhl.FileSystem.NodeFactory.FromMemory
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeFactory.FromMemory
+  nameWithType: NodeFactory.FromMemory
+- uid: Yarhl.FileSystem.NodeSystem
+  name: NodeSystem
+  href: api/Yarhl.FileSystem.NodeSystem.html
+  commentId: T:Yarhl.FileSystem.NodeSystem
+  fullName: Yarhl.FileSystem.NodeSystem
+  nameWithType: NodeSystem
+- uid: Yarhl.FileSystem.NodeSystem.PathSeparator
+  name: PathSeparator
+  href: api/Yarhl.FileSystem.NodeSystem.html#Yarhl_FileSystem_NodeSystem_PathSeparator
+  commentId: P:Yarhl.FileSystem.NodeSystem.PathSeparator
+  fullName: Yarhl.FileSystem.NodeSystem.PathSeparator
+  nameWithType: NodeSystem.PathSeparator
+- uid: Yarhl.FileSystem.NodeSystem.PathSeparator*
+  name: PathSeparator
+  href: api/Yarhl.FileSystem.NodeSystem.html#Yarhl_FileSystem_NodeSystem_PathSeparator_
+  commentId: Overload:Yarhl.FileSystem.NodeSystem.PathSeparator
+  isSpec: "True"
+  fullName: Yarhl.FileSystem.NodeSystem.PathSeparator
+  nameWithType: NodeSystem.PathSeparator
+- uid: Yarhl.IO
+  name: Yarhl.IO
+  href: api/Yarhl.IO.html
+  commentId: N:Yarhl.IO
+  fullName: Yarhl.IO
+  nameWithType: Yarhl.IO
+- uid: Yarhl.IO.DataReader
+  name: DataReader
+  href: api/Yarhl.IO.DataReader.html
+  commentId: T:Yarhl.IO.DataReader
+  fullName: Yarhl.IO.DataReader
+  nameWithType: DataReader
+- uid: Yarhl.IO.DataReader.#ctor(Yarhl.IO.DataStream)
+  name: DataReader(DataStream)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader__ctor_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.IO.DataReader.#ctor(Yarhl.IO.DataStream)
+  fullName: Yarhl.IO.DataReader.DataReader(Yarhl.IO.DataStream)
+  nameWithType: DataReader.DataReader(DataStream)
+- uid: Yarhl.IO.DataReader.#ctor*
+  name: DataReader
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader__ctor_
+  commentId: Overload:Yarhl.IO.DataReader.#ctor
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.DataReader
+  nameWithType: DataReader.DataReader
+- uid: Yarhl.IO.DataReader.DefaultEncoding
+  name: DefaultEncoding
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_DefaultEncoding
+  commentId: P:Yarhl.IO.DataReader.DefaultEncoding
+  fullName: Yarhl.IO.DataReader.DefaultEncoding
+  nameWithType: DataReader.DefaultEncoding
+- uid: Yarhl.IO.DataReader.DefaultEncoding*
+  name: DefaultEncoding
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_DefaultEncoding_
+  commentId: Overload:Yarhl.IO.DataReader.DefaultEncoding
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.DefaultEncoding
+  nameWithType: DataReader.DefaultEncoding
+- uid: Yarhl.IO.DataReader.Endianness
+  name: Endianness
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_Endianness
+  commentId: P:Yarhl.IO.DataReader.Endianness
+  fullName: Yarhl.IO.DataReader.Endianness
+  nameWithType: DataReader.Endianness
+- uid: Yarhl.IO.DataReader.Endianness*
+  name: Endianness
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_Endianness_
+  commentId: Overload:Yarhl.IO.DataReader.Endianness
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.Endianness
+  nameWithType: DataReader.Endianness
+- uid: Yarhl.IO.DataReader.Read*
+  name: Read
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_Read_
+  commentId: Overload:Yarhl.IO.DataReader.Read
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.Read
+  nameWithType: DataReader.Read
+- uid: Yarhl.IO.DataReader.Read``1
+  name: Read<T>()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_Read__1
+  commentId: M:Yarhl.IO.DataReader.Read``1
+  name.vb: Read(Of T)()
+  fullName: Yarhl.IO.DataReader.Read<T>()
+  fullName.vb: Yarhl.IO.DataReader.Read(Of T)()
+  nameWithType: DataReader.Read<T>()
+  nameWithType.vb: DataReader.Read(Of T)()
+- uid: Yarhl.IO.DataReader.ReadByte
+  name: ReadByte()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadByte
+  commentId: M:Yarhl.IO.DataReader.ReadByte
+  fullName: Yarhl.IO.DataReader.ReadByte()
+  nameWithType: DataReader.ReadByte()
+- uid: Yarhl.IO.DataReader.ReadByte*
+  name: ReadByte
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadByte_
+  commentId: Overload:Yarhl.IO.DataReader.ReadByte
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadByte
+  nameWithType: DataReader.ReadByte
+- uid: Yarhl.IO.DataReader.ReadBytes(System.Int32)
+  name: ReadBytes(Int32)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadBytes_System_Int32_
+  commentId: M:Yarhl.IO.DataReader.ReadBytes(System.Int32)
+  fullName: Yarhl.IO.DataReader.ReadBytes(System.Int32)
+  nameWithType: DataReader.ReadBytes(Int32)
+- uid: Yarhl.IO.DataReader.ReadBytes*
+  name: ReadBytes
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadBytes_
+  commentId: Overload:Yarhl.IO.DataReader.ReadBytes
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadBytes
+  nameWithType: DataReader.ReadBytes
+- uid: Yarhl.IO.DataReader.ReadByType(System.Type)
+  name: ReadByType(Type)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadByType_System_Type_
+  commentId: M:Yarhl.IO.DataReader.ReadByType(System.Type)
+  fullName: Yarhl.IO.DataReader.ReadByType(System.Type)
+  nameWithType: DataReader.ReadByType(Type)
+- uid: Yarhl.IO.DataReader.ReadByType*
+  name: ReadByType
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadByType_
+  commentId: Overload:Yarhl.IO.DataReader.ReadByType
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadByType
+  nameWithType: DataReader.ReadByType
+- uid: Yarhl.IO.DataReader.ReadChar(System.Text.Encoding)
+  name: ReadChar(Encoding)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadChar_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataReader.ReadChar(System.Text.Encoding)
+  fullName: Yarhl.IO.DataReader.ReadChar(System.Text.Encoding)
+  nameWithType: DataReader.ReadChar(Encoding)
+- uid: Yarhl.IO.DataReader.ReadChar*
+  name: ReadChar
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadChar_
+  commentId: Overload:Yarhl.IO.DataReader.ReadChar
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadChar
+  nameWithType: DataReader.ReadChar
+- uid: Yarhl.IO.DataReader.ReadChars(System.Int32,System.Text.Encoding)
+  name: ReadChars(Int32, Encoding)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadChars_System_Int32_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataReader.ReadChars(System.Int32,System.Text.Encoding)
+  fullName: Yarhl.IO.DataReader.ReadChars(System.Int32, System.Text.Encoding)
+  nameWithType: DataReader.ReadChars(Int32, Encoding)
+- uid: Yarhl.IO.DataReader.ReadChars*
+  name: ReadChars
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadChars_
+  commentId: Overload:Yarhl.IO.DataReader.ReadChars
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadChars
+  nameWithType: DataReader.ReadChars
+- uid: Yarhl.IO.DataReader.ReadDouble
+  name: ReadDouble()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadDouble
+  commentId: M:Yarhl.IO.DataReader.ReadDouble
+  fullName: Yarhl.IO.DataReader.ReadDouble()
+  nameWithType: DataReader.ReadDouble()
+- uid: Yarhl.IO.DataReader.ReadDouble*
+  name: ReadDouble
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadDouble_
+  commentId: Overload:Yarhl.IO.DataReader.ReadDouble
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadDouble
+  nameWithType: DataReader.ReadDouble
+- uid: Yarhl.IO.DataReader.ReadInt16
+  name: ReadInt16()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt16
+  commentId: M:Yarhl.IO.DataReader.ReadInt16
+  fullName: Yarhl.IO.DataReader.ReadInt16()
+  nameWithType: DataReader.ReadInt16()
+- uid: Yarhl.IO.DataReader.ReadInt16*
+  name: ReadInt16
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt16_
+  commentId: Overload:Yarhl.IO.DataReader.ReadInt16
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadInt16
+  nameWithType: DataReader.ReadInt16
+- uid: Yarhl.IO.DataReader.ReadInt24
+  name: ReadInt24()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt24
+  commentId: M:Yarhl.IO.DataReader.ReadInt24
+  fullName: Yarhl.IO.DataReader.ReadInt24()
+  nameWithType: DataReader.ReadInt24()
+- uid: Yarhl.IO.DataReader.ReadInt24*
+  name: ReadInt24
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt24_
+  commentId: Overload:Yarhl.IO.DataReader.ReadInt24
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadInt24
+  nameWithType: DataReader.ReadInt24
+- uid: Yarhl.IO.DataReader.ReadInt32
+  name: ReadInt32()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt32
+  commentId: M:Yarhl.IO.DataReader.ReadInt32
+  fullName: Yarhl.IO.DataReader.ReadInt32()
+  nameWithType: DataReader.ReadInt32()
+- uid: Yarhl.IO.DataReader.ReadInt32*
+  name: ReadInt32
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt32_
+  commentId: Overload:Yarhl.IO.DataReader.ReadInt32
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadInt32
+  nameWithType: DataReader.ReadInt32
+- uid: Yarhl.IO.DataReader.ReadInt64
+  name: ReadInt64()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt64
+  commentId: M:Yarhl.IO.DataReader.ReadInt64
+  fullName: Yarhl.IO.DataReader.ReadInt64()
+  nameWithType: DataReader.ReadInt64()
+- uid: Yarhl.IO.DataReader.ReadInt64*
+  name: ReadInt64
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadInt64_
+  commentId: Overload:Yarhl.IO.DataReader.ReadInt64
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadInt64
+  nameWithType: DataReader.ReadInt64
+- uid: Yarhl.IO.DataReader.ReadPadding(System.Int32,System.Boolean)
+  name: ReadPadding(Int32, Boolean)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadPadding_System_Int32_System_Boolean_
+  commentId: M:Yarhl.IO.DataReader.ReadPadding(System.Int32,System.Boolean)
+  fullName: Yarhl.IO.DataReader.ReadPadding(System.Int32, System.Boolean)
+  nameWithType: DataReader.ReadPadding(Int32, Boolean)
+- uid: Yarhl.IO.DataReader.ReadPadding*
+  name: ReadPadding
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadPadding_
+  commentId: Overload:Yarhl.IO.DataReader.ReadPadding
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadPadding
+  nameWithType: DataReader.ReadPadding
+- uid: Yarhl.IO.DataReader.ReadSByte
+  name: ReadSByte()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadSByte
+  commentId: M:Yarhl.IO.DataReader.ReadSByte
+  fullName: Yarhl.IO.DataReader.ReadSByte()
+  nameWithType: DataReader.ReadSByte()
+- uid: Yarhl.IO.DataReader.ReadSByte*
+  name: ReadSByte
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadSByte_
+  commentId: Overload:Yarhl.IO.DataReader.ReadSByte
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadSByte
+  nameWithType: DataReader.ReadSByte
+- uid: Yarhl.IO.DataReader.ReadSingle
+  name: ReadSingle()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadSingle
+  commentId: M:Yarhl.IO.DataReader.ReadSingle
+  fullName: Yarhl.IO.DataReader.ReadSingle()
+  nameWithType: DataReader.ReadSingle()
+- uid: Yarhl.IO.DataReader.ReadSingle*
+  name: ReadSingle
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadSingle_
+  commentId: Overload:Yarhl.IO.DataReader.ReadSingle
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadSingle
+  nameWithType: DataReader.ReadSingle
+- uid: Yarhl.IO.DataReader.ReadString(System.Int32,System.Text.Encoding)
+  name: ReadString(Int32, Encoding)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadString_System_Int32_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataReader.ReadString(System.Int32,System.Text.Encoding)
+  fullName: Yarhl.IO.DataReader.ReadString(System.Int32, System.Text.Encoding)
+  nameWithType: DataReader.ReadString(Int32, Encoding)
+- uid: Yarhl.IO.DataReader.ReadString(System.Text.Encoding)
+  name: ReadString(Encoding)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadString_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataReader.ReadString(System.Text.Encoding)
+  fullName: Yarhl.IO.DataReader.ReadString(System.Text.Encoding)
+  nameWithType: DataReader.ReadString(Encoding)
+- uid: Yarhl.IO.DataReader.ReadString(System.Type,System.Text.Encoding)
+  name: ReadString(Type, Encoding)
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadString_System_Type_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataReader.ReadString(System.Type,System.Text.Encoding)
+  fullName: Yarhl.IO.DataReader.ReadString(System.Type, System.Text.Encoding)
+  nameWithType: DataReader.ReadString(Type, Encoding)
+- uid: Yarhl.IO.DataReader.ReadString*
+  name: ReadString
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadString_
+  commentId: Overload:Yarhl.IO.DataReader.ReadString
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadString
+  nameWithType: DataReader.ReadString
+- uid: Yarhl.IO.DataReader.ReadUInt16
+  name: ReadUInt16()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadUInt16
+  commentId: M:Yarhl.IO.DataReader.ReadUInt16
+  fullName: Yarhl.IO.DataReader.ReadUInt16()
+  nameWithType: DataReader.ReadUInt16()
+- uid: Yarhl.IO.DataReader.ReadUInt16*
+  name: ReadUInt16
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadUInt16_
+  commentId: Overload:Yarhl.IO.DataReader.ReadUInt16
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadUInt16
+  nameWithType: DataReader.ReadUInt16
+- uid: Yarhl.IO.DataReader.ReadUInt32
+  name: ReadUInt32()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadUInt32
+  commentId: M:Yarhl.IO.DataReader.ReadUInt32
+  fullName: Yarhl.IO.DataReader.ReadUInt32()
+  nameWithType: DataReader.ReadUInt32()
+- uid: Yarhl.IO.DataReader.ReadUInt32*
+  name: ReadUInt32
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadUInt32_
+  commentId: Overload:Yarhl.IO.DataReader.ReadUInt32
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadUInt32
+  nameWithType: DataReader.ReadUInt32
+- uid: Yarhl.IO.DataReader.ReadUInt64
+  name: ReadUInt64()
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadUInt64
+  commentId: M:Yarhl.IO.DataReader.ReadUInt64
+  fullName: Yarhl.IO.DataReader.ReadUInt64()
+  nameWithType: DataReader.ReadUInt64()
+- uid: Yarhl.IO.DataReader.ReadUInt64*
+  name: ReadUInt64
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadUInt64_
+  commentId: Overload:Yarhl.IO.DataReader.ReadUInt64
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.ReadUInt64
+  nameWithType: DataReader.ReadUInt64
+- uid: Yarhl.IO.DataReader.Stream
+  name: Stream
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_Stream
+  commentId: P:Yarhl.IO.DataReader.Stream
+  fullName: Yarhl.IO.DataReader.Stream
+  nameWithType: DataReader.Stream
+- uid: Yarhl.IO.DataReader.Stream*
+  name: Stream
+  href: api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_Stream_
+  commentId: Overload:Yarhl.IO.DataReader.Stream
+  isSpec: "True"
+  fullName: Yarhl.IO.DataReader.Stream
+  nameWithType: DataReader.Stream
+- uid: Yarhl.IO.DataStream
+  name: DataStream
+  href: api/Yarhl.IO.DataStream.html
+  commentId: T:Yarhl.IO.DataStream
+  fullName: Yarhl.IO.DataStream
+  nameWithType: DataStream
+- uid: Yarhl.IO.DataStream.#ctor
+  name: DataStream()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor
+  commentId: M:Yarhl.IO.DataStream.#ctor
+  fullName: Yarhl.IO.DataStream.DataStream()
+  nameWithType: DataStream.DataStream()
+- uid: Yarhl.IO.DataStream.#ctor(System.IO.Stream)
+  name: DataStream(Stream)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor_System_IO_Stream_
+  commentId: M:Yarhl.IO.DataStream.#ctor(System.IO.Stream)
+  fullName: Yarhl.IO.DataStream.DataStream(System.IO.Stream)
+  nameWithType: DataStream.DataStream(Stream)
+- uid: Yarhl.IO.DataStream.#ctor(System.IO.Stream,System.Int64,System.Int64)
+  name: DataStream(Stream, Int64, Int64)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor_System_IO_Stream_System_Int64_System_Int64_
+  commentId: M:Yarhl.IO.DataStream.#ctor(System.IO.Stream,System.Int64,System.Int64)
+  fullName: Yarhl.IO.DataStream.DataStream(System.IO.Stream, System.Int64, System.Int64)
+  nameWithType: DataStream.DataStream(Stream, Int64, Int64)
+- uid: Yarhl.IO.DataStream.#ctor(System.String,System.Int64,System.Int64,Yarhl.IO.FileOpenMode)
+  name: DataStream(String, Int64, Int64, FileOpenMode)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor_System_String_System_Int64_System_Int64_Yarhl_IO_FileOpenMode_
+  commentId: M:Yarhl.IO.DataStream.#ctor(System.String,System.Int64,System.Int64,Yarhl.IO.FileOpenMode)
+  fullName: Yarhl.IO.DataStream.DataStream(System.String, System.Int64, System.Int64, Yarhl.IO.FileOpenMode)
+  nameWithType: DataStream.DataStream(String, Int64, Int64, FileOpenMode)
+- uid: Yarhl.IO.DataStream.#ctor(System.String,Yarhl.IO.FileOpenMode)
+  name: DataStream(String, FileOpenMode)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor_System_String_Yarhl_IO_FileOpenMode_
+  commentId: M:Yarhl.IO.DataStream.#ctor(System.String,Yarhl.IO.FileOpenMode)
+  fullName: Yarhl.IO.DataStream.DataStream(System.String, Yarhl.IO.FileOpenMode)
+  nameWithType: DataStream.DataStream(String, FileOpenMode)
+- uid: Yarhl.IO.DataStream.#ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)
+  name: DataStream(DataStream, Int64, Int64)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor_Yarhl_IO_DataStream_System_Int64_System_Int64_
+  commentId: M:Yarhl.IO.DataStream.#ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)
+  fullName: Yarhl.IO.DataStream.DataStream(Yarhl.IO.DataStream, System.Int64, System.Int64)
+  nameWithType: DataStream.DataStream(DataStream, Int64, Int64)
+- uid: Yarhl.IO.DataStream.#ctor*
+  name: DataStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream__ctor_
+  commentId: Overload:Yarhl.IO.DataStream.#ctor
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.DataStream
+  nameWithType: DataStream.DataStream
+- uid: Yarhl.IO.DataStream.AbsolutePosition
+  name: AbsolutePosition
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_AbsolutePosition
+  commentId: P:Yarhl.IO.DataStream.AbsolutePosition
+  fullName: Yarhl.IO.DataStream.AbsolutePosition
+  nameWithType: DataStream.AbsolutePosition
+- uid: Yarhl.IO.DataStream.AbsolutePosition*
+  name: AbsolutePosition
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_AbsolutePosition_
+  commentId: Overload:Yarhl.IO.DataStream.AbsolutePosition
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.AbsolutePosition
+  nameWithType: DataStream.AbsolutePosition
+- uid: Yarhl.IO.DataStream.ActiveStreams
+  name: ActiveStreams
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ActiveStreams
+  commentId: P:Yarhl.IO.DataStream.ActiveStreams
+  fullName: Yarhl.IO.DataStream.ActiveStreams
+  nameWithType: DataStream.ActiveStreams
+- uid: Yarhl.IO.DataStream.ActiveStreams*
+  name: ActiveStreams
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ActiveStreams_
+  commentId: Overload:Yarhl.IO.DataStream.ActiveStreams
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.ActiveStreams
+  nameWithType: DataStream.ActiveStreams
+- uid: Yarhl.IO.DataStream.BaseStream
+  name: BaseStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_BaseStream
+  commentId: P:Yarhl.IO.DataStream.BaseStream
+  fullName: Yarhl.IO.DataStream.BaseStream
+  nameWithType: DataStream.BaseStream
+- uid: Yarhl.IO.DataStream.BaseStream*
+  name: BaseStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_BaseStream_
+  commentId: Overload:Yarhl.IO.DataStream.BaseStream
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.BaseStream
+  nameWithType: DataStream.BaseStream
+- uid: Yarhl.IO.DataStream.Compare(Yarhl.IO.DataStream)
+  name: Compare(DataStream)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Compare_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.IO.DataStream.Compare(Yarhl.IO.DataStream)
+  fullName: Yarhl.IO.DataStream.Compare(Yarhl.IO.DataStream)
+  nameWithType: DataStream.Compare(DataStream)
+- uid: Yarhl.IO.DataStream.Compare*
+  name: Compare
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Compare_
+  commentId: Overload:Yarhl.IO.DataStream.Compare
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Compare
+  nameWithType: DataStream.Compare
+- uid: Yarhl.IO.DataStream.Dispose
+  name: Dispose()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Dispose
+  commentId: M:Yarhl.IO.DataStream.Dispose
+  fullName: Yarhl.IO.DataStream.Dispose()
+  nameWithType: DataStream.Dispose()
+- uid: Yarhl.IO.DataStream.Dispose(System.Boolean)
+  name: Dispose(Boolean)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Dispose_System_Boolean_
+  commentId: M:Yarhl.IO.DataStream.Dispose(System.Boolean)
+  fullName: Yarhl.IO.DataStream.Dispose(System.Boolean)
+  nameWithType: DataStream.Dispose(Boolean)
+- uid: Yarhl.IO.DataStream.Dispose*
+  name: Dispose
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Dispose_
+  commentId: Overload:Yarhl.IO.DataStream.Dispose
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Dispose
+  nameWithType: DataStream.Dispose
+- uid: Yarhl.IO.DataStream.Disposed
+  name: Disposed
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Disposed
+  commentId: P:Yarhl.IO.DataStream.Disposed
+  fullName: Yarhl.IO.DataStream.Disposed
+  nameWithType: DataStream.Disposed
+- uid: Yarhl.IO.DataStream.Disposed*
+  name: Disposed
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Disposed_
+  commentId: Overload:Yarhl.IO.DataStream.Disposed
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Disposed
+  nameWithType: DataStream.Disposed
+- uid: Yarhl.IO.DataStream.EndOfStream
+  name: EndOfStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_EndOfStream
+  commentId: P:Yarhl.IO.DataStream.EndOfStream
+  fullName: Yarhl.IO.DataStream.EndOfStream
+  nameWithType: DataStream.EndOfStream
+- uid: Yarhl.IO.DataStream.EndOfStream*
+  name: EndOfStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_EndOfStream_
+  commentId: Overload:Yarhl.IO.DataStream.EndOfStream
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.EndOfStream
+  nameWithType: DataStream.EndOfStream
+- uid: Yarhl.IO.DataStream.Finalize
+  name: Finalize()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Finalize
+  commentId: M:Yarhl.IO.DataStream.Finalize
+  fullName: Yarhl.IO.DataStream.Finalize()
+  nameWithType: DataStream.Finalize()
+- uid: Yarhl.IO.DataStream.Finalize*
+  name: Finalize
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Finalize_
+  commentId: Overload:Yarhl.IO.DataStream.Finalize
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Finalize
+  nameWithType: DataStream.Finalize
+- uid: Yarhl.IO.DataStream.Length
+  name: Length
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Length
+  commentId: P:Yarhl.IO.DataStream.Length
+  fullName: Yarhl.IO.DataStream.Length
+  nameWithType: DataStream.Length
+- uid: Yarhl.IO.DataStream.Length*
+  name: Length
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Length_
+  commentId: Overload:Yarhl.IO.DataStream.Length
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Length
+  nameWithType: DataStream.Length
+- uid: Yarhl.IO.DataStream.Offset
+  name: Offset
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Offset
+  commentId: P:Yarhl.IO.DataStream.Offset
+  fullName: Yarhl.IO.DataStream.Offset
+  nameWithType: DataStream.Offset
+- uid: Yarhl.IO.DataStream.Offset*
+  name: Offset
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Offset_
+  commentId: Overload:Yarhl.IO.DataStream.Offset
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Offset
+  nameWithType: DataStream.Offset
+- uid: Yarhl.IO.DataStream.ParentDataStream
+  name: ParentDataStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ParentDataStream
+  commentId: P:Yarhl.IO.DataStream.ParentDataStream
+  fullName: Yarhl.IO.DataStream.ParentDataStream
+  nameWithType: DataStream.ParentDataStream
+- uid: Yarhl.IO.DataStream.ParentDataStream*
+  name: ParentDataStream
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ParentDataStream_
+  commentId: Overload:Yarhl.IO.DataStream.ParentDataStream
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.ParentDataStream
+  nameWithType: DataStream.ParentDataStream
+- uid: Yarhl.IO.DataStream.PopPosition
+  name: PopPosition()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PopPosition
+  commentId: M:Yarhl.IO.DataStream.PopPosition
+  fullName: Yarhl.IO.DataStream.PopPosition()
+  nameWithType: DataStream.PopPosition()
+- uid: Yarhl.IO.DataStream.PopPosition*
+  name: PopPosition
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PopPosition_
+  commentId: Overload:Yarhl.IO.DataStream.PopPosition
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.PopPosition
+  nameWithType: DataStream.PopPosition
+- uid: Yarhl.IO.DataStream.Position
+  name: Position
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Position
+  commentId: P:Yarhl.IO.DataStream.Position
+  fullName: Yarhl.IO.DataStream.Position
+  nameWithType: DataStream.Position
+- uid: Yarhl.IO.DataStream.Position*
+  name: Position
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Position_
+  commentId: Overload:Yarhl.IO.DataStream.Position
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Position
+  nameWithType: DataStream.Position
+- uid: Yarhl.IO.DataStream.PushCurrentPosition
+  name: PushCurrentPosition()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PushCurrentPosition
+  commentId: M:Yarhl.IO.DataStream.PushCurrentPosition
+  fullName: Yarhl.IO.DataStream.PushCurrentPosition()
+  nameWithType: DataStream.PushCurrentPosition()
+- uid: Yarhl.IO.DataStream.PushCurrentPosition*
+  name: PushCurrentPosition
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PushCurrentPosition_
+  commentId: Overload:Yarhl.IO.DataStream.PushCurrentPosition
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.PushCurrentPosition
+  nameWithType: DataStream.PushCurrentPosition
+- uid: Yarhl.IO.DataStream.PushToPosition(System.Int64,Yarhl.IO.SeekMode)
+  name: PushToPosition(Int64, SeekMode)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PushToPosition_System_Int64_Yarhl_IO_SeekMode_
+  commentId: M:Yarhl.IO.DataStream.PushToPosition(System.Int64,Yarhl.IO.SeekMode)
+  fullName: Yarhl.IO.DataStream.PushToPosition(System.Int64, Yarhl.IO.SeekMode)
+  nameWithType: DataStream.PushToPosition(Int64, SeekMode)
+- uid: Yarhl.IO.DataStream.PushToPosition*
+  name: PushToPosition
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PushToPosition_
+  commentId: Overload:Yarhl.IO.DataStream.PushToPosition
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.PushToPosition
+  nameWithType: DataStream.PushToPosition
+- uid: Yarhl.IO.DataStream.Read(System.Byte[],System.Int32,System.Int32)
+  name: Read(Byte[], Int32, Int32)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Read_System_Byte___System_Int32_System_Int32_
+  commentId: M:Yarhl.IO.DataStream.Read(System.Byte[],System.Int32,System.Int32)
+  name.vb: Read(Byte(), Int32, Int32)
+  fullName: Yarhl.IO.DataStream.Read(System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.IO.DataStream.Read(System.Byte(), System.Int32, System.Int32)
+  nameWithType: DataStream.Read(Byte[], Int32, Int32)
+  nameWithType.vb: DataStream.Read(Byte(), Int32, Int32)
+- uid: Yarhl.IO.DataStream.Read*
+  name: Read
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Read_
+  commentId: Overload:Yarhl.IO.DataStream.Read
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Read
+  nameWithType: DataStream.Read
+- uid: Yarhl.IO.DataStream.ReadByte
+  name: ReadByte()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ReadByte
+  commentId: M:Yarhl.IO.DataStream.ReadByte
+  fullName: Yarhl.IO.DataStream.ReadByte()
+  nameWithType: DataStream.ReadByte()
+- uid: Yarhl.IO.DataStream.ReadByte*
+  name: ReadByte
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ReadByte_
+  commentId: Overload:Yarhl.IO.DataStream.ReadByte
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.ReadByte
+  nameWithType: DataStream.ReadByte
+- uid: Yarhl.IO.DataStream.ReadFormat*
+  name: ReadFormat
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ReadFormat_
+  commentId: Overload:Yarhl.IO.DataStream.ReadFormat
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.ReadFormat
+  nameWithType: DataStream.ReadFormat
+- uid: Yarhl.IO.DataStream.ReadFormat``1
+  name: ReadFormat<T>()
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_ReadFormat__1
+  commentId: M:Yarhl.IO.DataStream.ReadFormat``1
+  name.vb: ReadFormat(Of T)()
+  fullName: Yarhl.IO.DataStream.ReadFormat<T>()
+  fullName.vb: Yarhl.IO.DataStream.ReadFormat(Of T)()
+  nameWithType: DataStream.ReadFormat<T>()
+  nameWithType.vb: DataStream.ReadFormat(Of T)()
+- uid: Yarhl.IO.DataStream.RunInPosition(System.Action,System.Int64,Yarhl.IO.SeekMode)
+  name: RunInPosition(Action, Int64, SeekMode)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_RunInPosition_System_Action_System_Int64_Yarhl_IO_SeekMode_
+  commentId: M:Yarhl.IO.DataStream.RunInPosition(System.Action,System.Int64,Yarhl.IO.SeekMode)
+  fullName: Yarhl.IO.DataStream.RunInPosition(System.Action, System.Int64, Yarhl.IO.SeekMode)
+  nameWithType: DataStream.RunInPosition(Action, Int64, SeekMode)
+- uid: Yarhl.IO.DataStream.RunInPosition*
+  name: RunInPosition
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_RunInPosition_
+  commentId: Overload:Yarhl.IO.DataStream.RunInPosition
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.RunInPosition
+  nameWithType: DataStream.RunInPosition
+- uid: Yarhl.IO.DataStream.Seek(System.Int64,Yarhl.IO.SeekMode)
+  name: Seek(Int64, SeekMode)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Seek_System_Int64_Yarhl_IO_SeekMode_
+  commentId: M:Yarhl.IO.DataStream.Seek(System.Int64,Yarhl.IO.SeekMode)
+  fullName: Yarhl.IO.DataStream.Seek(System.Int64, Yarhl.IO.SeekMode)
+  nameWithType: DataStream.Seek(Int64, SeekMode)
+- uid: Yarhl.IO.DataStream.Seek*
+  name: Seek
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Seek_
+  commentId: Overload:Yarhl.IO.DataStream.Seek
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Seek
+  nameWithType: DataStream.Seek
+- uid: Yarhl.IO.DataStream.Write(System.Byte[],System.Int32,System.Int32)
+  name: Write(Byte[], Int32, Int32)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Write_System_Byte___System_Int32_System_Int32_
+  commentId: M:Yarhl.IO.DataStream.Write(System.Byte[],System.Int32,System.Int32)
+  name.vb: Write(Byte(), Int32, Int32)
+  fullName: Yarhl.IO.DataStream.Write(System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.IO.DataStream.Write(System.Byte(), System.Int32, System.Int32)
+  nameWithType: DataStream.Write(Byte[], Int32, Int32)
+  nameWithType.vb: DataStream.Write(Byte(), Int32, Int32)
+- uid: Yarhl.IO.DataStream.Write*
+  name: Write
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Write_
+  commentId: Overload:Yarhl.IO.DataStream.Write
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.Write
+  nameWithType: DataStream.Write
+- uid: Yarhl.IO.DataStream.WriteByte(System.Byte)
+  name: WriteByte(Byte)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_WriteByte_System_Byte_
+  commentId: M:Yarhl.IO.DataStream.WriteByte(System.Byte)
+  fullName: Yarhl.IO.DataStream.WriteByte(System.Byte)
+  nameWithType: DataStream.WriteByte(Byte)
+- uid: Yarhl.IO.DataStream.WriteByte*
+  name: WriteByte
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_WriteByte_
+  commentId: Overload:Yarhl.IO.DataStream.WriteByte
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.WriteByte
+  nameWithType: DataStream.WriteByte
+- uid: Yarhl.IO.DataStream.WriteTo(System.String)
+  name: WriteTo(String)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_WriteTo_System_String_
+  commentId: M:Yarhl.IO.DataStream.WriteTo(System.String)
+  fullName: Yarhl.IO.DataStream.WriteTo(System.String)
+  nameWithType: DataStream.WriteTo(String)
+- uid: Yarhl.IO.DataStream.WriteTo(Yarhl.IO.DataStream)
+  name: WriteTo(DataStream)
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_WriteTo_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.IO.DataStream.WriteTo(Yarhl.IO.DataStream)
+  fullName: Yarhl.IO.DataStream.WriteTo(Yarhl.IO.DataStream)
+  nameWithType: DataStream.WriteTo(DataStream)
+- uid: Yarhl.IO.DataStream.WriteTo*
+  name: WriteTo
+  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_WriteTo_
+  commentId: Overload:Yarhl.IO.DataStream.WriteTo
+  isSpec: "True"
+  fullName: Yarhl.IO.DataStream.WriteTo
+  nameWithType: DataStream.WriteTo
+- uid: Yarhl.IO.DataWriter
+  name: DataWriter
+  href: api/Yarhl.IO.DataWriter.html
+  commentId: T:Yarhl.IO.DataWriter
+  fullName: Yarhl.IO.DataWriter
+  nameWithType: DataWriter
+- uid: Yarhl.IO.DataWriter.#ctor(Yarhl.IO.DataStream)
+  name: DataWriter(DataStream)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter__ctor_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.IO.DataWriter.#ctor(Yarhl.IO.DataStream)
+  fullName: Yarhl.IO.DataWriter.DataWriter(Yarhl.IO.DataStream)
+  nameWithType: DataWriter.DataWriter(DataStream)
+- uid: Yarhl.IO.DataWriter.#ctor*
+  name: DataWriter
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter__ctor_
+  commentId: Overload:Yarhl.IO.DataWriter.#ctor
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.DataWriter
+  nameWithType: DataWriter.DataWriter
+- uid: Yarhl.IO.DataWriter.DefaultEncoding
+  name: DefaultEncoding
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_DefaultEncoding
+  commentId: P:Yarhl.IO.DataWriter.DefaultEncoding
+  fullName: Yarhl.IO.DataWriter.DefaultEncoding
+  nameWithType: DataWriter.DefaultEncoding
+- uid: Yarhl.IO.DataWriter.DefaultEncoding*
+  name: DefaultEncoding
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_DefaultEncoding_
+  commentId: Overload:Yarhl.IO.DataWriter.DefaultEncoding
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.DefaultEncoding
+  nameWithType: DataWriter.DefaultEncoding
+- uid: Yarhl.IO.DataWriter.Endianness
+  name: Endianness
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Endianness
+  commentId: P:Yarhl.IO.DataWriter.Endianness
+  fullName: Yarhl.IO.DataWriter.Endianness
+  nameWithType: DataWriter.Endianness
+- uid: Yarhl.IO.DataWriter.Endianness*
+  name: Endianness
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Endianness_
+  commentId: Overload:Yarhl.IO.DataWriter.Endianness
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.Endianness
+  nameWithType: DataWriter.Endianness
+- uid: Yarhl.IO.DataWriter.Stream
+  name: Stream
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Stream
+  commentId: P:Yarhl.IO.DataWriter.Stream
+  fullName: Yarhl.IO.DataWriter.Stream
+  nameWithType: DataWriter.Stream
+- uid: Yarhl.IO.DataWriter.Stream*
+  name: Stream
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Stream_
+  commentId: Overload:Yarhl.IO.DataWriter.Stream
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.Stream
+  nameWithType: DataWriter.Stream
+- uid: Yarhl.IO.DataWriter.Write(System.Byte)
+  name: Write(Byte)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Byte_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Byte)
+  fullName: Yarhl.IO.DataWriter.Write(System.Byte)
+  nameWithType: DataWriter.Write(Byte)
+- uid: Yarhl.IO.DataWriter.Write(System.Byte[])
+  name: Write(Byte[])
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Byte___
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Byte[])
+  name.vb: Write(Byte())
+  fullName: Yarhl.IO.DataWriter.Write(System.Byte[])
+  fullName.vb: Yarhl.IO.DataWriter.Write(System.Byte())
+  nameWithType: DataWriter.Write(Byte[])
+  nameWithType.vb: DataWriter.Write(Byte())
+- uid: Yarhl.IO.DataWriter.Write(System.Char,System.Text.Encoding)
+  name: Write(Char, Encoding)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Char_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Char,System.Text.Encoding)
+  fullName: Yarhl.IO.DataWriter.Write(System.Char, System.Text.Encoding)
+  nameWithType: DataWriter.Write(Char, Encoding)
+- uid: Yarhl.IO.DataWriter.Write(System.Char[],System.Text.Encoding)
+  name: Write(Char[], Encoding)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Char___System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Char[],System.Text.Encoding)
+  name.vb: Write(Char(), Encoding)
+  fullName: Yarhl.IO.DataWriter.Write(System.Char[], System.Text.Encoding)
+  fullName.vb: Yarhl.IO.DataWriter.Write(System.Char(), System.Text.Encoding)
+  nameWithType: DataWriter.Write(Char[], Encoding)
+  nameWithType.vb: DataWriter.Write(Char(), Encoding)
+- uid: Yarhl.IO.DataWriter.Write(System.Double)
+  name: Write(Double)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Double_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Double)
+  fullName: Yarhl.IO.DataWriter.Write(System.Double)
+  nameWithType: DataWriter.Write(Double)
+- uid: Yarhl.IO.DataWriter.Write(System.Int16)
+  name: Write(Int16)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Int16_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Int16)
+  fullName: Yarhl.IO.DataWriter.Write(System.Int16)
+  nameWithType: DataWriter.Write(Int16)
+- uid: Yarhl.IO.DataWriter.Write(System.Int32)
+  name: Write(Int32)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Int32_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Int32)
+  fullName: Yarhl.IO.DataWriter.Write(System.Int32)
+  nameWithType: DataWriter.Write(Int32)
+- uid: Yarhl.IO.DataWriter.Write(System.Int64)
+  name: Write(Int64)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Int64_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Int64)
+  fullName: Yarhl.IO.DataWriter.Write(System.Int64)
+  nameWithType: DataWriter.Write(Int64)
+- uid: Yarhl.IO.DataWriter.Write(System.SByte)
+  name: Write(SByte)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_SByte_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.SByte)
+  fullName: Yarhl.IO.DataWriter.Write(System.SByte)
+  nameWithType: DataWriter.Write(SByte)
+- uid: Yarhl.IO.DataWriter.Write(System.Single)
+  name: Write(Single)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_Single_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.Single)
+  fullName: Yarhl.IO.DataWriter.Write(System.Single)
+  nameWithType: DataWriter.Write(Single)
+- uid: Yarhl.IO.DataWriter.Write(System.String,System.Boolean,System.Text.Encoding,System.Int32)
+  name: Write(String, Boolean, Encoding, Int32)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_String_System_Boolean_System_Text_Encoding_System_Int32_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.String,System.Boolean,System.Text.Encoding,System.Int32)
+  fullName: Yarhl.IO.DataWriter.Write(System.String, System.Boolean, System.Text.Encoding, System.Int32)
+  nameWithType: DataWriter.Write(String, Boolean, Encoding, Int32)
+- uid: Yarhl.IO.DataWriter.Write(System.String,System.Int32,System.Boolean,System.Text.Encoding)
+  name: Write(String, Int32, Boolean, Encoding)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_String_System_Int32_System_Boolean_System_Text_Encoding_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.String,System.Int32,System.Boolean,System.Text.Encoding)
+  fullName: Yarhl.IO.DataWriter.Write(System.String, System.Int32, System.Boolean, System.Text.Encoding)
+  nameWithType: DataWriter.Write(String, Int32, Boolean, Encoding)
+- uid: Yarhl.IO.DataWriter.Write(System.String,System.Type,System.Boolean,System.Text.Encoding,System.Int32)
+  name: Write(String, Type, Boolean, Encoding, Int32)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_String_System_Type_System_Boolean_System_Text_Encoding_System_Int32_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.String,System.Type,System.Boolean,System.Text.Encoding,System.Int32)
+  fullName: Yarhl.IO.DataWriter.Write(System.String, System.Type, System.Boolean, System.Text.Encoding, System.Int32)
+  nameWithType: DataWriter.Write(String, Type, Boolean, Encoding, Int32)
+- uid: Yarhl.IO.DataWriter.Write(System.UInt16)
+  name: Write(UInt16)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_UInt16_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.UInt16)
+  fullName: Yarhl.IO.DataWriter.Write(System.UInt16)
+  nameWithType: DataWriter.Write(UInt16)
+- uid: Yarhl.IO.DataWriter.Write(System.UInt32)
+  name: Write(UInt32)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_UInt32_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.UInt32)
+  fullName: Yarhl.IO.DataWriter.Write(System.UInt32)
+  nameWithType: DataWriter.Write(UInt32)
+- uid: Yarhl.IO.DataWriter.Write(System.UInt64)
+  name: Write(UInt64)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_System_UInt64_
+  commentId: M:Yarhl.IO.DataWriter.Write(System.UInt64)
+  fullName: Yarhl.IO.DataWriter.Write(System.UInt64)
+  nameWithType: DataWriter.Write(UInt64)
+- uid: Yarhl.IO.DataWriter.Write*
+  name: Write
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_Write_
+  commentId: Overload:Yarhl.IO.DataWriter.Write
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.Write
+  nameWithType: DataWriter.Write
+- uid: Yarhl.IO.DataWriter.WriteOfType(System.Type,System.Object)
+  name: WriteOfType(Type, Object)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteOfType_System_Type_System_Object_
+  commentId: M:Yarhl.IO.DataWriter.WriteOfType(System.Type,System.Object)
+  fullName: Yarhl.IO.DataWriter.WriteOfType(System.Type, System.Object)
+  nameWithType: DataWriter.WriteOfType(Type, Object)
+- uid: Yarhl.IO.DataWriter.WriteOfType*
+  name: WriteOfType
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteOfType_
+  commentId: Overload:Yarhl.IO.DataWriter.WriteOfType
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.WriteOfType
+  nameWithType: DataWriter.WriteOfType
+- uid: Yarhl.IO.DataWriter.WriteOfType``1(``0)
+  name: WriteOfType<T>(T)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteOfType__1___0_
+  commentId: M:Yarhl.IO.DataWriter.WriteOfType``1(``0)
+  name.vb: WriteOfType(Of T)(T)
+  fullName: Yarhl.IO.DataWriter.WriteOfType<T>(T)
+  fullName.vb: Yarhl.IO.DataWriter.WriteOfType(Of T)(T)
+  nameWithType: DataWriter.WriteOfType<T>(T)
+  nameWithType.vb: DataWriter.WriteOfType(Of T)(T)
+- uid: Yarhl.IO.DataWriter.WritePadding(System.Byte,System.Int32,System.Boolean)
+  name: WritePadding(Byte, Int32, Boolean)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WritePadding_System_Byte_System_Int32_System_Boolean_
+  commentId: M:Yarhl.IO.DataWriter.WritePadding(System.Byte,System.Int32,System.Boolean)
+  fullName: Yarhl.IO.DataWriter.WritePadding(System.Byte, System.Int32, System.Boolean)
+  nameWithType: DataWriter.WritePadding(Byte, Int32, Boolean)
+- uid: Yarhl.IO.DataWriter.WritePadding*
+  name: WritePadding
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WritePadding_
+  commentId: Overload:Yarhl.IO.DataWriter.WritePadding
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.WritePadding
+  nameWithType: DataWriter.WritePadding
+- uid: Yarhl.IO.DataWriter.WriteTimes(System.Byte,System.Int64)
+  name: WriteTimes(Byte, Int64)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteTimes_System_Byte_System_Int64_
+  commentId: M:Yarhl.IO.DataWriter.WriteTimes(System.Byte,System.Int64)
+  fullName: Yarhl.IO.DataWriter.WriteTimes(System.Byte, System.Int64)
+  nameWithType: DataWriter.WriteTimes(Byte, Int64)
+- uid: Yarhl.IO.DataWriter.WriteTimes*
+  name: WriteTimes
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteTimes_
+  commentId: Overload:Yarhl.IO.DataWriter.WriteTimes
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.WriteTimes
+  nameWithType: DataWriter.WriteTimes
+- uid: Yarhl.IO.DataWriter.WriteUntilLength(System.Byte,System.Int64)
+  name: WriteUntilLength(Byte, Int64)
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteUntilLength_System_Byte_System_Int64_
+  commentId: M:Yarhl.IO.DataWriter.WriteUntilLength(System.Byte,System.Int64)
+  fullName: Yarhl.IO.DataWriter.WriteUntilLength(System.Byte, System.Int64)
+  nameWithType: DataWriter.WriteUntilLength(Byte, Int64)
+- uid: Yarhl.IO.DataWriter.WriteUntilLength*
+  name: WriteUntilLength
+  href: api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WriteUntilLength_
+  commentId: Overload:Yarhl.IO.DataWriter.WriteUntilLength
+  isSpec: "True"
+  fullName: Yarhl.IO.DataWriter.WriteUntilLength
+  nameWithType: DataWriter.WriteUntilLength
+- uid: Yarhl.IO.EndiannessMode
+  name: EndiannessMode
+  href: api/Yarhl.IO.EndiannessMode.html
+  commentId: T:Yarhl.IO.EndiannessMode
+  fullName: Yarhl.IO.EndiannessMode
+  nameWithType: EndiannessMode
+- uid: Yarhl.IO.EndiannessMode.BigEndian
+  name: BigEndian
+  href: api/Yarhl.IO.EndiannessMode.html#Yarhl_IO_EndiannessMode_BigEndian
+  commentId: F:Yarhl.IO.EndiannessMode.BigEndian
+  fullName: Yarhl.IO.EndiannessMode.BigEndian
+  nameWithType: EndiannessMode.BigEndian
+- uid: Yarhl.IO.EndiannessMode.LittleEndian
+  name: LittleEndian
+  href: api/Yarhl.IO.EndiannessMode.html#Yarhl_IO_EndiannessMode_LittleEndian
+  commentId: F:Yarhl.IO.EndiannessMode.LittleEndian
+  fullName: Yarhl.IO.EndiannessMode.LittleEndian
+  nameWithType: EndiannessMode.LittleEndian
+- uid: Yarhl.IO.FileOpenMode
+  name: FileOpenMode
+  href: api/Yarhl.IO.FileOpenMode.html
+  commentId: T:Yarhl.IO.FileOpenMode
+  fullName: Yarhl.IO.FileOpenMode
+  nameWithType: FileOpenMode
+- uid: Yarhl.IO.FileOpenMode.Append
+  name: Append
+  href: api/Yarhl.IO.FileOpenMode.html#Yarhl_IO_FileOpenMode_Append
+  commentId: F:Yarhl.IO.FileOpenMode.Append
+  fullName: Yarhl.IO.FileOpenMode.Append
+  nameWithType: FileOpenMode.Append
+- uid: Yarhl.IO.FileOpenMode.Read
+  name: Read
+  href: api/Yarhl.IO.FileOpenMode.html#Yarhl_IO_FileOpenMode_Read
+  commentId: F:Yarhl.IO.FileOpenMode.Read
+  fullName: Yarhl.IO.FileOpenMode.Read
+  nameWithType: FileOpenMode.Read
+- uid: Yarhl.IO.FileOpenMode.ReadWrite
+  name: ReadWrite
+  href: api/Yarhl.IO.FileOpenMode.html#Yarhl_IO_FileOpenMode_ReadWrite
+  commentId: F:Yarhl.IO.FileOpenMode.ReadWrite
+  fullName: Yarhl.IO.FileOpenMode.ReadWrite
+  nameWithType: FileOpenMode.ReadWrite
+- uid: Yarhl.IO.FileOpenMode.Write
+  name: Write
+  href: api/Yarhl.IO.FileOpenMode.html#Yarhl_IO_FileOpenMode_Write
+  commentId: F:Yarhl.IO.FileOpenMode.Write
+  fullName: Yarhl.IO.FileOpenMode.Write
+  nameWithType: FileOpenMode.Write
+- uid: Yarhl.IO.FileOpenModeExtensions
+  name: FileOpenModeExtensions
+  href: api/Yarhl.IO.FileOpenModeExtensions.html
+  commentId: T:Yarhl.IO.FileOpenModeExtensions
+  fullName: Yarhl.IO.FileOpenModeExtensions
+  nameWithType: FileOpenModeExtensions
+- uid: Yarhl.IO.FileOpenModeExtensions.ToFileAccess(Yarhl.IO.FileOpenMode)
+  name: ToFileAccess(FileOpenMode)
+  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileAccess_Yarhl_IO_FileOpenMode_
+  commentId: M:Yarhl.IO.FileOpenModeExtensions.ToFileAccess(Yarhl.IO.FileOpenMode)
+  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileAccess(Yarhl.IO.FileOpenMode)
+  nameWithType: FileOpenModeExtensions.ToFileAccess(FileOpenMode)
+- uid: Yarhl.IO.FileOpenModeExtensions.ToFileAccess*
+  name: ToFileAccess
+  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileAccess_
+  commentId: Overload:Yarhl.IO.FileOpenModeExtensions.ToFileAccess
+  isSpec: "True"
+  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileAccess
+  nameWithType: FileOpenModeExtensions.ToFileAccess
+- uid: Yarhl.IO.FileOpenModeExtensions.ToFileMode(Yarhl.IO.FileOpenMode)
+  name: ToFileMode(FileOpenMode)
+  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileMode_Yarhl_IO_FileOpenMode_
+  commentId: M:Yarhl.IO.FileOpenModeExtensions.ToFileMode(Yarhl.IO.FileOpenMode)
+  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileMode(Yarhl.IO.FileOpenMode)
+  nameWithType: FileOpenModeExtensions.ToFileMode(FileOpenMode)
+- uid: Yarhl.IO.FileOpenModeExtensions.ToFileMode*
+  name: ToFileMode
+  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileMode_
+  commentId: Overload:Yarhl.IO.FileOpenModeExtensions.ToFileMode
+  isSpec: "True"
+  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileMode
+  nameWithType: FileOpenModeExtensions.ToFileMode
+- uid: Yarhl.IO.NumericExtension
+  name: NumericExtension
+  href: api/Yarhl.IO.NumericExtension.html
+  commentId: T:Yarhl.IO.NumericExtension
+  fullName: Yarhl.IO.NumericExtension
+  nameWithType: NumericExtension
+- uid: Yarhl.IO.NumericExtension.Pad(System.Int16,System.Int32)
+  name: Pad(Int16, Int32)
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_System_Int16_System_Int32_
+  commentId: M:Yarhl.IO.NumericExtension.Pad(System.Int16,System.Int32)
+  fullName: Yarhl.IO.NumericExtension.Pad(System.Int16, System.Int32)
+  nameWithType: NumericExtension.Pad(Int16, Int32)
+- uid: Yarhl.IO.NumericExtension.Pad(System.Int32,System.Int32)
+  name: Pad(Int32, Int32)
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_System_Int32_System_Int32_
+  commentId: M:Yarhl.IO.NumericExtension.Pad(System.Int32,System.Int32)
+  fullName: Yarhl.IO.NumericExtension.Pad(System.Int32, System.Int32)
+  nameWithType: NumericExtension.Pad(Int32, Int32)
+- uid: Yarhl.IO.NumericExtension.Pad(System.Int64,System.Int64)
+  name: Pad(Int64, Int64)
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_System_Int64_System_Int64_
+  commentId: M:Yarhl.IO.NumericExtension.Pad(System.Int64,System.Int64)
+  fullName: Yarhl.IO.NumericExtension.Pad(System.Int64, System.Int64)
+  nameWithType: NumericExtension.Pad(Int64, Int64)
+- uid: Yarhl.IO.NumericExtension.Pad(System.UInt16,System.Int32)
+  name: Pad(UInt16, Int32)
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_System_UInt16_System_Int32_
+  commentId: M:Yarhl.IO.NumericExtension.Pad(System.UInt16,System.Int32)
+  fullName: Yarhl.IO.NumericExtension.Pad(System.UInt16, System.Int32)
+  nameWithType: NumericExtension.Pad(UInt16, Int32)
+- uid: Yarhl.IO.NumericExtension.Pad(System.UInt32,System.Int32)
+  name: Pad(UInt32, Int32)
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_System_UInt32_System_Int32_
+  commentId: M:Yarhl.IO.NumericExtension.Pad(System.UInt32,System.Int32)
+  fullName: Yarhl.IO.NumericExtension.Pad(System.UInt32, System.Int32)
+  nameWithType: NumericExtension.Pad(UInt32, Int32)
+- uid: Yarhl.IO.NumericExtension.Pad(System.UInt64,System.UInt64)
+  name: Pad(UInt64, UInt64)
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_System_UInt64_System_UInt64_
+  commentId: M:Yarhl.IO.NumericExtension.Pad(System.UInt64,System.UInt64)
+  fullName: Yarhl.IO.NumericExtension.Pad(System.UInt64, System.UInt64)
+  nameWithType: NumericExtension.Pad(UInt64, UInt64)
+- uid: Yarhl.IO.NumericExtension.Pad*
+  name: Pad
+  href: api/Yarhl.IO.NumericExtension.html#Yarhl_IO_NumericExtension_Pad_
+  commentId: Overload:Yarhl.IO.NumericExtension.Pad
+  isSpec: "True"
+  fullName: Yarhl.IO.NumericExtension.Pad
+  nameWithType: NumericExtension.Pad
+- uid: Yarhl.IO.SeekMode
+  name: SeekMode
+  href: api/Yarhl.IO.SeekMode.html
+  commentId: T:Yarhl.IO.SeekMode
+  fullName: Yarhl.IO.SeekMode
+  nameWithType: SeekMode
+- uid: Yarhl.IO.SeekMode.Current
+  name: Current
+  href: api/Yarhl.IO.SeekMode.html#Yarhl_IO_SeekMode_Current
+  commentId: F:Yarhl.IO.SeekMode.Current
+  fullName: Yarhl.IO.SeekMode.Current
+  nameWithType: SeekMode.Current
+- uid: Yarhl.IO.SeekMode.End
+  name: End
+  href: api/Yarhl.IO.SeekMode.html#Yarhl_IO_SeekMode_End
+  commentId: F:Yarhl.IO.SeekMode.End
+  fullName: Yarhl.IO.SeekMode.End
+  nameWithType: SeekMode.End
+- uid: Yarhl.IO.SeekMode.Start
+  name: Start
+  href: api/Yarhl.IO.SeekMode.html#Yarhl_IO_SeekMode_Start
+  commentId: F:Yarhl.IO.SeekMode.Start
+  fullName: Yarhl.IO.SeekMode.Start
+  nameWithType: SeekMode.Start
+- uid: Yarhl.IO.TextReader
+  name: TextReader
+  href: api/Yarhl.IO.TextReader.html
+  commentId: T:Yarhl.IO.TextReader
+  fullName: Yarhl.IO.TextReader
+  nameWithType: TextReader
+- uid: Yarhl.IO.TextReader.#ctor(Yarhl.IO.DataStream)
+  name: TextReader(DataStream)
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader__ctor_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.IO.TextReader.#ctor(Yarhl.IO.DataStream)
+  fullName: Yarhl.IO.TextReader.TextReader(Yarhl.IO.DataStream)
+  nameWithType: TextReader.TextReader(DataStream)
+- uid: Yarhl.IO.TextReader.#ctor(Yarhl.IO.DataStream,System.Text.Encoding)
+  name: TextReader(DataStream, Encoding)
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader__ctor_Yarhl_IO_DataStream_System_Text_Encoding_
+  commentId: M:Yarhl.IO.TextReader.#ctor(Yarhl.IO.DataStream,System.Text.Encoding)
+  fullName: Yarhl.IO.TextReader.TextReader(Yarhl.IO.DataStream, System.Text.Encoding)
+  nameWithType: TextReader.TextReader(DataStream, Encoding)
+- uid: Yarhl.IO.TextReader.#ctor*
+  name: TextReader
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader__ctor_
+  commentId: Overload:Yarhl.IO.TextReader.#ctor
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.TextReader
+  nameWithType: TextReader.TextReader
+- uid: Yarhl.IO.TextReader.AutoNewLine
+  name: AutoNewLine
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_AutoNewLine
+  commentId: P:Yarhl.IO.TextReader.AutoNewLine
+  fullName: Yarhl.IO.TextReader.AutoNewLine
+  nameWithType: TextReader.AutoNewLine
+- uid: Yarhl.IO.TextReader.AutoNewLine*
+  name: AutoNewLine
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_AutoNewLine_
+  commentId: Overload:Yarhl.IO.TextReader.AutoNewLine
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.AutoNewLine
+  nameWithType: TextReader.AutoNewLine
+- uid: Yarhl.IO.TextReader.Encoding
+  name: Encoding
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Encoding
+  commentId: P:Yarhl.IO.TextReader.Encoding
+  fullName: Yarhl.IO.TextReader.Encoding
+  nameWithType: TextReader.Encoding
+- uid: Yarhl.IO.TextReader.Encoding*
+  name: Encoding
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Encoding_
+  commentId: Overload:Yarhl.IO.TextReader.Encoding
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.Encoding
+  nameWithType: TextReader.Encoding
+- uid: Yarhl.IO.TextReader.NewLine
+  name: NewLine
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_NewLine
+  commentId: P:Yarhl.IO.TextReader.NewLine
+  fullName: Yarhl.IO.TextReader.NewLine
+  nameWithType: TextReader.NewLine
+- uid: Yarhl.IO.TextReader.NewLine*
+  name: NewLine
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_NewLine_
+  commentId: Overload:Yarhl.IO.TextReader.NewLine
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.NewLine
+  nameWithType: TextReader.NewLine
+- uid: Yarhl.IO.TextReader.Peek
+  name: Peek()
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Peek
+  commentId: M:Yarhl.IO.TextReader.Peek
+  fullName: Yarhl.IO.TextReader.Peek()
+  nameWithType: TextReader.Peek()
+- uid: Yarhl.IO.TextReader.Peek(System.Int32)
+  name: Peek(Int32)
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Peek_System_Int32_
+  commentId: M:Yarhl.IO.TextReader.Peek(System.Int32)
+  fullName: Yarhl.IO.TextReader.Peek(System.Int32)
+  nameWithType: TextReader.Peek(Int32)
+- uid: Yarhl.IO.TextReader.Peek*
+  name: Peek
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Peek_
+  commentId: Overload:Yarhl.IO.TextReader.Peek
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.Peek
+  nameWithType: TextReader.Peek
+- uid: Yarhl.IO.TextReader.PeekLine
+  name: PeekLine()
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_PeekLine
+  commentId: M:Yarhl.IO.TextReader.PeekLine
+  fullName: Yarhl.IO.TextReader.PeekLine()
+  nameWithType: TextReader.PeekLine()
+- uid: Yarhl.IO.TextReader.PeekLine*
+  name: PeekLine
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_PeekLine_
+  commentId: Overload:Yarhl.IO.TextReader.PeekLine
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.PeekLine
+  nameWithType: TextReader.PeekLine
+- uid: Yarhl.IO.TextReader.PeekToToken(System.String)
+  name: PeekToToken(String)
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_PeekToToken_System_String_
+  commentId: M:Yarhl.IO.TextReader.PeekToToken(System.String)
+  fullName: Yarhl.IO.TextReader.PeekToToken(System.String)
+  nameWithType: TextReader.PeekToToken(String)
+- uid: Yarhl.IO.TextReader.PeekToToken*
+  name: PeekToToken
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_PeekToToken_
+  commentId: Overload:Yarhl.IO.TextReader.PeekToToken
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.PeekToToken
+  nameWithType: TextReader.PeekToToken
+- uid: Yarhl.IO.TextReader.Read
+  name: Read()
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Read
+  commentId: M:Yarhl.IO.TextReader.Read
+  fullName: Yarhl.IO.TextReader.Read()
+  nameWithType: TextReader.Read()
+- uid: Yarhl.IO.TextReader.Read(System.Int32)
+  name: Read(Int32)
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Read_System_Int32_
+  commentId: M:Yarhl.IO.TextReader.Read(System.Int32)
+  fullName: Yarhl.IO.TextReader.Read(System.Int32)
+  nameWithType: TextReader.Read(Int32)
+- uid: Yarhl.IO.TextReader.Read*
+  name: Read
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Read_
+  commentId: Overload:Yarhl.IO.TextReader.Read
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.Read
+  nameWithType: TextReader.Read
+- uid: Yarhl.IO.TextReader.ReadLine
+  name: ReadLine()
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_ReadLine
+  commentId: M:Yarhl.IO.TextReader.ReadLine
+  fullName: Yarhl.IO.TextReader.ReadLine()
+  nameWithType: TextReader.ReadLine()
+- uid: Yarhl.IO.TextReader.ReadLine*
+  name: ReadLine
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_ReadLine_
+  commentId: Overload:Yarhl.IO.TextReader.ReadLine
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.ReadLine
+  nameWithType: TextReader.ReadLine
+- uid: Yarhl.IO.TextReader.ReadToEnd
+  name: ReadToEnd()
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_ReadToEnd
+  commentId: M:Yarhl.IO.TextReader.ReadToEnd
+  fullName: Yarhl.IO.TextReader.ReadToEnd()
+  nameWithType: TextReader.ReadToEnd()
+- uid: Yarhl.IO.TextReader.ReadToEnd*
+  name: ReadToEnd
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_ReadToEnd_
+  commentId: Overload:Yarhl.IO.TextReader.ReadToEnd
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.ReadToEnd
+  nameWithType: TextReader.ReadToEnd
+- uid: Yarhl.IO.TextReader.ReadToToken(System.String)
+  name: ReadToToken(String)
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_ReadToToken_System_String_
+  commentId: M:Yarhl.IO.TextReader.ReadToToken(System.String)
+  fullName: Yarhl.IO.TextReader.ReadToToken(System.String)
+  nameWithType: TextReader.ReadToToken(String)
+- uid: Yarhl.IO.TextReader.ReadToToken*
+  name: ReadToToken
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_ReadToToken_
+  commentId: Overload:Yarhl.IO.TextReader.ReadToToken
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.ReadToToken
+  nameWithType: TextReader.ReadToToken
+- uid: Yarhl.IO.TextReader.Stream
+  name: Stream
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Stream
+  commentId: P:Yarhl.IO.TextReader.Stream
+  fullName: Yarhl.IO.TextReader.Stream
+  nameWithType: TextReader.Stream
+- uid: Yarhl.IO.TextReader.Stream*
+  name: Stream
+  href: api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_Stream_
+  commentId: Overload:Yarhl.IO.TextReader.Stream
+  isSpec: "True"
+  fullName: Yarhl.IO.TextReader.Stream
+  nameWithType: TextReader.Stream
+- uid: Yarhl.IO.TextWriter
+  name: TextWriter
+  href: api/Yarhl.IO.TextWriter.html
+  commentId: T:Yarhl.IO.TextWriter
+  fullName: Yarhl.IO.TextWriter
+  nameWithType: TextWriter
+- uid: Yarhl.IO.TextWriter.#ctor(Yarhl.IO.DataStream)
+  name: TextWriter(DataStream)
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter__ctor_Yarhl_IO_DataStream_
+  commentId: M:Yarhl.IO.TextWriter.#ctor(Yarhl.IO.DataStream)
+  fullName: Yarhl.IO.TextWriter.TextWriter(Yarhl.IO.DataStream)
+  nameWithType: TextWriter.TextWriter(DataStream)
+- uid: Yarhl.IO.TextWriter.#ctor(Yarhl.IO.DataStream,System.Text.Encoding)
+  name: TextWriter(DataStream, Encoding)
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter__ctor_Yarhl_IO_DataStream_System_Text_Encoding_
+  commentId: M:Yarhl.IO.TextWriter.#ctor(Yarhl.IO.DataStream,System.Text.Encoding)
+  fullName: Yarhl.IO.TextWriter.TextWriter(Yarhl.IO.DataStream, System.Text.Encoding)
+  nameWithType: TextWriter.TextWriter(DataStream, Encoding)
+- uid: Yarhl.IO.TextWriter.#ctor*
+  name: TextWriter
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter__ctor_
+  commentId: Overload:Yarhl.IO.TextWriter.#ctor
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.TextWriter
+  nameWithType: TextWriter.TextWriter
+- uid: Yarhl.IO.TextWriter.Encoding
+  name: Encoding
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Encoding
+  commentId: P:Yarhl.IO.TextWriter.Encoding
+  fullName: Yarhl.IO.TextWriter.Encoding
+  nameWithType: TextWriter.Encoding
+- uid: Yarhl.IO.TextWriter.Encoding*
+  name: Encoding
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Encoding_
+  commentId: Overload:Yarhl.IO.TextWriter.Encoding
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.Encoding
+  nameWithType: TextWriter.Encoding
+- uid: Yarhl.IO.TextWriter.NewLine
+  name: NewLine
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_NewLine
+  commentId: P:Yarhl.IO.TextWriter.NewLine
+  fullName: Yarhl.IO.TextWriter.NewLine
+  nameWithType: TextWriter.NewLine
+- uid: Yarhl.IO.TextWriter.NewLine*
+  name: NewLine
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_NewLine_
+  commentId: Overload:Yarhl.IO.TextWriter.NewLine
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.NewLine
+  nameWithType: TextWriter.NewLine
+- uid: Yarhl.IO.TextWriter.Stream
+  name: Stream
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Stream
+  commentId: P:Yarhl.IO.TextWriter.Stream
+  fullName: Yarhl.IO.TextWriter.Stream
+  nameWithType: TextWriter.Stream
+- uid: Yarhl.IO.TextWriter.Stream*
+  name: Stream
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Stream_
+  commentId: Overload:Yarhl.IO.TextWriter.Stream
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.Stream
+  nameWithType: TextWriter.Stream
+- uid: Yarhl.IO.TextWriter.Write(System.Char)
+  name: Write(Char)
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Write_System_Char_
+  commentId: M:Yarhl.IO.TextWriter.Write(System.Char)
+  fullName: Yarhl.IO.TextWriter.Write(System.Char)
+  nameWithType: TextWriter.Write(Char)
+- uid: Yarhl.IO.TextWriter.Write(System.Char[])
+  name: Write(Char[])
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Write_System_Char___
+  commentId: M:Yarhl.IO.TextWriter.Write(System.Char[])
+  name.vb: Write(Char())
+  fullName: Yarhl.IO.TextWriter.Write(System.Char[])
+  fullName.vb: Yarhl.IO.TextWriter.Write(System.Char())
+  nameWithType: TextWriter.Write(Char[])
+  nameWithType.vb: TextWriter.Write(Char())
+- uid: Yarhl.IO.TextWriter.Write(System.String)
+  name: Write(String)
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Write_System_String_
+  commentId: M:Yarhl.IO.TextWriter.Write(System.String)
+  fullName: Yarhl.IO.TextWriter.Write(System.String)
+  nameWithType: TextWriter.Write(String)
+- uid: Yarhl.IO.TextWriter.Write(System.String,System.Object[])
+  name: Write(String, Object[])
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Write_System_String_System_Object___
+  commentId: M:Yarhl.IO.TextWriter.Write(System.String,System.Object[])
+  name.vb: Write(String, Object())
+  fullName: Yarhl.IO.TextWriter.Write(System.String, System.Object[])
+  fullName.vb: Yarhl.IO.TextWriter.Write(System.String, System.Object())
+  nameWithType: TextWriter.Write(String, Object[])
+  nameWithType.vb: TextWriter.Write(String, Object())
+- uid: Yarhl.IO.TextWriter.Write*
+  name: Write
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Write_
+  commentId: Overload:Yarhl.IO.TextWriter.Write
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.Write
+  nameWithType: TextWriter.Write
+- uid: Yarhl.IO.TextWriter.WriteLine
+  name: WriteLine()
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WriteLine
+  commentId: M:Yarhl.IO.TextWriter.WriteLine
+  fullName: Yarhl.IO.TextWriter.WriteLine()
+  nameWithType: TextWriter.WriteLine()
+- uid: Yarhl.IO.TextWriter.WriteLine(System.String)
+  name: WriteLine(String)
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WriteLine_System_String_
+  commentId: M:Yarhl.IO.TextWriter.WriteLine(System.String)
+  fullName: Yarhl.IO.TextWriter.WriteLine(System.String)
+  nameWithType: TextWriter.WriteLine(String)
+- uid: Yarhl.IO.TextWriter.WriteLine(System.String,System.Object[])
+  name: WriteLine(String, Object[])
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WriteLine_System_String_System_Object___
+  commentId: M:Yarhl.IO.TextWriter.WriteLine(System.String,System.Object[])
+  name.vb: WriteLine(String, Object())
+  fullName: Yarhl.IO.TextWriter.WriteLine(System.String, System.Object[])
+  fullName.vb: Yarhl.IO.TextWriter.WriteLine(System.String, System.Object())
+  nameWithType: TextWriter.WriteLine(String, Object[])
+  nameWithType.vb: TextWriter.WriteLine(String, Object())
+- uid: Yarhl.IO.TextWriter.WriteLine*
+  name: WriteLine
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WriteLine_
+  commentId: Overload:Yarhl.IO.TextWriter.WriteLine
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.WriteLine
+  nameWithType: TextWriter.WriteLine
+- uid: Yarhl.Media.Text
+  name: Yarhl.Media.Text
+  href: api/Yarhl.Media.Text.html
+  commentId: N:Yarhl.Media.Text
+  fullName: Yarhl.Media.Text
+  nameWithType: Yarhl.Media.Text
+- uid: Yarhl.Media.Text.Encodings
+  name: Yarhl.Media.Text.Encodings
+  href: api/Yarhl.Media.Text.Encodings.html
+  commentId: N:Yarhl.Media.Text.Encodings
+  fullName: Yarhl.Media.Text.Encodings
+  nameWithType: Yarhl.Media.Text.Encodings
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback
+  name: EscapeOutRangeDecoderFallback
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html
+  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback
+  nameWithType: EscapeOutRangeDecoderFallback
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
+  name: CreateFallbackBuffer()
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_CreateFallbackBuffer
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer()
+  nameWithType: EscapeOutRangeDecoderFallback.CreateFallbackBuffer()
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer*
+  name: CreateFallbackBuffer
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_CreateFallbackBuffer_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
+  nameWithType: EscapeOutRangeDecoderFallback.CreateFallbackBuffer
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
+  name: MaxCharCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_MaxCharCount
+  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
+  nameWithType: EscapeOutRangeDecoderFallback.MaxCharCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount*
+  name: MaxCharCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_MaxCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
+  nameWithType: EscapeOutRangeDecoderFallback.MaxCharCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer
+  name: EscapeOutRangeDecoderFallbackBuffer
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html
+  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte[],System.Int32)
+  name: Fallback(Byte[], Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Fallback_System_Byte___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte[],System.Int32)
+  name.vb: Fallback(Byte(), Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte(), System.Int32)
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Fallback(Byte[], Int32)
+  nameWithType.vb: EscapeOutRangeDecoderFallbackBuffer.Fallback(Byte(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback*
+  name: Fallback
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Fallback_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Fallback
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
+  name: GetNextChar()
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_GetNextChar
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar()
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.GetNextChar()
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar*
+  name: GetNextChar
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_GetNextChar_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.GetNextChar
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
+  name: MovePrevious()
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_MovePrevious
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious()
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.MovePrevious()
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious*
+  name: MovePrevious
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_MovePrevious_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.MovePrevious
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
+  name: Remaining
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Remaining
+  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Remaining
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining*
+  name: Remaining
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Remaining_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Remaining
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
+  name: Reset()
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Reset
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset()
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Reset()
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset*
+  name: Reset
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Reset_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
+  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Reset
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
+  name: EscapeOutRangeEnconding
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html
+  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
+  nameWithType: EscapeOutRangeEnconding
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.String)
+  name: EscapeOutRangeEnconding(String)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_System_String_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.String)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(System.String)
+  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(String)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.Text.Encoding)
+  name: EscapeOutRangeEnconding(Encoding)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_System_Text_Encoding_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.Text.Encoding)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(System.Text.Encoding)
+  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(Encoding)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor*
+  name: EscapeOutRangeEnconding
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding
+  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char[],System.Int32,System.Int32)
+  name: GetByteCount(Char[], Int32, Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetByteCount_System_Char___System_Int32_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char[],System.Int32,System.Int32)
+  name.vb: GetByteCount(Char(), Int32, Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char(), System.Int32, System.Int32)
+  nameWithType: EscapeOutRangeEnconding.GetByteCount(Char[], Int32, Int32)
+  nameWithType.vb: EscapeOutRangeEnconding.GetByteCount(Char(), Int32, Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount*
+  name: GetByteCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetByteCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount
+  nameWithType: EscapeOutRangeEnconding.GetByteCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
+  name: GetBytes(Char[], Int32, Int32, Byte[], Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetBytes_System_Char___System_Int32_System_Int32_System_Byte___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
+  name.vb: GetBytes(Char(), Int32, Int32, Byte(), Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char[], System.Int32, System.Int32, System.Byte[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char(), System.Int32, System.Int32, System.Byte(), System.Int32)
+  nameWithType: EscapeOutRangeEnconding.GetBytes(Char[], Int32, Int32, Byte[], Int32)
+  nameWithType.vb: EscapeOutRangeEnconding.GetBytes(Char(), Int32, Int32, Byte(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes*
+  name: GetBytes
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetBytes_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes
+  nameWithType: EscapeOutRangeEnconding.GetBytes
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte[],System.Int32,System.Int32)
+  name: GetCharCount(Byte[], Int32, Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetCharCount_System_Byte___System_Int32_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte[],System.Int32,System.Int32)
+  name.vb: GetCharCount(Byte(), Int32, Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte(), System.Int32, System.Int32)
+  nameWithType: EscapeOutRangeEnconding.GetCharCount(Byte[], Int32, Int32)
+  nameWithType.vb: EscapeOutRangeEnconding.GetCharCount(Byte(), Int32, Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount*
+  name: GetCharCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount
+  nameWithType: EscapeOutRangeEnconding.GetCharCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
+  name: GetChars(Byte[], Int32, Int32, Char[], Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetChars_System_Byte___System_Int32_System_Int32_System_Char___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
+  name.vb: GetChars(Byte(), Int32, Int32, Char(), Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte[], System.Int32, System.Int32, System.Char[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte(), System.Int32, System.Int32, System.Char(), System.Int32)
+  nameWithType: EscapeOutRangeEnconding.GetChars(Byte[], Int32, Int32, Char[], Int32)
+  nameWithType.vb: EscapeOutRangeEnconding.GetChars(Byte(), Int32, Int32, Char(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars*
+  name: GetChars
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetChars_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars
+  nameWithType: EscapeOutRangeEnconding.GetChars
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount(System.Int32)
+  name: GetMaxByteCount(Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxByteCount_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount(System.Int32)
+  nameWithType: EscapeOutRangeEnconding.GetMaxByteCount(Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount*
+  name: GetMaxByteCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxByteCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount
+  nameWithType: EscapeOutRangeEnconding.GetMaxByteCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount(System.Int32)
+  name: GetMaxCharCount(Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxCharCount_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount(System.Int32)
+  nameWithType: EscapeOutRangeEnconding.GetMaxCharCount(Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount*
+  name: GetMaxCharCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount
+  nameWithType: EscapeOutRangeEnconding.GetMaxCharCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  name: TokenEnd
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenEnd
+  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  nameWithType: EscapeOutRangeEnconding.TokenEnd
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd*
+  name: TokenEnd
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenEnd_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  nameWithType: EscapeOutRangeEnconding.TokenEnd
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  name: TokenStart
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenStart
+  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  nameWithType: EscapeOutRangeEnconding.TokenStart
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart*
+  name: TokenStart
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenStart_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  nameWithType: EscapeOutRangeEnconding.TokenStart
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding
+  name: EucJpEncoding
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html
+  commentId: T:Yarhl.Media.Text.Encodings.EucJpEncoding
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding
+  nameWithType: EucJpEncoding
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor
+  name: EucJpEncoding()
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding()
+  nameWithType: EucJpEncoding.EucJpEncoding()
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(System.Text.DecoderFallback,System.Text.EncoderFallback)
+  name: EucJpEncoding(DecoderFallback, EncoderFallback)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor_System_Text_DecoderFallback_System_Text_EncoderFallback_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(System.Text.DecoderFallback,System.Text.EncoderFallback)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding(System.Text.DecoderFallback, System.Text.EncoderFallback)
+  nameWithType: EucJpEncoding.EucJpEncoding(DecoderFallback, EncoderFallback)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor*
+  name: EucJpEncoding
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding
+  nameWithType: EucJpEncoding.EucJpEncoding
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.DecoderFallback
+  name: DecoderFallback
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_DecoderFallback
+  commentId: P:Yarhl.Media.Text.Encodings.EucJpEncoding.DecoderFallback
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.DecoderFallback
+  nameWithType: EucJpEncoding.DecoderFallback
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.DecoderFallback*
+  name: DecoderFallback
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_DecoderFallback_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.DecoderFallback
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.DecoderFallback
+  nameWithType: EucJpEncoding.DecoderFallback
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.EncoderFallback
+  name: EncoderFallback
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_EncoderFallback
+  commentId: P:Yarhl.Media.Text.Encodings.EucJpEncoding.EncoderFallback
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EncoderFallback
+  nameWithType: EucJpEncoding.EncoderFallback
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.EncoderFallback*
+  name: EncoderFallback
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_EncoderFallback_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.EncoderFallback
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EncoderFallback
+  nameWithType: EucJpEncoding.EncoderFallback
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount(System.Char[],System.Int32,System.Int32)
+  name: GetByteCount(Char[], Int32, Int32)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetByteCount_System_Char___System_Int32_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount(System.Char[],System.Int32,System.Int32)
+  name.vb: GetByteCount(Char(), Int32, Int32)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount(System.Char[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount(System.Char(), System.Int32, System.Int32)
+  nameWithType: EucJpEncoding.GetByteCount(Char[], Int32, Int32)
+  nameWithType.vb: EucJpEncoding.GetByteCount(Char(), Int32, Int32)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount*
+  name: GetByteCount
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetByteCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetByteCount
+  nameWithType: EucJpEncoding.GetByteCount
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
+  name: GetBytes(Char[], Int32, Int32, Byte[], Int32)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetBytes_System_Char___System_Int32_System_Int32_System_Byte___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
+  name.vb: GetBytes(Char(), Int32, Int32, Byte(), Int32)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes(System.Char[], System.Int32, System.Int32, System.Byte[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes(System.Char(), System.Int32, System.Int32, System.Byte(), System.Int32)
+  nameWithType: EucJpEncoding.GetBytes(Char[], Int32, Int32, Byte[], Int32)
+  nameWithType.vb: EucJpEncoding.GetBytes(Char(), Int32, Int32, Byte(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes*
+  name: GetBytes
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetBytes_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetBytes
+  nameWithType: EucJpEncoding.GetBytes
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount(System.Byte[],System.Int32,System.Int32)
+  name: GetCharCount(Byte[], Int32, Int32)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetCharCount_System_Byte___System_Int32_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount(System.Byte[],System.Int32,System.Int32)
+  name.vb: GetCharCount(Byte(), Int32, Int32)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount(System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount(System.Byte(), System.Int32, System.Int32)
+  nameWithType: EucJpEncoding.GetCharCount(Byte[], Int32, Int32)
+  nameWithType.vb: EucJpEncoding.GetCharCount(Byte(), Int32, Int32)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount*
+  name: GetCharCount
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetCharCount
+  nameWithType: EucJpEncoding.GetCharCount
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
+  name: GetChars(Byte[], Int32, Int32, Char[], Int32)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetChars_System_Byte___System_Int32_System_Int32_System_Char___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
+  name.vb: GetChars(Byte(), Int32, Int32, Char(), Int32)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars(System.Byte[], System.Int32, System.Int32, System.Char[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars(System.Byte(), System.Int32, System.Int32, System.Char(), System.Int32)
+  nameWithType: EucJpEncoding.GetChars(Byte[], Int32, Int32, Char[], Int32)
+  nameWithType.vb: EucJpEncoding.GetChars(Byte(), Int32, Int32, Char(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars*
+  name: GetChars
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetChars_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetChars
+  nameWithType: EucJpEncoding.GetChars
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxByteCount(System.Int32)
+  name: GetMaxByteCount(Int32)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetMaxByteCount_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxByteCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxByteCount(System.Int32)
+  nameWithType: EucJpEncoding.GetMaxByteCount(Int32)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxByteCount*
+  name: GetMaxByteCount
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetMaxByteCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxByteCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxByteCount
+  nameWithType: EucJpEncoding.GetMaxByteCount
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxCharCount(System.Int32)
+  name: GetMaxCharCount(Int32)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetMaxCharCount_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxCharCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxCharCount(System.Int32)
+  nameWithType: EucJpEncoding.GetMaxCharCount(Int32)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxCharCount*
+  name: GetMaxCharCount
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding_GetMaxCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxCharCount
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.GetMaxCharCount
+  nameWithType: EucJpEncoding.GetMaxCharCount
+- uid: Yarhl.Media.Text.Po
+  name: Po
+  href: api/Yarhl.Media.Text.Po.html
+  commentId: T:Yarhl.Media.Text.Po
+  fullName: Yarhl.Media.Text.Po
+  nameWithType: Po
+- uid: Yarhl.Media.Text.Po.#ctor
+  name: Po()
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po__ctor
+  commentId: M:Yarhl.Media.Text.Po.#ctor
+  fullName: Yarhl.Media.Text.Po.Po()
+  nameWithType: Po.Po()
+- uid: Yarhl.Media.Text.Po.#ctor(Yarhl.Media.Text.PoHeader)
+  name: Po(PoHeader)
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po__ctor_Yarhl_Media_Text_PoHeader_
+  commentId: M:Yarhl.Media.Text.Po.#ctor(Yarhl.Media.Text.PoHeader)
+  fullName: Yarhl.Media.Text.Po.Po(Yarhl.Media.Text.PoHeader)
+  nameWithType: Po.Po(PoHeader)
+- uid: Yarhl.Media.Text.Po.#ctor*
+  name: Po
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po__ctor_
+  commentId: Overload:Yarhl.Media.Text.Po.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Po.Po
+  nameWithType: Po.Po
+- uid: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable{Yarhl.Media.Text.PoEntry})
+  name: Add(IEnumerable<PoEntry>)
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_System_Collections_Generic_IEnumerable_Yarhl_Media_Text_PoEntry__
+  commentId: M:Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable{Yarhl.Media.Text.PoEntry})
+  name.vb: Add(IEnumerable(Of PoEntry))
+  fullName: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable<Yarhl.Media.Text.PoEntry>)
+  fullName.vb: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable(Of Yarhl.Media.Text.PoEntry))
+  nameWithType: Po.Add(IEnumerable<PoEntry>)
+  nameWithType.vb: Po.Add(IEnumerable(Of PoEntry))
+- uid: Yarhl.Media.Text.Po.Add(Yarhl.Media.Text.PoEntry)
+  name: Add(PoEntry)
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_Yarhl_Media_Text_PoEntry_
+  commentId: M:Yarhl.Media.Text.Po.Add(Yarhl.Media.Text.PoEntry)
+  fullName: Yarhl.Media.Text.Po.Add(Yarhl.Media.Text.PoEntry)
+  nameWithType: Po.Add(PoEntry)
+- uid: Yarhl.Media.Text.Po.Add*
+  name: Add
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_
+  commentId: Overload:Yarhl.Media.Text.Po.Add
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Po.Add
+  nameWithType: Po.Add
+- uid: Yarhl.Media.Text.Po.Entries
+  name: Entries
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Entries
+  commentId: P:Yarhl.Media.Text.Po.Entries
+  fullName: Yarhl.Media.Text.Po.Entries
+  nameWithType: Po.Entries
+- uid: Yarhl.Media.Text.Po.Entries*
+  name: Entries
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Entries_
+  commentId: Overload:Yarhl.Media.Text.Po.Entries
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Po.Entries
+  nameWithType: Po.Entries
+- uid: Yarhl.Media.Text.Po.FindEntry(System.String,System.String)
+  name: FindEntry(String, String)
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_FindEntry_System_String_System_String_
+  commentId: M:Yarhl.Media.Text.Po.FindEntry(System.String,System.String)
+  fullName: Yarhl.Media.Text.Po.FindEntry(System.String, System.String)
+  nameWithType: Po.FindEntry(String, String)
+- uid: Yarhl.Media.Text.Po.FindEntry*
+  name: FindEntry
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_FindEntry_
+  commentId: Overload:Yarhl.Media.Text.Po.FindEntry
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Po.FindEntry
+  nameWithType: Po.FindEntry
+- uid: Yarhl.Media.Text.Po.Header
+  name: Header
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Header
+  commentId: P:Yarhl.Media.Text.Po.Header
+  fullName: Yarhl.Media.Text.Po.Header
+  nameWithType: Po.Header
+- uid: Yarhl.Media.Text.Po.Header*
+  name: Header
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Header_
+  commentId: Overload:Yarhl.Media.Text.Po.Header
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Po.Header
+  nameWithType: Po.Header
+- uid: Yarhl.Media.Text.Po2Binary
+  name: Po2Binary
+  href: api/Yarhl.Media.Text.Po2Binary.html
+  commentId: T:Yarhl.Media.Text.Po2Binary
+  fullName: Yarhl.Media.Text.Po2Binary
+  nameWithType: Po2Binary
+- uid: Yarhl.Media.Text.Po2Binary.Convert(Yarhl.FileFormat.BinaryFormat)
+  name: Convert(BinaryFormat)
+  href: api/Yarhl.Media.Text.Po2Binary.html#Yarhl_Media_Text_Po2Binary_Convert_Yarhl_FileFormat_BinaryFormat_
+  commentId: M:Yarhl.Media.Text.Po2Binary.Convert(Yarhl.FileFormat.BinaryFormat)
+  fullName: Yarhl.Media.Text.Po2Binary.Convert(Yarhl.FileFormat.BinaryFormat)
+  nameWithType: Po2Binary.Convert(BinaryFormat)
+- uid: Yarhl.Media.Text.Po2Binary.Convert(Yarhl.Media.Text.Po)
+  name: Convert(Po)
+  href: api/Yarhl.Media.Text.Po2Binary.html#Yarhl_Media_Text_Po2Binary_Convert_Yarhl_Media_Text_Po_
+  commentId: M:Yarhl.Media.Text.Po2Binary.Convert(Yarhl.Media.Text.Po)
+  fullName: Yarhl.Media.Text.Po2Binary.Convert(Yarhl.Media.Text.Po)
+  nameWithType: Po2Binary.Convert(Po)
+- uid: Yarhl.Media.Text.Po2Binary.Convert*
+  name: Convert
+  href: api/Yarhl.Media.Text.Po2Binary.html#Yarhl_Media_Text_Po2Binary_Convert_
+  commentId: Overload:Yarhl.Media.Text.Po2Binary.Convert
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Po2Binary.Convert
+  nameWithType: Po2Binary.Convert
+- uid: Yarhl.Media.Text.PoEntry
+  name: PoEntry
+  href: api/Yarhl.Media.Text.PoEntry.html
+  commentId: T:Yarhl.Media.Text.PoEntry
+  fullName: Yarhl.Media.Text.PoEntry
+  nameWithType: PoEntry
+- uid: Yarhl.Media.Text.PoEntry.#ctor
+  name: PoEntry()
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry__ctor
+  commentId: M:Yarhl.Media.Text.PoEntry.#ctor
+  fullName: Yarhl.Media.Text.PoEntry.PoEntry()
+  nameWithType: PoEntry.PoEntry()
+- uid: Yarhl.Media.Text.PoEntry.#ctor(System.String)
+  name: PoEntry(String)
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry__ctor_System_String_
+  commentId: M:Yarhl.Media.Text.PoEntry.#ctor(System.String)
+  fullName: Yarhl.Media.Text.PoEntry.PoEntry(System.String)
+  nameWithType: PoEntry.PoEntry(String)
+- uid: Yarhl.Media.Text.PoEntry.#ctor*
+  name: PoEntry
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry__ctor_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.PoEntry
+  nameWithType: PoEntry.PoEntry
+- uid: Yarhl.Media.Text.PoEntry.Context
+  name: Context
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Context
+  commentId: P:Yarhl.Media.Text.PoEntry.Context
+  fullName: Yarhl.Media.Text.PoEntry.Context
+  nameWithType: PoEntry.Context
+- uid: Yarhl.Media.Text.PoEntry.Context*
+  name: Context
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Context_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.Context
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.Context
+  nameWithType: PoEntry.Context
+- uid: Yarhl.Media.Text.PoEntry.ExtractedComments
+  name: ExtractedComments
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_ExtractedComments
+  commentId: P:Yarhl.Media.Text.PoEntry.ExtractedComments
+  fullName: Yarhl.Media.Text.PoEntry.ExtractedComments
+  nameWithType: PoEntry.ExtractedComments
+- uid: Yarhl.Media.Text.PoEntry.ExtractedComments*
+  name: ExtractedComments
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_ExtractedComments_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.ExtractedComments
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.ExtractedComments
+  nameWithType: PoEntry.ExtractedComments
+- uid: Yarhl.Media.Text.PoEntry.Flags
+  name: Flags
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Flags
+  commentId: P:Yarhl.Media.Text.PoEntry.Flags
+  fullName: Yarhl.Media.Text.PoEntry.Flags
+  nameWithType: PoEntry.Flags
+- uid: Yarhl.Media.Text.PoEntry.Flags*
+  name: Flags
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Flags_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.Flags
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.Flags
+  nameWithType: PoEntry.Flags
+- uid: Yarhl.Media.Text.PoEntry.Original
+  name: Original
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Original
+  commentId: P:Yarhl.Media.Text.PoEntry.Original
+  fullName: Yarhl.Media.Text.PoEntry.Original
+  nameWithType: PoEntry.Original
+- uid: Yarhl.Media.Text.PoEntry.Original*
+  name: Original
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Original_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.Original
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.Original
+  nameWithType: PoEntry.Original
+- uid: Yarhl.Media.Text.PoEntry.PreviousContext
+  name: PreviousContext
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_PreviousContext
+  commentId: P:Yarhl.Media.Text.PoEntry.PreviousContext
+  fullName: Yarhl.Media.Text.PoEntry.PreviousContext
+  nameWithType: PoEntry.PreviousContext
+- uid: Yarhl.Media.Text.PoEntry.PreviousContext*
+  name: PreviousContext
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_PreviousContext_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.PreviousContext
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.PreviousContext
+  nameWithType: PoEntry.PreviousContext
+- uid: Yarhl.Media.Text.PoEntry.PreviousOriginal
+  name: PreviousOriginal
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_PreviousOriginal
+  commentId: P:Yarhl.Media.Text.PoEntry.PreviousOriginal
+  fullName: Yarhl.Media.Text.PoEntry.PreviousOriginal
+  nameWithType: PoEntry.PreviousOriginal
+- uid: Yarhl.Media.Text.PoEntry.PreviousOriginal*
+  name: PreviousOriginal
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_PreviousOriginal_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.PreviousOriginal
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.PreviousOriginal
+  nameWithType: PoEntry.PreviousOriginal
+- uid: Yarhl.Media.Text.PoEntry.Reference
+  name: Reference
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Reference
+  commentId: P:Yarhl.Media.Text.PoEntry.Reference
+  fullName: Yarhl.Media.Text.PoEntry.Reference
+  nameWithType: PoEntry.Reference
+- uid: Yarhl.Media.Text.PoEntry.Reference*
+  name: Reference
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Reference_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.Reference
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.Reference
+  nameWithType: PoEntry.Reference
+- uid: Yarhl.Media.Text.PoEntry.Text
+  name: Text
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Text
+  commentId: P:Yarhl.Media.Text.PoEntry.Text
+  fullName: Yarhl.Media.Text.PoEntry.Text
+  nameWithType: PoEntry.Text
+- uid: Yarhl.Media.Text.PoEntry.Text*
+  name: Text
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Text_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.Text
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.Text
+  nameWithType: PoEntry.Text
+- uid: Yarhl.Media.Text.PoEntry.Translated
+  name: Translated
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Translated
+  commentId: P:Yarhl.Media.Text.PoEntry.Translated
+  fullName: Yarhl.Media.Text.PoEntry.Translated
+  nameWithType: PoEntry.Translated
+- uid: Yarhl.Media.Text.PoEntry.Translated*
+  name: Translated
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_Translated_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.Translated
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.Translated
+  nameWithType: PoEntry.Translated
+- uid: Yarhl.Media.Text.PoEntry.TranslatorComment
+  name: TranslatorComment
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_TranslatorComment
+  commentId: P:Yarhl.Media.Text.PoEntry.TranslatorComment
+  fullName: Yarhl.Media.Text.PoEntry.TranslatorComment
+  nameWithType: PoEntry.TranslatorComment
+- uid: Yarhl.Media.Text.PoEntry.TranslatorComment*
+  name: TranslatorComment
+  href: api/Yarhl.Media.Text.PoEntry.html#Yarhl_Media_Text_PoEntry_TranslatorComment_
+  commentId: Overload:Yarhl.Media.Text.PoEntry.TranslatorComment
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoEntry.TranslatorComment
+  nameWithType: PoEntry.TranslatorComment
+- uid: Yarhl.Media.Text.PoHeader
+  name: PoHeader
+  href: api/Yarhl.Media.Text.PoHeader.html
+  commentId: T:Yarhl.Media.Text.PoHeader
+  fullName: Yarhl.Media.Text.PoHeader
+  nameWithType: PoHeader
+- uid: Yarhl.Media.Text.PoHeader.#ctor
+  name: PoHeader()
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader__ctor
+  commentId: M:Yarhl.Media.Text.PoHeader.#ctor
+  fullName: Yarhl.Media.Text.PoHeader.PoHeader()
+  nameWithType: PoHeader.PoHeader()
+- uid: Yarhl.Media.Text.PoHeader.#ctor(System.String,System.String,System.String)
+  name: PoHeader(String, String, String)
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader__ctor_System_String_System_String_System_String_
+  commentId: M:Yarhl.Media.Text.PoHeader.#ctor(System.String,System.String,System.String)
+  fullName: Yarhl.Media.Text.PoHeader.PoHeader(System.String, System.String, System.String)
+  nameWithType: PoHeader.PoHeader(String, String, String)
+- uid: Yarhl.Media.Text.PoHeader.#ctor*
+  name: PoHeader
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader__ctor_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.PoHeader
+  nameWithType: PoHeader.PoHeader
+- uid: Yarhl.Media.Text.PoHeader.ContentTransferEncoding
+  name: ContentTransferEncoding
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ContentTransferEncoding
+  commentId: P:Yarhl.Media.Text.PoHeader.ContentTransferEncoding
+  fullName: Yarhl.Media.Text.PoHeader.ContentTransferEncoding
+  nameWithType: PoHeader.ContentTransferEncoding
+- uid: Yarhl.Media.Text.PoHeader.ContentTransferEncoding*
+  name: ContentTransferEncoding
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ContentTransferEncoding_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.ContentTransferEncoding
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.ContentTransferEncoding
+  nameWithType: PoHeader.ContentTransferEncoding
+- uid: Yarhl.Media.Text.PoHeader.ContentType
+  name: ContentType
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ContentType
+  commentId: P:Yarhl.Media.Text.PoHeader.ContentType
+  fullName: Yarhl.Media.Text.PoHeader.ContentType
+  nameWithType: PoHeader.ContentType
+- uid: Yarhl.Media.Text.PoHeader.ContentType*
+  name: ContentType
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ContentType_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.ContentType
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.ContentType
+  nameWithType: PoHeader.ContentType
+- uid: Yarhl.Media.Text.PoHeader.CreationDate
+  name: CreationDate
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_CreationDate
+  commentId: P:Yarhl.Media.Text.PoHeader.CreationDate
+  fullName: Yarhl.Media.Text.PoHeader.CreationDate
+  nameWithType: PoHeader.CreationDate
+- uid: Yarhl.Media.Text.PoHeader.CreationDate*
+  name: CreationDate
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_CreationDate_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.CreationDate
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.CreationDate
+  nameWithType: PoHeader.CreationDate
+- uid: Yarhl.Media.Text.PoHeader.Extensions
+  name: Extensions
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_Extensions
+  commentId: P:Yarhl.Media.Text.PoHeader.Extensions
+  fullName: Yarhl.Media.Text.PoHeader.Extensions
+  nameWithType: PoHeader.Extensions
+- uid: Yarhl.Media.Text.PoHeader.Extensions*
+  name: Extensions
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_Extensions_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.Extensions
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.Extensions
+  nameWithType: PoHeader.Extensions
+- uid: Yarhl.Media.Text.PoHeader.Language
+  name: Language
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_Language
+  commentId: P:Yarhl.Media.Text.PoHeader.Language
+  fullName: Yarhl.Media.Text.PoHeader.Language
+  nameWithType: PoHeader.Language
+- uid: Yarhl.Media.Text.PoHeader.Language*
+  name: Language
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_Language_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.Language
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.Language
+  nameWithType: PoHeader.Language
+- uid: Yarhl.Media.Text.PoHeader.LanguageTeam
+  name: LanguageTeam
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_LanguageTeam
+  commentId: P:Yarhl.Media.Text.PoHeader.LanguageTeam
+  fullName: Yarhl.Media.Text.PoHeader.LanguageTeam
+  nameWithType: PoHeader.LanguageTeam
+- uid: Yarhl.Media.Text.PoHeader.LanguageTeam*
+  name: LanguageTeam
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_LanguageTeam_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.LanguageTeam
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.LanguageTeam
+  nameWithType: PoHeader.LanguageTeam
+- uid: Yarhl.Media.Text.PoHeader.LastTranslator
+  name: LastTranslator
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_LastTranslator
+  commentId: P:Yarhl.Media.Text.PoHeader.LastTranslator
+  fullName: Yarhl.Media.Text.PoHeader.LastTranslator
+  nameWithType: PoHeader.LastTranslator
+- uid: Yarhl.Media.Text.PoHeader.LastTranslator*
+  name: LastTranslator
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_LastTranslator_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.LastTranslator
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.LastTranslator
+  nameWithType: PoHeader.LastTranslator
+- uid: Yarhl.Media.Text.PoHeader.MimeVersion
+  name: MimeVersion
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_MimeVersion
+  commentId: P:Yarhl.Media.Text.PoHeader.MimeVersion
+  fullName: Yarhl.Media.Text.PoHeader.MimeVersion
+  nameWithType: PoHeader.MimeVersion
+- uid: Yarhl.Media.Text.PoHeader.MimeVersion*
+  name: MimeVersion
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_MimeVersion_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.MimeVersion
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.MimeVersion
+  nameWithType: PoHeader.MimeVersion
+- uid: Yarhl.Media.Text.PoHeader.PluralForms
+  name: PluralForms
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_PluralForms
+  commentId: P:Yarhl.Media.Text.PoHeader.PluralForms
+  fullName: Yarhl.Media.Text.PoHeader.PluralForms
+  nameWithType: PoHeader.PluralForms
+- uid: Yarhl.Media.Text.PoHeader.PluralForms*
+  name: PluralForms
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_PluralForms_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.PluralForms
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.PluralForms
+  nameWithType: PoHeader.PluralForms
+- uid: Yarhl.Media.Text.PoHeader.ProjectIdVersion
+  name: ProjectIdVersion
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ProjectIdVersion
+  commentId: P:Yarhl.Media.Text.PoHeader.ProjectIdVersion
+  fullName: Yarhl.Media.Text.PoHeader.ProjectIdVersion
+  nameWithType: PoHeader.ProjectIdVersion
+- uid: Yarhl.Media.Text.PoHeader.ProjectIdVersion*
+  name: ProjectIdVersion
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ProjectIdVersion_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.ProjectIdVersion
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.ProjectIdVersion
+  nameWithType: PoHeader.ProjectIdVersion
+- uid: Yarhl.Media.Text.PoHeader.ReportMsgidBugsTo
+  name: ReportMsgidBugsTo
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ReportMsgidBugsTo
+  commentId: P:Yarhl.Media.Text.PoHeader.ReportMsgidBugsTo
+  fullName: Yarhl.Media.Text.PoHeader.ReportMsgidBugsTo
+  nameWithType: PoHeader.ReportMsgidBugsTo
+- uid: Yarhl.Media.Text.PoHeader.ReportMsgidBugsTo*
+  name: ReportMsgidBugsTo
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_ReportMsgidBugsTo_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.ReportMsgidBugsTo
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.ReportMsgidBugsTo
+  nameWithType: PoHeader.ReportMsgidBugsTo
+- uid: Yarhl.Media.Text.PoHeader.RevisionDate
+  name: RevisionDate
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_RevisionDate
+  commentId: P:Yarhl.Media.Text.PoHeader.RevisionDate
+  fullName: Yarhl.Media.Text.PoHeader.RevisionDate
+  nameWithType: PoHeader.RevisionDate
+- uid: Yarhl.Media.Text.PoHeader.RevisionDate*
+  name: RevisionDate
+  href: api/Yarhl.Media.Text.PoHeader.html#Yarhl_Media_Text_PoHeader_RevisionDate_
+  commentId: Overload:Yarhl.Media.Text.PoHeader.RevisionDate
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.PoHeader.RevisionDate
+  nameWithType: PoHeader.RevisionDate
+- uid: Yarhl.Media.Text.Replacer
+  name: Replacer
+  href: api/Yarhl.Media.Text.Replacer.html
+  commentId: T:Yarhl.Media.Text.Replacer
+  fullName: Yarhl.Media.Text.Replacer
+  nameWithType: Replacer
+- uid: Yarhl.Media.Text.Replacer.#ctor
+  name: Replacer()
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer__ctor
+  commentId: M:Yarhl.Media.Text.Replacer.#ctor
+  fullName: Yarhl.Media.Text.Replacer.Replacer()
+  nameWithType: Replacer.Replacer()
+- uid: Yarhl.Media.Text.Replacer.#ctor*
+  name: Replacer
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer__ctor_
+  commentId: Overload:Yarhl.Media.Text.Replacer.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Replacer.Replacer
+  nameWithType: Replacer.Replacer
+- uid: Yarhl.Media.Text.Replacer.Add(System.String,System.String)
+  name: Add(String, String)
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Add_System_String_System_String_
+  commentId: M:Yarhl.Media.Text.Replacer.Add(System.String,System.String)
+  fullName: Yarhl.Media.Text.Replacer.Add(System.String, System.String)
+  nameWithType: Replacer.Add(String, String)
+- uid: Yarhl.Media.Text.Replacer.Add*
+  name: Add
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Add_
+  commentId: Overload:Yarhl.Media.Text.Replacer.Add
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Replacer.Add
+  nameWithType: Replacer.Add
+- uid: Yarhl.Media.Text.Replacer.Map
+  name: Map
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Map
+  commentId: P:Yarhl.Media.Text.Replacer.Map
+  fullName: Yarhl.Media.Text.Replacer.Map
+  nameWithType: Replacer.Map
+- uid: Yarhl.Media.Text.Replacer.Map*
+  name: Map
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Map_
+  commentId: Overload:Yarhl.Media.Text.Replacer.Map
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Replacer.Map
+  nameWithType: Replacer.Map
+- uid: Yarhl.Media.Text.Replacer.Remove(System.String)
+  name: Remove(String)
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Remove_System_String_
+  commentId: M:Yarhl.Media.Text.Replacer.Remove(System.String)
+  fullName: Yarhl.Media.Text.Replacer.Remove(System.String)
+  nameWithType: Replacer.Remove(String)
+- uid: Yarhl.Media.Text.Replacer.Remove*
+  name: Remove
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Remove_
+  commentId: Overload:Yarhl.Media.Text.Replacer.Remove
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Replacer.Remove
+  nameWithType: Replacer.Remove
+- uid: Yarhl.Media.Text.Replacer.Transform(System.String,System.Boolean)
+  name: Transform(String, Boolean)
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Transform_System_String_System_Boolean_
+  commentId: M:Yarhl.Media.Text.Replacer.Transform(System.String,System.Boolean)
+  fullName: Yarhl.Media.Text.Replacer.Transform(System.String, System.Boolean)
+  nameWithType: Replacer.Transform(String, Boolean)
+- uid: Yarhl.Media.Text.Replacer.Transform*
+  name: Transform
+  href: api/Yarhl.Media.Text.Replacer.html#Yarhl_Media_Text_Replacer_Transform_
+  commentId: Overload:Yarhl.Media.Text.Replacer.Transform
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.Replacer.Transform
+  nameWithType: Replacer.Transform
+- uid: Yarhl.Media.Text.ReplacerEntry
+  name: ReplacerEntry
+  href: api/Yarhl.Media.Text.ReplacerEntry.html
+  commentId: T:Yarhl.Media.Text.ReplacerEntry
+  fullName: Yarhl.Media.Text.ReplacerEntry
+  nameWithType: ReplacerEntry
+- uid: Yarhl.Media.Text.ReplacerEntry.#ctor(System.String,System.String)
+  name: ReplacerEntry(String, String)
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry__ctor_System_String_System_String_
+  commentId: M:Yarhl.Media.Text.ReplacerEntry.#ctor(System.String,System.String)
+  fullName: Yarhl.Media.Text.ReplacerEntry.ReplacerEntry(System.String, System.String)
+  nameWithType: ReplacerEntry.ReplacerEntry(String, String)
+- uid: Yarhl.Media.Text.ReplacerEntry.#ctor*
+  name: ReplacerEntry
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry__ctor_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.#ctor
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.ReplacerEntry
+  nameWithType: ReplacerEntry.ReplacerEntry
+- uid: Yarhl.Media.Text.ReplacerEntry.Modified
+  name: Modified
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Modified
+  commentId: P:Yarhl.Media.Text.ReplacerEntry.Modified
+  fullName: Yarhl.Media.Text.ReplacerEntry.Modified
+  nameWithType: ReplacerEntry.Modified
+- uid: Yarhl.Media.Text.ReplacerEntry.Modified*
+  name: Modified
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Modified_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.Modified
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.Modified
+  nameWithType: ReplacerEntry.Modified
+- uid: Yarhl.Media.Text.ReplacerEntry.Original
+  name: Original
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Original
+  commentId: P:Yarhl.Media.Text.ReplacerEntry.Original
+  fullName: Yarhl.Media.Text.ReplacerEntry.Original
+  nameWithType: ReplacerEntry.Original
+- uid: Yarhl.Media.Text.ReplacerEntry.Original*
+  name: Original
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Original_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.Original
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.Original
+  nameWithType: ReplacerEntry.Original
+- uid: Yarhl.Media.Text.XmlExtension
+  name: XmlExtension
+  href: api/Yarhl.Media.Text.XmlExtension.html
+  commentId: T:Yarhl.Media.Text.XmlExtension
+  fullName: Yarhl.Media.Text.XmlExtension
+  nameWithType: XmlExtension
+- uid: Yarhl.Media.Text.XmlExtension.EscapeSpace
+  name: EscapeSpace
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_EscapeSpace
+  commentId: P:Yarhl.Media.Text.XmlExtension.EscapeSpace
+  fullName: Yarhl.Media.Text.XmlExtension.EscapeSpace
+  nameWithType: XmlExtension.EscapeSpace
+- uid: Yarhl.Media.Text.XmlExtension.EscapeSpace*
+  name: EscapeSpace
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_EscapeSpace_
+  commentId: Overload:Yarhl.Media.Text.XmlExtension.EscapeSpace
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.XmlExtension.EscapeSpace
+  nameWithType: XmlExtension.EscapeSpace
+- uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
+  name: GetIndentedValue(XElement)
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_GetIndentedValue_System_Xml_Linq_XElement_
+  commentId: M:Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
+  fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
+  nameWithType: XmlExtension.GetIndentedValue(XElement)
+- uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue*
+  name: GetIndentedValue
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_GetIndentedValue_
+  commentId: Overload:Yarhl.Media.Text.XmlExtension.GetIndentedValue
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue
+  nameWithType: XmlExtension.GetIndentedValue
+- uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement,System.String,System.Int32)
+  name: SetIndentedValue(XElement, String, Int32)
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_SetIndentedValue_System_Xml_Linq_XElement_System_String_System_Int32_
+  commentId: M:Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement,System.String,System.Int32)
+  fullName: Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement, System.String, System.Int32)
+  nameWithType: XmlExtension.SetIndentedValue(XElement, String, Int32)
+- uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue*
+  name: SetIndentedValue
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_SetIndentedValue_
+  commentId: Overload:Yarhl.Media.Text.XmlExtension.SetIndentedValue
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.XmlExtension.SetIndentedValue
+  nameWithType: XmlExtension.SetIndentedValue
+- uid: Yarhl.Media.Text.XmlExtension.XmlSpacesPerLevel
+  name: XmlSpacesPerLevel
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_XmlSpacesPerLevel
+  commentId: P:Yarhl.Media.Text.XmlExtension.XmlSpacesPerLevel
+  fullName: Yarhl.Media.Text.XmlExtension.XmlSpacesPerLevel
+  nameWithType: XmlExtension.XmlSpacesPerLevel
+- uid: Yarhl.Media.Text.XmlExtension.XmlSpacesPerLevel*
+  name: XmlSpacesPerLevel
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_XmlSpacesPerLevel_
+  commentId: Overload:Yarhl.Media.Text.XmlExtension.XmlSpacesPerLevel
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.XmlExtension.XmlSpacesPerLevel
+  nameWithType: XmlExtension.XmlSpacesPerLevel
+- uid: Yarhl.PluginManager
+  name: PluginManager
+  href: api/Yarhl.PluginManager.html
+  commentId: T:Yarhl.PluginManager
+  fullName: Yarhl.PluginManager
+  nameWithType: PluginManager
+- uid: Yarhl.PluginManager.Dispose
+  name: Dispose()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Dispose
+  commentId: M:Yarhl.PluginManager.Dispose
+  fullName: Yarhl.PluginManager.Dispose()
+  nameWithType: PluginManager.Dispose()
+- uid: Yarhl.PluginManager.Dispose*
+  name: Dispose
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Dispose_
+  commentId: Overload:Yarhl.PluginManager.Dispose
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.Dispose
+  nameWithType: PluginManager.Dispose
+- uid: Yarhl.PluginManager.Finalize
+  name: Finalize()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Finalize
+  commentId: M:Yarhl.PluginManager.Finalize
+  fullName: Yarhl.PluginManager.Finalize()
+  nameWithType: PluginManager.Finalize()
+- uid: Yarhl.PluginManager.Finalize*
+  name: Finalize
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Finalize_
+  commentId: Overload:Yarhl.PluginManager.Finalize
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.Finalize
+  nameWithType: PluginManager.Finalize
+- uid: Yarhl.PluginManager.FindExtensions(System.Type)
+  name: FindExtensions(Type)
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindExtensions_System_Type_
+  commentId: M:Yarhl.PluginManager.FindExtensions(System.Type)
+  fullName: Yarhl.PluginManager.FindExtensions(System.Type)
+  nameWithType: PluginManager.FindExtensions(Type)
+- uid: Yarhl.PluginManager.FindExtensions*
+  name: FindExtensions
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindExtensions_
+  commentId: Overload:Yarhl.PluginManager.FindExtensions
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.FindExtensions
+  nameWithType: PluginManager.FindExtensions
+- uid: Yarhl.PluginManager.FindExtensions``1
+  name: FindExtensions<T>()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindExtensions__1
+  commentId: M:Yarhl.PluginManager.FindExtensions``1
+  name.vb: FindExtensions(Of T)()
+  fullName: Yarhl.PluginManager.FindExtensions<T>()
+  fullName.vb: Yarhl.PluginManager.FindExtensions(Of T)()
+  nameWithType: PluginManager.FindExtensions<T>()
+  nameWithType.vb: PluginManager.FindExtensions(Of T)()
+- uid: Yarhl.PluginManager.Instance
+  name: Instance
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Instance
+  commentId: P:Yarhl.PluginManager.Instance
+  fullName: Yarhl.PluginManager.Instance
+  nameWithType: PluginManager.Instance
+- uid: Yarhl.PluginManager.Instance*
+  name: Instance
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Instance_
+  commentId: Overload:Yarhl.PluginManager.Instance
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.Instance
+  nameWithType: PluginManager.Instance
+- uid: Yarhl.PluginManager.Shutdown
+  name: Shutdown()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Shutdown
+  commentId: M:Yarhl.PluginManager.Shutdown
+  fullName: Yarhl.PluginManager.Shutdown()
+  nameWithType: PluginManager.Shutdown()
+- uid: Yarhl.PluginManager.Shutdown*
+  name: Shutdown
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Shutdown_
+  commentId: Overload:Yarhl.PluginManager.Shutdown
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.Shutdown
+  nameWithType: PluginManager.Shutdown

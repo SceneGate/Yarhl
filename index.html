@@ -1,0 +1,170 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Yarhl: Yet Another ROM Hacking Library  | SceneGate Yarhl </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Yarhl: Yet Another ROM Hacking Library  | SceneGate Yarhl ">
+    <meta name="generator" content="docfx 2.40.0.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="README">
+<h1 id="yarhl-yet-another-rom-hacking-library-gpl-v3-license">Yarhl: Yet Another ROM Hacking Library <a href="http://www.gnu.org/copyleft/gpl.html"><img src="https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat" alt="GPL v3 License"></a></h1>
+
+<p><strong>Yarhl</strong> is a library for <em>ROM Hacking</em> and fan-translation projects.
+It provides a virtual file system, file format and format conversion features
+and plugin support. It's built in C# / .NET and works in Windows, Linux and
+Mac OS X.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Linux &amp; Mac OS X</th>
+<th>Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Build &amp; Test</strong></td>
+<td><a href="https://travis-ci.org/SceneGate/Yarhl"><img src="https://travis-ci.org/SceneGate/Yarhl.svg?branch=master" alt="Travis Build Status"></a> <a href="https://travis-ci.org/SceneGate/Yarhl/builds"><img src="https://buildstats.info/travisci/chart/SceneGate/Yarhl" alt="Travis Build history"></a></td>
+<td><a href="https://ci.appveyor.com/project/pleonex/libgame/branch/master"><img src="https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/master?svg=true" alt="AppVeyor Build status"></a> <a href="https://ci.appveyor.com/project/pleonex/libgame/history"><img src="https://buildstats.info/appveyor/chart/pleonex/libgame" alt="AppVeyor Build history"></a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Quality report</th>
+<th><a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=alert_status" alt="Sonar Gate"></a></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Coverage</strong></td>
+<td><a href="https://coveralls.io/github/SceneGate/Yarhl?branch=master"><img src="https://coveralls.io/repos/github/SceneGate/Yarhl/badge.svg?branch=master" alt="Coveralls"></a></td>
+</tr>
+<tr>
+<td><strong>Quality Reports</strong></td>
+<td><a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=alert_status" alt="SonarCloud"></a></td>
+</tr>
+<tr>
+<td><strong>Quality Details</strong></td>
+<td><a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=sqale_rating" alt="Maintainability"></a> <a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=bugs" alt="Bugs"></a> <a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=code_smells" alt="Code smells"></a> <a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=duplicated_lines_density" alt="Duplicated lines"></a></td>
+</tr>
+<tr>
+<td><strong>Code Stats</strong></td>
+<td><a href="https://sonarcloud.io/dashboard?id=yarhl"><img src="https://sonarcloud.io/api/project_badges/measure?project=yarhl&amp;metric=ncloc" alt="Lines of code"></a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="build">Build</h2>
+<h3 id="linux--mac-os-x">Linux &amp; Mac OS X</h3>
+<p>Requirements:
+<a href="http://www.mono-project.com/docs/getting-started/install/linux/"><em>Mono</em></a>.</p>
+<ol>
+<li><p>Clone the repository with <code>git clone https://github.com/SceneGate/Yarhl --recursive</code></p>
+</li>
+<li><p>Run <code>./build.sh</code></p>
+</li>
+</ol>
+<h3 id="windows">Windows</h3>
+<p>Requirements:
+<em>Visual Studio</em> or
+<a href="http://www.monodevelop.com/download/"><em>Xamarin Studio</em></a>.</p>
+<ol>
+<li><p>Clone the repository with the <a href="https://windows.github.com/">GitHub client</a>
+or <a href="https://git-scm.com/downloads">Git for Windows</a>.</p>
+</li>
+<li><p>Run <code>.\build.ps1</code></p>
+</li>
+</ol>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SceneGate/Yarhl/blob/master/docs/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright (c) 2018 Benito Palacios (pleonex)
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>
