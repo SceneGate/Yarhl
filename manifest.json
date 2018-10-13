@@ -539,17 +539,17 @@
         "incrementalPhase": "build"
       },
       "processors": {
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+        "TocDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         },
-        "TocDocumentProcessor": {
-          "can_incremental": false,
-          "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
           "incrementalPhase": "build"
         }
       }
