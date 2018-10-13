@@ -199,6 +199,52 @@ Task("Serve-Doc")
     DocFxBuild("docs/docfx.json", new DocFxBuildSettings { Serve = true });
 });
 
+Task("Deploy-Doc")
+    .IsDependentOn("Build-Doc")
+    .Does(() =>
+{
+    int retcode;
+
+    // Clone or pull
+    var repo_doc = Directory("doc-branch");
+    if (!DirectoryExists(repo_doc)) {
+        retcode = StartProcess(
+            "git",
+            $"clone git@github.com:SceneGate/Yarhl.git {repo_doc} -b gh-pages");
+        if (retcode != 0) {
+            throw new Exception("Cannot clone repository");
+        }
+    } else {
+        retcode = StartProcess("git", new ProcessSettings {
+            Arguments = "pull",
+            WorkingDirectory = repo_doc
+        });
+        if (retcode != 0) {
+            throw new Exception("Cannot pull repository");
+        }
+    }
+
+    // Copy the content of the web
+    CopyDirectory("docs/_site", repo_doc);
+
+    // Commit and push
+    retcode = StartProcess("git", new ProcessSettings {
+        Arguments = "commit -a -m 'Update doc from cake'",
+        WorkingDirectory = repo_doc
+    });
+    if (retcode != 0) {
+        throw new Exception("Cannot commit");
+    }
+
+    retcode = StartProcess("git", new ProcessSettings {
+        Arguments = "push origin gh-pages",
+        WorkingDirectory = repo_doc
+    });
+    if (retcode != 0) {
+        throw new Exception("Cannot push");
+    }
+});
+
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
