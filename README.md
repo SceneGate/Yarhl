@@ -16,6 +16,11 @@ Mac OS X.
 | **Quality Details** | [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=yarhl) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=bugs)](https://sonarcloud.io/dashboard?id=yarhl) [![Code smells](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=code_smells)](https://sonarcloud.io/dashboard?id=yarhl) [![Duplicated lines](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=yarhl) |
 | **Code Stats** | [![Lines of code](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=ncloc)](https://sonarcloud.io/dashboard?id=yarhl) |
 
+## Documentation
+
+Online API documentation is available in the GitHub page
+[here](https://scenegate.github.io/Yarhl/).
+
 ## Build
 
 ### Linux & Mac OS X
