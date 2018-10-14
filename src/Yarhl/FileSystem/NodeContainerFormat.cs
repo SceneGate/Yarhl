@@ -77,10 +77,13 @@ namespace Yarhl.FileSystem
             manageRoot = false;
         }
 
-        protected override void Dispose(bool freeManagedResourcesAlso)
+        /// <summary>
+        /// Dispose the root directory and children if it hasn't been moved yet.
+        /// </summary>
+        public override void Dispose()
         {
-            base.Dispose(freeManagedResourcesAlso);
-            if (freeManagedResourcesAlso && manageRoot)
+            base.Dispose();
+            if (manageRoot)
                 Root.Dispose();
         }
     }

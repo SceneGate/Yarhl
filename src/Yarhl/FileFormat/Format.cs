@@ -61,6 +61,9 @@ namespace Yarhl.FileFormat
             if (dstType == null)
                 throw new ArgumentNullException(nameof(dstType));
 
+            if (src == null)
+                throw new ArgumentNullException(nameof(src));
+
             // Create the generic type to search.
             Type srcType = src.GetType();
             Type converterType = typeof(IConverter<,>)
@@ -238,19 +241,7 @@ namespace Yarhl.FileFormat
         /// Releases all resource used by the <see cref="Format"/>
         /// object.
         /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);              // Dispose me everything (L)
-            GC.SuppressFinalize(this);  // Don't dispose again!
-        }
-
-        /// <summary>
-        /// Releases all resource used by the <see cref="Format"/>
-        /// object.
-        /// </summary>
-        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
-        /// managed resources also.</param>
-        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        public virtual void Dispose()
         {
             if (Disposed)
                 return;

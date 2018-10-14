@@ -90,6 +90,15 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformTypedNullThrowsException()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+
+            Assert.That(() => node.Transform(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void TransformAfterDisposeThrowsException()
         {
             Format dummyFormat = new StringFormatTest("3");

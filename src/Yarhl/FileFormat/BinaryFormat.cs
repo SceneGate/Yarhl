@@ -80,16 +80,12 @@ namespace Yarhl.FileFormat
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="BinaryFormat"/>
-        /// object.
+        /// Releases underlaying Stream.
         /// </summary>
-        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
-        /// managed resources also.</param>
-        protected override void Dispose(bool freeManagedResourcesAlso)
+        public override void Dispose()
         {
-            base.Dispose(freeManagedResourcesAlso);
-            if (freeManagedResourcesAlso)
-                Stream.Dispose();
+            base.Dispose();
+            Stream.Dispose();
         }
     }
 }

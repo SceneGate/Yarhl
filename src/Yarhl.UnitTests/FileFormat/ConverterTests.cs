@@ -32,44 +32,44 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FindSingleInnerConverter()
         {
-            var converterTypes = PluginManager.Instance
+            var converters = PluginManager.Instance
                 .FindExtensions<IConverter<string, ulong>>();
-            Assert.IsNotEmpty(converterTypes);
+            Assert.IsNotEmpty(converters);
             Assert.IsInstanceOf<SingleOuterConverterExample.SingleInnerConverterExample>(
-                converterTypes.Single());
+                converters.Single());
         }
 
         [Test]
         public void FindSingleOuterConverter()
         {
-            var converterTypes = PluginManager.Instance
+            var converters = PluginManager.Instance
                 .FindExtensions<IConverter<string, uint>>();
-            Assert.IsNotEmpty(converterTypes);
+            Assert.IsNotEmpty(converters);
             Assert.IsInstanceOf<SingleOuterConverterExample>(
-                converterTypes.Single());
+                converters.Single());
         }
 
         [Test]
         public void FindTwoConvertersInSameClass()
         {
-            var converterType1 = PluginManager.Instance
+            var converter1 = PluginManager.Instance
                 .FindExtensions<IConverter<string, int>>();
-            Assert.IsInstanceOf<TwoConvertersExample>(converterType1.Single());
+            Assert.IsInstanceOf<TwoConvertersExample>(converter1.Single());
 
             Assert.DoesNotThrow(() =>
-                converterType1.Single(t =>
+                converter1.Single(t =>
                     t.GetType().GetInterfaces().Any(i =>
                         i.IsGenericType &&
                         i.GenericTypeArguments.Length == 2 &&
                         i.GenericTypeArguments[0] == typeof(string) &&
                         i.GenericTypeArguments[1] == typeof(int))));
 
-            var converterType2 = PluginManager.Instance
+            var converter2 = PluginManager.Instance
                 .FindExtensions<IConverter<int, string>>();
-            Assert.IsInstanceOf<TwoConvertersExample>(converterType2.Single());
+            Assert.IsInstanceOf<TwoConvertersExample>(converter2.Single());
 
             Assert.DoesNotThrow(() =>
-                converterType2.Single(t =>
+                converter2.Single(t =>
                     t.GetType().GetInterfaces().Any(i =>
                         i.IsGenericType &&
                         i.GenericTypeArguments.Length == 2 &&
@@ -80,9 +80,9 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FindDerivedConverter()
         {
-            var converterTypes = PluginManager.Instance
+            var converters = PluginManager.Instance
                 .FindExtensions<IConverter<string, ushort>>();
-            Assert.IsInstanceOf<DerivedConverter>(converterTypes.Single());
+            Assert.IsInstanceOf<DerivedConverter>(converters.Single());
         }
     }
 }

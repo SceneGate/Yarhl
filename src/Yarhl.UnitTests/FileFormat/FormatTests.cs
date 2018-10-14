@@ -59,6 +59,14 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         [Test]
+        public void StaticTypedArgConvertThrowsIfNull()
+        {
+            Assert.That(
+                () => Format.ConvertTo<int, string>(null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void StaticConvertToConverts()
         {
             Assert.AreEqual(Format.ConvertTo(typeof(int), "3"), 3);
@@ -71,6 +79,14 @@ namespace Yarhl.UnitTests.FileFormat
             Type dstType = null;
             Assert.That(
                 () => Format.ConvertTo(dstType, "3"),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void StaticConvertToThrowsIfSrcIsNull()
+        {
+            Assert.That(
+                () => Format.ConvertTo(typeof(int), null),
                 Throws.ArgumentNullException);
         }
 
