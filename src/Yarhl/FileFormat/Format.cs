@@ -22,24 +22,12 @@ namespace Yarhl.FileFormat
 {
     using System;
     using System.Linq;
-    using Mono.Addins;
 
     /// <summary>
     /// Abstract file format.
     /// </summary>
-    [TypeExtensionPoint(ExtensionAttributeType = typeof(FormatAttribute))]
     public abstract class Format : IDisposable
     {
-        /// <summary>
-        /// Finalizes an instance of the <see cref="Format"/> class.
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Format"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~Format()
-        {
-            Dispose(false);
-        }
-
         /// <summary>
         /// Gets a value indicating whether this <see cref="Format"/> is disposed.
         /// </summary>
@@ -73,31 +61,31 @@ namespace Yarhl.FileFormat
             if (dstType == null)
                 throw new ArgumentNullException(nameof(dstType));
 
-            // Search the converter for the giving types and create an instance
-            dynamic converter;
+            // Create the generic type to search.
             Type srcType = src.GetType();
+            Type converterType = typeof(IConverter<,>)
+                    .MakeGenericType(srcType, dstType);
+
+            // Search the converter for the giving types.
+            dynamic converter;
             try {
-                var converterType = PluginManager.Instance
-                    .FindExtensions(typeof(IConverter<,>))
-                    .Single(type =>
-                           type.GetInterfaces().Any(inter =>
-                                inter.IsGenericType &&
-                                inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)) &&
-                                inter.GenericTypeArguments[0].IsAssignableFrom(srcType) &&
-                                dstType.IsAssignableFrom(inter.GenericTypeArguments[1])));
-                converter = Activator.CreateInstance(converterType);
-            } catch (InvalidOperationException ex) {
+                var converters = PluginManager.Instance
+                    .FindExtensions(converterType)
+                    .ToList();
+                
+                if (converters.Count == 0) {
+                    throw new InvalidOperationException(
+                        $"Cannot find converter for: {srcType} -> {dstType}");
+                } else if (converters.Count > 1) {
+                    throw new InvalidOperationException(
+                        $"Multiple converters for: {srcType} -> {dstType}");
+                }
+
+                converter = converters[0];
+            } catch (System.Composition.Hosting.CompositionFailedException ex) {
                 throw new InvalidOperationException(
-                    $"No single converter for: {srcType} -> {dstType}",
-                    ex);
-            } catch (System.Reflection.TargetInvocationException ex) {
-                throw new InvalidOperationException(
-                    "Exception in converter constructor",
-                    ex);
-            } catch (MissingMemberException ex) {
-                throw new InvalidOperationException(
-                    "The converter has no constructor without arguments.\n" +
-                    "Create the converter object and use ConvertWith<T>.",
+                    "The converter has not a public constructor with no arguments.\n" +
+                    "Create an instance of the converter and use ConvertWith.",
                     ex);
             }
 

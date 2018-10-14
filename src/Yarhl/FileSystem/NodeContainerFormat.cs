@@ -26,11 +26,13 @@
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Composition;
     using FileFormat;
 
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
+    [Export(typeof(Format))]
     [Format("Yarhl.Common.NodeContainer")]
     public class NodeContainerFormat : Format
     {

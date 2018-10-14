@@ -20,11 +20,13 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.FileFormat
 {
+    using System.Composition;
     using IO;
 
     /// <summary>
     /// Binary format.
     /// </summary>
+    [Export(typeof(Format))]
     [Format("Yarhl.Common.Binary")]
     public class BinaryFormat : Format
     {

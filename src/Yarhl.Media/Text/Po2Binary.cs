@@ -26,16 +26,19 @@
 namespace Yarhl.Media.Text
 {
     using System;
+    using System.Composition;
     using System.Text;
-    using Mono.Addins;
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
     /// <summary>
     /// Po to Binary converter.
     /// </summary>
-    [Extension]
-    public class Po2Binary : IConverter<Po, BinaryFormat>, IConverter<BinaryFormat, Po>
+    [Export(typeof(IConverter<Po, BinaryFormat>))]
+    [Export(typeof(IConverter<BinaryFormat, Po>))]
+    public class Po2Binary :
+        IConverter<Po, BinaryFormat>,
+        IConverter<BinaryFormat, Po>
     {
         /// <summary>
         /// Convert the specified PO into a Binary stream.

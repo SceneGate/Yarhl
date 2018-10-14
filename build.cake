@@ -34,26 +34,13 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
+var tests = Argument("tests", string.Empty);
 
-Task("Restore-NuGet")
+Task("Build")
     .Does(() =>
 {
     NuGetRestore("src/Yarhl.sln");
-});
 
-Task("Build-Mono.Addins")
-    .Does(() =>
-{
-    MSBuild(
-        "mono-addins/Mono.Addins/Mono.Addins.csproj",
-        configurator => configurator.SetConfiguration(configuration));
-});
-
-Task("Build")
-    .IsDependentOn("Restore-NuGet")
-    .IsDependentOn("Build-Mono.Addins")
-    .Does(() =>
-{
     MSBuild(
         "src/Yarhl.sln",
         configurator => configurator.SetConfiguration(configuration));
@@ -63,9 +50,14 @@ Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    NUnit3(
-        $"src/**/bin/{configuration}/*.UnitTests.dll",
-        new NUnit3Settings { NoResults = true });
+    var settings = new NUnit3Settings();
+    settings.NoResults = true;
+
+    if (tests != string.Empty) {
+        settings.Test = tests;
+    }
+
+    NUnit3($"src/**/bin/{configuration}/*.UnitTests.dll", settings);
 });
 
 Task("Run-Linter-Gendarme")
@@ -105,7 +97,7 @@ Task("Run-AltCover")
     var altcoverArgs = new AltCover.PrepareArgs {
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
-        AssemblyFilter = new[] { "nunit.framework", "Mono.Addins" },
+        AssemblyFilter = new[] { "nunit.framework" },
         XmlReport = "coverage.xml",
         OpenCover = true
     };

@@ -22,19 +22,25 @@ namespace Yarhl
 {
     using System;
     using System.Collections.Generic;
+    using System.Composition.Hosting;
     using System.IO;
     using System.Linq;
-    using Mono.Addins;
+    using System.Reflection;
 
     /// <summary>
-    /// Manager for Yarhl plugins.
+    /// Plugin manager.
     /// </summary>
-    public sealed class PluginManager : IDisposable
+    /// <remarks>
+    /// Plugin assemblies are loaded from the directory with the Yarhl
+    /// assembly and the 'Plugins' subfolder with its children.
+    /// </remarks>
+    public sealed class PluginManager
     {
-        const string AddinFolder = ".addins";
-
         static readonly object LockObj = new object();
         static PluginManager singleInstance;
+
+        ContainerConfiguration containerConfig;
+        CompositionHost container;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="PluginManager" />
@@ -42,20 +48,14 @@ namespace Yarhl
         /// </summary>
         PluginManager()
         {
-            if (!AddinManager.IsInitialized) {
-                AddinManager.Initialize(AddinFolder);
-                AddinManager.Registry.Update();
-            }
-
-            // Make the addin folder hidden for Windows.
-            var addinDir = new DirectoryInfo(AddinFolder);
-            addinDir.Attributes |= FileAttributes.Hidden;
+            InitializeContainer();
         }
 
-        ~PluginManager()
-        {
-            Dispose(false);
-        }
+        /// <summary>
+        /// Name of the plugins directory.
+        /// </summary>
+        /// <value>The name of the plugins directory.</value>
+        public static string PluginDirectory => "Plugins";
 
         /// <summary>
         /// Gets the plugin manager instance.
@@ -76,21 +76,13 @@ namespace Yarhl
         }
 
         /// <summary>
-        /// Shutdown the plugin manager.
-        /// </summary>
-        public static void Shutdown()
-        {
-            Dispose(true);
-        }
-
-        /// <summary>
         /// Finds all the extensions from the given base type.
         /// </summary>
         /// <returns>The extensions.</returns>
         /// <typeparam name="T">Type of the extension point.</typeparam>
-        public IEnumerable<Type> FindExtensions<T>()
+        public IEnumerable<T> FindExtensions<T>()
         {
-            return FindExtensions(typeof(T));
+            return container.GetExports<T>();
         }
 
         /// <summary>
@@ -98,34 +90,37 @@ namespace Yarhl
         /// </summary>
         /// <returns>The extensions.</returns>
         /// <param name="extension">Type of the extension point.</param>
-        public IEnumerable<Type> FindExtensions(Type extension)
+        public IEnumerable<object> FindExtensions(Type extension)
         {
-            return AddinManager
-                .GetExtensionNodes<TypeExtensionNode>(extension)
-                .Select(node => node.Type);
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
+            return container.GetExports(extension);
         }
 
-        /// <summary>
-        /// Releases all resource used by the <see cref="PluginManager"/> object.
-        /// </summary>
-        public void Dispose()
+        void InitializeContainer()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+            // Assemblies from the program directory
+            var programDir = AppDomain.CurrentDomain.BaseDirectory;
+            var programAssemblies = Directory.GetFiles(programDir, "*.dll")
+                .Select(Assembly.LoadFile);
+            
+            containerConfig = new ContainerConfiguration()
+                .WithAssembly(this.GetType().Assembly)
+                .WithAssemblies(programAssemblies);
 
-        static void Dispose(bool freeManaged)
-        {
-            lock (LockObj) {
-                singleInstance = null;
-                if (freeManaged && AddinManager.IsInitialized) {
-                    try {
-                        AddinManager.Shutdown();
-                    } catch (InvalidOperationException) {
-                        // Due to a bug in Mono.Addins it may throw an exception
-                    }
-                }
+            // Assemblies from the Plugin directory and subfolders
+            string pluginDir = Path.Combine(programDir, PluginDirectory);
+            if (Directory.Exists(pluginDir)) {
+                var pluginFiles = Directory.GetFiles(
+                    pluginDir,
+                    "*.dll",
+                    SearchOption.AllDirectories);
+                var pluginAssemblies = pluginFiles.Select(Assembly.LoadFile);
+                containerConfig.WithAssemblies(pluginAssemblies);
             }
+
+            container = containerConfig.CreateContainer();
         }
     }
 }

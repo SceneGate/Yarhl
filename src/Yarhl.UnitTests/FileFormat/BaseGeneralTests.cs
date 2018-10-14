@@ -33,10 +33,13 @@ namespace Yarhl.UnitTests.FileFormat
         where T : Format
     {
         [Test]
-        public void FormatIsFound()
+        public void FormatIsFoundAndIsUnique()
         {
-            Assert.IsTrue(PluginManager.Instance
-                          .FindExtensions<Format>().Contains(typeof(T)));
+            var formats = PluginManager.Instance
+                .FindExtensions<Format>()
+                .Select(t => t.GetType())
+                .ToList();
+            Assert.Contains(typeof(T), formats);
         }
 
         public void NameIsCorrect(string packageName, string formatName)

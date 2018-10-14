@@ -28,12 +28,14 @@ namespace Yarhl.Media.Text
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Composition;
     using System.Linq;
     using Yarhl.FileFormat;
 
     /// <summary>
     /// Portable Object format for translations.
     /// </summary>
+    [Export(typeof(Format))]
     [Format("Yarhl.Common.Po")]
     public class Po : Format
     {

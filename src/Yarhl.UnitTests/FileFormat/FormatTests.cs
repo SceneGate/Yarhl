@@ -21,7 +21,7 @@
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
-    using Mono.Addins;
+    using System.Composition;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
@@ -81,7 +81,7 @@ namespace Yarhl.UnitTests.FileFormat
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.ConvertTo(typeof(short), test));
             Assert.AreEqual(
-                "No single converter for: " +
+                "Multiple converters for: " +
                 "Yarhl.UnitTests.FileFormat.StringFormatTest -> System.Int16",
                 ex.Message);
         }
@@ -92,7 +92,7 @@ namespace Yarhl.UnitTests.FileFormat
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.ConvertTo(typeof(short), (short)3));
             Assert.AreEqual(
-                "No single converter for: System.Int16 -> System.Int16",
+                "Cannot find converter for: System.Int16 -> System.Int16",
                 ex.Message);
         }
 
@@ -100,9 +100,11 @@ namespace Yarhl.UnitTests.FileFormat
         public void StaticConvertToThrowsIfConstructorFails()
         {
             var test = new StringFormatTest("3");
-            var ex = Assert.Throws<InvalidOperationException>(() =>
+            var ex = Assert.Throws<Exception>(() =>
                 Format.ConvertTo(typeof(ushort), test));
-            Assert.AreEqual("Exception in converter constructor", ex.Message);
+            Assert.AreEqual(
+                "Exception of type 'System.Exception' was thrown.",
+                ex.Message);
         }
 
         [Test]
@@ -112,8 +114,8 @@ namespace Yarhl.UnitTests.FileFormat
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.ConvertTo(typeof(long), test));
             Assert.AreEqual(
-                "The converter has no constructor without arguments.\n" +
-                "Create the converter object and use ConvertWith<T>.",
+                "The converter has not a public constructor with no arguments.\n" +
+                "Create an instance of the converter and use ConvertWith.",
                 ex.Message);
         }
 
@@ -124,8 +126,8 @@ namespace Yarhl.UnitTests.FileFormat
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.ConvertTo(typeof(ulong), test));
             Assert.AreEqual(
-                "The converter has no constructor without arguments.\n" +
-                "Create the converter object and use ConvertWith<T>.",
+                "The converter has not a public constructor with no arguments.\n" +
+                "Create an instance of the converter and use ConvertWith.",
                 ex.Message);
         }
 
@@ -404,8 +406,9 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.That(formatAttr.Name, Is.Null);
         }
 
-        [Extension]
-        public class FormatTestDuplicatedConverter1 : IConverter<StringFormatTest, short>
+        [Export(typeof(IConverter<StringFormatTest, short>))]
+        public class FormatTestDuplicatedConverter1 :
+            IConverter<StringFormatTest, short>
         {
             public short Convert(StringFormatTest test)
             {
@@ -413,8 +416,9 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Extension]
-        public class FormatTestDuplicatedConverter2 : IConverter<StringFormatTest, short>
+        [Export(typeof(IConverter<StringFormatTest, short>))]
+        public class FormatTestDuplicatedConverter2 :
+            IConverter<StringFormatTest, short>
         {
             public short Convert(StringFormatTest test)
             {
@@ -422,8 +426,9 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Extension]
-        public class FormatTestBadConstructor : IConverter<StringFormatTest, ushort>
+        [Export(typeof(IConverter<StringFormatTest, ushort>))]
+        public class FormatTestBadConstructor :
+            IConverter<StringFormatTest, ushort>
         {
             public FormatTestBadConstructor()
             {
@@ -436,8 +441,9 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Extension]
-        public class FormatTestNoConstructor : IConverter<StringFormatTest, long>
+        [Export(typeof(IConverter<StringFormatTest, long>))]
+        public class FormatTestNoConstructor :
+            IConverter<StringFormatTest, long>
         {
             public FormatTestNoConstructor(string dummy)
             {
@@ -452,8 +458,9 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Extension]
-        public class FormatTestPrivateConstructor : IConverter<StringFormatTest, ulong>
+        [Export(typeof(IConverter<StringFormatTest, ulong>))]
+        public class FormatTestPrivateConstructor :
+            IConverter<StringFormatTest, ulong>
         {
             FormatTestPrivateConstructor()
             {
@@ -475,7 +482,9 @@ namespace Yarhl.UnitTests.FileFormat
             public ushort Y { get; set; }
         }
 
-        [Extension]
+        [Export(typeof(IConverter<ushort, Derived>))]
+        [Export(typeof(IConverter<Derived, ushort>))]
+        [Export(typeof(IConverter<ushort, Base>))]
         public class ConvertDerived :
             IConverter<ushort, Derived>, IConverter<Derived, ushort>
         {
@@ -493,7 +502,9 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Extension]
+        [Export(typeof(IConverter<int, Base>))]
+        [Export(typeof(IConverter<Base, int>))]
+        [Export(typeof(IConverter<Derived, int>))]
         public class ConvertBase :
             IConverter<int, Base>, IConverter<Base, int>
         {

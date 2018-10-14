@@ -26,89 +26,58 @@
 namespace Yarhl.UnitTests
 {
     using System;
+    using System.Composition;
     using System.IO;
     using System.Linq;
-    using FileFormat;
-    using Mono.Addins;
     using NUnit.Framework;
-    using Yarhl.FileFormat;
 
     [TestFixture, SingleThreaded]
     public class PluginManagerTests
     {
-        public interface IDummyExtensionPoint<T>
+        public interface IExistsInterface
+        {
+        }
+
+        public interface IGenericExport<T>
         {
         }
 
         [Test]
-        public void InstanceInitializeAddinManager()
-        {
-            PluginManager.Shutdown();
-            Assert.IsFalse(AddinManager.IsInitialized);
-            Assert.IsNotNull(PluginManager.Instance);
-            Assert.IsTrue(AddinManager.IsInitialized);
-        }
-
-        [Test]
-        public void AddinFolderIsHiddenAndExists()
+        public void InstanceInitializePluginManager()
         {
             Assert.IsNotNull(PluginManager.Instance);
-            DirectoryInfo dirInfo = new DirectoryInfo(".addins");
-            Assert.IsTrue(dirInfo.Exists);
-            Assert.IsTrue(dirInfo.Attributes.HasFlag(FileAttributes.Hidden));
-        }
-
-        [Test]
-        public void ShutdownTurnOffAddinManager()
-        {
-            Assert.IsNotNull(PluginManager.Instance);
-            Assert.IsTrue(AddinManager.IsInitialized);
-            PluginManager.Shutdown();
-            Assert.IsFalse(AddinManager.IsInitialized);
-        }
-
-        [Test]
-        public void DisposeTurnOffAddinManager()
-        {
-            Assert.IsNotNull(PluginManager.Instance);
-            Assert.IsTrue(AddinManager.IsInitialized);
-            PluginManager.Instance.Dispose();
-            Assert.IsFalse(AddinManager.IsInitialized);
         }
 
         [Test]
         public void FindExtensionByGenericType()
         {
             var extensions = PluginManager.Instance
-                .FindExtensions<Format>()
+                .FindExtensions<IExistsInterface>()
                 .ToList();
-            Assert.IsNotEmpty(extensions);
-            Assert.Contains(typeof(StringFormatTest), extensions);
+            Assert.IsInstanceOf(typeof(IExistsInterface), extensions.Single());
         }
 
         [Test]
-        public void FindSpecificExtensionByGenericTypeFails()
+        public void FindSpecificExtensionByGenericTypeReturnsEmpty()
         {
             var extensions = PluginManager.Instance
-                                          .FindExtensions<StringFormatTest>();
+                .FindExtensions<ExistsClass>();
             Assert.IsEmpty(extensions);
         }
 
         [Test]
-        public void FindExtension()
+        public void FindExtensionByType()
         {
             var extensions = PluginManager.Instance
-                                          .FindExtensions(typeof(Format))
-                                          .ToList();
-            Assert.IsNotEmpty(extensions);
-            Assert.Contains(typeof(StringFormatTest), extensions);
+                .FindExtensions(typeof(IExistsInterface));
+            Assert.IsInstanceOf(typeof(IExistsInterface), extensions.Single());
         }
 
         [Test]
-        public void FindExtensionNotRegisteredReturnsEmpty()
+        public void FindExtensionByTypeNotRegisteredReturnsEmpty()
         {
             var extensions = PluginManager.Instance
-                                          .FindExtensions(typeof(StringFormatTest));
+                .FindExtensions(typeof(ExistsClass));
             Assert.IsEmpty(extensions);
         }
 
@@ -116,26 +85,33 @@ namespace Yarhl.UnitTests
         public void FindExtensionWithNullTypeThrowsException()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                                             PluginManager.Instance.FindExtensions(null));
+                PluginManager.Instance.FindExtensions(null));
         }
 
         [Test]
         public void FindGenericExtensions()
         {
             var extensions = PluginManager.Instance
-                .FindExtensions(typeof(IConverter<,>))
-                .ToList();
-            Assert.IsNotEmpty(extensions);
-            Assert.Contains(typeof(SingleOuterConverterExample), extensions);
+                .FindExtensions(typeof(IGenericExport<int>));
+            Assert.IsInstanceOf(typeof(IGenericExport<int>), extensions.Single());
         }
 
         [Test]
         public void FindGenericExtensionsNotRegisteredReturnsEmpty()
         {
             var extensions = PluginManager.Instance
-                .FindExtensions(typeof(IDummyExtensionPoint<>))
-                .ToList();
+                .FindExtensions(typeof(IGenericExport<double>));
             Assert.IsEmpty(extensions);
+        }
+
+        [Export(typeof(IExistsInterface))]
+        public class ExistsClass : IExistsInterface
+        {
+        }
+
+        [Export(typeof(IGenericExport<int>))]
+        public class GenericExport : IGenericExport<int>
+        {
         }
     }
 }

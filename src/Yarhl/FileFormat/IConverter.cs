@@ -20,14 +20,11 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.FileFormat
 {
-    using Mono.Addins;
-
     /// <summary>
     /// Format converter interface.
     /// </summary>
     /// <typeparam name="TSrc">Source format.</typeparam>
     /// <typeparam name="TDst">Destination format.</typeparam>
-    [TypeExtensionPoint]
     public interface IConverter<in TSrc, out TDst>
     {
         /// <summary>

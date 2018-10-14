@@ -1,7 +1,6 @@
 # Output
 bin/
 obj/
-.addins
 
 # IDE
 *.userprefs

@@ -21,10 +21,10 @@
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
-    using Mono.Addins;
+    using System.Composition;
     using Yarhl.FileFormat;
 
-    [Extension]
+    [Export(typeof(IConverter<string, uint>))]
     public class SingleOuterConverterExample : IConverter<string, uint>
     {
         public uint Convert(string source)
@@ -32,7 +32,7 @@ namespace Yarhl.UnitTests.FileFormat
             return System.Convert.ToUInt32(source);
         }
 
-        [Extension]
+        [Export(typeof(IConverter<string, ulong>))]
         public class SingleInnerConverterExample : IConverter<string, ulong>
         {
             public ulong Convert(string source)
@@ -42,9 +42,10 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
+    [Export(typeof(IConverter<string, int>))]
+    [Export(typeof(IConverter<int, string>))]
     public class TwoConvertersExample :
-    IConverter<string, int>, IConverter<int, string>
+        IConverter<string, int>, IConverter<int, string>
     {
         public int Convert(string source)
         {
@@ -57,9 +58,9 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
+    [Export(typeof(IConverter<string, short>))]
     public class ConverterAndOtherInterface :
-    IConverter<string, short>, IDisposable
+        IConverter<string, short>, IDisposable
     {
         public short Convert(string source)
         {
@@ -79,7 +80,7 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
+    [Export(typeof(IConverter<string, ushort>))]
     public class DerivedConverter : BaseConverter
     {
     }
@@ -106,7 +107,7 @@ namespace Yarhl.UnitTests.FileFormat
         public int Value { get; private set; }
     }
 
-    [Extension]
+    [Export(typeof(IConverter<StringFormatTest, int>))]
     public class StringFormatTest2IntConverter : IConverter<StringFormatTest, int>
     {
         public int Convert(StringFormatTest test)
@@ -115,7 +116,8 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
+    [Export(typeof(IConverter<StringFormatTest, IntFormatTest>))]
+    [Export(typeof(IConverter<IntFormatTest, StringFormatTest>))]
     public class StringFormatTest2IntFormatTestConverter :
         IConverter<StringFormatTest, IntFormatTest>,
         IConverter<IntFormatTest, StringFormatTest>

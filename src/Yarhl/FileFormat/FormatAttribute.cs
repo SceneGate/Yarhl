@@ -21,7 +21,6 @@
 namespace Yarhl.FileFormat
 {
     using System;
-    using Mono.Addins;
 
     /// <summary>
     /// Class attribute for format extensions.
@@ -29,7 +28,7 @@ namespace Yarhl.FileFormat
     /// </summary>
     [CLSCompliant(false)]
     [AttributeUsage(AttributeTargets.Class)]
-    public sealed class FormatAttribute : CustomExtensionAttribute
+    public sealed class FormatAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FormatAttribute"/> class.
@@ -42,7 +41,7 @@ namespace Yarhl.FileFormat
         /// Initializes a new instance of the <see cref="FormatAttribute"/> class.
         /// </summary>
         /// <param name="name">The format name.</param>
-        public FormatAttribute([NodeAttribute("Name")] string name)
+        public FormatAttribute(string name)
         {
             Name = name;
         }
@@ -51,7 +50,9 @@ namespace Yarhl.FileFormat
         /// Gets or sets the format name.
         /// </summary>
         /// <value>The format name.</value>
-        [NodeAttribute]
-        public string Name { get; set; }
+        public string Name {
+            get;
+            set;
+        }
     }
 }
