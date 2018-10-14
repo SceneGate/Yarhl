@@ -33,7 +33,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("Yarhl development team")]
 [assembly: AssemblyProduct("Yarhl")]
 [assembly: AssemblyCopyright("Copyright (c) 2017 SceneGate Team")]
-[assembly: AssemblyVersion("2.0.0.*")]
+[assembly: AssemblyVersion("2.0.0")]
 [assembly: AssemblyFileVersion("2.0.0")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]

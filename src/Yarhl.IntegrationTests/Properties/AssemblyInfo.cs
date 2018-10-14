@@ -4,7 +4,7 @@
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2016 Benito Palacios Sánchez
+//  Copyright (c) 2018 Benito Palacios Sánchez
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -26,7 +26,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Unit tests for Yarhl library")]
 [assembly: AssemblyCompany("Yarhl development team")]
 [assembly: AssemblyProduct("Yarhl")]
-[assembly: AssemblyCopyright("Copyright (c) 2017 SceneGate Team")]
+[assembly: AssemblyCopyright("Copyright (c) 2018 SceneGate Team")]
 [assembly: AssemblyVersion("2.0.0")]
 [assembly: AssemblyFileVersion("2.0.0")]
 

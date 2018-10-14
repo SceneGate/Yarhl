@@ -122,6 +122,12 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.AreEqual(
                 "Exception of type 'System.Exception' was thrown.",
                 ex.Message);
+
+            // Just for coverage
+            var converter = new FormatTestBadConstructor("2");
+            Assert.That(
+                converter.Convert(new StringFormatTest("3")),
+                Is.EqualTo(0));
         }
 
         [Test]
@@ -134,6 +140,12 @@ namespace Yarhl.UnitTests.FileFormat
                 "The converter has not a public constructor with no arguments.\n" +
                 "Create an instance of the converter and use ConvertWith.",
                 ex.Message);
+
+            // But we can use the ConvertWith
+            var converter = new FormatTestNoConstructor("3");
+            Assert.AreEqual(
+                Format.ConvertWith(converter, new StringFormatTest("1")),
+                0);
         }
 
         [Test]
@@ -146,6 +158,12 @@ namespace Yarhl.UnitTests.FileFormat
                 "The converter has not a public constructor with no arguments.\n" +
                 "Create an instance of the converter and use ConvertWith.",
                 ex.Message);
+
+            // But we can use the ConvertWith of classes with Factory pattern.
+            var converter = FormatTestPrivateConstructor.Create();
+            Assert.AreEqual(
+                Format.ConvertWith(converter, new StringFormatTest("1")),
+                0);
         }
 
         [Test]
@@ -158,6 +176,10 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.DoesNotThrow(() => val = Format.ConvertTo<Base>((ushort)3));
             Assert.IsInstanceOf<Derived>(val);
             Assert.AreEqual(3, val.X);
+
+            Assert.DoesNotThrow(() => val = Format.ConvertTo<Base>((int)3));
+            Assert.IsInstanceOf<Base>(val);
+            Assert.AreEqual(5, val.X);
         }
 
         [Test]
@@ -212,7 +234,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void StaticGenericConvertWithConverts()
         {
             var format = new StringFormatTest("3");
-            var converter = new FormatTestDuplicatedConverter2();
+            var converter = new FormatTestDuplicatedConverter1();
             Assert.AreEqual(
                 Format.ConvertWith<StringFormatTest, short>(converter, format),
                 3);
@@ -466,6 +488,11 @@ namespace Yarhl.UnitTests.FileFormat
                 throw new Exception();
             }
 
+            public FormatTestBadConstructor(string dummy)
+            {
+                // This one doesn't throw
+            }
+
             public ushort Convert(StringFormatTest test)
             {
                 return 0;
@@ -495,6 +522,11 @@ namespace Yarhl.UnitTests.FileFormat
         {
             FormatTestPrivateConstructor()
             {
+            }
+
+            public static FormatTestPrivateConstructor Create()
+            {
+                return new FormatTestPrivateConstructor();
             }
 
             public ulong Convert(StringFormatTest format)

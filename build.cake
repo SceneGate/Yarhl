@@ -136,8 +136,11 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
 {
     string inputDir = $"{projectPath}/bin/{configuration}";
     string outputDir = $"{inputDir}/__Instrumented";
-    if (DirectoryExists(outputDir))
-        DeleteDirectory(outputDir, true);
+    if (DirectoryExists(outputDir)) {
+        DeleteDirectory(
+            outputDir,
+            new DeleteDirectorySettings { Recursive = true });
+    }
 
     var altcoverArgs = new AltCover.PrepareArgs {
         InputDirectory = inputDir,
