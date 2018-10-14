@@ -22,6 +22,7 @@ namespace Yarhl.UnitTests.FileFormat
 {
     using System;
     using System.Composition;
+    using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
@@ -420,6 +421,20 @@ namespace Yarhl.UnitTests.FileFormat
 
             var formatAttr = attr[0] as FormatAttribute;
             Assert.That(formatAttr.Name, Is.Null);
+        }
+
+        [Test]
+        public void FormatsAreNotDuplicated()
+        {
+            Assert.That(Format.GetFormats().Select(f => f.GetType()), Is.Unique);
+        }
+
+        [Test]
+        public void GetFormatsReturnsKnownFormats()
+        {
+            Assert.That(
+                Format.GetFormats().Select(f => f.GetType().FullName),
+                Does.Contain("Yarhl.FileFormat.BinaryFormat"));
         }
 
         [Export(typeof(IConverter<StringFormatTest, short>))]

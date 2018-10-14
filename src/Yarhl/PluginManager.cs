@@ -100,13 +100,12 @@ namespace Yarhl
 
         void InitializeContainer()
         {
-            // Assemblies from the program directory
+            // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
             var programAssemblies = Directory.GetFiles(programDir, "*.dll")
                 .Select(Assembly.LoadFile);
             
             containerConfig = new ContainerConfiguration()
-                .WithAssembly(this.GetType().Assembly)
                 .WithAssemblies(programAssemblies);
 
             // Assemblies from the Plugin directory and subfolders

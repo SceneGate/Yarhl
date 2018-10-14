@@ -14,7 +14,8 @@ packages/
 TestResult.xml
 StyleCopViolations.xml
 StyleCop.Cache
-coverage.xml
+coverage_unit.xml
+coverage_integration.xml
 coveragereport/
 
 # Cake

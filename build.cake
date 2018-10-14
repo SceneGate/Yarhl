@@ -44,6 +44,12 @@ Task("Build")
     MSBuild(
         "src/Yarhl.sln",
         configurator => configurator.SetConfiguration(configuration));
+
+    // Copy Yarhl.Media for the integration tests
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
+    CopyFileToDirectory(
+        $"src/Yarhl.Media/bin/{configuration}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
 });
 
 Task("Run-Unit-Tests")
@@ -57,7 +63,11 @@ Task("Run-Unit-Tests")
         settings.Test = tests;
     }
 
-    NUnit3($"src/**/bin/{configuration}/*.UnitTests.dll", settings);
+    var testAssemblies = new List<FilePath> {
+        $"src/Yarhl.UnitTests/bin/{configuration}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/Yarhl.IntegrationTests.dll"
+    };
+    NUnit3(testAssemblies, settings);
 });
 
 Task("Run-Linter-Gendarme")
@@ -90,32 +100,26 @@ Task("Run-AltCover")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var inputDir = $"src/Yarhl.UnitTests/bin/{configuration}";
-    var outputDir = $"{inputDir}/__Instrumented";
+    // Configure the tests to run with code coverate
+    TestWithAltCover(
+        "src/Yarhl.UnitTests",
+        "Yarhl.UnitTests.dll",
+        "coverage_unit.xml");
 
-    // Create new assemblies with the instrumentation
-    var altcoverArgs = new AltCover.PrepareArgs {
-        InputDirectory = inputDir,
-        OutputDirectory = outputDir,
-        AssemblyFilter = new[] { "nunit.framework" },
-        XmlReport = "coverage.xml",
-        OpenCover = true
-    };
-    Prepare(altcoverArgs);
-
-    // Run the tests again but instrumented
-    NUnit3(
-        $"{outputDir}/Yarhl.UnitTests.dll",
-        new NUnit3Settings { NoResults = true });
+    TestWithAltCover(
+        "src/Yarhl.IntegrationTests",
+        "Yarhl.IntegrationTests.dll",
+        "coverage_integration.xml");
 
     // Create the report
     ReportGenerator(
-        "coverage.xml",
+        new FilePath[] { "coverage_unit.xml", "coverage_integration.xml" },
         "coveragereport",
         new ReportGeneratorSettings {
             ReportTypes = new[] {
                 ReportGeneratorReportType.Html,
                 ReportGeneratorReportType.TextSummary,
+                ReportGeneratorReportType.Xml,
                 ReportGeneratorReportType.XmlSummary } });
 
     // Get final result
@@ -128,6 +132,31 @@ Task("Run-AltCover")
     }
 });
 
+public void TestWithAltCover(string projectPath, string assembly, string outputXml)
+{
+    string inputDir = $"{projectPath}/bin/{configuration}";
+    string outputDir = $"{inputDir}/__Instrumented";
+    if (DirectoryExists(outputDir))
+        DeleteDirectory(outputDir, true);
+
+    var altcoverArgs = new AltCover.PrepareArgs {
+        InputDirectory = inputDir,
+        OutputDirectory = outputDir,
+        AssemblyFilter = new[] { "nunit.framework" },
+        XmlReport = outputXml,
+        OpenCover = true
+    };
+    Prepare(altcoverArgs);
+
+    string pluginDir = $"{inputDir}/Plugins";
+    if (DirectoryExists(pluginDir)) {
+        EnsureDirectoryExists($"{outputDir}/Plugins");
+        CopyDirectory(pluginDir, $"{outputDir}/Plugins");
+    }
+
+    NUnit3($"{outputDir}/{assembly}", new NUnit3Settings { NoResults = true });
+}
+
 Task("Test-Quality")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover");
@@ -138,7 +167,7 @@ Task("Run-Coveralls")
     .Does(() =>
 {
     CoverallsIo(
-        MakeAbsolute(File("coverage.xml")).FullPath,
+        MakeAbsolute(File("coveragereport/Summary.xml")).FullPath,
         new CoverallsIoSettings {
             RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN")
         });

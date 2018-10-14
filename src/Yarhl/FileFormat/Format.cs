@@ -21,6 +21,7 @@
 namespace Yarhl.FileFormat
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -33,6 +34,15 @@ namespace Yarhl.FileFormat
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed { get; private set; }
+
+        /// <summary>
+        /// Get a list of implemented formats.
+        /// </summary>
+        /// <returns>Enumerable of formats.</returns>
+        public static IEnumerable<Format> GetFormats()
+        {
+            return PluginManager.Instance.FindExtensions<Format>();
+        }
 
         /// <summary>
         /// Converts the format to the specified type.
