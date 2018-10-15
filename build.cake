@@ -119,7 +119,6 @@ Task("Run-AltCover")
             ReportTypes = new[] {
                 ReportGeneratorReportType.Html,
                 ReportGeneratorReportType.TextSummary,
-                ReportGeneratorReportType.Xml,
                 ReportGeneratorReportType.XmlSummary } });
 
     // Get final result
@@ -283,7 +282,10 @@ Task("Travis")
 Task("AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Coveralls")
+    // Cake doesn't support ReportGenerator with Cobertura
+    // and the old Coveralls CLI only support Cobertura.
+    // After porting to .NET Core we would be able to use the new CLI.
+    // .IsDependentOn("Run-Coveralls")
     .IsDependentOn("Run-Sonar");
 
 RunTarget(target);
