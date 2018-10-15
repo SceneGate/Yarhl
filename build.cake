@@ -177,6 +177,7 @@ Task("Run-Coveralls")
 
 Task("Run-Sonar")
     .IsDependentOn("Build")
+    .IsDependentOn("Run-AltCover")
     .Does(() =>
 {
     var sonar_token = EnvironmentVariable("SONAR_TOKEN");
