@@ -360,24 +360,36 @@ namespace Yarhl.Media.Text.Encodings
             public static Table FromResource(string path)
             {
                 Table table = new Table();
-                Assembly assembly = Assembly.GetExecutingAssembly();
 
-                using (var resource = assembly.GetManifestResourceStream(path))
-                using (var reader = new StreamReader(resource)) {
-                    while (!reader.EndOfStream) {
-                        string line = reader.ReadLine();
-                        if (string.IsNullOrWhiteSpace(line))
-                            continue;
-                        if (line[0] == '#')
-                            continue;
+                Stream stream = null;
+                try {
+                    stream = Assembly.GetExecutingAssembly()
+                        .GetManifestResourceStream(path);
 
-                        string[] fields = line.Split('\t');
-                        int index = System.Convert.ToInt32(fields[0].TrimStart(' '), 10);
-                        int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
+                    using (var reader = new StreamReader(stream)) {
+                        stream = null;  // Avoid disposing twice
 
-                        table.Index2CodePoint[index] = codePoint;
-                        table.CodePoint2Index[codePoint] = index;
+                        while (!reader.EndOfStream) {
+                            string line = reader.ReadLine();
+                            if (string.IsNullOrWhiteSpace(line))
+                                continue;
+                            if (line[0] == '#')
+                                continue;
+
+                            string[] fields = line.Split('\t');
+
+                            string indexText = fields[0].TrimStart(' ');
+                            int index = System.Convert.ToInt32(indexText, 10);
+
+                            string codeText = fields[1].Substring(2);
+                            int codePoint = System.Convert.ToInt32(codeText, 16);
+
+                            table.Index2CodePoint[index] = codePoint;
+                            table.CodePoint2Index[codePoint] = index;
+                        }
                     }
+                } finally {
+                    stream?.Dispose();
                 }
 
                 return table;
