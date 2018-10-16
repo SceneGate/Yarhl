@@ -37,31 +37,14 @@ namespace Yarhl.Media.Text.Encodings
     /// </summary>
     public sealed class EucJpEncoding : Encoding
     {
-        static Dictionary<int, int> idx2CodePointJs212;
-        static Dictionary<int, int> idx2CodePointJs208;
-        static Dictionary<int, int> codePoint2IdxJs212;
-        static Dictionary<int, int> codePoint2IdxJs208;
+        static Table tableJis212 =
+            Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0212.txt");
+
+        static Table tableJis208 =
+            Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0208.txt");
+
         readonly DecoderFallback decoderFallback;
         readonly EncoderFallback encoderFallback;
-
-        static EucJpEncoding()
-        {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-
-            idx2CodePointJs208 = new Dictionary<int, int>();
-            codePoint2IdxJs208 = new Dictionary<int, int>();
-            FillCodecTable(
-                assembly.GetManifestResourceStream("Yarhl.Media.Text.Encodings.index-jis0208.txt"),
-                idx2CodePointJs208,
-                codePoint2IdxJs208);
-
-            idx2CodePointJs212 = new Dictionary<int, int>();
-            codePoint2IdxJs212 = new Dictionary<int, int>();
-            FillCodecTable(
-                assembly.GetManifestResourceStream("Yarhl.Media.Text.Encodings.index-jis0212.txt"),
-                idx2CodePointJs212,
-                codePoint2IdxJs212);
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EucJpEncoding"/> class.
@@ -235,29 +218,6 @@ namespace Yarhl.Media.Text.Encodings
             return byteCount;
         }
 
-        static void FillCodecTable(
-            Stream file,
-            IDictionary<int, int> idx2CodePoint,
-            IDictionary<int, int> codePoint2Idx)
-        {
-            using (StreamReader reader = new StreamReader(file)) {
-                while (!reader.EndOfStream) {
-                    string line = reader.ReadLine();
-                    if (string.IsNullOrWhiteSpace(line))
-                        continue;
-                    if (line[0] == '#')
-                        continue;
-
-                    string[] fields = line.Split('\t');
-                    int index = System.Convert.ToInt32(fields[0].TrimStart(' '), 10);
-                    int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
-
-                    idx2CodePoint[index] = codePoint;
-                    codePoint2Idx[codePoint] = index;
-                }
-            }
-        }
-
         static bool IsInRange(int val, int min, int max)
         {
             return val >= min && val <= max;
@@ -295,14 +255,14 @@ namespace Yarhl.Media.Text.Encodings
                     // 5
                     encodedByte(stream, 0x8E);
                     encodedByte(stream, (byte)(codePoint - 0xFF61 + 0xA1));
-                } else if (codePoint2IdxJs208.ContainsKey(codePoint)) {
+                } else if (tableJis208.CodePoint2Index.ContainsKey(codePoint)) {
                     // 7
-                    int pointer = codePoint2IdxJs208[codePoint];
+                    int pointer = tableJis208.CodePoint2Index[codePoint];
                     encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
                     encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
-                } else if (codePoint2IdxJs212.ContainsKey(codePoint)) {
+                } else if (tableJis212.CodePoint2Index.ContainsKey(codePoint)) {
                     // 8, Fixed, not in the specs
-                    int pointer212 = codePoint2IdxJs212[codePoint];
+                    int pointer212 = tableJis212.CodePoint2Index[codePoint];
                     encodedByte(stream, 0x8F);
                     encodedByte(stream, (byte)((pointer212 / 94) + 0xA1));
                     encodedByte(stream, (byte)((pointer212 % 94) + 0xA1));
@@ -333,7 +293,7 @@ namespace Yarhl.Media.Text.Encodings
         void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
             byte lead = 0;
-            Dictionary<int, int> codePointTable = idx2CodePointJs208;
+            IDictionary<int, int> codePointTable = tableJis208.Index2CodePoint;
             while (stream.Position < stream.Length) {
                 byte current = (byte)stream.ReadByte();
                 if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
@@ -342,7 +302,7 @@ namespace Yarhl.Media.Text.Encodings
                     decodedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
                 } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
                     // 4
-                    codePointTable = idx2CodePointJs212;
+                    codePointTable = tableJis212.Index2CodePoint;
                     lead = current;
                 } else if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
                     // 5
@@ -351,7 +311,7 @@ namespace Yarhl.Media.Text.Encodings
                     decodedText(stream, char.ConvertFromUtf32(codePoint));
 
                     lead = 0x00;
-                    codePointTable = idx2CodePointJs208;
+                    codePointTable = tableJis208.Index2CodePoint;
                 } else if (lead != 0x00) {
                     DecodeInvalidBytes(stream, decodedText, lead, current);
                 } else if (current <= 0x7F) {
@@ -377,6 +337,51 @@ namespace Yarhl.Media.Text.Encodings
             bool result = fallback.Fallback(data, 0);
             while (result && fallback.Remaining > 0)
                 decodedText(stream, fallback.GetNextChar().ToString());
+        }
+
+        sealed class Table
+        {
+            private Table()
+            {
+                Index2CodePoint = new Dictionary<int, int>();
+                CodePoint2Index = new Dictionary<int, int>();
+            }
+
+            public IDictionary<int, int> Index2CodePoint {
+                get;
+                private set;
+            }
+
+            public IDictionary<int, int> CodePoint2Index {
+                get;
+                private set;
+            }
+
+            public static Table FromResource(string path)
+            {
+                Table table = new Table();
+                Assembly assembly = Assembly.GetExecutingAssembly();
+
+                using (var resource = assembly.GetManifestResourceStream(path))
+                using (var reader = new StreamReader(resource)) {
+                    while (!reader.EndOfStream) {
+                        string line = reader.ReadLine();
+                        if (string.IsNullOrWhiteSpace(line))
+                            continue;
+                        if (line[0] == '#')
+                            continue;
+
+                        string[] fields = line.Split('\t');
+                        int index = System.Convert.ToInt32(fields[0].TrimStart(' '), 10);
+                        int codePoint = System.Convert.ToInt32(fields[1].Substring(2), 16);
+
+                        table.Index2CodePoint[index] = codePoint;
+                        table.CodePoint2Index[codePoint] = index;
+                    }
+                }
+
+                return table;
+            }
         }
     }
 }

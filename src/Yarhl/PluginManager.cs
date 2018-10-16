@@ -39,7 +39,6 @@ namespace Yarhl
         static readonly object LockObj = new object();
         static PluginManager singleInstance;
 
-        ContainerConfiguration containerConfig;
         CompositionHost container;
 
         /// <summary>
@@ -105,7 +104,7 @@ namespace Yarhl
             var programAssemblies = Directory.GetFiles(programDir, "*.dll")
                 .Select(Assembly.LoadFile);
             
-            containerConfig = new ContainerConfiguration()
+            var containerConfig = new ContainerConfiguration()
                 .WithAssemblies(programAssemblies);
 
             // Assemblies from the Plugin directory and subfolders

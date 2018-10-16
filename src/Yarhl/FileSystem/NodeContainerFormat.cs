@@ -78,13 +78,20 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Dispose the root directory and children if it hasn't been moved yet.
+        /// Releases all resource used by the
+        /// <see cref="NodeContainerFormat"/> object.
         /// </summary>
-        public override void Dispose()
+        /// <param name="disposing">
+        /// If set to <c>true</c> free managed resources also.
+        /// It happens from Dispose() calls.
+        /// </param>
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose();
-            if (manageRoot)
+            base.Dispose(disposing);
+
+            if (disposing && manageRoot) {
                 Root.Dispose();
+            }
         }
     }
 }

@@ -248,14 +248,23 @@ namespace Yarhl.FileFormat
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="Format"/>
-        /// object.
+        /// Releases all resource used by the <see cref="Format"/> object.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
         {
-            if (Disposed)
-                return;
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
+        /// <summary>
+        /// Releases all resource used by the <see cref="Format"/> object.
+        /// </summary>
+        /// <param name="disposing">
+        /// If set to <c>true</c> free managed resources also.
+        /// It happens from Dispose() calls.
+        /// </param>
+        protected virtual void Dispose(bool disposing)
+        {
             Disposed = true;
         }
     }
