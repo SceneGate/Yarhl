@@ -448,14 +448,16 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatsAreNotDuplicated()
         {
-            Assert.That(Format.GetFormats().Select(f => f.GetType()), Is.Unique);
+            Assert.That(
+                Format.GetFormats().Select(f => f.Value.GetType()),
+                Is.Unique);
         }
 
         [Test]
         public void GetFormatsReturnsKnownFormats()
         {
             Assert.That(
-                Format.GetFormats().Select(f => f.GetType().FullName),
+                Format.GetFormats().Select(f => f.Value.GetType().FullName),
                 Does.Contain("Yarhl.FileFormat.BinaryFormat"));
         }
 

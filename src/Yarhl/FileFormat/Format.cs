@@ -39,9 +39,9 @@ namespace Yarhl.FileFormat
         /// Get a list of implemented formats.
         /// </summary>
         /// <returns>Enumerable of formats.</returns>
-        public static IEnumerable<Format> GetFormats()
+        public static IEnumerable<Lazy<Format>> GetFormats()
         {
-            return PluginManager.Instance.FindExtensions<Format>();
+            return PluginManager.Instance.FindLazyExtensions<Format>();
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Yarhl.FileFormat
             dynamic converter;
             try {
                 var converters = PluginManager.Instance
-                    .FindExtensions(converterType)
+                    .FindLazyExtensions(converterType)
                     .ToList();
                 
                 if (converters.Count == 0) {
@@ -102,7 +102,7 @@ namespace Yarhl.FileFormat
                     ex);
             }
 
-            return converter.Convert(src);
+            return converter.Value.Convert(src);
         }
 
         /// <summary>

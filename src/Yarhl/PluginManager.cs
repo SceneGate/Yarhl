@@ -97,6 +97,33 @@ namespace Yarhl
             return container.GetExports(extension);
         }
 
+        /// <summary>
+        /// Finds all the extensions from the given base type and return their
+        /// lazy type for initialization.
+        /// </summary>
+        /// <typeparam name="T">Type of the extension point.</typeparam>
+        /// <returns>The lazy extensions.</returns>
+        public IEnumerable<Lazy<T>> FindLazyExtensions<T>()
+        {
+            return container.GetExports<Lazy<T>>();
+        }
+
+        /// <summary>
+        /// Finds all the extensions from the given base type and return their
+        /// lazy type for initialization.
+        /// </summary>
+        /// <param name="extension">Type of the extension point.</param>
+        /// <returns>The lazy extensions.</returns>
+        public IEnumerable<object> FindLazyExtensions(Type extension)
+        {
+            if (extension == null) {
+                throw new ArgumentNullException(nameof(extension));
+            }
+
+            Type lazyType = typeof(Lazy<>).MakeGenericType(extension);
+            return container.GetExports(lazyType);
+        }
+
         void InitializeContainer()
         {
             // Assemblies from the program directory (including this one).

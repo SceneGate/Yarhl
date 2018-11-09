@@ -104,6 +104,40 @@ namespace Yarhl.UnitTests
             Assert.IsEmpty(extensions);
         }
 
+        [Test]
+        public void FindLazyExtensionByGeneric()
+        {
+            var extensions = PluginManager.Instance
+                .FindLazyExtensions<ConstructorWithException>();
+            Assert.That(extensions.Count(), Is.EqualTo(1));
+            Assert.That(() => extensions.Single().Value, Throws.Exception);
+        }
+
+        [Test]
+        public void FindLazyExtensionByType()
+        {
+            var extensions = PluginManager.Instance
+                .FindLazyExtensions(typeof(ConstructorWithException));
+            Assert.That(extensions.Count(), Is.EqualTo(1));
+            Assert.That(
+                extensions.Single().GetType(),
+                Is.EqualTo(typeof(Lazy<ConstructorWithException>)));
+            Assert.That(
+                ((Lazy<ConstructorWithException>)extensions.Single()).IsValueCreated,
+                Is.False);
+            Assert.That(
+                () => ((Lazy<ConstructorWithException>)extensions.Single()).Value,
+                Throws.Exception);
+        }
+
+        [Test]
+        public void FindLazyExtensionByTypeWithNullThrowsException()
+        {
+            Assert.That(
+                () => PluginManager.Instance.FindLazyExtensions(null),
+                Throws.ArgumentNullException);
+        }
+
         [Export(typeof(IExistsInterface))]
         public class ExistsClass : IExistsInterface
         {
@@ -112,6 +146,15 @@ namespace Yarhl.UnitTests
         [Export(typeof(IGenericExport<int>))]
         public class GenericExport : IGenericExport<int>
         {
+        }
+
+        [Export]
+        public class ConstructorWithException
+        {
+            public ConstructorWithException()
+            {
+                throw new Exception();
+            }
         }
     }
 }

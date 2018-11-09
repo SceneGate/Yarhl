@@ -29,15 +29,15 @@ namespace Yarhl.IntegrationTests
             var formats = Format.GetFormats();
             Assert.That(formats, Is.Not.Empty);
             Assert.That(
-                formats.Select(t => t.GetType().FullName).ToList(),
+                formats.Select(t => t.Value.GetType().FullName),
                 Does.Contain("Yarhl.Media.Text.Po"));
         }
 
         [Test]
-        public void CanFondPoConverterFromTypes()
+        public void CanFoundPoConverterFromTypes()
         {
             Type poType = Format.GetFormats()
-                .Select(f => f.GetType())
+                .Select(f => f.Value.GetType())
                 .Single(t => t.FullName == "Yarhl.Media.Text.Po");
 
             Type converterType = typeof(IConverter<,>).MakeGenericType(
