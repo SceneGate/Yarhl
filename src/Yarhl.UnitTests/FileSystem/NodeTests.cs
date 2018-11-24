@@ -26,6 +26,7 @@
 namespace Yarhl.UnitTests.FileSystem
 {
     using System;
+    using System.Composition;
     using FileFormat;
     using NUnit.Framework;
     using Yarhl.FileFormat;
@@ -419,7 +420,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreSame(node, result);
         }
 
-        [System.Composition.PartNotDiscoverable]
+        [PartNotDiscoverable]
         public class PrivateConverter :
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

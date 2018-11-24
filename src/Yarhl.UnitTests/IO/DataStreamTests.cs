@@ -26,7 +26,6 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.Composition;
     using System.IO;
     using NUnit.Framework;
     using Yarhl.FileFormat;

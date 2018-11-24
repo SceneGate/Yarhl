@@ -33,6 +33,21 @@ namespace Yarhl.UnitTests.FileFormat
     public class ConverterMetadataTests
     {
         [Test]
+        public void GetAndSetProperties()
+        {
+            var metadata = new ConverterMetadata {
+                Name = "test",
+                Type = typeof(int),
+                Sources = typeof(string),
+                Destinations = typeof(DateTime)
+            };
+            Assert.That(metadata.Name, Is.EqualTo("test"));
+            Assert.That(metadata.Type, Is.EqualTo(typeof(int)));
+            Assert.That(metadata.Sources, Is.EqualTo(typeof(string)));
+            Assert.That(metadata.Destinations, Is.EqualTo(typeof(DateTime)));
+        }
+
+        [Test]
         public void GetSourcesReturnOneElementArrayForSingleSource()
         {
             var metadata = new ConverterMetadata {

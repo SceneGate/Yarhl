@@ -30,6 +30,7 @@ namespace Yarhl.UnitTests
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
+    using Yarhl.FileFormat;
 
     [TestFixture, SingleThreaded]
     public class PluginManagerTests
@@ -135,6 +136,46 @@ namespace Yarhl.UnitTests
                 Throws.ArgumentNullException);
         }
 
+        [Test]
+        public void FindLazyExtensionWithMetadata()
+        {
+            var formats = PluginManager.Instance
+                .FindLazyExtensions<Format, FormatMetadata>()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(PluginFormat)));
+        }
+
+        [Test]
+        public void FindLazyExtesionWithMetadataIsUnique()
+        {
+            var formats = PluginManager.Instance
+                .FindLazyExtensions<Format, FormatMetadata>()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Is.Unique);
+        }
+
+        [Test]
+        public void GetFormatsReturnsListWithMetadata()
+        {
+            var formats = PluginManager.Instance.GetFormats()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(PluginFormat)));
+        }
+
+        [Test]
+        public void GetConvertersWithMetadataReturnsListWithMetadata()
+        {
+            var formats = PluginManager.Instance.GetConverters()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(PluginConverter)));
+            
+            var conv = (PluginConverter)PluginManager.Instance.GetConverters()
+                    .Where(f => f.Metadata.Type == typeof(PluginConverter))
+                    .Single()
+                    .CreateExport().Value;
+            Assert.That(conv.Convert(new PluginFormat()), Is.EqualTo(0));
+        }
+
         [Export(typeof(IExistsInterface))]
         public class ExistsClass : IExistsInterface
         {
@@ -151,6 +192,19 @@ namespace Yarhl.UnitTests
             public ConstructorWithException()
             {
                 throw new Exception();
+            }
+        }
+
+        public class PluginFormat : Format
+        {
+            public int Value => 0;
+        }
+
+        public class PluginConverter : IConverter<PluginFormat, int>
+        {
+            public int Convert(PluginFormat src)
+            {
+                return src.Value;
             }
         }
     }

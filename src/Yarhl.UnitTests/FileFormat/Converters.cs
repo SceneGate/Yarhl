@@ -21,7 +21,6 @@
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
-    using System.Composition;
     using Yarhl.FileFormat;
 
     public class SingleOuterConverterExample : IConverter<string, uint>
