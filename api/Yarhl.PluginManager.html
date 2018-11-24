@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class PluginManager
    | SceneGate Yarhl ">
-    <meta name="generator" content="docfx 2.40.0.0">
+    <meta name="generator" content="docfx 2.40.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -73,7 +73,7 @@
   
   <h1 id="Yarhl_PluginManager" data-uid="Yarhl.PluginManager" class="text-break">Class PluginManager
   </h1>
-  <div class="markdown level0 summary"><p>Manager for Yarhl plugins.</p>
+  <div class="markdown level0 summary"><p>Plugin manager.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -81,16 +81,16 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">PluginManager</span></div>
   </div>
-  <div classs="implements">
-    <h5>Implements</h5>
-    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Yarhl.html">Yarhl</a></h6>
   <h6><strong>Assembly</strong>: Yarhl.dll</h6>
   <h5 id="Yarhl_PluginManager_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class PluginManager : IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class PluginManager</code></pre>
   </div>
+  <h5 id="Yarhl_PluginManager_remarks"><strong>Remarks</strong></h5>
+  <div class="markdown level0 remarks"><p>Plugin assemblies are loaded from the directory with the Yarhl
+assembly and the 'Plugins' subfolder with its children.</p>
+</div>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -98,7 +98,7 @@
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_Instance.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.Instance%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L65">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L67">View Source</a>
   </span>
   <a id="Yarhl_PluginManager_Instance_" data-uid="Yarhl.PluginManager.Instance*"></a>
   <h4 id="Yarhl_PluginManager_Instance" data-uid="Yarhl.PluginManager.Instance">Instance</h4>
@@ -128,45 +128,46 @@
   <h5 id="Yarhl_PluginManager_Instance_remarks">Remarks</h5>
   <div class="markdown level1 remarks"><p>It initializes the manager if needed.</p>
 </div>
-  <h3 id="methods">Methods
-  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_Dispose.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_PluginDirectory.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.PluginDirectory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L111">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L60">View Source</a>
   </span>
-  <a id="Yarhl_PluginManager_Dispose_" data-uid="Yarhl.PluginManager.Dispose*"></a>
-  <h4 id="Yarhl_PluginManager_Dispose" data-uid="Yarhl.PluginManager.Dispose">Dispose()</h4>
-  <div class="markdown level1 summary"><p>Releases all resource used by the <a class="xref" href="Yarhl.PluginManager.html">PluginManager</a> object.</p>
+  <a id="Yarhl_PluginManager_PluginDirectory_" data-uid="Yarhl.PluginManager.PluginDirectory*"></a>
+  <h4 id="Yarhl_PluginManager_PluginDirectory" data-uid="Yarhl.PluginManager.PluginDirectory">PluginDirectory</h4>
+  <div class="markdown level1 summary"><p>Name of the plugins directory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
+    <pre><code class="lang-csharp hljs">public static string PluginDirectory { get; }</code></pre>
   </div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_Finalize.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.Finalize%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L55">View Source</a>
-  </span>
-  <a id="Yarhl_PluginManager_Finalize_" data-uid="Yarhl.PluginManager.Finalize*"></a>
-  <h4 id="Yarhl_PluginManager_Finalize" data-uid="Yarhl.PluginManager.Finalize">Finalize()</h4>
-  <div class="markdown level1 summary"></div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected void Finalize()</code></pre>
-  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The name of the plugins directory.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_FindExtensions_System_Type_.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.FindExtensions(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L101">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L95">View Source</a>
   </span>
   <a id="Yarhl_PluginManager_FindExtensions_" data-uid="Yarhl.PluginManager.FindExtensions*"></a>
   <h4 id="Yarhl_PluginManager_FindExtensions_System_Type_" data-uid="Yarhl.PluginManager.FindExtensions(System.Type)">FindExtensions(Type)</h4>
@@ -175,7 +176,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Type&gt; FindExtensions(Type extension)</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;object&gt; FindExtensions(Type extension)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -205,7 +206,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>&gt;</td>
         <td><p>The extensions.</p>
 </td>
       </tr>
@@ -216,7 +217,7 @@
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_FindExtensions__1.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.FindExtensions%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L91">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L85">View Source</a>
   </span>
   <a id="Yarhl_PluginManager_FindExtensions_" data-uid="Yarhl.PluginManager.FindExtensions*"></a>
   <h4 id="Yarhl_PluginManager_FindExtensions__1" data-uid="Yarhl.PluginManager.FindExtensions``1">FindExtensions&lt;T&gt;()</h4>
@@ -225,7 +226,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;Type&gt; FindExtensions&lt;T&gt;()</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;T&gt; FindExtensions&lt;T&gt;()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -237,7 +238,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;T&gt;</td>
         <td><p>The extensions.</p>
 </td>
       </tr>
@@ -261,24 +262,223 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_Shutdown.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.Shutdown%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_FindLazyExtensions_System_Type_.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.FindLazyExtensions(System.Type)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L81">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L120">View Source</a>
   </span>
-  <a id="Yarhl_PluginManager_Shutdown_" data-uid="Yarhl.PluginManager.Shutdown*"></a>
-  <h4 id="Yarhl_PluginManager_Shutdown" data-uid="Yarhl.PluginManager.Shutdown">Shutdown()</h4>
-  <div class="markdown level1 summary"><p>Shutdown the plugin manager.</p>
+  <a id="Yarhl_PluginManager_FindLazyExtensions_" data-uid="Yarhl.PluginManager.FindLazyExtensions*"></a>
+  <h4 id="Yarhl_PluginManager_FindLazyExtensions_System_Type_" data-uid="Yarhl.PluginManager.FindLazyExtensions(System.Type)">FindLazyExtensions(Type)</h4>
+  <div class="markdown level1 summary"><p>Finds all the extensions from the given base type and returns
+a factory to initialize the type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static void Shutdown()</code></pre>
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;object&gt; FindLazyExtensions(Type extension)</code></pre>
   </div>
-  <h3 id="implements">Implements</h3>
-  <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">extension</span></td>
+        <td><p>Type of the extension point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>&gt;</td>
+        <td><p>The extension factory.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_FindLazyExtensions__1.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.FindLazyExtensions%60%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L109">View Source</a>
+  </span>
+  <a id="Yarhl_PluginManager_FindLazyExtensions_" data-uid="Yarhl.PluginManager.FindLazyExtensions*"></a>
+  <h4 id="Yarhl_PluginManager_FindLazyExtensions__1" data-uid="Yarhl.PluginManager.FindLazyExtensions``1">FindLazyExtensions&lt;T&gt;()</h4>
+  <div class="markdown level1 summary"><p>Finds all the extensions from the given base type and return their
+lazy type for initialization.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;ExportFactory&lt;T&gt;&gt; FindLazyExtensions&lt;T&gt;()</code></pre>
   </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.composition.exportfactory-1">ExportFactory</a>&lt;T&gt;&gt;</td>
+        <td><p>The lazy extensions.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Type of the extension point.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_FindLazyExtensions__2.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.FindLazyExtensions%60%602%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L137">View Source</a>
+  </span>
+  <a id="Yarhl_PluginManager_FindLazyExtensions_" data-uid="Yarhl.PluginManager.FindLazyExtensions*"></a>
+  <h4 id="Yarhl_PluginManager_FindLazyExtensions__2" data-uid="Yarhl.PluginManager.FindLazyExtensions``2">FindLazyExtensions&lt;T, TMetadata&gt;()</h4>
+  <div class="markdown level1 summary"><p>Finds all the extensions from the given base type and returns
+a factory to initialize the type and its associated metadata.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;ExportFactory&lt;T, TMetadata&gt;&gt; FindLazyExtensions&lt;T, TMetadata&gt;()
+    where TMetadata : IExportMetadata</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.composition.exportfactory-2">ExportFactory</a>&lt;T, TMetadata&gt;&gt;</td>
+        <td><p>The extension factory.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="typeParameters">Type Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="parametername">T</span></td>
+        <td><p>Type of the extension point.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="parametername">TMetadata</span></td>
+        <td><p>Type of the metadata.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_GetConverters.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.GetConverters%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L160">View Source</a>
+  </span>
+  <a id="Yarhl_PluginManager_GetConverters_" data-uid="Yarhl.PluginManager.GetConverters*"></a>
+  <h4 id="Yarhl_PluginManager_GetConverters" data-uid="Yarhl.PluginManager.GetConverters">GetConverters()</h4>
+  <div class="markdown level1 summary"><p>Get a list of converter extensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;ExportFactory&lt;IConverter, ConverterMetadata&gt;&gt; GetConverters()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.composition.exportfactory-2">ExportFactory</a>&lt;<a class="xref" href="Yarhl.FileFormat.IConverter.html">IConverter</a>, <a class="xref" href="Yarhl.FileFormat.ConverterMetadata.html">ConverterMetadata</a>&gt;&gt;</td>
+        <td><p>Enumerable of lazy converters with metadata.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager_GetFormats.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager.GetFormats%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L151">View Source</a>
+  </span>
+  <a id="Yarhl_PluginManager_GetFormats_" data-uid="Yarhl.PluginManager.GetFormats*"></a>
+  <h4 id="Yarhl_PluginManager_GetFormats" data-uid="Yarhl.PluginManager.GetFormats">GetFormats()</h4>
+  <div class="markdown level1 summary"><p>Get a list of format extensions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;ExportFactory&lt;Format, FormatMetadata&gt;&gt; GetFormats()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.composition.exportfactory-2">ExportFactory</a>&lt;<a class="xref" href="Yarhl.FileFormat.Format.html">Format</a>, <a class="xref" href="Yarhl.FileFormat.FormatMetadata.html">FormatMetadata</a>&gt;&gt;</td>
+        <td><p>Enumerable of lazy formats with metadata.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
 </article>
           </div>
           
@@ -290,7 +490,7 @@
                     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_PluginManager.md&amp;value=---%0Auid%3A%20Yarhl.PluginManager%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L32" class="contribution-link">View Source</a>
+                    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/PluginManager.cs/#L40" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

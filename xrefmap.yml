@@ -79,6 +79,109 @@ references:
   isSpec: "True"
   fullName: Yarhl.FileFormat.BinaryFormat.Stream
   nameWithType: BinaryFormat.Stream
+- uid: Yarhl.FileFormat.ConverterMetadata
+  name: ConverterMetadata
+  href: api/Yarhl.FileFormat.ConverterMetadata.html
+  commentId: T:Yarhl.FileFormat.ConverterMetadata
+  fullName: Yarhl.FileFormat.ConverterMetadata
+  nameWithType: ConverterMetadata
+- uid: Yarhl.FileFormat.ConverterMetadata.CanConvert(System.Type)
+  name: CanConvert(Type)
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_CanConvert_System_Type_
+  commentId: M:Yarhl.FileFormat.ConverterMetadata.CanConvert(System.Type)
+  fullName: Yarhl.FileFormat.ConverterMetadata.CanConvert(System.Type)
+  nameWithType: ConverterMetadata.CanConvert(Type)
+- uid: Yarhl.FileFormat.ConverterMetadata.CanConvert(System.Type,System.Type)
+  name: CanConvert(Type, Type)
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_CanConvert_System_Type_System_Type_
+  commentId: M:Yarhl.FileFormat.ConverterMetadata.CanConvert(System.Type,System.Type)
+  fullName: Yarhl.FileFormat.ConverterMetadata.CanConvert(System.Type, System.Type)
+  nameWithType: ConverterMetadata.CanConvert(Type, Type)
+- uid: Yarhl.FileFormat.ConverterMetadata.CanConvert*
+  name: CanConvert
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_CanConvert_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.CanConvert
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.CanConvert
+  nameWithType: ConverterMetadata.CanConvert
+- uid: Yarhl.FileFormat.ConverterMetadata.Destinations
+  name: Destinations
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Destinations
+  commentId: P:Yarhl.FileFormat.ConverterMetadata.Destinations
+  fullName: Yarhl.FileFormat.ConverterMetadata.Destinations
+  nameWithType: ConverterMetadata.Destinations
+- uid: Yarhl.FileFormat.ConverterMetadata.Destinations*
+  name: Destinations
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Destinations_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.Destinations
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.Destinations
+  nameWithType: ConverterMetadata.Destinations
+- uid: Yarhl.FileFormat.ConverterMetadata.GetDestinations
+  name: GetDestinations()
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_GetDestinations
+  commentId: M:Yarhl.FileFormat.ConverterMetadata.GetDestinations
+  fullName: Yarhl.FileFormat.ConverterMetadata.GetDestinations()
+  nameWithType: ConverterMetadata.GetDestinations()
+- uid: Yarhl.FileFormat.ConverterMetadata.GetDestinations*
+  name: GetDestinations
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_GetDestinations_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.GetDestinations
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.GetDestinations
+  nameWithType: ConverterMetadata.GetDestinations
+- uid: Yarhl.FileFormat.ConverterMetadata.GetSources
+  name: GetSources()
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_GetSources
+  commentId: M:Yarhl.FileFormat.ConverterMetadata.GetSources
+  fullName: Yarhl.FileFormat.ConverterMetadata.GetSources()
+  nameWithType: ConverterMetadata.GetSources()
+- uid: Yarhl.FileFormat.ConverterMetadata.GetSources*
+  name: GetSources
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_GetSources_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.GetSources
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.GetSources
+  nameWithType: ConverterMetadata.GetSources
+- uid: Yarhl.FileFormat.ConverterMetadata.Name
+  name: Name
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Name
+  commentId: P:Yarhl.FileFormat.ConverterMetadata.Name
+  fullName: Yarhl.FileFormat.ConverterMetadata.Name
+  nameWithType: ConverterMetadata.Name
+- uid: Yarhl.FileFormat.ConverterMetadata.Name*
+  name: Name
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Name_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.Name
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.Name
+  nameWithType: ConverterMetadata.Name
+- uid: Yarhl.FileFormat.ConverterMetadata.Sources
+  name: Sources
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Sources
+  commentId: P:Yarhl.FileFormat.ConverterMetadata.Sources
+  fullName: Yarhl.FileFormat.ConverterMetadata.Sources
+  nameWithType: ConverterMetadata.Sources
+- uid: Yarhl.FileFormat.ConverterMetadata.Sources*
+  name: Sources
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Sources_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.Sources
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.Sources
+  nameWithType: ConverterMetadata.Sources
+- uid: Yarhl.FileFormat.ConverterMetadata.Type
+  name: Type
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Type
+  commentId: P:Yarhl.FileFormat.ConverterMetadata.Type
+  fullName: Yarhl.FileFormat.ConverterMetadata.Type
+  nameWithType: ConverterMetadata.Type
+- uid: Yarhl.FileFormat.ConverterMetadata.Type*
+  name: Type
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Type_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.Type
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.Type
+  nameWithType: ConverterMetadata.Type
 - uid: Yarhl.FileFormat.Format
   name: Format
   href: api/Yarhl.FileFormat.Format.html
@@ -218,57 +321,44 @@ references:
   isSpec: "True"
   fullName: Yarhl.FileFormat.Format.Disposed
   nameWithType: Format.Disposed
-- uid: Yarhl.FileFormat.Format.Finalize
-  name: Finalize()
-  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Finalize
-  commentId: M:Yarhl.FileFormat.Format.Finalize
-  fullName: Yarhl.FileFormat.Format.Finalize()
-  nameWithType: Format.Finalize()
-- uid: Yarhl.FileFormat.Format.Finalize*
-  name: Finalize
-  href: api/Yarhl.FileFormat.Format.html#Yarhl_FileFormat_Format_Finalize_
-  commentId: Overload:Yarhl.FileFormat.Format.Finalize
-  isSpec: "True"
-  fullName: Yarhl.FileFormat.Format.Finalize
-  nameWithType: Format.Finalize
-- uid: Yarhl.FileFormat.FormatAttribute
-  name: FormatAttribute
-  href: api/Yarhl.FileFormat.FormatAttribute.html
-  commentId: T:Yarhl.FileFormat.FormatAttribute
-  fullName: Yarhl.FileFormat.FormatAttribute
-  nameWithType: FormatAttribute
-- uid: Yarhl.FileFormat.FormatAttribute.#ctor
-  name: FormatAttribute()
-  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute__ctor
-  commentId: M:Yarhl.FileFormat.FormatAttribute.#ctor
-  fullName: Yarhl.FileFormat.FormatAttribute.FormatAttribute()
-  nameWithType: FormatAttribute.FormatAttribute()
-- uid: Yarhl.FileFormat.FormatAttribute.#ctor(System.String)
-  name: FormatAttribute(String)
-  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute__ctor_System_String_
-  commentId: M:Yarhl.FileFormat.FormatAttribute.#ctor(System.String)
-  fullName: Yarhl.FileFormat.FormatAttribute.FormatAttribute(System.String)
-  nameWithType: FormatAttribute.FormatAttribute(String)
-- uid: Yarhl.FileFormat.FormatAttribute.#ctor*
-  name: FormatAttribute
-  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute__ctor_
-  commentId: Overload:Yarhl.FileFormat.FormatAttribute.#ctor
-  isSpec: "True"
-  fullName: Yarhl.FileFormat.FormatAttribute.FormatAttribute
-  nameWithType: FormatAttribute.FormatAttribute
-- uid: Yarhl.FileFormat.FormatAttribute.Name
+- uid: Yarhl.FileFormat.FormatMetadata
+  name: FormatMetadata
+  href: api/Yarhl.FileFormat.FormatMetadata.html
+  commentId: T:Yarhl.FileFormat.FormatMetadata
+  fullName: Yarhl.FileFormat.FormatMetadata
+  nameWithType: FormatMetadata
+- uid: Yarhl.FileFormat.FormatMetadata.Name
   name: Name
-  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute_Name
-  commentId: P:Yarhl.FileFormat.FormatAttribute.Name
-  fullName: Yarhl.FileFormat.FormatAttribute.Name
-  nameWithType: FormatAttribute.Name
-- uid: Yarhl.FileFormat.FormatAttribute.Name*
+  href: api/Yarhl.FileFormat.FormatMetadata.html#Yarhl_FileFormat_FormatMetadata_Name
+  commentId: P:Yarhl.FileFormat.FormatMetadata.Name
+  fullName: Yarhl.FileFormat.FormatMetadata.Name
+  nameWithType: FormatMetadata.Name
+- uid: Yarhl.FileFormat.FormatMetadata.Name*
   name: Name
-  href: api/Yarhl.FileFormat.FormatAttribute.html#Yarhl_FileFormat_FormatAttribute_Name_
-  commentId: Overload:Yarhl.FileFormat.FormatAttribute.Name
+  href: api/Yarhl.FileFormat.FormatMetadata.html#Yarhl_FileFormat_FormatMetadata_Name_
+  commentId: Overload:Yarhl.FileFormat.FormatMetadata.Name
   isSpec: "True"
-  fullName: Yarhl.FileFormat.FormatAttribute.Name
-  nameWithType: FormatAttribute.Name
+  fullName: Yarhl.FileFormat.FormatMetadata.Name
+  nameWithType: FormatMetadata.Name
+- uid: Yarhl.FileFormat.FormatMetadata.Type
+  name: Type
+  href: api/Yarhl.FileFormat.FormatMetadata.html#Yarhl_FileFormat_FormatMetadata_Type
+  commentId: P:Yarhl.FileFormat.FormatMetadata.Type
+  fullName: Yarhl.FileFormat.FormatMetadata.Type
+  nameWithType: FormatMetadata.Type
+- uid: Yarhl.FileFormat.FormatMetadata.Type*
+  name: Type
+  href: api/Yarhl.FileFormat.FormatMetadata.html#Yarhl_FileFormat_FormatMetadata_Type_
+  commentId: Overload:Yarhl.FileFormat.FormatMetadata.Type
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.FormatMetadata.Type
+  nameWithType: FormatMetadata.Type
+- uid: Yarhl.FileFormat.IConverter
+  name: IConverter
+  href: api/Yarhl.FileFormat.IConverter.html
+  commentId: T:Yarhl.FileFormat.IConverter
+  fullName: Yarhl.FileFormat.IConverter
+  nameWithType: IConverter
 - uid: Yarhl.FileFormat.IConverter`2
   name: IConverter<TSrc, TDst>
   href: api/Yarhl.FileFormat.IConverter-2.html
@@ -295,6 +385,38 @@ references:
   fullName.vb: Yarhl.FileFormat.IConverter(Of TSrc, TDst).Convert
   nameWithType: IConverter<TSrc, TDst>.Convert
   nameWithType.vb: IConverter(Of TSrc, TDst).Convert
+- uid: Yarhl.FileFormat.IExportMetadata
+  name: IExportMetadata
+  href: api/Yarhl.FileFormat.IExportMetadata.html
+  commentId: T:Yarhl.FileFormat.IExportMetadata
+  fullName: Yarhl.FileFormat.IExportMetadata
+  nameWithType: IExportMetadata
+- uid: Yarhl.FileFormat.IExportMetadata.Name
+  name: Name
+  href: api/Yarhl.FileFormat.IExportMetadata.html#Yarhl_FileFormat_IExportMetadata_Name
+  commentId: P:Yarhl.FileFormat.IExportMetadata.Name
+  fullName: Yarhl.FileFormat.IExportMetadata.Name
+  nameWithType: IExportMetadata.Name
+- uid: Yarhl.FileFormat.IExportMetadata.Name*
+  name: Name
+  href: api/Yarhl.FileFormat.IExportMetadata.html#Yarhl_FileFormat_IExportMetadata_Name_
+  commentId: Overload:Yarhl.FileFormat.IExportMetadata.Name
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.IExportMetadata.Name
+  nameWithType: IExportMetadata.Name
+- uid: Yarhl.FileFormat.IExportMetadata.Type
+  name: Type
+  href: api/Yarhl.FileFormat.IExportMetadata.html#Yarhl_FileFormat_IExportMetadata_Type
+  commentId: P:Yarhl.FileFormat.IExportMetadata.Type
+  fullName: Yarhl.FileFormat.IExportMetadata.Type
+  nameWithType: IExportMetadata.Type
+- uid: Yarhl.FileFormat.IExportMetadata.Type*
+  name: Type
+  href: api/Yarhl.FileFormat.IExportMetadata.html#Yarhl_FileFormat_IExportMetadata_Type_
+  commentId: Overload:Yarhl.FileFormat.IExportMetadata.Type
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.IExportMetadata.Type
+  nameWithType: IExportMetadata.Type
 - uid: Yarhl.FileSystem
   name: Yarhl.FileSystem
   href: api/Yarhl.FileSystem.html
@@ -2404,18 +2526,18 @@ references:
   commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
   fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
   nameWithType: EscapeOutRangeEnconding
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(Encoding)
+  name: EscapeOutRangeEnconding(Encoding)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_Encoding_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(Encoding)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(Encoding)
+  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(Encoding)
 - uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.String)
   name: EscapeOutRangeEnconding(String)
   href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_System_String_
   commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.String)
   fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(System.String)
   nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(String)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.Text.Encoding)
-  name: EscapeOutRangeEnconding(Encoding)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_System_Text_Encoding_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.Text.Encoding)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(System.Text.Encoding)
-  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(Encoding)
 - uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor*
   name: EscapeOutRangeEnconding
   href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_
@@ -2551,11 +2673,11 @@ references:
   commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor
   fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding()
   nameWithType: EucJpEncoding.EucJpEncoding()
-- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(System.Text.DecoderFallback,System.Text.EncoderFallback)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(DecoderFallback,EncoderFallback)
   name: EucJpEncoding(DecoderFallback, EncoderFallback)
-  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor_System_Text_DecoderFallback_System_Text_EncoderFallback_
-  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(System.Text.DecoderFallback,System.Text.EncoderFallback)
-  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding(System.Text.DecoderFallback, System.Text.EncoderFallback)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor_DecoderFallback_EncoderFallback_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(DecoderFallback,EncoderFallback)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding(DecoderFallback, EncoderFallback)
   nameWithType: EucJpEncoding.EucJpEncoding(DecoderFallback, EncoderFallback)
 - uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor*
   name: EucJpEncoding
@@ -2705,13 +2827,13 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.Po.Po
   nameWithType: Po.Po
-- uid: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable{Yarhl.Media.Text.PoEntry})
+- uid: Yarhl.Media.Text.Po.Add(IEnumerable{Yarhl.Media.Text.PoEntry})
   name: Add(IEnumerable<PoEntry>)
-  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_System_Collections_Generic_IEnumerable_Yarhl_Media_Text_PoEntry__
-  commentId: M:Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable{Yarhl.Media.Text.PoEntry})
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_IEnumerable_Yarhl_Media_Text_PoEntry__
+  commentId: M:Yarhl.Media.Text.Po.Add(IEnumerable{Yarhl.Media.Text.PoEntry})
   name.vb: Add(IEnumerable(Of PoEntry))
-  fullName: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable<Yarhl.Media.Text.PoEntry>)
-  fullName.vb: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable(Of Yarhl.Media.Text.PoEntry))
+  fullName: Yarhl.Media.Text.Po.Add(IEnumerable<Yarhl.Media.Text.PoEntry>)
+  fullName.vb: Yarhl.Media.Text.Po.Add(IEnumerable(Of Yarhl.Media.Text.PoEntry))
   nameWithType: Po.Add(IEnumerable<PoEntry>)
   nameWithType.vb: Po.Add(IEnumerable(Of PoEntry))
 - uid: Yarhl.Media.Text.Po.Add(Yarhl.Media.Text.PoEntry)
@@ -3262,11 +3384,11 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.XmlExtension.EscapeSpace
   nameWithType: XmlExtension.EscapeSpace
-- uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
+- uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue(XElement)
   name: GetIndentedValue(XElement)
-  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_GetIndentedValue_System_Xml_Linq_XElement_
-  commentId: M:Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
-  fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_GetIndentedValue_XElement_
+  commentId: M:Yarhl.Media.Text.XmlExtension.GetIndentedValue(XElement)
+  fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue(XElement)
   nameWithType: XmlExtension.GetIndentedValue(XElement)
 - uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue*
   name: GetIndentedValue
@@ -3275,11 +3397,11 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue
   nameWithType: XmlExtension.GetIndentedValue
-- uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement,System.String,System.Int32)
+- uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue(XElement,System.String,System.Int32)
   name: SetIndentedValue(XElement, String, Int32)
-  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_SetIndentedValue_System_Xml_Linq_XElement_System_String_System_Int32_
-  commentId: M:Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement,System.String,System.Int32)
-  fullName: Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement, System.String, System.Int32)
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_SetIndentedValue_XElement_System_String_System_Int32_
+  commentId: M:Yarhl.Media.Text.XmlExtension.SetIndentedValue(XElement,System.String,System.Int32)
+  fullName: Yarhl.Media.Text.XmlExtension.SetIndentedValue(XElement, System.String, System.Int32)
   nameWithType: XmlExtension.SetIndentedValue(XElement, String, Int32)
 - uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue*
   name: SetIndentedValue
@@ -3307,32 +3429,6 @@ references:
   commentId: T:Yarhl.PluginManager
   fullName: Yarhl.PluginManager
   nameWithType: PluginManager
-- uid: Yarhl.PluginManager.Dispose
-  name: Dispose()
-  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Dispose
-  commentId: M:Yarhl.PluginManager.Dispose
-  fullName: Yarhl.PluginManager.Dispose()
-  nameWithType: PluginManager.Dispose()
-- uid: Yarhl.PluginManager.Dispose*
-  name: Dispose
-  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Dispose_
-  commentId: Overload:Yarhl.PluginManager.Dispose
-  isSpec: "True"
-  fullName: Yarhl.PluginManager.Dispose
-  nameWithType: PluginManager.Dispose
-- uid: Yarhl.PluginManager.Finalize
-  name: Finalize()
-  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Finalize
-  commentId: M:Yarhl.PluginManager.Finalize
-  fullName: Yarhl.PluginManager.Finalize()
-  nameWithType: PluginManager.Finalize()
-- uid: Yarhl.PluginManager.Finalize*
-  name: Finalize
-  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Finalize_
-  commentId: Overload:Yarhl.PluginManager.Finalize
-  isSpec: "True"
-  fullName: Yarhl.PluginManager.Finalize
-  nameWithType: PluginManager.Finalize
 - uid: Yarhl.PluginManager.FindExtensions(System.Type)
   name: FindExtensions(Type)
   href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindExtensions_System_Type_
@@ -3355,6 +3451,63 @@ references:
   fullName.vb: Yarhl.PluginManager.FindExtensions(Of T)()
   nameWithType: PluginManager.FindExtensions<T>()
   nameWithType.vb: PluginManager.FindExtensions(Of T)()
+- uid: Yarhl.PluginManager.FindLazyExtensions(System.Type)
+  name: FindLazyExtensions(Type)
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindLazyExtensions_System_Type_
+  commentId: M:Yarhl.PluginManager.FindLazyExtensions(System.Type)
+  fullName: Yarhl.PluginManager.FindLazyExtensions(System.Type)
+  nameWithType: PluginManager.FindLazyExtensions(Type)
+- uid: Yarhl.PluginManager.FindLazyExtensions*
+  name: FindLazyExtensions
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindLazyExtensions_
+  commentId: Overload:Yarhl.PluginManager.FindLazyExtensions
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.FindLazyExtensions
+  nameWithType: PluginManager.FindLazyExtensions
+- uid: Yarhl.PluginManager.FindLazyExtensions``1
+  name: FindLazyExtensions<T>()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindLazyExtensions__1
+  commentId: M:Yarhl.PluginManager.FindLazyExtensions``1
+  name.vb: FindLazyExtensions(Of T)()
+  fullName: Yarhl.PluginManager.FindLazyExtensions<T>()
+  fullName.vb: Yarhl.PluginManager.FindLazyExtensions(Of T)()
+  nameWithType: PluginManager.FindLazyExtensions<T>()
+  nameWithType.vb: PluginManager.FindLazyExtensions(Of T)()
+- uid: Yarhl.PluginManager.FindLazyExtensions``2
+  name: FindLazyExtensions<T, TMetadata>()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_FindLazyExtensions__2
+  commentId: M:Yarhl.PluginManager.FindLazyExtensions``2
+  name.vb: FindLazyExtensions(Of T, TMetadata)()
+  fullName: Yarhl.PluginManager.FindLazyExtensions<T, TMetadata>()
+  fullName.vb: Yarhl.PluginManager.FindLazyExtensions(Of T, TMetadata)()
+  nameWithType: PluginManager.FindLazyExtensions<T, TMetadata>()
+  nameWithType.vb: PluginManager.FindLazyExtensions(Of T, TMetadata)()
+- uid: Yarhl.PluginManager.GetConverters
+  name: GetConverters()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_GetConverters
+  commentId: M:Yarhl.PluginManager.GetConverters
+  fullName: Yarhl.PluginManager.GetConverters()
+  nameWithType: PluginManager.GetConverters()
+- uid: Yarhl.PluginManager.GetConverters*
+  name: GetConverters
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_GetConverters_
+  commentId: Overload:Yarhl.PluginManager.GetConverters
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.GetConverters
+  nameWithType: PluginManager.GetConverters
+- uid: Yarhl.PluginManager.GetFormats
+  name: GetFormats()
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_GetFormats
+  commentId: M:Yarhl.PluginManager.GetFormats
+  fullName: Yarhl.PluginManager.GetFormats()
+  nameWithType: PluginManager.GetFormats()
+- uid: Yarhl.PluginManager.GetFormats*
+  name: GetFormats
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_GetFormats_
+  commentId: Overload:Yarhl.PluginManager.GetFormats
+  isSpec: "True"
+  fullName: Yarhl.PluginManager.GetFormats
+  nameWithType: PluginManager.GetFormats
 - uid: Yarhl.PluginManager.Instance
   name: Instance
   href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Instance
@@ -3368,16 +3521,16 @@ references:
   isSpec: "True"
   fullName: Yarhl.PluginManager.Instance
   nameWithType: PluginManager.Instance
-- uid: Yarhl.PluginManager.Shutdown
-  name: Shutdown()
-  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Shutdown
-  commentId: M:Yarhl.PluginManager.Shutdown
-  fullName: Yarhl.PluginManager.Shutdown()
-  nameWithType: PluginManager.Shutdown()
-- uid: Yarhl.PluginManager.Shutdown*
-  name: Shutdown
-  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_Shutdown_
-  commentId: Overload:Yarhl.PluginManager.Shutdown
+- uid: Yarhl.PluginManager.PluginDirectory
+  name: PluginDirectory
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_PluginDirectory
+  commentId: P:Yarhl.PluginManager.PluginDirectory
+  fullName: Yarhl.PluginManager.PluginDirectory
+  nameWithType: PluginManager.PluginDirectory
+- uid: Yarhl.PluginManager.PluginDirectory*
+  name: PluginDirectory
+  href: api/Yarhl.PluginManager.html#Yarhl_PluginManager_PluginDirectory_
+  commentId: Overload:Yarhl.PluginManager.PluginDirectory
   isSpec: "True"
-  fullName: Yarhl.PluginManager.Shutdown
-  nameWithType: PluginManager.Shutdown
+  fullName: Yarhl.PluginManager.PluginDirectory
+  nameWithType: PluginManager.PluginDirectory

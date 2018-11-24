@@ -81,8 +81,7 @@ It allows to give a name to the format.</p>
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.attribute">Attribute</a></div>
-    <div class="level2"><span class="xref">Mono.Addins.CustomExtensionAttribute</span></div>
-    <div class="level3"><span class="xref">FormatAttribute</span></div>
+    <div class="level2"><span class="xref">FormatAttribute</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -90,24 +89,6 @@ It allows to give a name to the format.</p>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <span class="xref">Mono.Addins.CustomExtensionAttribute.Id</span>
-    </div>
-    <div>
-      <span class="xref">Mono.Addins.CustomExtensionAttribute.InsertBefore</span>
-    </div>
-    <div>
-      <span class="xref">Mono.Addins.CustomExtensionAttribute.InsertAfter</span>
-    </div>
-    <div>
-      <span class="xref">Mono.Addins.CustomExtensionAttribute.Path</span>
-    </div>
-    <div>
-      <span class="xref">Mono.Addins.CustomExtensionAttribute.ExtensionNode</span>
-    </div>
-    <div>
-      <span class="xref">Mono.Addins.CustomExtensionAttribute.Addin</span>
-    </div>
     <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.attribute.equals#System_Attribute_Equals_System_Object_">Attribute.Equals(Object)</a>
     </div>
@@ -238,7 +219,7 @@ It allows to give a name to the format.</p>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[CLSCompliant(false)]
 [AttributeUsage(AttributeTargets.Class)]
-public sealed class FormatAttribute : CustomExtensionAttribute, _Attribute</code></pre>
+public sealed class FormatAttribute : Attribute, _Attribute</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -247,7 +228,7 @@ public sealed class FormatAttribute : CustomExtensionAttribute, _Attribute</code
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_FileFormat_FormatAttribute__ctor.md&amp;value=---%0Auid%3A%20Yarhl.FileFormat.FormatAttribute.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/FileFormat/FormatAttribute.cs/#L37">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/plugins-mef/src/Yarhl/FileFormat/FormatAttribute.cs/#L36">View Source</a>
   </span>
   <a id="Yarhl_FileFormat_FormatAttribute__ctor_" data-uid="Yarhl.FileFormat.FormatAttribute.#ctor*"></a>
   <h4 id="Yarhl_FileFormat_FormatAttribute__ctor" data-uid="Yarhl.FileFormat.FormatAttribute.#ctor">FormatAttribute()</h4>
@@ -263,7 +244,7 @@ public sealed class FormatAttribute : CustomExtensionAttribute, _Attribute</code
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_FileFormat_FormatAttribute__ctor_System_String_.md&amp;value=---%0Auid%3A%20Yarhl.FileFormat.FormatAttribute.%23ctor(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/FileFormat/FormatAttribute.cs/#L45">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/plugins-mef/src/Yarhl/FileFormat/FormatAttribute.cs/#L44">View Source</a>
   </span>
   <a id="Yarhl_FileFormat_FormatAttribute__ctor_" data-uid="Yarhl.FileFormat.FormatAttribute.#ctor*"></a>
   <h4 id="Yarhl_FileFormat_FormatAttribute__ctor_System_String_" data-uid="Yarhl.FileFormat.FormatAttribute.#ctor(System.String)">FormatAttribute(String)</h4>
@@ -272,7 +253,7 @@ public sealed class FormatAttribute : CustomExtensionAttribute, _Attribute</code
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FormatAttribute([NodeAttribute(&quot;Name&quot;)] string name)</code></pre>
+    <pre><code class="lang-csharp hljs">public FormatAttribute(string name)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -299,7 +280,7 @@ public sealed class FormatAttribute : CustomExtensionAttribute, _Attribute</code
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_FileFormat_FormatAttribute_Name.md&amp;value=---%0Auid%3A%20Yarhl.FileFormat.FormatAttribute.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/FileFormat/FormatAttribute.cs/#L54">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/plugins-mef/src/Yarhl/FileFormat/FormatAttribute.cs/#L53">View Source</a>
   </span>
   <a id="Yarhl_FileFormat_FormatAttribute_Name_" data-uid="Yarhl.FileFormat.FormatAttribute.Name*"></a>
   <h4 id="Yarhl_FileFormat_FormatAttribute_Name" data-uid="Yarhl.FileFormat.FormatAttribute.Name">Name</h4>
@@ -308,8 +289,7 @@ public sealed class FormatAttribute : CustomExtensionAttribute, _Attribute</code
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NodeAttribute]
-public string Name { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -342,7 +322,7 @@ public string Name { get; set; }</code></pre>
                     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_FileFormat_FormatAttribute.md&amp;value=---%0Auid%3A%20Yarhl.FileFormat.FormatAttribute%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl/FileFormat/FormatAttribute.cs/#L30" class="contribution-link">View Source</a>
+                    <a href="https://github.com/SceneGate/Yarhl/blob/plugins-mef/src/Yarhl/FileFormat/FormatAttribute.cs/#L29" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
