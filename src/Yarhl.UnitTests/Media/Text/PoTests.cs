@@ -34,12 +34,6 @@ namespace Yarhl.UnitTests.Media.Text
     public class PoTests : BaseGeneralTests<Po>
     {
         [Test]
-        public void CorrectName()
-        {
-            NameIsCorrect("Yarhl.Common", "Po");
-        }
-
-        [Test]
         public void DefaultValues()
         {
             var po = new Po();

@@ -22,10 +22,13 @@ namespace Yarhl
 {
     using System;
     using System.Collections.Generic;
+    using System.Composition;
+    using System.Composition.Convention;
     using System.Composition.Hosting;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using FileFormat;
 
     /// <summary>
     /// Plugin manager.
@@ -103,9 +106,9 @@ namespace Yarhl
         /// </summary>
         /// <typeparam name="T">Type of the extension point.</typeparam>
         /// <returns>The lazy extensions.</returns>
-        public IEnumerable<Lazy<T>> FindLazyExtensions<T>()
+        public IEnumerable<ExportFactory<T>> FindLazyExtensions<T>()
         {
-            return container.GetExports<Lazy<T>>();
+            return container.GetExports<ExportFactory<T>>();
         }
 
         /// <summary>
@@ -120,18 +123,62 @@ namespace Yarhl
                 throw new ArgumentNullException(nameof(extension));
             }
 
-            Type lazyType = typeof(Lazy<>).MakeGenericType(extension);
+            Type lazyType = typeof(ExportFactory<>).MakeGenericType(extension);
             return container.GetExports(lazyType);
+        }
+
+        public IEnumerable<ExportFactory<T, TMetadata>> FindLazyExtensions<T, TMetadata>()
+            where TMetadata : IExportMetadata
+        {
+            return container.GetExports<ExportFactory<T, TMetadata>>()
+                // Because of technical limitations / bugs there can be upto
+                // 3 copies of the same extension. We filter by type.
+                .GroupBy(f => f.Metadata.Type)
+                .Select(f => f.First());
         }
 
         void InitializeContainer()
         {
+            var conventions = new ConventionBuilder();
+            conventions
+                .ForTypesDerivedFrom<Format>()
+                .Export<Format>(
+                    export => export
+                        .AddMetadata("Name", t => t.FullName)
+                        .AddMetadata("Type", t => t))
+                .SelectConstructor(ctors =>
+                    ctors.OrderBy(ctor => ctor.GetParameters().Length)
+                    .First());
+
+            conventions
+                .ForTypesDerivedFrom(typeof(IConverter<,>))
+                .ExportInterfaces(
+                    inter =>
+                        inter.IsGenericType &&
+                        inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)))
+                .ExportInterfaces(
+                    inter =>
+                        inter.IsGenericType &&
+                        inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)),
+                    (inter, export) =>  export
+                        .AddMetadata("Source", inter.GenericTypeArguments[0])
+                        .AddMetadata("Destination", inter.GenericTypeArguments[1])
+                        .AsContractType<IConverter>())
+                .Export<IConverter>(
+                    export => export
+                    .AddMetadata("Name", t => t.FullName)
+                    .AddMetadata("Type", t => t))
+                .SelectConstructor(ctors =>
+                    ctors.OrderBy(ctor => ctor.GetParameters().Length)
+                    .First());
+
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
             var programAssemblies = Directory.GetFiles(programDir, "*.dll")
                 .Select(Assembly.LoadFile);
             
             var containerConfig = new ContainerConfiguration()
+                .WithDefaultConventions(conventions)
                 .WithAssemblies(programAssemblies);
 
             // Assemblies from the Plugin directory and subfolders

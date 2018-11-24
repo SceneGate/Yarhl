@@ -34,12 +34,6 @@ namespace Yarhl.UnitTests.FileSystem
     public class NodeContainerFormatTests : BaseGeneralTests<NodeContainerFormat>
     {
         [Test]
-        public void CorrectName()
-        {
-            NameIsCorrect("Yarhl.Common", "NodeContainer");
-        }
-
-        [Test]
         public void ConstructorSetProperties()
         {
             NodeContainerFormat format = new NodeContainerFormat();

@@ -1,10 +1,9 @@
-﻿//
-//  IConverter.cs
+//  IExportMetadata.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2016 Benito Palacios Sánchez
+//  Copyright (c) 2018 Benito Palacios Sánchez
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -20,22 +19,15 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.FileFormat
 {
-    public interface IConverter
-    {
-    }
+    using System;
 
     /// <summary>
-    /// Format converter interface.
+    /// Base metadata associated to a exported type.
     /// </summary>
-    /// <typeparam name="TSrc">Source format.</typeparam>
-    /// <typeparam name="TDst">Destination format.</typeparam>
-    public interface IConverter<in TSrc, out TDst> : IConverter
+    public interface IExportMetadata
     {
-        /// <summary>
-        /// Converts the specified source into the given type.
-        /// </summary>
-        /// <returns>The converted source.</returns>
-        /// <param name="source">Source format to convert.</param>
-        TDst Convert(TSrc source);
+        string Name { get; set; }
+
+        Type Type { get; set; }
     }
 }

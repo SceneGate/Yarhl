@@ -32,8 +32,6 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
-    [Export(typeof(Format))]
-    [Format("Yarhl.Common.NodeContainer")]
     public class NodeContainerFormat : Format
     {
         bool manageRoot;

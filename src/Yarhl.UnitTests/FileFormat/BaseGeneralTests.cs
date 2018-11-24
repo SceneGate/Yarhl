@@ -42,13 +42,11 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.Contains(typeof(T), formats);
         }
 
-        public void NameIsCorrect(string packageName, string formatName)
+        [Test]
+        public void FormatHasValidMetadataName()
         {
-            var attr = typeof(T).GetCustomAttributes(typeof(FormatAttribute), true);
-            Assert.That(attr, Has.One.Items);
-
-            var formatAttr = attr[0] as FormatAttribute;
-            Assert.That(formatAttr.Name, Is.EqualTo(packageName + "." + formatName));
+            Assert.DoesNotThrow(() =>
+                Format.GetFormats().Single(f => f.Metadata.Name == Name));
         }
 
         [Test]
@@ -58,6 +56,8 @@ namespace Yarhl.UnitTests.FileFormat
             format.Dispose();
             Assert.IsTrue(format.Disposed);
         }
+
+        protected string Name { get => typeof(T).FullName; }
 
         protected abstract T CreateDummyFormat();
     }

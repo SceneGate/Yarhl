@@ -110,7 +110,7 @@ namespace Yarhl.UnitTests
             var extensions = PluginManager.Instance
                 .FindLazyExtensions<ConstructorWithException>();
             Assert.That(extensions.Count(), Is.EqualTo(1));
-            Assert.That(() => extensions.Single().Value, Throws.Exception);
+            Assert.That(() => extensions.Single().CreateExport(), Throws.Exception);
         }
 
         [Test]
@@ -121,12 +121,9 @@ namespace Yarhl.UnitTests
             Assert.That(extensions.Count(), Is.EqualTo(1));
             Assert.That(
                 extensions.Single().GetType(),
-                Is.EqualTo(typeof(Lazy<ConstructorWithException>)));
+                Is.EqualTo(typeof(ExportFactory<ConstructorWithException>)));
             Assert.That(
-                ((Lazy<ConstructorWithException>)extensions.Single()).IsValueCreated,
-                Is.False);
-            Assert.That(
-                () => ((Lazy<ConstructorWithException>)extensions.Single()).Value,
+                () => ((ExportFactory<ConstructorWithException>)extensions.Single()).CreateExport().Value,
                 Throws.Exception);
         }
 

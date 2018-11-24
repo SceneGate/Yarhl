@@ -26,8 +26,6 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Binary format.
     /// </summary>
-    [Export(typeof(Format))]
-    [Format("Yarhl.Common.Binary")]
     public class BinaryFormat : Format
     {
         /// <summary>

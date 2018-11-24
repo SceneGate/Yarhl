@@ -1354,7 +1354,6 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(stream1.Compare(stream2));
         }
 
-        [Export(typeof(IConverter<BinaryFormat, byte>))]
         public class DummyBinaryConverter : IConverter<BinaryFormat, byte>
         {
             public byte Convert(BinaryFormat source)

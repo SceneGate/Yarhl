@@ -21,6 +21,7 @@
 namespace Yarhl.FileFormat
 {
     using System;
+    using System.Composition;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -39,9 +40,10 @@ namespace Yarhl.FileFormat
         /// Get a list of implemented formats.
         /// </summary>
         /// <returns>Enumerable of formats.</returns>
-        public static IEnumerable<Lazy<Format>> GetFormats()
+        public static IEnumerable<ExportFactory<Format, FormatMetadata>> GetFormats()
         {
-            return PluginManager.Instance.FindLazyExtensions<Format>();
+            return PluginManager.Instance
+                .FindLazyExtensions<Format, FormatMetadata>();
         }
 
         /// <summary>
@@ -80,21 +82,20 @@ namespace Yarhl.FileFormat
                     .MakeGenericType(srcType, dstType);
 
             // Search the converter for the giving types.
-            dynamic converter;
+            dynamic extension;
             try {
-                var converters = PluginManager.Instance
-                    .FindLazyExtensions(converterType)
-                    .ToList();
-                
-                if (converters.Count == 0) {
+                var extensions = PluginManager.Instance
+                    .FindLazyExtensions(converterType);
+
+                if (!extensions.Any()) {
                     throw new InvalidOperationException(
                         $"Cannot find converter for: {srcType} -> {dstType}");
-                } else if (converters.Count > 1) {
+                } else if (extensions.Skip(1).Any()) {
                     throw new InvalidOperationException(
                         $"Multiple converters for: {srcType} -> {dstType}");
                 }
 
-                converter = converters[0];
+                extension = extensions.First();
             } catch (System.Composition.Hosting.CompositionFailedException ex) {
                 throw new InvalidOperationException(
                     "The converter has not a public constructor with no arguments.\n" +
@@ -102,7 +103,7 @@ namespace Yarhl.FileFormat
                     ex);
             }
 
-            return converter.Value.Convert(src);
+            return extension.CreateExport().Value.Convert(src);
         }
 
         /// <summary>

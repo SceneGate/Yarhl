@@ -424,32 +424,20 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         [Test]
-        public void FormatAttributeSetsName()
+        public void FormatMetadataContainsNameAndType()
         {
-            var attr = typeof(StringFormatTest)
-                .GetCustomAttributes(typeof(FormatAttribute), true);
-            Assert.That(attr, Has.One.Items);
-
-            var formatAttr = attr[0] as FormatAttribute;
-            Assert.That(formatAttr.Name, Is.EqualTo("Yarhl.UnitTests.StringFormat"));
-        }
-
-        [Test]
-        public void FormatAttributeWithoutConstructorHasNullName()
-        {
-            var attr = typeof(IntFormatTest)
-                .GetCustomAttributes(typeof(FormatAttribute), true);
-            Assert.That(attr, Has.One.Items);
-
-            var formatAttr = attr[0] as FormatAttribute;
-            Assert.That(formatAttr.Name, Is.Null);
+            var format = Format.GetFormats()
+                .Single(p => p.Metadata.Type == typeof(StringFormatTest));
+            Assert.That(
+                format.Metadata.Name,
+                Is.EqualTo("Yarhl.UnitTests.FileFormat.StringFormatTest"));
         }
 
         [Test]
         public void FormatsAreNotDuplicated()
         {
             Assert.That(
-                Format.GetFormats().Select(f => f.Value.GetType()),
+                Format.GetFormats().Select(f => f.Metadata.Type),
                 Is.Unique);
         }
 
@@ -457,11 +445,10 @@ namespace Yarhl.UnitTests.FileFormat
         public void GetFormatsReturnsKnownFormats()
         {
             Assert.That(
-                Format.GetFormats().Select(f => f.Value.GetType().FullName),
+                Format.GetFormats().Select(f => f.Metadata.Name),
                 Does.Contain("Yarhl.FileFormat.BinaryFormat"));
         }
 
-        [Export(typeof(IConverter<StringFormatTest, short>))]
         public class FormatTestDuplicatedConverter1 :
             IConverter<StringFormatTest, short>
         {
@@ -471,7 +458,6 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Export(typeof(IConverter<StringFormatTest, short>))]
         public class FormatTestDuplicatedConverter2 :
             IConverter<StringFormatTest, short>
         {
@@ -481,7 +467,6 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Export(typeof(IConverter<StringFormatTest, ushort>))]
         public class FormatTestBadConstructor :
             IConverter<StringFormatTest, ushort>
         {
@@ -501,7 +486,6 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Export(typeof(IConverter<StringFormatTest, long>))]
         public class FormatTestNoConstructor :
             IConverter<StringFormatTest, long>
         {
@@ -518,7 +502,6 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Export(typeof(IConverter<StringFormatTest, ulong>))]
         public class FormatTestPrivateConstructor :
             IConverter<StringFormatTest, ulong>
         {

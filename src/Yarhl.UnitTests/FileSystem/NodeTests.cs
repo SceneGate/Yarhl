@@ -419,6 +419,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreSame(node, result);
         }
 
+        [System.Composition.PartNotDiscoverable]
         public class PrivateConverter :
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

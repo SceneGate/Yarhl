@@ -26,7 +26,6 @@
 namespace Yarhl.Media.Text
 {
     using System;
-    using System.Composition;
     using System.Text;
     using Yarhl.FileFormat;
     using Yarhl.IO;
@@ -34,8 +33,6 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Po to Binary converter.
     /// </summary>
-    [Export(typeof(IConverter<Po, BinaryFormat>))]
-    [Export(typeof(IConverter<BinaryFormat, Po>))]
     public class Po2Binary :
         IConverter<Po, BinaryFormat>,
         IConverter<BinaryFormat, Po>

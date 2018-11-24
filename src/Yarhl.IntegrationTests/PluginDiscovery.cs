@@ -29,7 +29,7 @@ namespace Yarhl.IntegrationTests
             var formats = Format.GetFormats();
             Assert.That(formats, Is.Not.Empty);
             Assert.That(
-                formats.Select(t => t.Value.GetType().FullName),
+                formats.Select(t => t.Metadata.Name),
                 Does.Contain("Yarhl.Media.Text.Po"));
         }
 
@@ -37,17 +37,15 @@ namespace Yarhl.IntegrationTests
         public void CanFoundPoConverterFromTypes()
         {
             Type poType = Format.GetFormats()
-                .Select(f => f.Value.GetType())
-                .Single(t => t.FullName == "Yarhl.Media.Text.Po");
+                .Single(f => f.Metadata.Name == "Yarhl.Media.Text.Po")
+                .Metadata.Type;
 
-            Type converterType = typeof(IConverter<,>).MakeGenericType(
-                typeof(BinaryFormat),
-                poType);
-
-            var converters = PluginManager.Instance.FindExtensions(converterType);
+            var converters = PluginManager.Instance
+                .FindLazyExtensions<IConverter, ConverterMetadata>()
+                .Where(f => f.Metadata.Source.Contains(poType));
             Assert.That(converters, Is.Not.Empty);
             Assert.That(
-                converters.Select(t => t.GetType().FullName).ToList(),
+                converters.Select(t => t.Metadata.Name),
                 Does.Contain("Yarhl.Media.Text.Po2Binary"));
         }
     }

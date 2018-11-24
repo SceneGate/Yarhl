@@ -128,12 +128,6 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.IsTrue(baseStream.Disposed);
         }
 
-        [Test]
-        public void CorrectName()
-        {
-            NameIsCorrect("Yarhl.Common", "Binary");
-        }
-
         protected override BinaryFormat CreateDummyFormat()
         {
             DataStream stream = new DataStream(new MemoryStream(), 0, 0);
