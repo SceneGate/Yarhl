@@ -29,8 +29,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Yarhl")]
-[assembly: AssemblyDescription("ROM Hacking library")]
-[assembly: AssemblyCompany("Yarhl development team")]
+[assembly: AssemblyDescription("File format converter library")]
+[assembly: AssemblyCompany("SceneGate")]
 [assembly: AssemblyProduct("Yarhl")]
 [assembly: AssemblyCopyright("Copyright (c) 2017 SceneGate Team")]
 [assembly: Guid("cf6865f7-7161-41c5-92b8-46049634bc23")]

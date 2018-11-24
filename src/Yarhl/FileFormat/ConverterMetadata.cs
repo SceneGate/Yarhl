@@ -20,7 +20,6 @@
 namespace Yarhl.FileFormat
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Metadata associated to a IConverter interface.
@@ -60,7 +59,11 @@ namespace Yarhl.FileFormat
         public Type[] GetSources()
         {
             if (!(Sources is Type[] sourceList)) {
-                sourceList = new[] { (Type)Sources };
+                if (Sources != null) {
+                    sourceList = new[] { (Type)Sources };
+                } else {
+                    sourceList = Type.EmptyTypes;
+                }
             }
 
             return sourceList;
@@ -73,7 +76,11 @@ namespace Yarhl.FileFormat
         public Type[] GetDestinations()
         {
             if (!(Destinations is Type[] destList)) {
-                destList = new[] { (Type)Destinations };
+                if (Destinations != null) {
+                    destList = new[] { (Type)Destinations };
+                } else {
+                    destList = Type.EmptyTypes;
+                }
             }
 
             return destList;
@@ -87,6 +94,9 @@ namespace Yarhl.FileFormat
         /// <returns>If this converter can realize the operation.</returns>
         public bool CanConvert(Type source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             Type[] sources = GetSources();
             for (int i = 0; i < sources.Length; i++) {
                 if (sources[i].IsAssignableFrom(source)) {
@@ -107,6 +117,12 @@ namespace Yarhl.FileFormat
         /// <returns>If this converter can realize the operation.</returns>
         public bool CanConvert(Type source, Type dest)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (dest == null)
+                throw new ArgumentNullException(nameof(dest));
+
             Type[] sources = GetSources();
             Type[] dests = GetDestinations();
 

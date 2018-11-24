@@ -26,7 +26,6 @@
 namespace Yarhl.FileSystem
 {
     using System;
-    using System.Composition;
     using FileFormat;
 
     /// <summary>
@@ -37,7 +36,8 @@ namespace Yarhl.FileSystem
         bool manageRoot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NodeContainerFormat"/> class.
+        /// Initializes a new instance of the <see cref="NodeContainerFormat"/>
+        /// class.
         /// </summary>
         public NodeContainerFormat()
         {

@@ -26,8 +26,17 @@ namespace Yarhl.FileFormat
     /// </summary>
     public interface IExportMetadata
     {
+        /// <summary>
+        /// Gets or sets the name of the extension.
+        /// Usually it's the FullName property of Type.
+        /// </summary>
+        /// <value>Name of the extension.</value>
         string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type of the extension.
+        /// </summary>
+        /// <value>The type of the extension.</value>
         Type Type { get; set; }
     }
 }

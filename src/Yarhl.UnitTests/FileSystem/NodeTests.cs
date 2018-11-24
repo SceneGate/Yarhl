@@ -210,7 +210,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void TransformWithConverterConcatenating()
         {
             PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new IntFormatTest(3);
+            Format dummyFormat = new IntFormatTest { Value = 3 };
             Node node = new Node("mytest", dummyFormat);
 
             node.Transform<StringFormatTest>()

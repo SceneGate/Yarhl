@@ -64,33 +64,20 @@ namespace Yarhl.FileFormat
             if (src == null)
                 throw new ArgumentNullException(nameof(src));
 
-            // Create the generic type to search.
-            Type srcType = src.GetType();
-            Type converterType = typeof(IConverter<,>)
-                    .MakeGenericType(srcType, dstType);
-
             // Search the converter for the giving types.
-            dynamic extension;
-            try {
-                var extensions = PluginManager.Instance.GetConverters()
-                    .Where(e => e.Metadata.CanConvert(srcType, dstType));
+            Type srcType = src.GetType();
+            var extensions = PluginManager.Instance.GetConverters()
+                .Where(e => e.Metadata.CanConvert(srcType, dstType));
 
-                if (!extensions.Any()) {
-                    throw new InvalidOperationException(
-                        $"Cannot find converter for: {srcType} -> {dstType}");
-                } else if (extensions.Skip(1).Any()) {
-                    throw new InvalidOperationException(
-                        $"Multiple converters for: {srcType} -> {dstType}");
-                }
-
-                extension = extensions.First();
-            } catch (System.Composition.Hosting.CompositionFailedException ex) {
+            if (!extensions.Any()) {
                 throw new InvalidOperationException(
-                    "The converter has not a public constructor with no arguments.\n" +
-                    "Create an instance of the converter and use ConvertWith.",
-                    ex);
+                    $"Cannot find converter for: {srcType} -> {dstType}");
+            } else if (extensions.Skip(1).Any()) {
+                throw new InvalidOperationException(
+                    $"Multiple converters for: {srcType} -> {dstType}");
             }
 
+            dynamic extension = extensions.First();
             return extension.CreateExport().Value.Convert(src);
         }
 

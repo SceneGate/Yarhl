@@ -37,25 +37,26 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatIsFoundAndIsUnique()
         {
-            var formats = PluginManager.Instance
-                .FindExtensions<Format>()
-                .Select(t => t.GetType())
-                .ToList();
-            Assert.Contains(typeof(T), formats);
+            var formats = PluginManager.Instance.GetFormats()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(T)));
+            Assert.That(formats, Is.Unique);
         }
 
         [Test]
-        public void FormatHasValidMetadataName()
+        public void FormatNameMatchAndIsUnique()
         {
-            Assert.DoesNotThrow(() =>
-                PluginManager.Instance.GetFormats()
-                    .Single(f => f.Metadata.Name == Name));
+            var names = PluginManager.Instance.GetFormats()
+                .Select(f => f.Metadata.Name);
+            Assert.That(names, Does.Contain(Name));
+            Assert.That(names, Is.Unique);
         }
 
         [Test]
         public void DisposeChangesDisposed()
         {
             T format = CreateDummyFormat();
+            Assert.IsFalse(format.Disposed);
             format.Dispose();
             Assert.IsTrue(format.Disposed);
         }

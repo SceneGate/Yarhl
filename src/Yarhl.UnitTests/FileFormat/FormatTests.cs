@@ -32,7 +32,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void DisposeChangesDisposed()
         {
-            var format = new StringFormatTest("3");
+            var format = new StringFormatTest { Value = "3" };
             Assert.IsFalse(format.Disposed);
             format.Dispose();
             Assert.IsTrue(format.Disposed);

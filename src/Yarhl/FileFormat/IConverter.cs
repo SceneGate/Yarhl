@@ -20,6 +20,9 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.FileFormat
 {
+    /// <summary>
+    /// Non-generic converter interface.
+    /// </summary>
     public interface IConverter
     {
     }

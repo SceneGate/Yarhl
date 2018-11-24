@@ -90,7 +90,7 @@ namespace Yarhl.UnitTests.FileFormat
             Value = str;
         }
 
-        public string Value { get; private set; }
+        public string Value { get; set; }
     }
 
     public class IntFormatTest : Format
@@ -104,7 +104,7 @@ namespace Yarhl.UnitTests.FileFormat
             Value = val;
         }
 
-        public int Value { get; private set; }
+        public int Value { get; set; }
     }
 
     public class StringFormatTest2IntConverter : IConverter<StringFormatTest, int>

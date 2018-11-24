@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Yarhl.UnitTests")]
 [assembly: AssemblyDescription("Unit tests for Yarhl library")]
-[assembly: AssemblyCompany("Yarhl development team")]
+[assembly: AssemblyCompany("SceneGate")]
 [assembly: AssemblyProduct("Yarhl")]
 [assembly: AssemblyCopyright("Copyright (c) 2018 SceneGate Team")]
 [assembly: AssemblyVersion("2.0.0")]
