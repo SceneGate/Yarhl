@@ -27,7 +27,6 @@ namespace Yarhl.UnitTests.IO
 {
     using System;
     using System.IO;
-    using Mono.Addins;
     using NUnit.Framework;
     using Yarhl.FileFormat;
     using Yarhl.IO;
@@ -1354,7 +1353,6 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(stream1.Compare(stream2));
         }
 
-        [Extension]
         public class DummyBinaryConverter : IConverter<BinaryFormat, byte>
         {
             public byte Convert(BinaryFormat source)

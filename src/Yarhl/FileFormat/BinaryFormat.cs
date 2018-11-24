@@ -25,7 +25,6 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Binary format.
     /// </summary>
-    [Format("Yarhl.Common.Binary")]
     public class BinaryFormat : Format
     {
         /// <summary>
@@ -78,16 +77,19 @@ namespace Yarhl.FileFormat
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="BinaryFormat"/>
-        /// object.
+        /// Releases all resource used by the <see cref="BinaryFormat"/> object.
         /// </summary>
-        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
-        /// managed resources also.</param>
-        protected override void Dispose(bool freeManagedResourcesAlso)
+        /// <param name="disposing">
+        /// If set to <c>true</c> free managed resources also.
+        /// It happens from Dispose() calls.
+        /// </param>
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose(freeManagedResourcesAlso);
-            if (freeManagedResourcesAlso)
+            base.Dispose(disposing);
+
+            if (disposing) {
                 Stream.Dispose();
+            }
         }
     }
 }

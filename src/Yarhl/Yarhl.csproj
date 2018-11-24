@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ReleaseVersion>1.0</ReleaseVersion>
+    <ReleaseVersion>2.0</ReleaseVersion>
     <SynchReleaseVersion>false</SynchReleaseVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -35,8 +35,20 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Mono.Addins">
-      <HintPath>..\..\mono-addins\bin\Mono.Addins.dll</HintPath>
+    <Reference Include="System.Composition.AttributedModel">
+      <HintPath>..\packages\System.Composition.AttributedModel.1.2.0\lib\netstandard2.0\System.Composition.AttributedModel.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Convention">
+      <HintPath>..\packages\System.Composition.Convention.1.2.0\lib\netstandard2.0\System.Composition.Convention.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Runtime">
+      <HintPath>..\packages\System.Composition.Runtime.1.2.0\lib\netstandard2.0\System.Composition.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.Hosting">
+      <HintPath>..\packages\System.Composition.Hosting.1.2.0\lib\netstandard2.0\System.Composition.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Composition.TypedParts">
+      <HintPath>..\packages\System.Composition.TypedParts.1.2.0\lib\netstandard2.0\System.Composition.TypedParts.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +57,9 @@
     <Compile Include="IO\DataStream.cs" />
     <Compile Include="IO\DataWriter.cs" />
     <Compile Include="FileFormat\Format.cs" />
-    <Compile Include="FileFormat\FormatAttribute.cs" />
+    <Compile Include="FileFormat\FormatMetadata.cs" />
+    <Compile Include="FileFormat\ConverterMetadata.cs" />
+    <Compile Include="FileFormat\IExportMetadata.cs" />
     <Compile Include="FileFormat\IConverter.cs" />
     <Compile Include="PluginManager.cs" />
     <Compile Include="FileSystem\Node.cs" />

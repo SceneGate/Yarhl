@@ -31,13 +31,13 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
-    [Format("Yarhl.Common.NodeContainer")]
     public class NodeContainerFormat : Format
     {
         bool manageRoot;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NodeContainerFormat"/> class.
+        /// Initializes a new instance of the <see cref="NodeContainerFormat"/>
+        /// class.
         /// </summary>
         public NodeContainerFormat()
         {
@@ -75,11 +75,21 @@ namespace Yarhl.FileSystem
             manageRoot = false;
         }
 
-        protected override void Dispose(bool freeManagedResourcesAlso)
+        /// <summary>
+        /// Releases all resource used by the
+        /// <see cref="NodeContainerFormat"/> object.
+        /// </summary>
+        /// <param name="disposing">
+        /// If set to <c>true</c> free managed resources also.
+        /// It happens from Dispose() calls.
+        /// </param>
+        protected override void Dispose(bool disposing)
         {
-            base.Dispose(freeManagedResourcesAlso);
-            if (freeManagedResourcesAlso && manageRoot)
+            base.Dispose(disposing);
+
+            if (disposing && manageRoot) {
                 Root.Dispose();
+            }
         }
     }
 }

@@ -34,7 +34,6 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Portable Object format for translations.
     /// </summary>
-    [Format("Yarhl.Common.Po")]
     public class Po : Format
     {
         readonly IList<PoEntry> entries;

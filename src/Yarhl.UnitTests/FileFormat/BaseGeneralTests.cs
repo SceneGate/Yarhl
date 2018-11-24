@@ -32,26 +32,31 @@ namespace Yarhl.UnitTests.FileFormat
     public abstract class BaseGeneralTests<T>
         where T : Format
     {
+        protected string Name { get => typeof(T).FullName; }
+
         [Test]
-        public void FormatIsFound()
+        public void FormatIsFoundAndIsUnique()
         {
-            Assert.IsTrue(PluginManager.Instance
-                          .FindExtensions<Format>().Contains(typeof(T)));
+            var formats = PluginManager.Instance.GetFormats()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(T)));
+            Assert.That(formats, Is.Unique);
         }
 
-        public void NameIsCorrect(string packageName, string formatName)
+        [Test]
+        public void FormatNameMatchAndIsUnique()
         {
-            var attr = typeof(T).GetCustomAttributes(typeof(FormatAttribute), true);
-            Assert.That(attr, Has.One.Items);
-
-            var formatAttr = attr[0] as FormatAttribute;
-            Assert.That(formatAttr.Name, Is.EqualTo(packageName + "." + formatName));
+            var names = PluginManager.Instance.GetFormats()
+                .Select(f => f.Metadata.Name);
+            Assert.That(names, Does.Contain(Name));
+            Assert.That(names, Is.Unique);
         }
 
         [Test]
         public void DisposeChangesDisposed()
         {
             T format = CreateDummyFormat();
+            Assert.IsFalse(format.Disposed);
             format.Dispose();
             Assert.IsTrue(format.Disposed);
         }

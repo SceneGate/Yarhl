@@ -21,10 +21,8 @@
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
-    using Mono.Addins;
     using Yarhl.FileFormat;
 
-    [Extension]
     public class SingleOuterConverterExample : IConverter<string, uint>
     {
         public uint Convert(string source)
@@ -32,7 +30,6 @@ namespace Yarhl.UnitTests.FileFormat
             return System.Convert.ToUInt32(source);
         }
 
-        [Extension]
         public class SingleInnerConverterExample : IConverter<string, ulong>
         {
             public ulong Convert(string source)
@@ -42,9 +39,8 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
     public class TwoConvertersExample :
-    IConverter<string, int>, IConverter<int, string>
+        IConverter<string, int>, IConverter<int, string>
     {
         public int Convert(string source)
         {
@@ -57,9 +53,8 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
     public class ConverterAndOtherInterface :
-    IConverter<string, short>, IDisposable
+        IConverter<string, short>, IDisposable
     {
         public short Convert(string source)
         {
@@ -79,34 +74,38 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
     public class DerivedConverter : BaseConverter
     {
     }
 
-    [Format("Yarhl.UnitTests.StringFormat")]
     public class StringFormatTest : Format
     {
+        public StringFormatTest()
+        {
+        }
+
         public StringFormatTest(string str)
         {
             Value = str;
         }
 
-        public string Value { get; private set; }
+        public string Value { get; set; }
     }
 
-    [Format]
     public class IntFormatTest : Format
     {
+        public IntFormatTest()
+        {
+        }
+
         public IntFormatTest(int val)
         {
             Value = val;
         }
 
-        public int Value { get; private set; }
+        public int Value { get; set; }
     }
 
-    [Extension]
     public class StringFormatTest2IntConverter : IConverter<StringFormatTest, int>
     {
         public int Convert(StringFormatTest test)
@@ -115,7 +114,6 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    [Extension]
     public class StringFormatTest2IntFormatTestConverter :
         IConverter<StringFormatTest, IntFormatTest>,
         IConverter<IntFormatTest, StringFormatTest>

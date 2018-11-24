@@ -34,38 +34,40 @@
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
+var tests = Argument("tests", string.Empty);
 
-Task("Restore-NuGet")
+Task("Build")
     .Does(() =>
 {
     NuGetRestore("src/Yarhl.sln");
-});
 
-Task("Build-Mono.Addins")
-    .Does(() =>
-{
-    MSBuild(
-        "mono-addins/Mono.Addins/Mono.Addins.csproj",
-        configurator => configurator.SetConfiguration(configuration));
-});
-
-Task("Build")
-    .IsDependentOn("Restore-NuGet")
-    .IsDependentOn("Build-Mono.Addins")
-    .Does(() =>
-{
     MSBuild(
         "src/Yarhl.sln",
         configurator => configurator.SetConfiguration(configuration));
+
+    // Copy Yarhl.Media for the integration tests
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
+    CopyFileToDirectory(
+        $"src/Yarhl.Media/bin/{configuration}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
 });
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    NUnit3(
-        $"src/**/bin/{configuration}/*.UnitTests.dll",
-        new NUnit3Settings { NoResults = true });
+    var settings = new NUnit3Settings();
+    settings.NoResults = true;
+
+    if (tests != string.Empty) {
+        settings.Test = tests;
+    }
+
+    var testAssemblies = new List<FilePath> {
+        $"src/Yarhl.UnitTests/bin/{configuration}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/Yarhl.IntegrationTests.dll"
+    };
+    NUnit3(testAssemblies, settings);
 });
 
 Task("Run-Linter-Gendarme")
@@ -98,27 +100,20 @@ Task("Run-AltCover")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var inputDir = $"src/Yarhl.UnitTests/bin/{configuration}";
-    var outputDir = $"{inputDir}/__Instrumented";
+    // Configure the tests to run with code coverate
+    TestWithAltCover(
+        "src/Yarhl.UnitTests",
+        "Yarhl.UnitTests.dll",
+        "coverage_unit.xml");
 
-    // Create new assemblies with the instrumentation
-    var altcoverArgs = new AltCover.PrepareArgs {
-        InputDirectory = inputDir,
-        OutputDirectory = outputDir,
-        AssemblyFilter = new[] { "nunit.framework", "Mono.Addins" },
-        XmlReport = "coverage.xml",
-        OpenCover = true
-    };
-    Prepare(altcoverArgs);
-
-    // Run the tests again but instrumented
-    NUnit3(
-        $"{outputDir}/Yarhl.UnitTests.dll",
-        new NUnit3Settings { NoResults = true });
+    TestWithAltCover(
+        "src/Yarhl.IntegrationTests",
+        "Yarhl.IntegrationTests.dll",
+        "coverage_integration.xml");
 
     // Create the report
     ReportGenerator(
-        "coverage.xml",
+        new FilePath[] { "coverage_unit.xml", "coverage_integration.xml" },
         "coveragereport",
         new ReportGeneratorSettings {
             ReportTypes = new[] {
@@ -136,6 +131,34 @@ Task("Run-AltCover")
     }
 });
 
+public void TestWithAltCover(string projectPath, string assembly, string outputXml)
+{
+    string inputDir = $"{projectPath}/bin/{configuration}";
+    string outputDir = $"{inputDir}/__Instrumented";
+    if (DirectoryExists(outputDir)) {
+        DeleteDirectory(
+            outputDir,
+            new DeleteDirectorySettings { Recursive = true });
+    }
+
+    var altcoverArgs = new AltCover.PrepareArgs {
+        InputDirectory = inputDir,
+        OutputDirectory = outputDir,
+        AssemblyFilter = new[] { "nunit.framework" },
+        XmlReport = outputXml,
+        OpenCover = true
+    };
+    Prepare(altcoverArgs);
+
+    string pluginDir = $"{inputDir}/Plugins";
+    if (DirectoryExists(pluginDir)) {
+        EnsureDirectoryExists($"{outputDir}/Plugins");
+        CopyDirectory(pluginDir, $"{outputDir}/Plugins");
+    }
+
+    NUnit3($"{outputDir}/{assembly}", new NUnit3Settings { NoResults = true });
+}
+
 Task("Test-Quality")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover");
@@ -146,7 +169,7 @@ Task("Run-Coveralls")
     .Does(() =>
 {
     CoverallsIo(
-        MakeAbsolute(File("coverage.xml")).FullPath,
+        MakeAbsolute(File("coveragereport/Summary.xml")).FullPath,
         new CoverallsIoSettings {
             RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN")
         });
@@ -154,6 +177,7 @@ Task("Run-Coveralls")
 
 Task("Run-Sonar")
     .IsDependentOn("Build")
+    .IsDependentOn("Run-AltCover")
     .Does(() =>
 {
     var sonar_token = EnvironmentVariable("SONAR_TOKEN");
@@ -259,7 +283,10 @@ Task("Travis")
 Task("AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Coveralls")
+    // Cake doesn't support ReportGenerator with Cobertura
+    // and the old Coveralls CLI only support Cobertura.
+    // After porting to .NET Core we would be able to use the new CLI.
+    // .IsDependentOn("Run-Coveralls")
     .IsDependentOn("Run-Sonar");
 
 RunTarget(target);

@@ -69,7 +69,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.DoesNotThrow(() => tempNode = NodeFactory.FromFile(tempFile));
             Assert.IsTrue(File.Exists(tempFile));
 
-            tempNode?.Dispose();
+            tempNode.Dispose();
             File.Delete(tempFile);
         }
 
@@ -87,11 +87,13 @@ namespace Yarhl.UnitTests.FileSystem
             File.Delete(tempFile);
         }
 
+        [Test]
         public void CreateFromFileDisposeFormatsIfFails()
         {
             string tempFile = Path.GetTempFileName();
             int numStreams = Yarhl.IO.DataStream.ActiveStreams;
-            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromFile(tempFile, null));
+            Assert.Throws<ArgumentNullException>(
+                () => NodeFactory.FromFile(tempFile, null));
             Assert.That(Yarhl.IO.DataStream.ActiveStreams, Is.EqualTo(numStreams));
             File.Delete(tempFile);
         }

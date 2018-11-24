@@ -26,6 +26,7 @@
 namespace Yarhl.UnitTests.FileSystem
 {
     using System;
+    using System.Composition;
     using FileFormat;
     using NUnit.Framework;
     using Yarhl.FileFormat;
@@ -87,6 +88,15 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(3, (node.Format as IntFormatTest).Value);
+        }
+
+        [Test]
+        public void TransformTypedNullThrowsException()
+        {
+            Format dummyFormat = new StringFormatTest("3");
+            Node node = new Node("mytest", dummyFormat);
+
+            Assert.That(() => node.Transform(null), Throws.ArgumentNullException);
         }
 
         [Test]
@@ -201,7 +211,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void TransformWithConverterConcatenating()
         {
             PrivateConverter converter = new PrivateConverter();
-            Format dummyFormat = new IntFormatTest(3);
+            Format dummyFormat = new IntFormatTest { Value = 3 };
             Node node = new Node("mytest", dummyFormat);
 
             node.Transform<StringFormatTest>()
@@ -410,6 +420,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreSame(node, result);
         }
 
+        [PartNotDiscoverable]
         public class PrivateConverter :
             IConverter<StringFormatTest, IntFormatTest>,
             IConverter<IntFormatTest, StringFormatTest>

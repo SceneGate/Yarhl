@@ -18,19 +18,20 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+using System;
 using System.Reflection;
-using Mono.Addins;
+using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Yarhl.UnitTests")]
 [assembly: AssemblyDescription("Unit tests for Yarhl library")]
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("Benito Palacios Sanchez (pleonex) 2016")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyCompany("Yarhl development team")]
+[assembly: AssemblyProduct("Yarhl")]
+[assembly: AssemblyCopyright("Copyright (c) 2017 SceneGate Team")]
+[assembly: AssemblyVersion("2.0.0")]
+[assembly: AssemblyFileVersion("2.0.0")]
 
-// Mono.Addins
-[assembly: Addin("Yarhl.UnitTests", "1.0")]
-[assembly: AddinDependency("Yarhl", "1.0")]
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#elif RELEASE
+[assembly: AssemblyConfiguration("Release")]
+#endif

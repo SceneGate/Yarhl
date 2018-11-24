@@ -1,10 +1,9 @@
-//
-//  Format.cs
+//  FormatMetadata.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2016 Benito Palacios Sánchez
+//  Copyright (c) 2018 Benito Palacios Sánchez
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -21,37 +20,22 @@
 namespace Yarhl.FileFormat
 {
     using System;
-    using Mono.Addins;
 
     /// <summary>
-    /// Class attribute for format extensions.
-    /// It allows to give a name to the format.
+    /// Metadata associated to a Format class.
     /// </summary>
-    [CLSCompliant(false)]
-    [AttributeUsage(AttributeTargets.Class)]
-    public sealed class FormatAttribute : CustomExtensionAttribute
+    public class FormatMetadata : IExportMetadata
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FormatAttribute"/> class.
+        /// Gets or sets the type full name. Shortcut of Type.FullName.
         /// </summary>
-        public FormatAttribute()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FormatAttribute"/> class.
-        /// </summary>
-        /// <param name="name">The format name.</param>
-        public FormatAttribute([NodeAttribute("Name")] string name)
-        {
-            Name = name;
-        }
-
-        /// <summary>
-        /// Gets or sets the format name.
-        /// </summary>
-        /// <value>The format name.</value>
-        [NodeAttribute]
+        /// <value>The full name of the type.</value>
         public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the format.
+        /// </summary>
+        /// <value>The type of the format.</value>
+        public Type Type { get; set; }
     }
 }

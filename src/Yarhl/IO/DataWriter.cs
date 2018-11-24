@@ -341,29 +341,45 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(type));
 
             val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
+            switch (val) {
+                case long l:
+                    Write(l);
+                    break;
+                case ulong ul:
+                    Write(ul);
+                    break;
 
-            if (type == typeof(long))
-                Write((long)val);
-            else if (type == typeof(ulong))
-                Write((ulong)val);
-            else if (type == typeof(int))
-                Write((int)val);
-            else if (type == typeof(uint))
-                Write((uint)val);
-            else if (type == typeof(short))
-                Write((short)val);
-            else if (type == typeof(ushort))
-                Write((ushort)val);
-            else if (type == typeof(byte))
-                Write((byte)val);
-            else if (type == typeof(sbyte))
-                Write((sbyte)val);
-            else if (type == typeof(char))
-                Write((char)val);
-            else if (type == typeof(string))
-                Write((string)val);
-            else
-                throw new FormatException("Unsupported type");
+                case int i:
+                    Write(i);
+                    break;
+                case uint ui:
+                    Write(ui);
+                    break;
+
+                case short s:
+                    Write(s);
+                    break;
+                case ushort us:
+                    Write(us);
+                    break;
+
+                case byte b:
+                    Write(b);
+                    break;
+                case sbyte sb:
+                    Write(sb);
+                    break;
+
+                case char ch:
+                    Write(ch);
+                    break;
+                case string str:
+                    Write(str);
+                    break;
+
+                default:
+                    throw new FormatException("Unsupported type");
+            }
         }
 
         /// <summary>

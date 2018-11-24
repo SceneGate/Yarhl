@@ -11,7 +11,7 @@ Mac OS X.
 
 | Quality report | [![Sonar Gate](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=alert_status)](https://sonarcloud.io/dashboard?id=yarhl) |
 | ----- | ------ |
-| **Coverage** | [![Coveralls](https://coveralls.io/repos/github/SceneGate/Yarhl/badge.svg?branch=master)](https://coveralls.io/github/SceneGate/Yarhl?branch=master) |
+| **Coverage** | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=coverage)](https://sonarcloud.io/dashboard?id=yarhl) |
 | **Quality Reports** | [![SonarCloud](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=alert_status)](https://sonarcloud.io/dashboard?id=yarhl) |
 | **Quality Details** | [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=yarhl) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=bugs)](https://sonarcloud.io/dashboard?id=yarhl) [![Code smells](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=code_smells)](https://sonarcloud.io/dashboard?id=yarhl) [![Duplicated lines](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=yarhl) |
 | **Code Stats** | [![Lines of code](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=ncloc)](https://sonarcloud.io/dashboard?id=yarhl) |
@@ -28,7 +28,7 @@ Online API documentation is available in the GitHub page
 Requirements:
 [*Mono*](http://www.mono-project.com/docs/getting-started/install/linux/).
 
-1. Clone the repository with `git clone https://github.com/SceneGate/Yarhl --recursive`
+1. Clone the repository.
 
 2. Run `./build.sh`
 
@@ -38,7 +38,8 @@ Requirements:
 *Visual Studio* or
 [*Xamarin Studio*](http://www.monodevelop.com/download/).
 
-1. Clone the repository with the [GitHub client](https://windows.github.com/)
-   or [Git for Windows](https://git-scm.com/downloads).
+1. Clone the repository. You can use the
+   [GitHub client](https://windows.github.com/)
+   or the [command-line](https://git-scm.com/downloads).
 
 2. Run `.\build.ps1`

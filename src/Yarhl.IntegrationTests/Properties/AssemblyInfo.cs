@@ -1,10 +1,10 @@
 ﻿//
-//  IConverter.cs
+//  AssemblyInfo.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2016 Benito Palacios Sánchez
+//  Copyright (c) 2018 Benito Palacios Sánchez
 //
 //  This program is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -18,27 +18,20 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Yarhl.FileFormat
-{
-    /// <summary>
-    /// Non-generic converter interface.
-    /// </summary>
-    public interface IConverter
-    {
-    }
+using System;
+using System.Reflection;
+using System.Runtime.InteropServices;
 
-    /// <summary>
-    /// Format converter interface.
-    /// </summary>
-    /// <typeparam name="TSrc">Source format.</typeparam>
-    /// <typeparam name="TDst">Destination format.</typeparam>
-    public interface IConverter<in TSrc, out TDst> : IConverter
-    {
-        /// <summary>
-        /// Converts the specified source into the given type.
-        /// </summary>
-        /// <returns>The converted source.</returns>
-        /// <param name="source">Source format to convert.</param>
-        TDst Convert(TSrc source);
-    }
-}
+[assembly: AssemblyTitle("Yarhl.UnitTests")]
+[assembly: AssemblyDescription("Unit tests for Yarhl library")]
+[assembly: AssemblyCompany("SceneGate")]
+[assembly: AssemblyProduct("Yarhl")]
+[assembly: AssemblyCopyright("Copyright (c) 2018 SceneGate Team")]
+[assembly: AssemblyVersion("2.0.0")]
+[assembly: AssemblyFileVersion("2.0.0")]
+
+#if DEBUG
+[assembly: AssemblyConfiguration("Debug")]
+#elif RELEASE
+[assembly: AssemblyConfiguration("Release")]
+#endif

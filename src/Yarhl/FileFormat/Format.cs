@@ -22,24 +22,12 @@ namespace Yarhl.FileFormat
 {
     using System;
     using System.Linq;
-    using Mono.Addins;
 
     /// <summary>
     /// Abstract file format.
     /// </summary>
-    [TypeExtensionPoint(ExtensionAttributeType = typeof(FormatAttribute))]
     public abstract class Format : IDisposable
     {
-        /// <summary>
-        /// Finalizes an instance of the <see cref="Format"/> class.
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="Format"/> is reclaimed by garbage collection.
-        /// </summary>
-        ~Format()
-        {
-            Dispose(false);
-        }
-
         /// <summary>
         /// Gets a value indicating whether this <see cref="Format"/> is disposed.
         /// </summary>
@@ -73,35 +61,24 @@ namespace Yarhl.FileFormat
             if (dstType == null)
                 throw new ArgumentNullException(nameof(dstType));
 
-            // Search the converter for the giving types and create an instance
-            dynamic converter;
+            if (src == null)
+                throw new ArgumentNullException(nameof(src));
+
+            // Search the converter for the giving types.
             Type srcType = src.GetType();
-            try {
-                var converterType = PluginManager.Instance
-                    .FindExtensions(typeof(IConverter<,>))
-                    .Single(type =>
-                           type.GetInterfaces().Any(inter =>
-                                inter.IsGenericType &&
-                                inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)) &&
-                                inter.GenericTypeArguments[0].IsAssignableFrom(srcType) &&
-                                dstType.IsAssignableFrom(inter.GenericTypeArguments[1])));
-                converter = Activator.CreateInstance(converterType);
-            } catch (InvalidOperationException ex) {
+            var extensions = PluginManager.Instance.GetConverters()
+                .Where(e => e.Metadata.CanConvert(srcType, dstType));
+
+            if (!extensions.Any()) {
                 throw new InvalidOperationException(
-                    $"No single converter for: {srcType} -> {dstType}",
-                    ex);
-            } catch (System.Reflection.TargetInvocationException ex) {
+                    $"Cannot find converter for: {srcType} -> {dstType}");
+            } else if (extensions.Skip(1).Any()) {
                 throw new InvalidOperationException(
-                    "Exception in converter constructor",
-                    ex);
-            } catch (MissingMemberException ex) {
-                throw new InvalidOperationException(
-                    "The converter has no constructor without arguments.\n" +
-                    "Create the converter object and use ConvertWith<T>.",
-                    ex);
+                    $"Multiple converters for: {srcType} -> {dstType}");
             }
 
-            return converter.Convert(src);
+            dynamic extension = extensions.First();
+            return extension.CreateExport().Value.Convert(src);
         }
 
         /// <summary>
@@ -247,26 +224,23 @@ namespace Yarhl.FileFormat
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="Format"/>
-        /// object.
+        /// Releases all resource used by the <see cref="Format"/> object.
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);              // Dispose me everything (L)
-            GC.SuppressFinalize(this);  // Don't dispose again!
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="Format"/>
-        /// object.
+        /// Releases all resource used by the <see cref="Format"/> object.
         /// </summary>
-        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
-        /// managed resources also.</param>
-        protected virtual void Dispose(bool freeManagedResourcesAlso)
+        /// <param name="disposing">
+        /// If set to <c>true</c> free managed resources also.
+        /// It happens from Dispose() calls.
+        /// </param>
+        protected virtual void Dispose(bool disposing)
         {
-            if (Disposed)
-                return;
-
             Disposed = true;
         }
     }
