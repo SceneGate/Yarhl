@@ -17,17 +17,25 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-using System;
-
 namespace Yarhl.FileFormat
 {
+    using System;
+
     /// <summary>
     /// Metadata associated to a Format class.
     /// </summary>
     public class FormatMetadata : IExportMetadata
     {
+        /// <summary>
+        /// Gets or sets the type full name. Shortcut of Type.FullName.
+        /// </summary>
+        /// <value>The full name of the type.</value>
         public string Name { get; set; }
 
+        /// <summary>
+        /// Gets or sets the type of the format.
+        /// </summary>
+        /// <value>The type of the format.</value>
         public Type Type { get; set; }
     }
 }

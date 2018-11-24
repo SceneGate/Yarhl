@@ -112,11 +112,11 @@ namespace Yarhl
         }
 
         /// <summary>
-        /// Finds all the extensions from the given base type and return their
-        /// lazy type for initialization.
+        /// Finds all the extensions from the given base type and returns
+        /// a factory to initialize the type.
         /// </summary>
         /// <param name="extension">Type of the extension point.</param>
-        /// <returns>The lazy extensions.</returns>
+        /// <returns>The extension factory.</returns>
         public IEnumerable<object> FindLazyExtensions(Type extension)
         {
             if (extension == null) {
@@ -127,19 +127,43 @@ namespace Yarhl
             return container.GetExports(lazyType);
         }
 
+        /// <summary>
+        /// Finds all the extensions from the given base type and returns
+        /// a factory to initialize the type and its associated metadata.
+        /// </summary>
+        /// <typeparam name="T">Type of the extension point.</typeparam>
+        /// <typeparam name="TMetadata">Type of the metadata.</typeparam>
+        /// <returns>The extension factory.</returns>
         public IEnumerable<ExportFactory<T, TMetadata>> FindLazyExtensions<T, TMetadata>()
             where TMetadata : IExportMetadata
         {
+            // Because of technical limitations / bugs there can be upto
+            // 3 copies of the same extension. We filter by type.
             return container.GetExports<ExportFactory<T, TMetadata>>()
-                // Because of technical limitations / bugs there can be upto
-                // 3 copies of the same extension. We filter by type.
                 .GroupBy(f => f.Metadata.Type)
                 .Select(f => f.First());
         }
 
-        void InitializeContainer()
+        /// <summary>
+        /// Get a list of format extensions.
+        /// </summary>
+        /// <returns>Enumerable of lazy formats with metadata.</returns>
+        public IEnumerable<ExportFactory<Format, FormatMetadata>> GetFormats()
         {
-            var conventions = new ConventionBuilder();
+            return FindLazyExtensions<Format, FormatMetadata>();
+        }
+
+        /// <summary>
+        /// Get a list of converter extensions.
+        /// </summary>
+        /// <returns>Enumerable of lazy converters with metadata.</returns>
+        public IEnumerable<ExportFactory<IConverter, ConverterMetadata>> GetConverters()
+        {
+            return FindLazyExtensions<IConverter, ConverterMetadata>();
+        }
+
+        static void DefineFormatConventions(ConventionBuilder conventions)
+        {
             conventions
                 .ForTypesDerivedFrom<Format>()
                 .Export<Format>(
@@ -149,20 +173,26 @@ namespace Yarhl
                 .SelectConstructor(ctors =>
                     ctors.OrderBy(ctor => ctor.GetParameters().Length)
                     .First());
+        }
 
+        static void DefineConverterConventions(ConventionBuilder conventions)
+        {
+            bool converterInterfaceFilter(Type i) =>
+                i.IsGenericType &&
+                i.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>));
+
+            // We export three types each converter:
+            // 1.- Export the specific generic converter types
+            // 2.- Export the IConverter interfaces with the interfaces metadata
+            // 3.- Export again the IConverter interface to fill common metadata
             conventions
                 .ForTypesDerivedFrom(typeof(IConverter<,>))
+                .ExportInterfaces(converterInterfaceFilter)
                 .ExportInterfaces(
-                    inter =>
-                        inter.IsGenericType &&
-                        inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)))
-                .ExportInterfaces(
-                    inter =>
-                        inter.IsGenericType &&
-                        inter.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>)),
-                    (inter, export) =>  export
-                        .AddMetadata("Source", inter.GenericTypeArguments[0])
-                        .AddMetadata("Destination", inter.GenericTypeArguments[1])
+                    converterInterfaceFilter,
+                    (inter, export) => export
+                        .AddMetadata("Sources", inter.GenericTypeArguments[0])
+                        .AddMetadata("Destinations", inter.GenericTypeArguments[1])
                         .AsContractType<IConverter>())
                 .Export<IConverter>(
                     export => export
@@ -171,15 +201,22 @@ namespace Yarhl
                 .SelectConstructor(ctors =>
                     ctors.OrderBy(ctor => ctor.GetParameters().Length)
                     .First());
+        }
+
+        void InitializeContainer()
+        {
+            var conventions = new ConventionBuilder();
+            DefineFormatConventions(conventions);
+            DefineConverterConventions(conventions);
+
+            var containerConfig = new ContainerConfiguration()
+                .WithDefaultConventions(conventions);
 
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
             var programAssemblies = Directory.GetFiles(programDir, "*.dll")
                 .Select(Assembly.LoadFile);
-            
-            var containerConfig = new ContainerConfiguration()
-                .WithDefaultConventions(conventions)
-                .WithAssemblies(programAssemblies);
+            containerConfig.WithAssemblies(programAssemblies);
 
             // Assemblies from the Plugin directory and subfolders
             string pluginDir = Path.Combine(programDir, PluginDirectory);

@@ -26,7 +26,7 @@ namespace Yarhl.IntegrationTests
         [Test]
         public void CanFoundPoByFormat()
         {
-            var formats = Format.GetFormats();
+            var formats = PluginManager.Instance.GetFormats();
             Assert.That(formats, Is.Not.Empty);
             Assert.That(
                 formats.Select(t => t.Metadata.Name),
@@ -36,13 +36,12 @@ namespace Yarhl.IntegrationTests
         [Test]
         public void CanFoundPoConverterFromTypes()
         {
-            Type poType = Format.GetFormats()
+            Type poType = PluginManager.Instance.GetFormats()
                 .Single(f => f.Metadata.Name == "Yarhl.Media.Text.Po")
                 .Metadata.Type;
 
-            var converters = PluginManager.Instance
-                .FindLazyExtensions<IConverter, ConverterMetadata>()
-                .Where(f => f.Metadata.Source.Contains(poType));
+            var converters = PluginManager.Instance.GetConverters()
+                .Where(f => f.Metadata.CanConvert(poType));
             Assert.That(converters, Is.Not.Empty);
             Assert.That(
                 converters.Select(t => t.Metadata.Name),

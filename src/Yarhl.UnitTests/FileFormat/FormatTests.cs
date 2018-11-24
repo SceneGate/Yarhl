@@ -131,14 +131,17 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         [Test]
-        public void StaticConvertToThrowsExceptionIfConstructorsHaveArgs()
+        public void StaticConvertNeedsToBeHiddenIfConstructorsHaveArgs()
         {
+            // With MEF we can't have an extension without a default constructor
+            // because it will throw an exception in every general request.
+            // So we need to hide those extensions.
             var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.ConvertTo(typeof(long), test));
             Assert.AreEqual(
-                "The converter has not a public constructor with no arguments.\n" +
-                "Create an instance of the converter and use ConvertWith.",
+                "Cannot find converter for: " +
+                "Yarhl.UnitTests.FileFormat.StringFormatTest -> System.Int64",
                 ex.Message);
 
             // But we can use the ConvertWith
@@ -149,14 +152,17 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         [Test]
-        public void StaticConvertToThrowsIfNoPublicConstructor()
+        public void StaticConvertNeedsToBeHiddenIfNoPublicConstructor()
         {
+            // With MEF we can't have an extension without a default constructor
+            // because it will throw an exception in every general request.
+            // So we need to hide those extensions.
             var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 Format.ConvertTo(typeof(ulong), test));
             Assert.AreEqual(
-                "The converter has not a public constructor with no arguments.\n" +
-                "Create an instance of the converter and use ConvertWith.",
+                "Cannot find converter for: " +
+                "Yarhl.UnitTests.FileFormat.StringFormatTest -> System.UInt64",
                 ex.Message);
 
             // But we can use the ConvertWith of classes with Factory pattern.
@@ -426,7 +432,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatMetadataContainsNameAndType()
         {
-            var format = Format.GetFormats()
+            var format = PluginManager.Instance.GetFormats()
                 .Single(p => p.Metadata.Type == typeof(StringFormatTest));
             Assert.That(
                 format.Metadata.Name,
@@ -437,7 +443,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void FormatsAreNotDuplicated()
         {
             Assert.That(
-                Format.GetFormats().Select(f => f.Metadata.Type),
+                PluginManager.Instance.GetFormats().Select(f => f.Metadata.Type),
                 Is.Unique);
         }
 
@@ -445,7 +451,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void GetFormatsReturnsKnownFormats()
         {
             Assert.That(
-                Format.GetFormats().Select(f => f.Metadata.Name),
+                PluginManager.Instance.GetFormats().Select(f => f.Metadata.Name),
                 Does.Contain("Yarhl.FileFormat.BinaryFormat"));
         }
 
@@ -486,6 +492,7 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
+        [PartNotDiscoverable]
         public class FormatTestNoConstructor :
             IConverter<StringFormatTest, long>
         {
@@ -502,6 +509,7 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
+        [PartNotDiscoverable]
         public class FormatTestPrivateConstructor :
             IConverter<StringFormatTest, ulong>
         {
@@ -530,9 +538,6 @@ namespace Yarhl.UnitTests.FileFormat
             public ushort Y { get; set; }
         }
 
-        [Export(typeof(IConverter<ushort, Derived>))]
-        [Export(typeof(IConverter<Derived, ushort>))]
-        [Export(typeof(IConverter<ushort, Base>))]
         public class ConvertDerived :
             IConverter<ushort, Derived>, IConverter<Derived, ushort>
         {
@@ -550,9 +555,6 @@ namespace Yarhl.UnitTests.FileFormat
             }
         }
 
-        [Export(typeof(IConverter<int, Base>))]
-        [Export(typeof(IConverter<Base, int>))]
-        [Export(typeof(IConverter<Derived, int>))]
         public class ConvertBase :
             IConverter<int, Base>, IConverter<Base, int>
         {

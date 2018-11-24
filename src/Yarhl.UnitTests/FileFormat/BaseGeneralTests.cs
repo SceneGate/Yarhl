@@ -32,6 +32,8 @@ namespace Yarhl.UnitTests.FileFormat
     public abstract class BaseGeneralTests<T>
         where T : Format
     {
+        protected string Name { get => typeof(T).FullName; }
+
         [Test]
         public void FormatIsFoundAndIsUnique()
         {
@@ -46,7 +48,8 @@ namespace Yarhl.UnitTests.FileFormat
         public void FormatHasValidMetadataName()
         {
             Assert.DoesNotThrow(() =>
-                Format.GetFormats().Single(f => f.Metadata.Name == Name));
+                PluginManager.Instance.GetFormats()
+                    .Single(f => f.Metadata.Name == Name));
         }
 
         [Test]
@@ -56,8 +59,6 @@ namespace Yarhl.UnitTests.FileFormat
             format.Dispose();
             Assert.IsTrue(format.Disposed);
         }
-
-        protected string Name { get => typeof(T).FullName; }
 
         protected abstract T CreateDummyFormat();
     }

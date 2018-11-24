@@ -21,8 +21,6 @@
 namespace Yarhl.FileFormat
 {
     using System;
-    using System.Composition;
-    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -35,16 +33,6 @@ namespace Yarhl.FileFormat
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed { get; private set; }
-
-        /// <summary>
-        /// Get a list of implemented formats.
-        /// </summary>
-        /// <returns>Enumerable of formats.</returns>
-        public static IEnumerable<ExportFactory<Format, FormatMetadata>> GetFormats()
-        {
-            return PluginManager.Instance
-                .FindLazyExtensions<Format, FormatMetadata>();
-        }
 
         /// <summary>
         /// Converts the format to the specified type.
@@ -84,8 +72,8 @@ namespace Yarhl.FileFormat
             // Search the converter for the giving types.
             dynamic extension;
             try {
-                var extensions = PluginManager.Instance
-                    .FindLazyExtensions(converterType);
+                var extensions = PluginManager.Instance.GetConverters()
+                    .Where(e => e.Metadata.CanConvert(srcType, dstType));
 
                 if (!extensions.Any()) {
                     throw new InvalidOperationException(
