@@ -55,10 +55,10 @@ Task("Build")
     EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
     EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/netstandard2.0/Yarhl.Media.dll",
+        $"src/Yarhl.Media/bin/{configuration}/net{netVersion}/Yarhl.Media.dll",
         $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/netstandard2.0/Yarhl.Media.dll",
+        $"src/Yarhl.Media/bin/{configuration}/netcoreapp{netCoreVersion}/Yarhl.Media.dll",
         $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
 });
 
