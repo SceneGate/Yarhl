@@ -106,13 +106,18 @@ Task("Run-Linter-Gendarme")
         }
     }
 
-    RunGendarme(gendarme, "src/Yarhl/Yarhl.csproj", "src/Yarhl/Gendarme.ignore");
-    RunGendarme(gendarme, "src/Yarhl.Media/Yarhl.Media.csproj", "src/Yarhl.Media/Gendarme.ignore");
+    RunGendarme(
+        gendarme,
+        $"src/Yarhl/bin/{configuration}/net{netVersion}/Yarhl.dll",
+        "src/Yarhl/Gendarme.ignore");
+    RunGendarme(
+        gendarme,
+        $"src/Yarhl.Media/bin/{configuration}/net{netVersion}/Yarhl.Media.dll",
+        "src/Yarhl.Media/Gendarme.ignore");
 });
 
-public void RunGendarme(string gendarme, string project, string ignore)
+public void RunGendarme(string gendarme, string assembly, string ignore)
 {
-    var assembly = GetProjectAssemblies(project, configuration).Single();
     var retcode = StartProcess(gendarme, $"--ignore {ignore} {assembly}");
     if (retcode != 0) {
         Warning($"Gendarme found errors on {assembly}");
@@ -156,7 +161,7 @@ Task("Run-AltCover")
 
 public void TestWithAltCover(string projectPath, string assembly, string outputXml)
 {
-    string inputDir = $"{projectPath}/bin/{configuration}";
+    string inputDir = $"{projectPath}/bin/{configuration}/net{netVersion}";
     string outputDir = $"{inputDir}/__Instrumented";
     if (DirectoryExists(outputDir)) {
         DeleteDirectory(
