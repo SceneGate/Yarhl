@@ -233,7 +233,8 @@ for (int i = 0; i < 2; i++) {
 
 * :heavy_check_mark: **DO** use braces for one line conditions and loops. This
   improves readability and avoid having changed lines just to add the brace when
-  it requires extra logic.
+  it requires extra logic. The exception is for one line conditions for argument
+  checking.
 
 ```csharp
 if (a) {

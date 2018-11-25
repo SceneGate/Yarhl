@@ -38,6 +38,12 @@ namespace Yarhl.UnitTests.IO
         DataStream stream;
         DataReader reader;
 
+        [OneTimeSetUp]
+        public void FixtureSetUp()
+        {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         [SetUp]
         public void SetUp()
         {

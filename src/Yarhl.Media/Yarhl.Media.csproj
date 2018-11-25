@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Yarhl.Media</RootNamespace>
     <AssemblyName>Yarhl.Media</AssemblyName>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
     <ReleaseVersion>2.0</ReleaseVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

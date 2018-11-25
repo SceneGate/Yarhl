@@ -28,6 +28,9 @@ namespace Yarhl
     using System.IO;
     using System.Linq;
     using System.Reflection;
+#if NETCOREAPP2_1
+    using System.Runtime.Loader;
+#endif
     using FileFormat;
 
     /// <summary>
@@ -215,7 +218,11 @@ namespace Yarhl
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
             var programAssemblies = Directory.GetFiles(programDir, "*.dll")
+#if NETCOREAPP2_1
+                .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
+#else
                 .Select(Assembly.LoadFile);
+#endif
             containerConfig.WithAssemblies(programAssemblies);
 
             // Assemblies from the Plugin directory and subfolders
