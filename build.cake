@@ -36,26 +36,35 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
 
+var msbuildConfig = new MSBuildSettings {
+    Verbosity = Verbosity.Minimal,
+    Configuration = configuration,
+    Restore = true,
+    MaxCpuCount = 0,  // Auto build parallel mode
+    WarningsAsError = Argument("warnaserror", false)
+};
+
 Task("Build")
     .Does(() =>
 {
-    NuGetRestore("src/Yarhl.sln");
-
-    MSBuild(
-        "src/Yarhl.sln",
-        configurator => configurator.SetConfiguration(configuration));
+    MSBuild("src/Yarhl.sln", msbuildConfig);
 
     // Copy Yarhl.Media for the integration tests
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net47/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp2.0/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
+        $"src/Yarhl.Media/bin/{configuration}/netstandard2.0/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/net47/Plugins");
+    CopyFileToDirectory(
+        $"src/Yarhl.Media/bin/{configuration}/netstandard2.0/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp2.0/Plugins");
 });
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
+    // NUnit3 to test libraries with .NET Framework / Mono
     var settings = new NUnit3Settings();
     settings.NoResults = true;
 
@@ -64,10 +73,22 @@ Task("Run-Unit-Tests")
     }
 
     var testAssemblies = new List<FilePath> {
-        $"src/Yarhl.UnitTests/bin/{configuration}/Yarhl.UnitTests.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/Yarhl.IntegrationTests.dll"
+        $"src/Yarhl.UnitTests/bin/{configuration}/net47/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/net47/Yarhl.IntegrationTests.dll"
     };
     NUnit3(testAssemblies, settings);
+
+    // .NET Core test library
+    var netcoreSettings = new DotNetCoreTestSettings {
+        NoBuild = true,
+        Framework = "netcoreapp2.0"
+    };
+    DotNetCoreTest(
+        $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
+        netcoreSettings);
+    DotNetCoreTest(
+        $"src/Yarhl.IntegrationTests/Yarhl.IntegrationTests.csproj",
+        netcoreSettings);
 });
 
 Task("Run-Linter-Gendarme")
