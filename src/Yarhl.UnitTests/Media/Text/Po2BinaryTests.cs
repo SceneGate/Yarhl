@@ -120,6 +120,7 @@ msgstr """"
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 ";
+            text = text.Replace("\r\n", "\n");
 
             var newPo = ConvertStringToPo(text);
 
@@ -163,7 +164,7 @@ msgstr """"
 ""X-Generator: yarhl\n""
 ""X-Hey: hoy\n""
 ";
-
+            text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
             var newHeader = newPo.Header;
 
@@ -228,6 +229,7 @@ msgstr """"
 ""Language: SC\n""
 ""X-Generator: libgame""
 ";
+            text = text.Replace("\r\n", "\n");
             Po testPo = null;
             Assert.DoesNotThrow(() => testPo = ConvertStringToPo(text));
             Assert.That(testPo?.Header?.Extensions["Generator"], Is.EqualTo("libgame"));
@@ -257,7 +259,7 @@ msgstr """"
 msgid ""totranslate""
 msgstr ""translated""
 ";
-
+            text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
 
             CompareText(testPo.ConvertTo<BinaryFormat>(), text);
@@ -292,7 +294,7 @@ msgctxt ""a ctx""
 msgid ""original""
 msgstr ""translated""
 ";
-
+            text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
 
             CompareText(testPo.ConvertTo<BinaryFormat>(), text);
@@ -323,7 +325,7 @@ msgstr """"
 ""trans\n""
 ""l\""a\""ted""
 ";
-
+            text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
 
             CompareText(testPo.ConvertTo<BinaryFormat>(), text);
@@ -378,6 +380,7 @@ msgstr """"
 msgid ""original""
 msgstr ""translated""
 ";
+            text = text.Replace("\r\n", "\n");
 
             var newPo = ConvertStringToPo(text);
 
@@ -411,7 +414,7 @@ msgstr """"
 ""Content-Type: text/plain; charset=UTF-8\n""
 ""Content-Transfer-Encoding: 8bit\n""
 ";
-
+            text = text.Replace("\r\n", "\n");
             Assert.Throws<FormatException>(
                 () => ConvertStringToPo(text),
                 "Original field must be filled");

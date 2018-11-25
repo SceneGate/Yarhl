@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
     <AssemblyName>Yarhl.UnitTests</AssemblyName>
-    <TargetFrameworks>net47;netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net461;netcoreapp2.1</TargetFrameworks>
     <ReleaseVersion>2.0</ReleaseVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

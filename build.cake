@@ -32,6 +32,8 @@
 #addin Cake.DocFx
 #tool nuget:?package=docfx.console
 
+var netVersion = "461";
+var netCoreVersion = "2.1";
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
@@ -50,14 +52,14 @@ Task("Build")
     MSBuild("src/Yarhl.sln", msbuildConfig);
 
     // Copy Yarhl.Media for the integration tests
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net47/Plugins");
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp2.0/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
     CopyFileToDirectory(
         $"src/Yarhl.Media/bin/{configuration}/netstandard2.0/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/net47/Plugins");
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
     CopyFileToDirectory(
         $"src/Yarhl.Media/bin/{configuration}/netstandard2.0/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp2.0/Plugins");
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
 });
 
 Task("Run-Unit-Tests")
@@ -73,15 +75,15 @@ Task("Run-Unit-Tests")
     }
 
     var testAssemblies = new List<FilePath> {
-        $"src/Yarhl.UnitTests/bin/{configuration}/net47/Yarhl.UnitTests.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/net47/Yarhl.IntegrationTests.dll"
+        $"src/Yarhl.UnitTests/bin/{configuration}/net{netVersion}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Yarhl.IntegrationTests.dll"
     };
     NUnit3(testAssemblies, settings);
 
     // .NET Core test library
     var netcoreSettings = new DotNetCoreTestSettings {
         NoBuild = true,
-        Framework = "netcoreapp2.0"
+        Framework = $"netcoreapp{netCoreVersion}"
     };
     DotNetCoreTest(
         $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
