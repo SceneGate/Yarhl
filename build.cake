@@ -32,7 +32,7 @@
 #addin Cake.DocFx
 #tool nuget:?package=docfx.console
 
-var netVersion = "472";
+var netVersion = "47";
 var netCoreVersion = "2.1";
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
