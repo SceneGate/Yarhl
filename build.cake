@@ -253,7 +253,7 @@ Task("Deploy-Doc")
 
     // Commit and push
     retcode = StartProcess("git", new ProcessSettings {
-        Arguments = "commit -a -m 'Update doc from cake'",
+        Arguments = "commit -a -u -m 'Update doc from cake'",
         WorkingDirectory = repo_doc
     });
     if (retcode != 0) {

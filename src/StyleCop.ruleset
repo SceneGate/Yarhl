@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for Connector" ToolsVersion="12.0">
+  <IncludeAll Action="Warning" />
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <!-- Disable XML file headers. -->
+    <Rule Id="SA1633" Action="None" />
+
+    <!-- Allow inline braces. -->
+    <Rule Id="SA1500" Action="None" />
+
+    <!-- Do not force to prefix local calls with 'this' -->
+    <Rule Id="SA1101" Action="None" />
+  </Rules>
+</RuleSet>
