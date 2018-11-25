@@ -42,6 +42,13 @@ namespace Yarhl
     /// </remarks>
     public sealed class PluginManager
     {
+        static readonly string[] IgnoredLibraries = {
+            "System.",
+            "Microsoft.",
+            "netstandard",
+            "nunit"
+        };
+
         static readonly object LockObj = new object();
         static PluginManager singleInstance;
 
@@ -218,6 +225,7 @@ namespace Yarhl
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
             var programAssemblies = Directory.GetFiles(programDir, "*.dll")
+                .Where(f => !IgnoredLibraries.Any(n => Path.GetFileName(f).ToLower().StartsWith(n)))
 #if NETCOREAPP2_1
                 .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
 #else
@@ -232,7 +240,13 @@ namespace Yarhl
                     pluginDir,
                     "*.dll",
                     SearchOption.AllDirectories);
-                var pluginAssemblies = pluginFiles.Select(Assembly.LoadFile);
+                var pluginAssemblies = pluginFiles
+                    .Where(f => !IgnoredLibraries.Any(n => Path.GetFileName(f).ToLower().StartsWith(n)))
+#if NETCOREAPP2_1
+                    .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
+#else
+                    .Select(Assembly.LoadFile);
+#endif
                 containerConfig.WithAssemblies(pluginAssemblies);
             }
 

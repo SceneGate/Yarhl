@@ -17,8 +17,7 @@
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Condition="'$(TargetFramework)' == 'net47'" Include="Microsoft.TestPlatform.ObjectModel" Version="11.0.0" />
-    <PackageReference Condition="'$(TargetFramework)' == 'netcoreapp2.1'" Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="nunit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
