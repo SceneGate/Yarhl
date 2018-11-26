@@ -154,6 +154,7 @@ namespace Yarhl.IO
             // read blocks and it avoids issues with half-encoded chars.
             long startPos = Stream.Position;
             List<byte> textBuffer = new List<byte>();
+            string text = string.Empty;
             int matchIndex = -1;
             while (matchIndex == -1) {
                 if (Stream.EndOfStream)
@@ -167,21 +168,20 @@ namespace Yarhl.IO
                 int read = Stream.Read(buffer, 0, size);
                 textBuffer.AddRange(buffer.Take(read));
 
-                matchIndex = Encoding.GetString(textBuffer.ToArray())
-                    .IndexOf(token, StringComparison.InvariantCulture);
+                text = Encoding.GetString(textBuffer.ToArray());
+                matchIndex = text.IndexOf(token, StringComparison.Ordinal);
             }
 
-            string result = Encoding.GetString(textBuffer.ToArray());
             if (matchIndex != -1) {
                 // We skip the bytes of the token too
-                string fullResult = result.Substring(0, matchIndex + token.Length);
+                string fullResult = text.Substring(0, matchIndex + token.Length);
                 Stream.Position = startPos + Encoding.GetByteCount(fullResult);
 
                 // Result without token
-                result = result.Substring(0, matchIndex);
+                text = text.Substring(0, matchIndex);
             }
 
-            return result;
+            return text;
         }
 
         /// <summary>

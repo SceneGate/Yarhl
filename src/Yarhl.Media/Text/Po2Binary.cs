@@ -149,7 +149,7 @@ namespace Yarhl.Media.Text
                 writer.WriteLine("\"\"");
 
             do {
-                int nextIdx = content.IndexOf("\\n", idx, StringComparison.InvariantCulture);
+                int nextIdx = content.IndexOf("\\n", idx, StringComparison.Ordinal);
                 int end = nextIdx != -1 ? nextIdx + 2 : content.Length;
                 writer.WriteLine("\"{0}\"", content.Substring(idx, end - idx));
 

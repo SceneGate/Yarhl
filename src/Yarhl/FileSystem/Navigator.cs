@@ -51,7 +51,7 @@ namespace Yarhl.FileSystem
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
 
-            if (!path.StartsWith(rootNode.Path, StringComparison.InvariantCulture))
+            if (!path.StartsWith(rootNode.Path, StringComparison.Ordinal))
                 return null;
 
             var queue = new Queue<T>();
