@@ -172,7 +172,7 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
     var altcoverArgs = new AltCover.PrepareArgs {
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
-        AssemblyFilter = new[] { "nunit.framework" },
+        AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
         XmlReport = outputXml,
         OpenCover = true
     };

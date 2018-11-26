@@ -13,7 +13,10 @@
         "dest": "api",
         "filter": "filterConfig.yml",
         "disableGitFeatures": false,
-        "disableDefaultFilter": false
+        "disableDefaultFilter": false,
+        "properties": {
+          "TargetFramework": "net47"
+        }
       }
     ],
     "build": {
