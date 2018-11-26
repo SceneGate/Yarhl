@@ -77,6 +77,12 @@ namespace Yarhl.FileSystem
             }
         }
 
+        /// <summary>
+        /// Gets the node associated DataStream if the format is BinaryFormat.
+        /// </summary>
+        /// <value>
+        /// DataStream if the format is BinaryFormat, null otherwise.
+        /// </value>
         public DataStream Stream {
             get { return GetFormatAs<BinaryFormat>()?.Stream; }
         }
@@ -171,6 +177,13 @@ namespace Yarhl.FileSystem
             return this;
         }
 
+        /// <summary>
+        /// Transform the node format to another format using a converter.
+        /// </summary>
+        /// <param name="converter">Convert to use.</param>
+        /// <typeparam name="TSrc">The type of the source format.</typeparam>
+        /// <typeparam name="TDst">The type of the destination format.</typeparam>
+        /// <returns>This node.</returns>
         public Node Transform<TSrc, TDst>(IConverter<TSrc, TDst> converter)
             where TSrc : Format
             where TDst : Format

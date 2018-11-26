@@ -78,6 +78,11 @@ namespace Yarhl.FileSystem
             currentNode.Add(child);
         }
 
+        /// <summary>
+        /// Creates a Node with a new stream from memory.
+        /// </summary>
+        /// <param name="name">The name of the node.</param>
+        /// <returns>The new node.</returns>
         public static Node FromMemory(string name)
         {
             return new Node(name, new BinaryFormat());

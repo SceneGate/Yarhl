@@ -32,6 +32,11 @@ namespace Yarhl.FileSystem
     {    
         readonly List<T> children;
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> class.
+        /// </summary>
+        /// <param name="name">Node name.</param>
         protected NavegableNode(string name)
         {
             if (string.IsNullOrEmpty(name))
@@ -47,18 +52,6 @@ namespace Yarhl.FileSystem
             Tags = new Dictionary<string, dynamic>();
             children = new List<T>();
             Children = new NavegableNodeCollection<T>(children);
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the
-        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> class.
-        /// Releases unmanaged resources and performs other cleanup operations before the
-        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> is reclaimed by
-        /// garbage collection.
-        /// </summary>
-        ~NavegableNode()
-        {
-            Dispose(false);
         }
 
         /// <summary>
