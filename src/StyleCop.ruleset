@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="Rules for Connector" ToolsVersion="12.0">
+<RuleSet Name="Rules for Yarhl" ToolsVersion="12.0">
   <IncludeAll Action="Warning" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <!-- Disable XML file headers. -->

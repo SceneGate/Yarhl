@@ -34,6 +34,7 @@
 
 var netVersion = "47";
 var netCoreVersion = "2.1";
+var netstandardVersion = "2.0";
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
@@ -55,10 +56,10 @@ Task("Build")
     EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
     EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/net{netVersion}/Yarhl.Media.dll",
+        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
         $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/netcoreapp{netCoreVersion}/Yarhl.Media.dll",
+        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
         $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
 });
 
@@ -108,11 +109,11 @@ Task("Run-Linter-Gendarme")
 
     RunGendarme(
         gendarme,
-        $"src/Yarhl/bin/{configuration}/net{netVersion}/Yarhl.dll",
+        $"src/Yarhl/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.dll",
         "src/Yarhl/Gendarme.ignore");
     RunGendarme(
         gendarme,
-        $"src/Yarhl.Media/bin/{configuration}/net{netVersion}/Yarhl.Media.dll",
+        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
         "src/Yarhl.Media/Gendarme.ignore");
 });
 
@@ -173,6 +174,7 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
         AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
+        TypeFilter = new[] { "Yarhl.AssemblyUtils" },
         XmlReport = outputXml,
         OpenCover = true
     };

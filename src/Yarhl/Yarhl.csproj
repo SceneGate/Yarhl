@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Yarhl</RootNamespace>
     <AssemblyName>Yarhl</AssemblyName>
-    <TargetFrameworks>net47;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <ReleaseVersion>2.0</ReleaseVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -17,6 +17,6 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.Composition" Version="1.2.0" />
-    <PackageReference Condition="'$(TargetFramework)' == 'netcoreapp2.1'" Include="System.Runtime.Loader" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Loader" Version="4.3.0" />
   </ItemGroup>
 </Project>

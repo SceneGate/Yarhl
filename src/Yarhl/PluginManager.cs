@@ -28,9 +28,6 @@ namespace Yarhl
     using System.IO;
     using System.Linq;
     using System.Reflection;
-#if NETCOREAPP2_1
-    using System.Runtime.Loader;
-#endif
     using FileFormat;
 
     /// <summary>
@@ -224,14 +221,8 @@ namespace Yarhl
 
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
-            var programAssemblies = Directory.GetFiles(programDir, "*.dll")
-                .Where(f => !IgnoredLibraries.Any(n => Path.GetFileName(f).ToLower().StartsWith(n)))
-#if NETCOREAPP2_1
-                .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
-#else
-                .Select(Assembly.LoadFile);
-#endif
-            containerConfig.WithAssemblies(programAssemblies);
+            var programAssemblies = Directory.GetFiles(programDir, "*.dll");
+            containerConfig.WithAssemblies(LoadAssemblies(programAssemblies));
 
             // Assemblies from the Plugin directory and subfolders
             string pluginDir = Path.Combine(programDir, PluginDirectory);
@@ -240,17 +231,20 @@ namespace Yarhl
                     pluginDir,
                     "*.dll",
                     SearchOption.AllDirectories);
-                var pluginAssemblies = pluginFiles
-                    .Where(f => !IgnoredLibraries.Any(n => Path.GetFileName(f).ToLower().StartsWith(n)))
-#if NETCOREAPP2_1
-                    .Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
-#else
-                    .Select(Assembly.LoadFile);
-#endif
-                containerConfig.WithAssemblies(pluginAssemblies);
+                containerConfig.WithAssemblies(LoadAssemblies(pluginFiles));
             }
 
             container = containerConfig.CreateContainer();
+        }
+
+        static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
+        {
+            // Skip libraries that match the ignored libraries because
+            // MEF would try to load its dependencies.
+            return paths
+                .Where(f => !IgnoredLibraries.Any(
+                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
+                .LoadAssemblies();
         }
     }
 }

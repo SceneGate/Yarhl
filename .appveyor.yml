@@ -1,5 +1,5 @@
 ## AppVeyor CI Integration
-version: 1.0.0.{build}-{branch}
+version: 2.0.0.{build}-{branch}
 image: Visual Studio 2017
 
 environment:
@@ -7,9 +7,6 @@ environment:
     secure: +3GOgzhn/1Hxf71M6QG7gCzWMDyUI4eRXCv8xyjumU9w2qqIxoGPACJyYoouU/+m
   COVERALLS_REPO_TOKEN:
     secure: 24h5OfNB3BIsJs7B6KwyDJW2HZ6dennZpAJaS4N8KCsk+KFOkpZB8+lOxQNW7bXU
-
-install:
-- cmd: git submodule update --init --recursive
 
 build_script:
 
