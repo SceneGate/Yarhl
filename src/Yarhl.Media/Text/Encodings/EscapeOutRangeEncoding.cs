@@ -293,7 +293,7 @@ namespace Yarhl.Media.Text.Encodings
         static string UnescapeText(string text, ICollection<byte> symbols = null)
         {
             StringBuilder transformed = new StringBuilder(text);
-            StringComparison culture = StringComparison.InvariantCulture;
+            StringComparison culture = StringComparison.Ordinal;
 
             int tokenIdx = -1;
             while ((tokenIdx = text.IndexOf(TokenStart, tokenIdx + 1, culture)) != -1) {

@@ -1,118 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit.3.11.0\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.11.0\build\NUnit.props')" />
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3525724C-57EC-4C84-ABFC-95780009A304}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
     <AssemblyName>Yarhl.UnitTests</AssemblyName>
+    <TargetFrameworks>net47;netcoreapp2.1</TargetFrameworks>
     <ReleaseVersion>2.0</ReleaseVersion>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
-    <SynchReleaseVersion>false</SynchReleaseVersion>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG;</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release</OutputPath>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Composition.AttributedModel">
-      <HintPath>..\packages\System.Composition.AttributedModel.1.2.0\lib\netstandard2.0\System.Composition.AttributedModel.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Composition.Convention">
-      <HintPath>..\packages\System.Composition.Convention.1.2.0\lib\netstandard2.0\System.Composition.Convention.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Composition.Runtime">
-      <HintPath>..\packages\System.Composition.Runtime.1.2.0\lib\netstandard2.0\System.Composition.Runtime.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Composition.Hosting">
-      <HintPath>..\packages\System.Composition.Hosting.1.2.0\lib\netstandard2.0\System.Composition.Hosting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Composition.TypedParts">
-      <HintPath>..\packages\System.Composition.TypedParts.1.2.0\lib\netstandard2.0\System.Composition.TypedParts.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.3.11.0\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <ItemGroup>
-    <Folder Include="FileFormat\" />
-    <Folder Include="Properties\" />
-    <Folder Include="FileSystem\" />
-    <Folder Include="IO\" />
-    <Folder Include="Media\" />
-    <Folder Include="Media\Text\" />
-    <Folder Include="Media\Text\Encodings\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="PluginManagerTests.cs" />
-    <Compile Include="FileFormat\FormatTests.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="FileFormat\ConverterTests.cs" />
-    <Compile Include="FileFormat\Converters.cs" />
-    <Compile Include="FileFormat\ConverterMetadataTests.cs" />
-    <Compile Include="FileSystem\NodeTests.cs" />
-    <Compile Include="FileSystem\NavegableNodeTests.cs" />
-    <Compile Include="FileSystem\NavegableNodeCollectionTests.cs" />
-    <Compile Include="FileSystem\NavigatorTests.cs" />
-    <Compile Include="FileSystem\NodeFactoryTests.cs" />
-    <Compile Include="FileFormat\BaseGeneralTests.cs" />
-    <Compile Include="IO\DataStreamTests.cs" />
-    <Compile Include="IO\FileOpenModeTests.cs" />
-    <Compile Include="IO\DataWriterTests.cs" />
-    <Compile Include="IO\DataReaderTests.cs" />
-    <Compile Include="IO\NumericExtensionTests.cs" />
-    <Compile Include="IO\TextWriterTests.cs" />
-    <Compile Include="IO\TextReaderTests.cs" />
-    <Compile Include="FileFormat\BinaryFormatTests.cs" />
-    <Compile Include="FileSystem\NodeContainerFormatTests.cs" />
-    <Compile Include="Media\Text\Encodings\EscapeOutRangeEncodingTests.cs" />
-    <Compile Include="Media\Text\Encodings\EucJpEncodingTests.cs" />
-    <Compile Include="Media\Text\Po2BinaryTests.cs" />
-    <Compile Include="Media\Text\PoEntryTests.cs" />
-    <Compile Include="Media\Text\PoHeaderTests.cs" />
-    <Compile Include="Media\Text\PoTests.cs" />
-    <Compile Include="Media\Text\XmlExtensionTests.cs" />
-    <Compile Include="Media\Text\ReplacerTests.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Yarhl\Yarhl.csproj">
-      <Project>{47373F3F-6A6A-4B2A-B06E-971D9FBDB545}</Project>
-      <Name>Yarhl</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj">
-      <Project>{D518538F-7B50-41A0-839C-C1D6A287DFA3}</Project>
-      <Name>Yarhl.Media</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <PropertyGroup>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <CodeAnalysisRuleSet>StyleCop.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>
   </PropertyGroup>
-  <Import Project="..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets" Condition="Exists('..\packages\StyleCop.MSBuild.5.0.0\build\StyleCop.MSBuild.targets')" />
+  <ItemGroup>
+    <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
+    <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
+    <PackageReference Include="nunit" Version="3.11.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
+  </ItemGroup>
 </Project>

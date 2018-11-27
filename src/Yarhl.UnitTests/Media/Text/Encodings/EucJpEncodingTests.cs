@@ -186,7 +186,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
                 () => encoder.GetBytes(input, 0, 1, buffer, 5));
 
             Assert.Throws<ArgumentNullException>(
-                () => encoder.GetByteCount(null, 0, 1));
+                () => encoder.GetByteCount((char[])null, 0, 1));
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => encoder.GetByteCount(input, -1, 1));
             Assert.Throws<ArgumentOutOfRangeException>(

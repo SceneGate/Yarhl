@@ -45,6 +45,13 @@ namespace Yarhl.FileFormat
             return ConvertTo(typeof(TDst), source);
         }
 
+        /// <summary>
+        /// Converts the format to the specified type.
+        /// </summary>
+        /// <param name="source">Format to convert.</param>
+        /// <typeparam name="TDst">The destination format type.</typeparam>
+        /// <typeparam name="TSrc">The source format type.</typeparam>
+        /// <returns></returns>
         public static TDst ConvertTo<TDst, TSrc>(TSrc source)
         {
             return ConvertTo(typeof(TDst), source);
@@ -180,6 +187,13 @@ namespace Yarhl.FileFormat
             return ConvertTo(dstType, this);
         }
 
+        /// <summary>
+        /// Converts using the specified converter.
+        /// </summary>
+        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
+        /// <typeparam name="TSrc">The type of the current format.</typeparam>
+        /// <typeparam name="TDst">The type of the destination format.</typeparam>
+        /// <returns>The new format.</returns>
         public TDst ConvertWith<TConv, TSrc, TDst>()
             where TSrc : Format
             where TConv : IConverter<TSrc, TDst>, new()
@@ -209,6 +223,12 @@ namespace Yarhl.FileFormat
             return ConvertWith(converter, (TSrc)this);
         }
 
+        /// <summary>
+        /// Converts using the specified converter.
+        /// </summary>
+        /// <param name="converter">Converter to use.</param>
+        /// <param name="dstType">The type of the destination format.</param>
+        /// <returns>The new format.</returns>
         public dynamic ConvertWith(dynamic converter, Type dstType)
         {
             if (Disposed)

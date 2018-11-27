@@ -32,30 +32,42 @@
 #addin Cake.DocFx
 #tool nuget:?package=docfx.console
 
+var netVersion = "47";
+var netCoreVersion = "2.1";
+var netstandardVersion = "2.0";
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
 
+var msbuildConfig = new MSBuildSettings {
+    Verbosity = Verbosity.Minimal,
+    Configuration = configuration,
+    Restore = true,
+    MaxCpuCount = 0,  // Auto build parallel mode
+    WarningsAsError = Argument("warnaserror", false)
+};
+
 Task("Build")
     .Does(() =>
 {
-    NuGetRestore("src/Yarhl.sln");
-
-    MSBuild(
-        "src/Yarhl.sln",
-        configurator => configurator.SetConfiguration(configuration));
+    MSBuild("src/Yarhl.sln", msbuildConfig);
 
     // Copy Yarhl.Media for the integration tests
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/Plugins");
+        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
+    CopyFileToDirectory(
+        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
 });
 
 Task("Run-Unit-Tests")
     .IsDependentOn("Build")
     .Does(() =>
 {
+    // NUnit3 to test libraries with .NET Framework / Mono
     var settings = new NUnit3Settings();
     settings.NoResults = true;
 
@@ -64,10 +76,22 @@ Task("Run-Unit-Tests")
     }
 
     var testAssemblies = new List<FilePath> {
-        $"src/Yarhl.UnitTests/bin/{configuration}/Yarhl.UnitTests.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/Yarhl.IntegrationTests.dll"
+        $"src/Yarhl.UnitTests/bin/{configuration}/net{netVersion}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Yarhl.IntegrationTests.dll"
     };
     NUnit3(testAssemblies, settings);
+
+    // .NET Core test library
+    var netcoreSettings = new DotNetCoreTestSettings {
+        NoBuild = true,
+        Framework = $"netcoreapp{netCoreVersion}"
+    };
+    DotNetCoreTest(
+        $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
+        netcoreSettings);
+    DotNetCoreTest(
+        $"src/Yarhl.IntegrationTests/Yarhl.IntegrationTests.csproj",
+        netcoreSettings);
 });
 
 Task("Run-Linter-Gendarme")
@@ -83,13 +107,18 @@ Task("Run-Linter-Gendarme")
         }
     }
 
-    RunGendarme(gendarme, "src/Yarhl/Yarhl.csproj", "src/Yarhl/Gendarme.ignore");
-    RunGendarme(gendarme, "src/Yarhl.Media/Yarhl.Media.csproj", "src/Yarhl.Media/Gendarme.ignore");
+    RunGendarme(
+        gendarme,
+        $"src/Yarhl/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.dll",
+        "src/Yarhl/Gendarme.ignore");
+    RunGendarme(
+        gendarme,
+        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
+        "src/Yarhl.Media/Gendarme.ignore");
 });
 
-public void RunGendarme(string gendarme, string project, string ignore)
+public void RunGendarme(string gendarme, string assembly, string ignore)
 {
-    var assembly = GetProjectAssemblies(project, configuration).Single();
     var retcode = StartProcess(gendarme, $"--ignore {ignore} {assembly}");
     if (retcode != 0) {
         Warning($"Gendarme found errors on {assembly}");
@@ -133,7 +162,7 @@ Task("Run-AltCover")
 
 public void TestWithAltCover(string projectPath, string assembly, string outputXml)
 {
-    string inputDir = $"{projectPath}/bin/{configuration}";
+    string inputDir = $"{projectPath}/bin/{configuration}/net{netVersion}";
     string outputDir = $"{inputDir}/__Instrumented";
     if (DirectoryExists(outputDir)) {
         DeleteDirectory(
@@ -144,7 +173,8 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
     var altcoverArgs = new AltCover.PrepareArgs {
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
-        AssemblyFilter = new[] { "nunit.framework" },
+        AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
+        TypeFilter = new[] { "Yarhl.AssemblyUtils" },
         XmlReport = outputXml,
         OpenCover = true
     };
@@ -253,7 +283,7 @@ Task("Deploy-Doc")
 
     // Commit and push
     retcode = StartProcess("git", new ProcessSettings {
-        Arguments = "commit -a -m 'Update doc from cake'",
+        Arguments = "commit -a -u -m 'Update doc from cake'",
         WorkingDirectory = repo_doc
     });
     if (retcode != 0) {

@@ -132,11 +132,6 @@ namespace Yarhl.IO
             ParentDataStream = stream;
         }
 
-        ~DataStream()
-        {
-            Dispose(false);
-        }
-
         /// <summary>
         /// Gets the number of streams in use.
         /// </summary>
@@ -535,6 +530,12 @@ namespace Yarhl.IO
             return result;
         }
 
+        /// <summary>
+        /// Releases all resource used by the <see cref="DataStream"/>
+        /// object.
+        /// </summary>
+        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
+        /// managed resources also.</param>
         protected virtual void Dispose(bool freeManagedResourcesAlso)
         {
             if (Disposed)

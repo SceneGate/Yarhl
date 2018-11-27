@@ -132,7 +132,7 @@ namespace Yarhl.Media.Text
 
         IDictionary<int, int> MatchMap(string text, bool originalText)
         {
-            var comparison = StringComparison.InvariantCulture;
+            var comparison = StringComparison.Ordinal;
             var matches = new Dictionary<int, int>();
             for (int i = 0; i < map.Count; i++) {
                 string original = originalText ? map[i].Original : map[i].Modified;

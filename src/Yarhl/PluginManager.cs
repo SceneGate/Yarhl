@@ -39,6 +39,13 @@ namespace Yarhl
     /// </remarks>
     public sealed class PluginManager
     {
+        static readonly string[] IgnoredLibraries = {
+            "System.",
+            "Microsoft.",
+            "netstandard",
+            "nunit"
+        };
+
         static readonly object LockObj = new object();
         static PluginManager singleInstance;
 
@@ -214,9 +221,8 @@ namespace Yarhl
 
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
-            var programAssemblies = Directory.GetFiles(programDir, "*.dll")
-                .Select(Assembly.LoadFile);
-            containerConfig.WithAssemblies(programAssemblies);
+            var programAssemblies = Directory.GetFiles(programDir, "*.dll");
+            containerConfig.WithAssemblies(LoadAssemblies(programAssemblies));
 
             // Assemblies from the Plugin directory and subfolders
             string pluginDir = Path.Combine(programDir, PluginDirectory);
@@ -225,11 +231,20 @@ namespace Yarhl
                     pluginDir,
                     "*.dll",
                     SearchOption.AllDirectories);
-                var pluginAssemblies = pluginFiles.Select(Assembly.LoadFile);
-                containerConfig.WithAssemblies(pluginAssemblies);
+                containerConfig.WithAssemblies(LoadAssemblies(pluginFiles));
             }
 
             container = containerConfig.CreateContainer();
+        }
+
+        static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
+        {
+            // Skip libraries that match the ignored libraries because
+            // MEF would try to load its dependencies.
+            return paths
+                .Where(f => !IgnoredLibraries.Any(
+                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
+                .LoadAssemblies();
         }
     }
 }

@@ -122,6 +122,10 @@ namespace Yarhl.Media.Text
         /// <value>The plural forms.</value>
         public string PluralForms { get; set; }
 
+        /// <summary>
+        /// Gets a dictionary with custom header metadata.
+        /// </summary>
+        /// <value>The dictionary for the metadata.</value>
         public IDictionary<string, string> Extensions { get; private set; }
     }
 }
