@@ -534,23 +534,6 @@ references:
   fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Disposed
   nameWithType: NavegableNode<T>.Disposed
   nameWithType.vb: NavegableNode(Of T).Disposed
-- uid: Yarhl.FileSystem.NavegableNode`1.Finalize
-  name: Finalize()
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Finalize
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.Finalize
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Finalize()
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Finalize()
-  nameWithType: NavegableNode<T>.Finalize()
-  nameWithType.vb: NavegableNode(Of T).Finalize()
-- uid: Yarhl.FileSystem.NavegableNode`1.Finalize*
-  name: Finalize
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Finalize_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Finalize
-  isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Finalize
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Finalize
-  nameWithType: NavegableNode<T>.Finalize
-  nameWithType.vb: NavegableNode(Of T).Finalize
 - uid: Yarhl.FileSystem.NavegableNode`1.Name
   name: Name
   href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Name
@@ -1489,19 +1472,6 @@ references:
   isSpec: "True"
   fullName: Yarhl.IO.DataStream.EndOfStream
   nameWithType: DataStream.EndOfStream
-- uid: Yarhl.IO.DataStream.Finalize
-  name: Finalize()
-  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Finalize
-  commentId: M:Yarhl.IO.DataStream.Finalize
-  fullName: Yarhl.IO.DataStream.Finalize()
-  nameWithType: DataStream.Finalize()
-- uid: Yarhl.IO.DataStream.Finalize*
-  name: Finalize
-  href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Finalize_
-  commentId: Overload:Yarhl.IO.DataStream.Finalize
-  isSpec: "True"
-  fullName: Yarhl.IO.DataStream.Finalize
-  nameWithType: DataStream.Finalize
 - uid: Yarhl.IO.DataStream.Length
   name: Length
   href: api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Length
