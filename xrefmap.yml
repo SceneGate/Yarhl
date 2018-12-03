@@ -1,6 +1,9 @@
 ### YamlMime:XRefMap
 sorted: true
 references:
+- uid: CONTRIBUTING
+  name: Contributing to Yarhl
+  href: articles/CONTRIBUTING.html
 - uid: README
   name: 'Yarhl: Yet Another ROM Hacking Library '
   href: index.html
