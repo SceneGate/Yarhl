@@ -1,0 +1,529 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Contributing to Yarhl | SceneGate Yarhl </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Contributing to Yarhl | SceneGate Yarhl ">
+    <meta name="generator" content="docfx 2.40.4.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../fusion/toc.html">
+    
+    
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="CONTRIBUTING">
+<h1 id="contributing-to-yarhl">Contributing to Yarhl</h1>
+
+<p>Thanks for taking the time to contribute! ✨</p>
+<p>In this document you will find all the information you need to make sure
+that Yarhl continues to be the high-quality product we want to be!</p>
+<h2 id="reporting-issues">Reporting issues</h2>
+<h3 id="issues">Issues</h3>
+<p>When reporting a problem, be as specific as possible. Ideally, you should
+provide an small snippet of code that reproduces the issue. Try to provide also
+the following information:</p>
+<ul>
+<li>OS: Linux / Windows / Mac OS</li>
+<li>Runtime: .NET Framework, Mono, .NET Core</li>
+<li>Version of Yarhl</li>
+<li>Stacktrace if any</li>
+<li>What's happening and what you expect to happen</li>
+</ul>
+<h3 id="features">Features</h3>
+<p>If you want to ask for a new feature, first make sure it hasn't been reported
+yet by using the search box in the issue tab. Make sure that the feature aligns
+with the direction of the project. <strong>Do not ask for tools for games or
+translations</strong>. This is an abstract library for all kind of converter programs.</p>
+<h2 id="pull-request">Pull Request</h2>
+<p>Before starting a pull request, create an issue requesting the feature you would
+like to see and implement. If you are fixing a bug, create also an issue to be
+able to track the problem. State that you would like to work on that. The team
+will reply to the issue as soon as possible, discussing the proposal if needed.
+This guarantee that later on the Pull Request we don't reject the proposal
+without having a discussion first and we don't waste time.</p>
+<p>In general, the process to create a pull request is:</p>
+<ol>
+<li>Create an issue describing the bug or feature and state you would like to
+work on that.</li>
+<li>The team will cheer you and/or discuss with you the issue.</li>
+<li>Fork the project.</li>
+<li>Clone your forked project and create a git branch.</li>
+<li>Make the necessary code changes in as many commits as you want. The commit
+message should follow this convention:</li>
+</ol>
+<pre><code>:emoji: Short description #IssueID
+
+Long description if needed.
+</code></pre>
+<ol start="6">
+<li>Create a pull request. After reviewing your changes and making any new
+commits if needed, the team will approve and merge it.</li>
+</ol>
+<p>For a complete list of emoji description see
+<a href="https://github.com/slashsBin/styleguide-git-commit-message#suggested-emojis">this repository</a>.</p>
+<h2 id="code-guidelines">Code Guidelines</h2>
+<p>We follow the following standard guidelines with custom changes:</p>
+<ul>
+<li><a href="https://raw.githubusercontent.com/mono/website/gh-pages/community/contributing/coding-guidelines.md">Mono Code Guidelines</a>.</li>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/">Microsoft Framework Design Guidelines</a></li>
+<li><a href="https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions">Microsoft C# Coding Convetions</a>.</li>
+</ul>
+<p>As the
+<a href="https://www.mono-project.com/community/contributing/coding-guidelines/#performance-and-readability">mono team says</a>:</p>
+<ul>
+<li>It is more important to be correct than to be fast.</li>
+<li>It is more important to be maintainable than to be fast.</li>
+<li>Fast code that is difficult to maintain is likely going to be looked down upon.</li>
+</ul>
+<p>And don't miss <a href="https://www.python.org/dev/peps/pep-0020/#id3">The Zen of Python</a>:</p>
+<pre><code>Beautiful is better than ugly.
+Explicit is better than implicit.
+Simple is better than complex.
+Complex is better than complicated.
+Flat is better than nested.
+Sparse is better than dense.
+Readability counts.
+Special cases aren't special enough to break the rules.
+Although practicality beats purity.
+Errors should never pass silently.
+Unless explicitly silenced.
+In the face of ambiguity, refuse the temptation to guess.
+There should be one-- and preferably only one --obvious way to do it.
+Although that way may not be obvious at first unless you're Dutch.
+Now is better than never.
+Although never is often better than *right* now.
+If the implementation is hard to explain, it's a bad idea.
+If the implementation is easy to explain, it may be a good idea.
+Namespaces are one honking great idea -- let's do more of those!
+</code></pre>
+<h3 id="quality">Quality</h3>
+<p>We focus on code-quality to make ours and others life easier. For that reason:</p>
+<ul>
+<li>✔️ <strong>DO</strong> write documentation for any public type and field.</li>
+<li>✔️ <strong>DO</strong> write a test for all the possible code branches of
+your methods. Use a TDD approach.</li>
+<li>✔️ <strong>DO</strong> seek for 100% test coverage.</li>
+<li>✔️ <strong>DO</strong> seek for compiler warning free code.</li>
+<li>✔️ <strong>DO</strong> check the code with StyleCop for style issues.</li>
+<li>✔️ <strong>DO</strong> check the code with Gendarme for design issues.</li>
+<li>✔️ <strong>DO</strong> review the results of SonarQube in the Pull Request.</li>
+<li>✔️ <strong>DO</strong> make sure the CI pass.</li>
+</ul>
+<h3 id="style-guidelines">Style Guidelines</h3>
+<h4 id="indentation">Indentation</h4>
+<ul>
+<li>✔️ <strong>DO</strong> use <strong>spaces</strong> with an indentation level of 4 spaces.</li>
+<li>❌ <strong>DO NOT</strong> use tabs.</li>
+</ul>
+<h4 id="new-lines">New lines</h4>
+<ul>
+<li>✔️ <strong>DO</strong> use Unix new lines: <code>\n</code> instead of Windows style
+<code>\r\n</code>. In general, Git will handle that for you.</li>
+<li>✔️ <strong>DO</strong> make sure there is an empty line at the end of the
+file. This ensure the latest line ends with the new line character and adding
+new lines after it won't show that line as changed in the diff.</li>
+</ul>
+<h4 id="line-length">Line length</h4>
+<ul>
+<li>✔️ <strong>DO</strong> use a limit of 80 columns. If you need to wrap,
+move to the next line with one extra indentation level.</li>
+<li>✔️ <strong>DO</strong> put all the arguments in a new line if they don't
+fit.</li>
+<li>✔️ <strong>DO</strong> use local variables to make small conditions.</li>
+</ul>
+<pre><code class="lang-csharp">void Method(
+    int a,
+    string b,
+    int c)
+{
+    OtherMethod(
+        a,
+        b,
+        c);
+
+    bool z = (a &gt; 3) &amp;&amp; (a &lt; 5);
+    bool w = b.StartsWith(&quot;hello&quot;);
+    if (z &amp;&amp; w) {
+        Code();
+    }
+}
+</code></pre>
+<h4 id="layout">Layout</h4>
+<ul>
+<li>✔️ <strong>DO</strong> define a type (class / struct / enum) per file.</li>
+<li>✔️ <strong>DO</strong> separate methods and properties with new lines.</li>
+<li>✔️ <strong>DO</strong> place the elements in this order:
+private fields, constructors, properties, methods, nested types. Place first
+static fields and order by visibility: public, protected, private.</li>
+</ul>
+<h4 id="spacing-rules">Spacing rules</h4>
+<ul>
+<li>❌ <strong>DO NOT</strong> leave any trailing spaces.</li>
+<li>❌ <strong>DO NOT</strong> use space before opening parenthesis calling methods or
+indexers, between the parenthesis and the arguments or between the generic
+types.</li>
+</ul>
+<pre><code class="lang-csharp">Method ( a );
+array [ 10 ];
+var list = new List &lt;int&gt; ();
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> use the following convention:</li>
+</ul>
+<pre><code class="lang-csharp">Method(a);
+array[10];
+var list = new List&lt;int&gt;();
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> use spaces and parenthesis for clarity in math
+operations:</li>
+</ul>
+<pre><code class="lang-csharp">int b = (a + (5 * 2)) / (3 + 3);
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> indent <code>case</code> statements:</li>
+</ul>
+<pre><code class="lang-csharp">switch (a) {
+    case 3:
+        c = &quot;hello&quot;;
+        break;
+
+    case 5:
+        c = &quot;world&quot;;
+        break;
+
+    default:
+        throw new Exception();
+}
+</code></pre>
+<h4 id="brace-position">Brace position</h4>
+<ul>
+<li>✔️ <strong>DO</strong> put the opening brace on the same line for
+conditions, loops and try-catch.</li>
+</ul>
+<pre><code class="lang-csharp">if (a) {
+    Code();
+    Code();
+} else if (b) {
+    Code();
+} else {
+    Code();
+}
+
+try {
+    Something();
+} catch (ArgumentNullException ex) {
+    Something();
+} finally {
+    Something();
+}
+
+for (int i = 0; i &lt; 2; i++) {
+    Something();
+}
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> use braces for one line conditions and loops. This
+improves readability and avoid having changed lines just to add the brace when
+it requires extra logic. The exception is for one line conditions for argument
+checking.</li>
+</ul>
+<pre><code class="lang-csharp">if (a) {
+    Code();
+}
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> put the brace in a new line when defining the
+namespace, a type or a method.</li>
+</ul>
+<pre><code class="lang-csharp">namespace Program.Text
+{
+    public class Abc
+    {
+        public void MyMethod()
+        {
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> put the brace in the same line for properties and
+indexers.</li>
+</ul>
+<pre><code class="lang-csharp">public int Property {
+    get {
+        return value;
+    }
+}
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> put each brace on a new line for empty methods.</li>
+</ul>
+<pre><code class="lang-csharp">void EmptyMethod()
+{
+}
+</code></pre>
+<h4 id="multiline-comments">Multiline comments</h4>
+<ul>
+<li>✔️ <strong>DO</strong> use always double slash comments.</li>
+</ul>
+<pre><code class="lang-csharp">// Blah
+// Blah again
+// and another Blah
+</code></pre>
+<h3 id="properties">Properties</h3>
+<ul>
+<li><p>❌ <strong>DO NOT</strong> use public variables under any circumstance.</p>
+</li>
+<li><p>✔️ <strong>DO</strong> use static properties for constants.</p>
+</li>
+<li><p>✔️ <strong>DO</strong> put the getter and setter in a new line for
+automatic or one line properties.</p>
+</li>
+</ul>
+<pre><code class="lang-csharp">public int Property {
+    get { return value; }
+    set { x = value; }
+}
+
+public int Text {
+    get;
+    private set;
+}
+</code></pre>
+<h3 id="file-headers">File headers</h3>
+<ul>
+<li>✔️ <strong>DO</strong> put the license in the file header with this format:</li>
+</ul>
+<pre><code class="lang-csharp">//
+// &lt;FileName&gt;.cs
+//
+// Author:
+//       &lt;AuthorName&gt; &lt;email@example.com&gt;
+//
+// Copyright (c) &lt;Year&gt; &lt;AuthorName&gt;
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the &quot;Software&quot;), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+</code></pre>
+<h3 id="naming">Naming</h3>
+<ul>
+<li>✔️ <strong>DO</strong> use <strong>always</strong> camel casing.</li>
+</ul>
+<pre><code class="lang-csharp">void Method(string myArgument)
+
+class MyClass
+{
+    string myString;
+    int veryImportantValue;
+}
+</code></pre>
+<ul>
+<li>❌ <strong>DO NOT</strong> use <code>m_</code> or <code>_</code> as prefixes for private instance members. The
+private visibility was created for that, really.</li>
+</ul>
+<h3 id="keyword-this">Keyword <code>this</code></h3>
+<ul>
+<li>❌ <strong>DO NOT</strong> use <code>this</code> if it's not needed.</li>
+<li>✔️ <strong>DO</strong> use <code>this</code> if the method has an argument with the
+same name.</li>
+</ul>
+<pre><code class="lang-csharp">class Foo
+{
+    int bar;
+ 
+    public Foo(int bar)
+    {
+        this.bar = bar;
+    }
+
+    void Update(int newValue)
+    {
+       bar = newValue;
+       Method();
+    }
+
+    public void Method()
+    {
+    }
+}
+</code></pre>
+<h3 id="keyword-var">Keyword <code>var</code></h3>
+<ul>
+<li>✔️ <strong>DO</strong> use the <code>var</code> on the left-hand side of an assignment
+when the type name is repeated on the right hand side:</li>
+</ul>
+<pre><code class="lang-csharp">var monkeyUUID = new NSUuid(uuid);
+NSUuid something = RetrieveUUID();
+</code></pre>
+<h3 id="initializing-instances">Initializing instances</h3>
+<ul>
+<li>✔️ <strong>DO</strong> use the C# syntax to initialize instances.</li>
+</ul>
+<pre><code class="lang-csharp">var x = new Foo {
+    Label = &quot;This&quot;,
+    Color = Color.Red
+};
+
+string[] array = { &quot;a&quot;, &quot;b&quot;, &quot;c&quot; };
+var array2 = new string[] { &quot;d&quot;, &quot;e&quot;, &quot;f&quot; };
+
+var list = new List&lt;string&gt; {
+    &quot;hello&quot;,
+    &quot;world&quot;
+};
+
+var dict = new Dictionary&lt;string, int&gt; {
+    { &quot;hello&quot;: 0 },
+    { &quot;world&quot;: 1 }
+};
+</code></pre>
+<h3 id="redundant-visibility">Redundant visibility</h3>
+<ul>
+<li>❌ <strong>DO NOT</strong> use the <code>private</code> keyword to indicate internal fields since
+it's already the default visibility.</li>
+</ul>
+<h3 id="usings">Usings</h3>
+<ul>
+<li><p>✔️ <strong>DO</strong> put the <code>using</code> inside the namespace.</p>
+</li>
+<li><p>✔️ <strong>DO</strong> include all the namespaces you are using.</p>
+</li>
+<li><p>✔️ <strong>DO</strong> use the <code>using</code> statement for <code>IDisposable</code> types.</p>
+</li>
+</ul>
+<h3 id="built-in-types">Built-in types</h3>
+<ul>
+<li>✔️ <strong>DO</strong> use the built-in type alias instead of the class
+names.</li>
+</ul>
+<pre><code class="lang-csharp">int a = 5;
+long b = 5;
+string c = &quot;hello&quot;;
+string d = int.Parse(&quot;5&quot;);
+</code></pre>
+<h4 id="integers">Integers</h4>
+<ul>
+<li>✔️ <strong>DO</strong> try to avoid unsigned integers in public method
+arguments and properties. Some .NET language doesn't support them.</li>
+</ul>
+<h4 id="strings">Strings</h4>
+<ul>
+<li>✔️ <strong>DO</strong> use the new string interpolation:</li>
+</ul>
+<pre><code class="lang-csharp">int a = 5;
+string b = $&quot;The result is {a}&quot;;
+</code></pre>
+<ul>
+<li>✔️ <strong>DO</strong> use the <code>StringBuilder</code> class when creating strings
+with many operations.</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SceneGate/Yarhl/blob/master/docs/articles/CONTRIBUTING.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright (c) 2018 SceneGate Team
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
