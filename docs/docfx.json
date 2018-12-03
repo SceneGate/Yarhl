@@ -33,7 +33,7 @@
           ]
         },
         {
-          "files": ["fusion/**"]
+          "files": ["fusion/**", "articles/**"]
         },
         {
           "files": ["README.md"],
