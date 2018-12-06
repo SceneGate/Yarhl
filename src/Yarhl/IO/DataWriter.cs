@@ -1,4 +1,3 @@
-//
 // DataWriter.cs
 //
 // Author:

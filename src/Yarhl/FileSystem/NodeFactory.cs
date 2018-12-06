@@ -1,5 +1,4 @@
-﻿//
-//  NodeFactory.cs
+﻿//  NodeFactory.cs
 //
 //  Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
