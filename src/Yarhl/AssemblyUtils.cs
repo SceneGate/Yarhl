@@ -28,7 +28,7 @@ namespace Yarhl
     /// <summary>
     /// Utilities to work with Assemblies in different frameworks.
     /// </summary>
-    public static class AssemblyUtils
+    static class AssemblyUtils
     {
         /// <summary>
         /// Load assemblies in different .NET implementations.
