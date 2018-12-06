@@ -1,0 +1,70 @@
+{
+    "metadata": [
+      {
+        "src": [
+          {
+            "files": [
+              "Yarhl/Yarhl.csproj",
+              "Yarhl.Media/Yarhl.Media.csproj"
+            ],
+            "src": "../src"
+          }
+        ],
+        "dest": "api",
+        "filter": "filterConfig.yml",
+        "disableGitFeatures": false,
+        "disableDefaultFilter": false,
+        "properties": {
+          "TargetFramework": "netstandard2.0"
+        }
+      }
+    ],
+    "build": {
+      "content": [
+        {
+          "files": [
+            "api/**.yml"
+          ]
+        },
+        {
+          "files": [
+            "toc.yml",
+            "index.md"
+          ]
+        },
+        {
+          "files": ["fusion/**", "articles/**"]
+        },
+        {
+          "files": ["README.md"],
+          "src": "../"
+        }
+      ],
+      "resource": [
+      ],
+      "overwrite": [
+        {
+          "files": [
+            "apidoc/**.md"
+          ],
+          "exclude": [
+            "obj/**",
+            "_site/**"
+          ]
+        }
+      ],
+      "dest": "_site",
+      "globalMetadataFiles": ["global_metadata.json"],
+      "fileMetadataFiles": [],
+      "template": [
+        "default"
+      ],
+      "postProcessors": [],
+      "markdownEngineName": "markdig",
+      "noLangKeyword": false,
+      "keepFileLink": false,
+      "cleanupCacheHistory": false,
+      "disableGitFeatures": false,
+      "xrefService": [ "https://xref.docs.microsoft.com/query?uid={uid}" ]
+    }
+}

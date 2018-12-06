@@ -1,21 +1,16 @@
 ## Travis CI Integration
 language: csharp
-solution: Yarhl.sln
 
 matrix:
   include:
     - os: linux
       dist: trusty
       mono: latest
+      dotnet: 2.1
     - os: osx
-      osx_image: xcode8
+      osx_image: xcode10
       mono: latest
-
-install:
-    - nuget restore Yarhl.sln
-    - nuget install NUnit.Runners -OutputDirectory testrunner
+      dotnet: 2.1.500
 
 script:
-    - msbuild mono-addins/Mono.Addins/Mono.Addins.csproj
-    - msbuild Yarhl.sln
-    - mono ./testrunner/NUnit.ConsoleRunner.*/tools/nunit3-console.exe Yarhl.UnitTests/bin/Debug/Yarhl.UnitTests.dll
+  - ./build.sh --target=Travis --verbosity=diagnostic
