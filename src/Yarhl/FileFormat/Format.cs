@@ -139,20 +139,26 @@ namespace Yarhl.FileFormat
             bool implementConverter = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition() == typeof(IConverter<,>));
+
             if (!implementConverter)
+            {
                 throw new ArgumentException(
-                    "Converter doesn't implement IConverter<,>",
-                    nameof(converter));
+                        "Converter doesn't implement IConverter<,>",
+                        nameof(converter));
+            }
 
             bool canConvert = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GenericTypeArguments.Length == 2 &&
                 i.GenericTypeArguments[0] == src.GetType() &&
                 i.GenericTypeArguments[1] == dstType);
+
             if (!canConvert)
+            {
                 throw new ArgumentException(
-                    "Converter cannot convert from/to the type",
-                    nameof(converter));
+                        "Converter cannot convert from/to the type",
+                        nameof(converter));
+            }
 
             return converter.Convert(src); 
         }

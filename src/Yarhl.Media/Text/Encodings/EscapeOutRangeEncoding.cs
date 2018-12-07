@@ -43,7 +43,7 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         /// <value>The max char count.</value>
         public override int MaxCharCount => EscapeOutRangeEnconding.TokenStart.Length +
-                                            2 +  // byte in hexadecimal
+                                            2 + // byte in hexadecimal
                                             EscapeOutRangeEnconding.TokenEnd.Length;
 
         /// <summary>
@@ -284,8 +284,10 @@ namespace Yarhl.Media.Text.Encodings
                 return false;
 
             for (int i = 0; i < sequence.Length; i++)
+            {
                 if (buffer[index + i] != sequence[i])
                     return false;
+            }
 
             return true;
         }
