@@ -36,7 +36,7 @@ namespace Yarhl.IO
     public class DataReader
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Yarhl.IO.DataReader"/> class.
+        /// Initializes a new instance of the <see cref="Yarhl.IO.DataReader"/> class.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <remarks>

@@ -1,5 +1,4 @@
-﻿//
-// NavegableNodeCollectionTests.cs
+﻿// NavegableNodeCollectionTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

@@ -1,4 +1,3 @@
-//
 // PluginManagerTests.cs
 //
 // Author:
@@ -168,7 +167,7 @@ namespace Yarhl.UnitTests
             var formats = PluginManager.Instance.GetConverters()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Does.Contain(typeof(PluginConverter)));
-            
+
             var conv = (PluginConverter)PluginManager.Instance.GetConverters()
                     .Where(f => f.Metadata.Type == typeof(PluginConverter))
                     .Single()

@@ -35,7 +35,7 @@ namespace Yarhl.IO
     public class DataWriter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:Yarhl.IO.DataWriter"/> class.
+        /// Initializes a new instance of the <see cref="Yarhl.IO.DataWriter"/> class.
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <remarks>

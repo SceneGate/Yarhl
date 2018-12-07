@@ -1,5 +1,4 @@
-﻿//
-//  PluginManager.cs
+﻿//  PluginManager.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -210,6 +209,16 @@ namespace Yarhl
                     .First());
         }
 
+        static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
+        {
+            // Skip libraries that match the ignored libraries because
+            // MEF would try to load its dependencies.
+            return paths
+                .Where(f => !IgnoredLibraries.Any(
+                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
+                .LoadAssemblies();
+        }
+
         void InitializeContainer()
         {
             var conventions = new ConventionBuilder();
@@ -235,16 +244,6 @@ namespace Yarhl
             }
 
             container = containerConfig.CreateContainer();
-        }
-
-        static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
-        {
-            // Skip libraries that match the ignored libraries because
-            // MEF would try to load its dependencies.
-            return paths
-                .Where(f => !IgnoredLibraries.Any(
-                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
-                .LoadAssemblies();
         }
     }
 }

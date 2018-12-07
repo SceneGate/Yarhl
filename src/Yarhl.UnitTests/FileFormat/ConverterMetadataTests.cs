@@ -1,4 +1,3 @@
-//
 // ConverterMetadataTests.cs
 //
 // Author:

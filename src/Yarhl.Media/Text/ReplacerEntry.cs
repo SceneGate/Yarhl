@@ -1,4 +1,3 @@
-//
 // ReplacerEntry.cs
 //
 // Author:

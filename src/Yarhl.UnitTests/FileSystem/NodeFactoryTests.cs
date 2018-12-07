@@ -1,5 +1,4 @@
-﻿//
-// NodeFactoryTests.cs
+﻿// NodeFactoryTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

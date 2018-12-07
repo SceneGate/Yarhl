@@ -1,5 +1,4 @@
-﻿//
-//  ConverterTests.cs
+﻿//  ConverterTests.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>

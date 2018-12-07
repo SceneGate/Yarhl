@@ -1,5 +1,4 @@
-﻿//
-// EucJpEncodingTests.cs
+﻿// EucJpEncodingTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

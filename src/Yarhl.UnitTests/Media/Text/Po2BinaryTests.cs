@@ -1,5 +1,4 @@
-﻿//
-// Po2BinaryTests.cs
+﻿// Po2BinaryTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

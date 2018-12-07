@@ -1,5 +1,4 @@
-﻿//
-// EscapeOutRangeEncoding.cs
+﻿// EscapeOutRangeEncoding.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

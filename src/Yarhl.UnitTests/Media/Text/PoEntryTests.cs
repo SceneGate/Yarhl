@@ -1,5 +1,4 @@
-﻿//
-// PoEntryTests.cs
+﻿// PoEntryTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
