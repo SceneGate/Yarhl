@@ -25,7 +25,7 @@
     <EmbeddedResource Include="Text\Encodings\index-jis0212.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

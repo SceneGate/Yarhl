@@ -38,7 +38,7 @@ namespace Yarhl.UnitTests.FileFormat
                 Name = "test",
                 Type = typeof(int),
                 Sources = typeof(string),
-                Destinations = typeof(DateTime)
+                Destinations = typeof(DateTime),
             };
             Assert.That(metadata.Name, Is.EqualTo("test"));
             Assert.That(metadata.Type, Is.EqualTo(typeof(int)));
@@ -50,7 +50,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void GetSourcesReturnOneElementArrayForSingleSource()
         {
             var metadata = new ConverterMetadata {
-                Sources = typeof(int)
+                Sources = typeof(int),
             };
             Type[] sources = metadata.GetSources();
             Assert.That(sources.Length, Is.EqualTo(1));
@@ -61,7 +61,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void GetSourcesReturnTwoElementsArrayForListOfSources()
         {
             var metadata = new ConverterMetadata {
-                Sources = new Type[] { typeof(int), typeof(string) }
+                Sources = new Type[] { typeof(int), typeof(string) },
             };
             Type[] sources = metadata.GetSources();
             Assert.That(sources.Length, Is.EqualTo(2));
@@ -80,7 +80,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void GetDestinationsReturnOneElementArrayForSingleSource()
         {
             var metadata = new ConverterMetadata {
-                Destinations = typeof(int)
+                Destinations = typeof(int),
             };
             Type[] dests = metadata.GetDestinations();
             Assert.That(dests.Length, Is.EqualTo(1));
@@ -91,7 +91,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void GetDestinationsReturnTwoElementsArrayForListOfSources()
         {
             var metadata = new ConverterMetadata {
-                Destinations = new Type[] { typeof(int), typeof(string) }
+                Destinations = new Type[] { typeof(int), typeof(string) },
             };
             Type[] dests = metadata.GetDestinations();
             Assert.That(dests.Length, Is.EqualTo(2));
@@ -110,7 +110,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void CanConvertSourceThrowsExceptionIfNullArgument()
         {
             var metadata = new ConverterMetadata {
-                Sources = new Type[] { typeof(int), typeof(string) }
+                Sources = new Type[] { typeof(int), typeof(string) },
             };
             Assert.That(
                 () => metadata.CanConvert(null),
@@ -121,7 +121,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void CanConvertReturnsTrueForExactType()
         {
             var metadata = new ConverterMetadata {
-                Sources = typeof(int)
+                Sources = typeof(int),
             };
             Assert.That(metadata.CanConvert(typeof(int)), Is.True);
         }
@@ -130,7 +130,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void CanConvertReturnsTrueForTypeInList()
         {
             var metadata = new ConverterMetadata {
-                Sources = new[] { typeof(string), typeof(int) }
+                Sources = new[] { typeof(string), typeof(int) },
             };
             Assert.That(metadata.CanConvert(typeof(int)), Is.True);
         }
@@ -139,7 +139,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void CanConvertReturnsTrueForDerivedTypes()
         {
             var metadata = new ConverterMetadata {
-                Sources = typeof(Base)
+                Sources = typeof(Base),
             };
             Assert.That(metadata.CanConvert(typeof(Derived)), Is.True);
         }
@@ -148,7 +148,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void CanConvertReturnsFalseForDifferentTypes()
         {
             var metadata = new ConverterMetadata {
-                Sources = new[] { typeof(string), typeof(int) }
+                Sources = new[] { typeof(string), typeof(int) },
             };
             Assert.That(metadata.CanConvert(typeof(DateTime)), Is.False);
         }
@@ -158,7 +158,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var metadata = new ConverterMetadata {
                 Sources = typeof(int),
-                Destinations = typeof(string)
+                Destinations = typeof(string),
             };
             Assert.That(
                 metadata.CanConvert(typeof(int), typeof(string)),
@@ -176,7 +176,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var metadata = new ConverterMetadata {
                 Sources = new[] { typeof(int), typeof(DateTime) },
-                Destinations = new[] { typeof(string), typeof(sbyte) }
+                Destinations = new[] { typeof(string), typeof(sbyte) },
             };
             Assert.That(
                 metadata.CanConvert(typeof(DateTime), typeof(sbyte)),
@@ -191,7 +191,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var metadata = new ConverterMetadata {
                 Sources = new[] { typeof(Base) },
-                Destinations = new[] { typeof(Derived) }
+                Destinations = new[] { typeof(Derived) },
             };
             Assert.That(
                 metadata.CanConvert(typeof(Derived), typeof(Base)),
@@ -199,7 +199,7 @@ namespace Yarhl.UnitTests.FileFormat
 
             metadata = new ConverterMetadata {
                 Sources = new[] { typeof(Derived) },
-                Destinations = new[] { typeof(Base) }
+                Destinations = new[] { typeof(Base) },
             };
             Assert.That(
                 metadata.CanConvert(typeof(Base), typeof(Base)),
@@ -214,7 +214,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var metadata = new ConverterMetadata {
                 Sources = new Type[] { typeof(int), typeof(string) },
-                Destinations = new Type[] { typeof(int), typeof(string) }
+                Destinations = new Type[] { typeof(int), typeof(string) },
             };
             Assert.That(
                 () => metadata.CanConvert(null, typeof(int)),

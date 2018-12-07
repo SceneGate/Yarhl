@@ -26,10 +26,10 @@ namespace Yarhl.UnitTests.FileSystem
 {
     using System;
     using System.Composition;
-    using FileFormat;
     using NUnit.Framework;
     using Yarhl.FileFormat;
     using Yarhl.FileSystem;
+    using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
     public class NodeTests

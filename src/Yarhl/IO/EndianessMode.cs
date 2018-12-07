@@ -37,6 +37,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Big endian.
         /// </summary>
-        BigEndian
+        BigEndian,
     }
 }

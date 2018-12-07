@@ -65,7 +65,7 @@ namespace Yarhl.UnitTests.Media.Text
                 LastTranslator = "test5",
                 LanguageTeam = "test6",
                 Language = "test7",
-                PluralForms = "test8"
+                PluralForms = "test8",
             };
             header.Extensions["X-MyExt"] = "the value";
 

@@ -32,7 +32,7 @@ namespace Yarhl.Media.Text.Encodings
 
     /// <summary>
     /// EUC-JP encoding.
-    /// Implemented standard from: https://encoding.spec.whatwg.org/
+    /// Implemented standard from: https://encoding.spec.whatwg.org/.
     /// </summary>
     public sealed class EucJpEncoding : Encoding
     {

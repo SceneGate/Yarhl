@@ -25,7 +25,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node with navigation features inside a FileSystem.
     /// </summary>
-    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
+    /// <typeparam name="T">The implementation of NavegableNodes.</typeparam>
     public abstract class NavegableNode<T> : IDisposable
         where T : NavegableNode<T>
     {
@@ -33,7 +33,7 @@ namespace Yarhl.FileSystem
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="Yarhl.FileSystem.NavegableNode`1"/> class.
+        /// <see cref="NavegableNode{T}"/> class.
         /// </summary>
         /// <param name="name">Node name.</param>
         protected NavegableNode(string name)

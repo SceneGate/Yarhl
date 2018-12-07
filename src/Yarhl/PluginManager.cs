@@ -27,7 +27,7 @@ namespace Yarhl
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using FileFormat;
+    using Yarhl.FileFormat;
 
     /// <summary>
     /// Plugin manager.
@@ -42,7 +42,7 @@ namespace Yarhl
             "System.",
             "Microsoft.",
             "netstandard",
-            "nunit"
+            "nunit",
         };
 
         static readonly object LockObj = new object();
@@ -51,8 +51,7 @@ namespace Yarhl
         CompositionHost container;
 
         /// <summary>
-        /// Prevents a default instance of the <see cref="PluginManager" />
-        /// class from being created.
+        /// Initializes a new instance of the <see cref="PluginManager"/> class.
         /// </summary>
         PluginManager()
         {
@@ -183,7 +182,7 @@ namespace Yarhl
 
         static void DefineConverterConventions(ConventionBuilder conventions)
         {
-            bool converterInterfaceFilter(Type i) =>
+            bool ConverterInterfaceFilter(Type i) =>
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>));
 
@@ -193,9 +192,9 @@ namespace Yarhl
             // 3.- Export again the IConverter interface to fill common metadata
             conventions
                 .ForTypesDerivedFrom(typeof(IConverter<,>))
-                .ExportInterfaces(converterInterfaceFilter)
+                .ExportInterfaces(ConverterInterfaceFilter)
                 .ExportInterfaces(
-                    converterInterfaceFilter,
+                    ConverterInterfaceFilter,
                     (inter, export) => export
                         .AddMetadata("Sources", inter.GenericTypeArguments[0])
                         .AddMetadata("Destinations", inter.GenericTypeArguments[1])

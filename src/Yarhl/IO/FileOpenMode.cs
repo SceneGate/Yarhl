@@ -60,13 +60,17 @@ namespace Yarhl.IO
         /// If the file doesn't exist it will throw an exception.
         /// Requires writing permissions.
         /// </summary>
-        Append
+        Append,
     }
 
     /// <summary>
     /// Extensions for the FileOpenMode enumeration.
     /// </summary>
-    public static class FileOpenModeExtensions
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.StyleCop.CSharp.MaintainabilityRules",
+        "SA1649:FileNameMustMatchTypeName",
+        Justification = "Extension class for the enum.")]
+    static class FileOpenModeExtensions
     {
         /// <summary>
         /// Get the equivalent <see cref="FileMode"/>.

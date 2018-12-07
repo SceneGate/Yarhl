@@ -31,13 +31,13 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Read-only collection of NavegableNodes.
     /// </summary>
-    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
+    /// <typeparam name="T">The implementation of NavegableNodes.</typeparam>
     public class NavegableNodeCollection<T> : ReadOnlyCollection<T>
         where T : NavegableNode<T>
     {
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="Yarhl.FileSystem.NavegableNodeCollection`1"/> class.
+        /// <see cref="Yarhl.FileSystem.NavegableNodeCollection{T}"/> class.
         /// </summary>
         /// <param name="list">Original list of nodes.</param>
         public NavegableNodeCollection(IList<T> list)

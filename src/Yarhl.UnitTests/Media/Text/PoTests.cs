@@ -25,9 +25,9 @@
 namespace Yarhl.UnitTests.Media.Text
 {
     using System;
-    using FileFormat;
     using NUnit.Framework;
     using Yarhl.Media.Text;
+    using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
     public class PoTests : BaseGeneralTests<Po>

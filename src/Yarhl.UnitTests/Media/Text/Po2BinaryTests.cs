@@ -140,7 +140,7 @@ msgstr """"
                 RevisionDate = "tomorrow",
                 LastTranslator = "she",
                 LanguageTeam = "bestteam",
-                PluralForms = "pl"
+                PluralForms = "pl",
             };
             header.Extensions["Generator"] = "yarhl";
             header.Extensions["Hey"] = "hoy";
@@ -279,7 +279,7 @@ msgstr ""translated""
                 Flags = "flag1,flag2",
                 PreviousContext = "prev ctx",
                 PreviousOriginal = "prev org",
-                Context = "a ctx"
+                Context = "a ctx",
             });
 
             string text = @"
@@ -315,7 +315,7 @@ msgstr ""translated""
             var testPo = new Po();
             testPo.Add(new PoEntry {
                 Original = "original",
-                Translated = "trans\nl\"a\"ted"
+                Translated = "trans\nl\"a\"ted",
             });
 
             string text = @"

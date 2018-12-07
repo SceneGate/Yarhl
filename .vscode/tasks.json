@@ -4,7 +4,7 @@
         {
             "type": "cake",
             "script": "Default",
-            "problemMatcher": [],
+            "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",
                 "isDefault": true

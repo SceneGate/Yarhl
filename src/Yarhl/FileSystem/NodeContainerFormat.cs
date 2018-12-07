@@ -25,7 +25,7 @@
 namespace Yarhl.FileSystem
 {
     using System;
-    using FileFormat;
+    using Yarhl.FileFormat;
 
     /// <summary>
     /// Node container format for unpack / pack files.

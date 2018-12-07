@@ -20,8 +20,8 @@
 namespace Yarhl.FileSystem
 {
     using System;
-    using FileFormat;
-    using IO;
+    using Yarhl.FileFormat;
+    using Yarhl.IO;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.

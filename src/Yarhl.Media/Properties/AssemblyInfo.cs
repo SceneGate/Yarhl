@@ -1,5 +1,4 @@
-﻿//
-// AssemblyInfo.cs
+﻿// AssemblyInfo.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

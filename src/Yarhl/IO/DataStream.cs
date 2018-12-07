@@ -27,7 +27,7 @@ namespace Yarhl.IO
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using FileFormat;
+    using Yarhl.FileFormat;
 
     /// <summary>
     /// Data stream.

@@ -31,7 +31,7 @@ namespace Yarhl.UnitTests.FileSystem
     [TestFixture]
     public class NavegableNodeCollectionTests
     {
-       [Test]
+        [Test]
         public void GetElementAsList()
         {
             var children = new List<DummyNavegable>();

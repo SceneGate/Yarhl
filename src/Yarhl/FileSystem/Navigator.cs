@@ -40,7 +40,7 @@ namespace Yarhl.FileSystem
         /// <param name="rootNode">The root node to start the search.</param>
         /// <param name="path">Path to search.</param>
         /// <returns>Node or null if not found.</returns>
-        /// <typeparam name="T">NavegableNode type</typeparam>
+        /// <typeparam name="T">NavegableNode type.</typeparam>
         public static T SearchFile<T>(T rootNode, string path)
             where T : NavegableNode<T>
         {
@@ -74,7 +74,7 @@ namespace Yarhl.FileSystem
         /// <param name="rootNode">The root node to start iterating.</param>
         /// <param name="mode">The navigation mode.</param>
         /// <returns>The nodes.</returns>
-        /// <typeparam name="T">NavegableNode type</typeparam>
+        /// <typeparam name="T">NavegableNode type.</typeparam>
         public static IEnumerable<T> IterateNodes<T>(
             T rootNode,
             NavigationMode mode = NavigationMode.BreadthFirst)

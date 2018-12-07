@@ -39,6 +39,6 @@ namespace Yarhl.FileSystem
         /// Depth-First Search.
         /// Return first nodes in sub-directories.
         /// </summary>
-        DepthFirst
+        DepthFirst,
     }
 }
