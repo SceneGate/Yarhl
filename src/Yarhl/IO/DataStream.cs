@@ -1,4 +1,3 @@
-//
 // DataStream.cs
 //
 // Author:

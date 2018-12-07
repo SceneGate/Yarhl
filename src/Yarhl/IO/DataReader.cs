@@ -1,4 +1,3 @@
-//
 // DataReader.cs
 //
 // Author:

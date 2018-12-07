@@ -1,5 +1,4 @@
-﻿//
-// NavegableNodeCollection.cs
+﻿// NavegableNodeCollection.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

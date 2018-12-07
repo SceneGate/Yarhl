@@ -1,5 +1,4 @@
-﻿//
-//  Navegable.cs
+﻿//  Navegable.cs
 //
 //  Author:
 //       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>

@@ -1,5 +1,4 @@
-﻿//
-// NumericExtension.cs
+﻿// NumericExtension.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

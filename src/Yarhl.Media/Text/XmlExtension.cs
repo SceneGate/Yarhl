@@ -107,9 +107,9 @@ namespace Yarhl.Media.Text
                     RemoveStartingSpaces(text);
                     RemoveTrailingSpaces(text);
 
-                    text.Replace("\n ", "\n");       // Remove spaces after
-                    text.Replace(" \n", "\n");       // and before new line
-                    if (text[0] == '\n')             // Remove first new line char
+                    text.Replace("\n ", "\n"); // Remove spaces after
+                    text.Replace(" \n", "\n"); // and before new line
+                    if (text[0] == '\n') // Remove first new line char
                         text.Remove(0, 1);
                     if (text[text.Length - 1] == '\n') // Remove last new line char
                         text.Remove(text.Length - 1, 1);

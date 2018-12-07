@@ -1,4 +1,3 @@
-//
 //  AssemblyUtils.cs
 //
 //  Author:
