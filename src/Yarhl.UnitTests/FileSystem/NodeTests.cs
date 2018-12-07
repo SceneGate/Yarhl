@@ -1,5 +1,4 @@
-﻿//
-// NodeTests.cs
+﻿// NodeTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -181,7 +180,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
         }
-        
+
         [Test]
         public void TransformCreatingConverterChangeFormat()
         {

@@ -1,4 +1,3 @@
-//
 // ReplacerTests.cs
 //
 // Author:

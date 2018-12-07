@@ -4,5 +4,7 @@
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
     <!-- Disable documentation for public types and members. -->
     <Rule Id="CS1591" Action="None" />
+    <!-- Disable documentation for methods. -->
+    <Rule Id="SA1600" Action="None" />
   </Rules>
 </RuleSet>

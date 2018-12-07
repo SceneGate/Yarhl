@@ -1,5 +1,4 @@
-﻿//
-// PoHeader.cs
+﻿// PoHeader.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

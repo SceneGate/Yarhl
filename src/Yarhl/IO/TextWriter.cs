@@ -1,5 +1,4 @@
-﻿//
-// TextWriter.cs
+﻿// TextWriter.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

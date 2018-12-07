@@ -1,5 +1,4 @@
-﻿//
-// PoEntry.cs
+﻿// PoEntry.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

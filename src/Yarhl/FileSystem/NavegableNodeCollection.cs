@@ -1,5 +1,4 @@
-﻿//
-// NavegableNodeCollection.cs
+﻿// NavegableNodeCollection.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -38,7 +37,7 @@ namespace Yarhl.FileSystem
     {
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="T:Yarhl.FileSystem.NavegableNodeCollection`1"/> class.
+        /// <see cref="Yarhl.FileSystem.NavegableNodeCollection`1"/> class.
         /// </summary>
         /// <param name="list">Original list of nodes.</param>
         public NavegableNodeCollection(IList<T> list)

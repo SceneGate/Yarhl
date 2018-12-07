@@ -1,5 +1,4 @@
-﻿//
-// NavegableNodeTests.cs
+﻿// NavegableNodeTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -202,7 +201,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void AddChildrenThrowsExceptionAfterDispose()
         {
             var node = new DummyNavegable("MyParent");
-            var children = new List<DummyNavegable> { new DummyNavegable("child") }; 
+            var children = new List<DummyNavegable> { new DummyNavegable("child") };
             node.Dispose();
             Assert.That(
                 () => node.Add(children),
@@ -313,7 +312,8 @@ namespace Yarhl.UnitTests.FileSystem
 
         class DummyNavegable : NavegableNode<DummyNavegable>
         {
-            public DummyNavegable(string name) : base(name)
+            public DummyNavegable(string name)
+                : base(name)
             {
             }
         }

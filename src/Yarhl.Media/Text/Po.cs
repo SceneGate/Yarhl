@@ -1,5 +1,4 @@
-﻿//
-// Po.cs
+﻿// Po.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -165,10 +164,11 @@ namespace Yarhl.Media.Text
 
         void MergeEntry(PoEntry current, PoEntry newEntry)
         {
-            if (current.Translated != newEntry.Translated)
+            if (current.Translated != newEntry.Translated) {
                 throw new InvalidOperationException(
-                    "Tried to merge Po entries with same original text but " +
-                    "different translations.");
+                        "Tried to merge Po entries with same original text but " +
+                        "different translations.");
+            }
 
             if (newEntry.Reference != null)
                 current.Reference += "," + newEntry.Reference;

@@ -1,5 +1,4 @@
-﻿//
-// NodeContainerFormat.cs
+﻿// NodeContainerFormat.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

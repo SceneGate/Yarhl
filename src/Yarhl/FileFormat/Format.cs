@@ -1,23 +1,22 @@
-﻿//
-//  Format.cs
+﻿// Format.cs
 //
-//  Author:
-//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
+// Author:
+//      Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2016 Benito Palacios Sánchez
+// Copyright (c) 2016 Benito Palacios Sánchez
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.FileFormat
 {
     using System;
@@ -51,7 +50,7 @@ namespace Yarhl.FileFormat
         /// <param name="source">Format to convert.</param>
         /// <typeparam name="TDst">The destination format type.</typeparam>
         /// <typeparam name="TSrc">The source format type.</typeparam>
-        /// <returns></returns>
+        /// <returns>The new format.</returns>
         public static TDst ConvertTo<TDst, TSrc>(TSrc source)
         {
             return ConvertTo(typeof(TDst), source);
@@ -140,22 +139,26 @@ namespace Yarhl.FileFormat
             bool implementConverter = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition() == typeof(IConverter<,>));
-            if (!implementConverter)
+
+            if (!implementConverter) {
                 throw new ArgumentException(
-                    "Converter doesn't implement IConverter<,>",
-                    nameof(converter));
+                        "Converter doesn't implement IConverter<,>",
+                        nameof(converter));
+            }
 
             bool canConvert = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GenericTypeArguments.Length == 2 &&
                 i.GenericTypeArguments[0] == src.GetType() &&
                 i.GenericTypeArguments[1] == dstType);
-            if (!canConvert)
-                throw new ArgumentException(
-                    "Converter cannot convert from/to the type",
-                    nameof(converter));
 
-            return converter.Convert(src); 
+            if (!canConvert) {
+                throw new ArgumentException(
+                        "Converter cannot convert from/to the type",
+                        nameof(converter));
+            }
+
+            return converter.Convert(src);
         }
 
         /// <summary>

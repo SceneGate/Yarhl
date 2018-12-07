@@ -1,5 +1,4 @@
-﻿//
-// DataStreamTests.cs
+﻿// DataStreamTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

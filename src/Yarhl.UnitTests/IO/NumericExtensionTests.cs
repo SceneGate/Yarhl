@@ -1,5 +1,4 @@
-﻿//
-// NumericExtensionTests.cs
+﻿// NumericExtensionTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>

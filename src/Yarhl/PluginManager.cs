@@ -1,23 +1,22 @@
-﻿//
-//  PluginManager.cs
+﻿// PluginManager.cs
 //
-//  Author:
-//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
+// Author:
+//      Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
 //
-//  Copyright (c) 2016 Benito Palacios Sánchez
+// Copyright (c) 2016 Benito Palacios Sánchez
 //
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
 //
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
 //
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl
 {
     using System;
@@ -61,7 +60,7 @@ namespace Yarhl
         }
 
         /// <summary>
-        /// Name of the plugins directory.
+        /// Gets the name of the plugins directory.
         /// </summary>
         /// <value>The name of the plugins directory.</value>
         public static string PluginDirectory => "Plugins";
@@ -210,6 +209,16 @@ namespace Yarhl
                     .First());
         }
 
+        static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
+        {
+            // Skip libraries that match the ignored libraries because
+            // MEF would try to load its dependencies.
+            return paths
+                .Where(f => !IgnoredLibraries.Any(
+                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
+                .LoadAssemblies();
+        }
+
         void InitializeContainer()
         {
             var conventions = new ConventionBuilder();
@@ -235,16 +244,6 @@ namespace Yarhl
             }
 
             container = containerConfig.CreateContainer();
-        }
-
-        static IEnumerable<Assembly> LoadAssemblies(IEnumerable<string> paths)
-        {
-            // Skip libraries that match the ignored libraries because
-            // MEF would try to load its dependencies.
-            return paths
-                .Where(f => !IgnoredLibraries.Any(
-                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
-                .LoadAssemblies();
         }
     }
 }

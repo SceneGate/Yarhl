@@ -1,5 +1,4 @@
-﻿//
-// NavegableNodeCollectionTests.cs
+﻿// NavegableNodeCollectionTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -71,7 +70,8 @@ namespace Yarhl.UnitTests.FileSystem
 
         class DummyNavegable : NavegableNode<DummyNavegable>
         {
-            public DummyNavegable(string name) : base(name)
+            public DummyNavegable(string name)
+                : base(name)
             {
             }
         }
