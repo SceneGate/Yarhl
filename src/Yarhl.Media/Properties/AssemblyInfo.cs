@@ -28,19 +28,6 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Yarhl.Media")]
-[assembly: AssemblyDescription("Media formats for Yarhl")]
-[assembly: AssemblyCompany("Yarhl development team")]
-[assembly: AssemblyProduct("Yarhl")]
-[assembly: AssemblyCopyright("Copyright (c) 2017 SceneGate Team")]
-[assembly: AssemblyVersion("2.0.0")]
-[assembly: AssemblyFileVersion("2.0.0")]
 [assembly: CLSCompliant(true)]
 [assembly: ComVisible(true)]
 [assembly: InternalsVisibleTo("Yarhl.UnitTests")]
-
-#if DEBUG
-[assembly: AssemblyConfiguration("Debug")]
-#elif RELEASE
-[assembly: AssemblyConfiguration("Release")]
-#endif
