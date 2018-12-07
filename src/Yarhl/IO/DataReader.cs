@@ -298,7 +298,7 @@ namespace Yarhl.IO
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
-            
+
             byte[] buffer = ReadBytes(bytesCount);
             return encoding.GetString(buffer);
         }

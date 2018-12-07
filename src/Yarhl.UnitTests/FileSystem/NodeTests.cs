@@ -180,7 +180,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, (node.Format as IntFormatTest).Value);
         }
-        
+
         [Test]
         public void TransformCreatingConverterChangeFormat()
         {

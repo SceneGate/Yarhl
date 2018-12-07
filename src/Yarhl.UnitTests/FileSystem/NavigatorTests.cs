@@ -152,7 +152,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void IterateBreadthFirst()
         {
             Node node = new Node("A");
-            node.Add(new Node("B")); 
+            node.Add(new Node("B"));
             node.Add(new Node("C"));
             node.Add(new Node("D"));
             node.Children["B"].Add(new Node("E"));
@@ -171,7 +171,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void IterateRecursiveDepthFirst()
         {
             Node node = new Node("A");
-            node.Add(new Node("B")); 
+            node.Add(new Node("B"));
             node.Add(new Node("C"));
             node.Add(new Node("D"));
             node.Children["B"].Add(new Node("E"));

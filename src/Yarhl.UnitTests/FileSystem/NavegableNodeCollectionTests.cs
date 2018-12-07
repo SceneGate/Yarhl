@@ -70,7 +70,8 @@ namespace Yarhl.UnitTests.FileSystem
 
         class DummyNavegable : NavegableNode<DummyNavegable>
         {
-            public DummyNavegable(string name) : base(name)
+            public DummyNavegable(string name)
+                : base(name)
             {
             }
         }
