@@ -26,7 +26,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavegableNode<Node>
+    public class Node : NavigableNode<Node>
     {
         Format format;
 

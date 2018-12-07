@@ -40,9 +40,9 @@ namespace Yarhl.FileSystem
         /// <param name="rootNode">The root node to start the search.</param>
         /// <param name="path">Path to search.</param>
         /// <returns>Node or null if not found.</returns>
-        /// <typeparam name="T">NavegableNode type.</typeparam>
+        /// <typeparam name="T">NavigableNode type.</typeparam>
         public static T SearchFile<T>(T rootNode, string path)
-            where T : NavegableNode<T>
+            where T : NavigableNode<T>
         {
             if (rootNode == null)
                 throw new ArgumentNullException(nameof(rootNode));
@@ -74,11 +74,11 @@ namespace Yarhl.FileSystem
         /// <param name="rootNode">The root node to start iterating.</param>
         /// <param name="mode">The navigation mode.</param>
         /// <returns>The nodes.</returns>
-        /// <typeparam name="T">NavegableNode type.</typeparam>
+        /// <typeparam name="T">NavigableNode type.</typeparam>
         public static IEnumerable<T> IterateNodes<T>(
             T rootNode,
             NavigationMode mode = NavigationMode.BreadthFirst)
-            where T : NavegableNode<T>
+            where T : NavigableNode<T>
         {
             if (rootNode == null)
                 throw new ArgumentNullException(nameof(rootNode));
@@ -91,7 +91,7 @@ namespace Yarhl.FileSystem
         }
 
         static IEnumerable<T> IterateBreadthFirst<T>(T rootNode)
-            where T : NavegableNode<T>
+            where T : NavigableNode<T>
         {
             var queue = new Queue<T>();
             queue.Enqueue(rootNode);
@@ -107,7 +107,7 @@ namespace Yarhl.FileSystem
         }
 
         static IEnumerable<T> IterateDepthFirst<T>(T rootNode)
-            where T : NavegableNode<T>
+            where T : NavigableNode<T>
         {
             var stack = new Stack<T>(rootNode.Children.Reverse());
 

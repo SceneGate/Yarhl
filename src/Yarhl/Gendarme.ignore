@@ -23,7 +23,7 @@ M: System.Object Yarhl.IO.DataReader::Read()
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme
 # It makes no sense for a ReadOnlyCollection that furthermore is strongly type because of the generic
-T: Yarhl.FileSystem.NavegableNodeCollection`1
+T: Yarhl.FileSystem.NavigableNodeCollection`1
 
 R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects
@@ -49,7 +49,7 @@ R: Gendarme.Rules.Naming.UseCorrectSuffixRule
 # It doesn't inherit but internally use a Stream.
 T: Yarhl.IO.DataStream
 # Gendarme doesn't know about ReadOnlyCollection
-T: Yarhl.FileSystem.NavegableNodeCollection`1
+T: Yarhl.FileSystem.NavigableNodeCollection`1
 
 R: Gendarme.Rules.Performance.AvoidUnneededUnboxingRule
 # Actually we are unboxing once

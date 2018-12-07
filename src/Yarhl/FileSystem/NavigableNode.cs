@@ -1,4 +1,4 @@
-﻿// Navegable.cs
+﻿// Navigable.cs
 //
 // Author:
 //      Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
@@ -25,18 +25,18 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node with navigation features inside a FileSystem.
     /// </summary>
-    /// <typeparam name="T">The implementation of NavegableNodes.</typeparam>
-    public abstract class NavegableNode<T> : IDisposable
-        where T : NavegableNode<T>
+    /// <typeparam name="T">The implementation of NavigableNodes.</typeparam>
+    public abstract class NavigableNode<T> : IDisposable
+        where T : NavigableNode<T>
     {
         readonly List<T> children;
 
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="NavegableNode{T}"/> class.
+        /// <see cref="NavigableNode{T}"/> class.
         /// </summary>
         /// <param name="name">Node name.</param>
-        protected NavegableNode(string name)
+        protected NavigableNode(string name)
         {
             if (string.IsNullOrEmpty(name))
                 throw new ArgumentNullException(nameof(name));
@@ -50,7 +50,7 @@ namespace Yarhl.FileSystem
             Name = name;
             Tags = new Dictionary<string, dynamic>();
             children = new List<T>();
-            Children = new NavegableNodeCollection<T>(children);
+            Children = new NavigableNodeCollection<T>(children);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Yarhl.FileSystem
         /// Gets a read-only list of children nodes.
         /// </summary>
         /// <value>The list of children.</value>
-        public NavegableNodeCollection<T> Children
+        public NavigableNodeCollection<T> Children
         {
             get;
             private set;
@@ -124,7 +124,7 @@ namespace Yarhl.FileSystem
         public void Add(T node)
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(NavegableNode<T>));
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
 
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
@@ -149,7 +149,7 @@ namespace Yarhl.FileSystem
         public void Add(IEnumerable<T> nodes)
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(NavegableNode<T>));
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
 
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
@@ -164,7 +164,7 @@ namespace Yarhl.FileSystem
         public void RemoveChildren()
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(NavegableNode<T>));
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
 
             foreach (var child in Children)
                 child.Dispose();
@@ -183,7 +183,7 @@ namespace Yarhl.FileSystem
 
         /// <summary>
         /// Releases all resource used by the
-        /// <see cref="Yarhl.FileSystem.NavegableNode{T}"/> object.
+        /// <see cref="Yarhl.FileSystem.NavigableNode{T}"/> object.
         /// </summary>
         /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
         /// managed resources also.</param>
