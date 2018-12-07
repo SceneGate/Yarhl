@@ -140,8 +140,7 @@ namespace Yarhl.FileFormat
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition() == typeof(IConverter<,>));
 
-            if (!implementConverter)
-            {
+            if (!implementConverter) {
                 throw new ArgumentException(
                         "Converter doesn't implement IConverter<,>",
                         nameof(converter));
@@ -153,8 +152,7 @@ namespace Yarhl.FileFormat
                 i.GenericTypeArguments[0] == src.GetType() &&
                 i.GenericTypeArguments[1] == dstType);
 
-            if (!canConvert)
-            {
+            if (!canConvert) {
                 throw new ArgumentException(
                         "Converter cannot convert from/to the type",
                         nameof(converter));
