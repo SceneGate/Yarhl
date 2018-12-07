@@ -8,7 +8,13 @@
     <!-- Allow inline braces. -->
     <Rule Id="SA1500" Action="None" />
 
-    <!-- Do not force to prefix local calls with 'this' -->
+    <!-- Braces can be omitted.  -->
+    <Rule Id="SA1503" Action="None" />
+
+    <!-- Do not force to prefix local calls with 'this'. -->
     <Rule Id="SA1101" Action="None" />
+
+    <!-- Disable mandatory access modifiers. -->
+    <Rule Id="SA1400" Action="None" />
   </Rules>
 </RuleSet>
