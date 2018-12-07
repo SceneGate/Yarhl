@@ -282,8 +282,7 @@ namespace Yarhl.Media.Text.Encodings
             if (index + sequence.Length > buffer.Count())
                 return false;
 
-            for (int i = 0; i < sequence.Length; i++)
-            {
+            for (int i = 0; i < sequence.Length; i++) {
                 if (buffer[index + i] != sequence[i])
                     return false;
             }
