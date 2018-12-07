@@ -38,13 +38,14 @@ var netstandardVersion = "2.0";
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
+var warningsAsError = Argument("warnaserror", true);
 
 var msbuildConfig = new MSBuildSettings {
     Verbosity = Verbosity.Minimal,
     Configuration = configuration,
     Restore = true,
     MaxCpuCount = 0,  // Auto build parallel mode
-    WarningsAsError = Argument("warnaserror", false)
+    WarningsAsError = warningsAsError,
 };
 
 Task("Build")
@@ -121,7 +122,7 @@ public void RunGendarme(string gendarme, string assembly, string ignore)
 {
     var retcode = StartProcess(gendarme, $"--ignore {ignore} {assembly}");
     if (retcode != 0) {
-        Warning($"Gendarme found errors on {assembly}");
+        ReportWarning($"Gendarme found errors on {assembly}");
     }
 }
 
@@ -156,7 +157,7 @@ Task("Run-AltCover")
     if (coverage == "100%") {
         Information("Full coverage!");
     } else {
-        Warning($"Missing coverage: {coverage}");
+        ReportWarning($"Missing coverage: {coverage}");
     }
 });
 
@@ -192,18 +193,6 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
 Task("Test-Quality")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover");
-
-
-Task("Run-Coveralls")
-    .IsDependentOn("Run-AltCover")
-    .Does(() =>
-{
-    CoverallsIo(
-        MakeAbsolute(File("coveragereport/Summary.xml")).FullPath,
-        new CoverallsIoSettings {
-            RepoToken = EnvironmentVariable("COVERALLS_REPO_TOKEN")
-        });
-});
 
 Task("Run-Sonar")
     .IsDependentOn("Build")
@@ -313,10 +302,16 @@ Task("Travis")
 Task("AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    // Cake doesn't support ReportGenerator with Cobertura
-    // and the old Coveralls CLI only support Cobertura.
-    // After porting to .NET Core we would be able to use the new CLI.
-    // .IsDependentOn("Run-Coveralls")
     .IsDependentOn("Run-Sonar");
 
 RunTarget(target);
+
+
+public void ReportWarning(string msg)
+{
+    if (warningsAsError) {
+        throw new Exception(msg);
+    } else {
+        Warning(msg);
+    }
+}
