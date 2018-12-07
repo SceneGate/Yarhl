@@ -56,6 +56,24 @@ namespace Yarhl.Media.Text
         }
 
         /// <summary>
+        /// Gets the type of the content and encoding.
+        /// </summary>
+        /// <value>The type of the content.</value>
+        public static string ContentType => "text/plain; charset=UTF-8";
+
+        /// <summary>
+        /// Gets the content transfer encoding.
+        /// </summary>
+        /// <value>The content transfer encoding.</value>
+        public static string ContentTransferEncoding => "8bit";
+
+        /// <summary>
+        /// Gets the version of MIME.
+        /// </summary>
+        /// <value>The version of MIME.</value>
+        public static string MimeVersion => "1.0";
+
+        /// <summary>
         /// Gets or sets the project identifier version.
         /// </summary>
         /// <value>The project identifier version.</value>
@@ -96,24 +114,6 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <value>The target language.</value>
         public string Language { get; set; }
-
-        /// <summary>
-        /// Gets the type of the content and encoding.
-        /// </summary>
-        /// <value>The type of the content.</value>
-        public string ContentType => "text/plain; charset=UTF-8";
-
-        /// <summary>
-        /// Gets the content transfer encoding.
-        /// </summary>
-        /// <value>The content transfer encoding.</value>
-        public string ContentTransferEncoding => "8bit";
-
-        /// <summary>
-        /// Gets the version of MIME.
-        /// </summary>
-        /// <value>The version of MIME.</value>
-        public string MimeVersion => "1.0";
 
         /// <summary>
         /// Gets or sets the plural forms.

@@ -175,9 +175,6 @@ msgstr """"
             Assert.AreEqual(header.LastTranslator, newHeader.LastTranslator);
             Assert.AreEqual(header.LanguageTeam, newHeader.LanguageTeam);
             Assert.AreEqual(header.Language, newHeader.Language);
-            Assert.AreEqual(header.MimeVersion, newHeader.MimeVersion);
-            Assert.AreEqual(header.ContentType, newHeader.ContentType);
-            Assert.AreEqual(header.ContentTransferEncoding, newHeader.ContentTransferEncoding);
             Assert.AreEqual(header.PluralForms, newHeader.PluralForms);
             Assert.That(header.Extensions["Generator"], Is.EqualTo(newHeader.Extensions["Generator"]));
             Assert.That(header.Extensions["Hey"], Is.EqualTo(newHeader.Extensions["Hey"]));

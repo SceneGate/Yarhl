@@ -183,7 +183,7 @@ namespace Yarhl.FileSystem
 
         /// <summary>
         /// Releases all resource used by the
-        /// <see cref="T:Yarhl.FileSystem.NavegableNode`1"/> object.
+        /// <see cref="Yarhl.FileSystem.NavegableNode{T}"/> object.
         /// </summary>
         /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
         /// managed resources also.</param>

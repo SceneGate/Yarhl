@@ -46,7 +46,7 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Gets the <see cref="T:Yarhl.FileSystem.NavegableNodeCollection`1"/>
+        /// Gets the <see cref="Yarhl.FileSystem.NavegableNodeCollection{T}"/>
         /// with the specified name.
         /// </summary>
         /// <param name="name">Node name.</param>

@@ -196,8 +196,8 @@ namespace Yarhl
                 .ExportInterfaces(
                     ConverterInterfaceFilter,
                     (inter, export) => export
-                        .AddMetadata("Sources", inter.GenericTypeArguments[0])
-                        .AddMetadata("Destinations", inter.GenericTypeArguments[1])
+                        .AddMetadata("InternalSources", inter.GenericTypeArguments[0])
+                        .AddMetadata("InternalDestinations", inter.GenericTypeArguments[1])
                         .AsContractType<IConverter>())
                 .Export<IConverter>(
                     export => export

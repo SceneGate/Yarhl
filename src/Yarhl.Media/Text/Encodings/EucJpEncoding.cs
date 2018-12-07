@@ -229,8 +229,18 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="encodedByte">Callback with the byte encoded.</param>
         void EncodeText(string text, Action<Stream, byte> encodedByte)
         {
-            MemoryStream stream = new MemoryStream(UTF32.GetBytes(text));
+            using (var stream = new MemoryStream(UTF32.GetBytes(text))) {
+                EncodeText(stream, encodedByte);
+            }
+        }
 
+        /// <summary>
+        /// Internal text encoder.
+        /// </summary>
+        /// <param name="stream">Text to encode.</param>
+        /// <param name="encodedByte">Callback with the byte encoded.</param>
+        void EncodeText(Stream stream, Action<Stream, byte> encodedByte)
+        {
             // 1
             while (stream.Position < stream.Length) {
                 byte[] buffer = new byte[4];
@@ -366,7 +376,9 @@ namespace Yarhl.Media.Text.Encodings
                         .GetManifestResourceStream(path);
 
                     using (var reader = new StreamReader(stream)) {
+                      #pragma warning disable IDISP003
                         stream = null;  // Avoid disposing twice
+                      #pragma warning restore IDISP003
 
                         while (!reader.EndOfStream) {
                             string line = reader.ReadLine();

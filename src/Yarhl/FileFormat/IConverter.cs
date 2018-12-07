@@ -22,6 +22,10 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Non-generic converter interface.
     /// </summary>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage(
+        "Microsoft.Design",
+        "CA1040:AvoidEmptyInterfaces",
+        Justification = "We use the interface as a compile time marker.")]
     public interface IConverter
     {
     }
