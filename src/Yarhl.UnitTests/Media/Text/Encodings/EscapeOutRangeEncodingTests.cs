@@ -36,7 +36,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void DecoderFallbackBufferGetsBuffer()
         {
-            var buffer = new EscapeOutRangeDecoderFallbackBuffer();
+            var buffer = new EscapeOutRangeEncoding.EscapeOutRangeDecoderFallbackBuffer();
             byte[] invalidBuffer = { 0xE2, 0x81 };
             Assert.True(buffer.Fallback(invalidBuffer, 0));
 
@@ -53,7 +53,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void DecoderFallbackBufferResets()
         {
-            var buffer = new EscapeOutRangeDecoderFallbackBuffer();
+            var buffer = new EscapeOutRangeEncoding.EscapeOutRangeDecoderFallbackBuffer();
             byte[] invalidBuffer = { 0xE2, 0x81 };
             Assert.True(buffer.Fallback(invalidBuffer, 0));
 
@@ -71,7 +71,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void DecoderFallbackBufferMoveBack()
         {
-            var buffer = new EscapeOutRangeDecoderFallbackBuffer();
+            var buffer = new EscapeOutRangeEncoding.EscapeOutRangeDecoderFallbackBuffer();
             byte[] invalidBuffer = { 0xE2, 0x81 };
             Assert.True(buffer.Fallback(invalidBuffer, 0));
 
@@ -100,7 +100,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
             Encoding encoding = Encoding.GetEncoding(
                 "utf-8",
                 new EncoderExceptionFallback(),
-                new EscapeOutRangeDecoderFallback());
+                new EscapeOutRangeEncoding.EscapeOutRangeDecoderFallback());
 
             byte[] invalidBuffer = { 0xE2, 0x81, 0xE3, 0xE4 };
             string output = encoding.GetString(invalidBuffer);
@@ -113,7 +113,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
             Encoding encoding = Encoding.GetEncoding(
                 "utf-8",
                 new EncoderExceptionFallback(),
-                new EscapeOutRangeDecoderFallback());
+                new EscapeOutRangeEncoding.EscapeOutRangeDecoderFallback());
 
             byte[] validBuffer = { 0xE3, 0x81, 0x82, 0xE3, 0xE3, 0x81, 0x82 };
             string output = encoding.GetString(validBuffer);
@@ -123,7 +123,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void EncodingReplaceInvalidUtf8Symbols()
         {
-            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             byte[] invalidBuffer = { 0xE2, 0x81, 0xE3, 0xE4 };
             string output = encoding.GetString(invalidBuffer);
             Assert.AreEqual(output.Length, encoding.GetCharCount(invalidBuffer));
@@ -134,19 +134,19 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void EncodingThrowExceptionIfNullEncoding()
         {
-            Assert.Throws<ArgumentNullException>(() => new EscapeOutRangeEnconding((Encoding)null));
+            Assert.Throws<ArgumentNullException>(() => new EscapeOutRangeEncoding((Encoding)null));
         }
 
         [Test]
         public void EncodingThrowExceptionIfNullStringEncoding()
         {
-            Assert.Throws<ArgumentNullException>(() => new EscapeOutRangeEnconding((string)null));
+            Assert.Throws<ArgumentNullException>(() => new EscapeOutRangeEncoding((string)null));
         }
 
         [Test]
         public void EncodingDoesNotChangeValidUtf8Symbols()
         {
-            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             byte[] validBuffer = { 0xE3, 0x81, 0x82, 0xE3, 0xE3, 0x81, 0x82 };
             string output = encoding.GetString(validBuffer);
             Assert.AreEqual(output.Length, encoding.GetCharCount(validBuffer));
@@ -157,7 +157,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void EncodingEncodesValidUtf8Symbols()
         {
-            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             string input = "[@!!E281][@!!E3][@!!E4]";
             byte[] output = encoding.GetBytes(input);
             Assert.AreEqual(output.Length, encoding.GetByteCount(input));
@@ -168,7 +168,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void EncodingEncodesInvalidUtf8Symbols()
         {
-            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             string input = "あ[@!!E3]あ";
             byte[] output = encoding.GetBytes(input);
             Assert.AreEqual(output.Length, encoding.GetByteCount(input));
@@ -179,7 +179,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void EncodingEncodesThrowExceptionIfMissingEndToken()
         {
-            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             string input = "あ[@!!E3";
             Assert.Throws<EncoderFallbackException>(() => encoding.GetBytes(input));
         }
@@ -187,7 +187,7 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
         [Test]
         public void EncodingEncodesThrowExceptionIfInvalidHexNumber()
         {
-            Encoding encoding = new EscapeOutRangeEnconding("utf-8");
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             string input = "あ[@!!Q3]あ";
             Assert.Throws<FormatException>(() => encoding.GetBytes(input));
         }

@@ -43,14 +43,14 @@ namespace Yarhl.FileFormat
         /// can convert from.
         /// </summary>
         /// <value>Single or list of types for conversion.</value>
-        public object Sources { get; set; }
+        public object InternalSources { get; set; }
 
         /// <summary>
         /// Gets or sets a single type or list of types the converter can
         /// convert to.
         /// </summary>
         /// <value>Single or list of types the converter can convert to.</value>
-        public object Destinations { get; set; }
+        public object InternalDestinations { get; set; }
 
         /// <summary>
         /// Gets a list of source types that can convert from.
@@ -58,9 +58,9 @@ namespace Yarhl.FileFormat
         /// <returns>List of source types that can convert from.</returns>
         public Type[] GetSources()
         {
-            if (!(Sources is Type[] sourceList)) {
-                if (Sources != null) {
-                    sourceList = new[] { (Type)Sources };
+            if (!(InternalSources is Type[] sourceList)) {
+                if (InternalSources != null) {
+                    sourceList = new[] { (Type)InternalSources };
                 } else {
                     sourceList = Type.EmptyTypes;
                 }
@@ -75,9 +75,9 @@ namespace Yarhl.FileFormat
         /// <returns>Destination types it can convert to.</returns>
         public Type[] GetDestinations()
         {
-            if (!(Destinations is Type[] destList)) {
-                if (Destinations != null) {
-                    destList = new[] { (Type)Destinations };
+            if (!(InternalDestinations is Type[] destList)) {
+                if (InternalDestinations != null) {
+                    destList = new[] { (Type)InternalDestinations };
                 } else {
                     destList = Type.EmptyTypes;
                 }

@@ -25,9 +25,9 @@
 namespace Yarhl.UnitTests.FileSystem
 {
     using System;
-    using FileFormat;
     using NUnit.Framework;
     using Yarhl.FileSystem;
+    using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
     public class NodeContainerFormatTests : BaseGeneralTests<NodeContainerFormat>

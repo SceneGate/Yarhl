@@ -31,7 +31,7 @@ namespace Yarhl.UnitTests
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
-    [TestFixture, SingleThreaded]
+    [TestFixture]
     public class PluginManagerTests
     {
         public interface IExistsInterface

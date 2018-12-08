@@ -152,17 +152,17 @@ namespace Yarhl.Media.Text
             return searchEntries.ContainsKey(key) ? searchEntries[key] : null;
         }
 
-        string GetKey(PoEntry entry)
+        static string GetKey(PoEntry entry)
         {
             return GetKey(entry.Original, entry.Context);
         }
 
-        string GetKey(string original, string context)
+        static string GetKey(string original, string context)
         {
             return original + "||" + (context ?? string.Empty);
         }
 
-        void MergeEntry(PoEntry current, PoEntry newEntry)
+        static void MergeEntry(PoEntry current, PoEntry newEntry)
         {
             if (current.Translated != newEntry.Translated) {
                 throw new InvalidOperationException(

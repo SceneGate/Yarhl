@@ -1,4 +1,4 @@
-﻿// NavegableNodeTests.cs
+﻿// NavigableNodeTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -30,12 +30,12 @@ namespace Yarhl.UnitTests.FileSystem
     using Yarhl.FileSystem;
 
     [TestFixture]
-    public class NavegableNodeTests
+    public class NavigableNodeTests
     {
         [Test]
         public void DefaultValues()
         {
-            var node = new DummyNavegable("NodeName");
+            var node = new DummyNavigable("NodeName");
             Assert.AreEqual("NodeName", node.Name);
             Assert.AreEqual("/NodeName", node.Path);
             Assert.IsNull(node.Parent);
@@ -46,9 +46,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ExceptionIfInvalidName()
         {
-            Assert.Throws<ArgumentNullException>(() => new DummyNavegable(null));
+            Assert.Throws<ArgumentNullException>(() => new DummyNavigable(null));
             Assert.That(
-                () => new DummyNavegable(string.Empty),
+                () => new DummyNavigable(string.Empty),
                 Throws.TypeOf<ArgumentNullException>());
         }
 
@@ -56,7 +56,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void ExceptionIfInvalidCharacters()
         {
             var ex = Assert.Throws<ArgumentException>(() =>
-                new DummyNavegable("MyT/est"));
+                new DummyNavigable("MyT/est"));
             Assert.AreEqual(
                 "Name contains invalid characters" + Environment.NewLine +
                 "Parameter name: name",
@@ -66,22 +66,22 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void NameProperty()
         {
-            var node = new DummyNavegable("MyNameTest");
+            var node = new DummyNavigable("MyNameTest");
             Assert.AreEqual("MyNameTest", node.Name);
         }
 
         [Test]
         public void PathIfParentIsNull()
         {
-            var node = new DummyNavegable("MyNameTest");
+            var node = new DummyNavigable("MyNameTest");
             Assert.AreEqual("/MyNameTest", node.Path);
         }
 
         [Test]
         public void PathWithParent()
         {
-            var node = new DummyNavegable("MyChild");
-            var parentNode = new DummyNavegable("MyParent");
+            var node = new DummyNavigable("MyChild");
+            var parentNode = new DummyNavigable("MyParent");
             parentNode.Add(node);
 
             Assert.AreEqual("/MyParent/MyChild", node.Path);
@@ -91,7 +91,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void TagsAllowAdding()
         {
-            var node = new DummyNavegable("MyNameTest");
+            var node = new DummyNavigable("MyNameTest");
             node.Tags["MyTag"] = 5;
             Assert.AreEqual(5, node.Tags["MyTag"]);
         }
@@ -99,8 +99,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void AddChildUpdatesChildrenAndParent()
         {
-            var node = new DummyNavegable("MyChild");
-            var parentNode = new DummyNavegable("MyParent");
+            var node = new DummyNavigable("MyChild");
+            var parentNode = new DummyNavigable("MyParent");
             parentNode.Add(node);
 
             Assert.AreSame(parentNode, node.Parent);
@@ -111,8 +111,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ChildrenGetsByName()
         {
-            var node = new DummyNavegable("MyChild");
-            var parentNode = new DummyNavegable("MyParent");
+            var node = new DummyNavigable("MyChild");
+            var parentNode = new DummyNavigable("MyParent");
             parentNode.Add(node);
             Assert.AreSame(node, parentNode.Children["MyChild"]);
         }
@@ -120,17 +120,17 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ExceptionIfNullChild()
         {
-            var node = new DummyNavegable("MyParent");
-            DummyNavegable child = null;
+            var node = new DummyNavigable("MyParent");
+            DummyNavigable child = null;
             Assert.Throws<ArgumentNullException>(() => node.Add(child));
         }
 
         [Test]
         public void ReplaceIfSameName()
         {
-            var children1 = new DummyNavegable("MyChild1");
-            var children2 = new DummyNavegable("MyChild1");
-            var parent = new DummyNavegable("MyParent");
+            var children1 = new DummyNavigable("MyChild1");
+            var children2 = new DummyNavigable("MyChild1");
+            var parent = new DummyNavigable("MyParent");
 
             parent.Add(children1);
             Assert.AreEqual(1, parent.Children.Count);
@@ -145,9 +145,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ReplaceDisposePreviousChild()
         {
-            var child1 = new DummyNavegable("MyChild1");
-            var child2 = new DummyNavegable("MyChild1");
-            var parent = new DummyNavegable("MyParent");
+            var child1 = new DummyNavigable("MyChild1");
+            var child2 = new DummyNavigable("MyChild1");
+            var parent = new DummyNavigable("MyParent");
 
             parent.Add(child1);
             Assert.AreEqual(1, parent.Children.Count);
@@ -165,11 +165,11 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void AddAllChildren()
         {
-            var children = new List<DummyNavegable>();
-            children.Add(new DummyNavegable("MyChild1"));
-            children.Add(new DummyNavegable("MyChild2"));
-            children.Add(new DummyNavegable("MyChild3"));
-            var parent = new DummyNavegable("MyParent");
+            var children = new List<DummyNavigable>();
+            children.Add(new DummyNavigable("MyChild1"));
+            children.Add(new DummyNavigable("MyChild2"));
+            children.Add(new DummyNavigable("MyChild3"));
+            var parent = new DummyNavigable("MyParent");
 
             parent.Add(children);
             Assert.AreEqual(3, parent.Children.Count);
@@ -181,8 +181,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void AddThrowsExceptionAfterDispose()
         {
-            var node = new DummyNavegable("MyParent");
-            DummyNavegable child = null;
+            var node = new DummyNavigable("MyParent");
+            DummyNavigable child = null;
             node.Dispose();
             Assert.That(
                 () => node.Add(child),
@@ -192,16 +192,16 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void AddChildrenThrowExceptionIfNull()
         {
-            var node = new DummyNavegable("MyParent");
-            List<DummyNavegable> children = null;
+            var node = new DummyNavigable("MyParent");
+            List<DummyNavigable> children = null;
             Assert.Throws<ArgumentNullException>(() => node.Add(children));
         }
 
         [Test]
         public void AddChildrenThrowsExceptionAfterDispose()
         {
-            var node = new DummyNavegable("MyParent");
-            var children = new List<DummyNavegable> { new DummyNavegable("child") };
+            var node = new DummyNavigable("MyParent");
+            var children = new List<DummyNavigable> { new DummyNavigable("child") };
             node.Dispose();
             Assert.That(
                 () => node.Add(children),
@@ -211,11 +211,11 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void RemoveChildren()
         {
-            var children = new List<DummyNavegable>();
-            children.Add(new DummyNavegable("MyChild1"));
-            children.Add(new DummyNavegable("MyChild2"));
-            children.Add(new DummyNavegable("MyChild3"));
-            var parent = new DummyNavegable("MyParent");
+            var children = new List<DummyNavigable>();
+            children.Add(new DummyNavigable("MyChild1"));
+            children.Add(new DummyNavigable("MyChild2"));
+            children.Add(new DummyNavigable("MyChild3"));
+            var parent = new DummyNavigable("MyParent");
 
             parent.Add(children);
             Assert.AreEqual(3, parent.Children.Count);
@@ -227,10 +227,10 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void RemoveChildrenRemovesInnerChildren()
         {
-            DummyNavegable parent = new DummyNavegable("Parent");
-            DummyNavegable child1 = new DummyNavegable("Child1");
-            DummyNavegable child2 = new DummyNavegable("Child2");
-            DummyNavegable subchild1 = new DummyNavegable("Subchild1");
+            DummyNavigable parent = new DummyNavigable("Parent");
+            DummyNavigable child1 = new DummyNavigable("Child1");
+            DummyNavigable child2 = new DummyNavigable("Child2");
+            DummyNavigable subchild1 = new DummyNavigable("Subchild1");
             child1.Add(subchild1);
             parent.Add(child1);
             parent.Add(child2);
@@ -243,10 +243,10 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void RemoveChildrenDisposeChildren()
         {
-            DummyNavegable parent = new DummyNavegable("Parent");
-            DummyNavegable child1 = new DummyNavegable("Child1");
-            DummyNavegable child2 = new DummyNavegable("Child2");
-            DummyNavegable subchild1 = new DummyNavegable("Subchild1");
+            DummyNavigable parent = new DummyNavigable("Parent");
+            DummyNavigable child1 = new DummyNavigable("Child1");
+            DummyNavigable child2 = new DummyNavigable("Child2");
+            DummyNavigable subchild1 = new DummyNavigable("Subchild1");
             child1.Add(subchild1);
             parent.Add(child1);
             parent.Add(child2);
@@ -266,8 +266,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void RemoveChildrenAfterDisposeThrowsException()
         {
-            var node = new DummyNavegable("node");
-            node.Add(new DummyNavegable("child"));
+            var node = new DummyNavigable("node");
+            node.Add(new DummyNavigable("child"));
             node.Dispose();
             Assert.That(node.RemoveChildren, Throws.TypeOf<ObjectDisposedException>());
         }
@@ -275,7 +275,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void DisposeChangesProperty()
         {
-            var node = new DummyNavegable("node");
+            var node = new DummyNavigable("node");
             Assert.That(node.Disposed, Is.False);
             node.Dispose();
             Assert.That(node.Disposed, Is.True);
@@ -284,7 +284,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void DisposeTwiceDoesNotThrowException()
         {
-            var node = new DummyNavegable("node");
+            var node = new DummyNavigable("node");
             node.Dispose();
             Assert.That(node.Dispose, Throws.Nothing);
         }
@@ -292,10 +292,10 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void DisposeRemoveChildrens()
         {
-            DummyNavegable parent = new DummyNavegable("Parent");
-            DummyNavegable child1 = new DummyNavegable("Child1");
-            DummyNavegable child2 = new DummyNavegable("Child2");
-            DummyNavegable subchild1 = new DummyNavegable("Subchild1");
+            DummyNavigable parent = new DummyNavigable("Parent");
+            DummyNavigable child1 = new DummyNavigable("Child1");
+            DummyNavigable child2 = new DummyNavigable("Child2");
+            DummyNavigable subchild1 = new DummyNavigable("Subchild1");
             child1.Add(subchild1);
             parent.Add(child1);
             parent.Add(child2);
@@ -310,9 +310,9 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.IsTrue(subchild1.Disposed);
         }
 
-        class DummyNavegable : NavegableNode<DummyNavegable>
+        class DummyNavigable : NavigableNode<DummyNavigable>
         {
-            public DummyNavegable(string name)
+            public DummyNavigable(string name)
                 : base(name)
             {
             }

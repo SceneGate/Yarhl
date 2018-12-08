@@ -73,7 +73,7 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.AreEqual(Format.ConvertTo(typeof(string), 3), "3");
         }
 
-         [Test]
+        [Test]
         public void StaticConvertToThrowsIfTypeIsNull()
         {
             Type dstType = null;
@@ -544,7 +544,7 @@ namespace Yarhl.UnitTests.FileFormat
             {
                 return new Derived {
                     X = source,
-                    Y = (ushort)(source + 1)
+                    Y = (ushort)(source + 1),
                 };
             }
 
@@ -560,7 +560,7 @@ namespace Yarhl.UnitTests.FileFormat
             public Base Convert(int source)
             {
                 return new Base {
-                    X = (ushort)(source + 2)
+                    X = (ushort)(source + 2),
                 };
             }
 

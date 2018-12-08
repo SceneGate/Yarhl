@@ -1,4 +1,4 @@
-﻿// NavegableNodeCollectionTests.cs
+﻿// NavigableNodeCollectionTests.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -29,18 +29,18 @@ namespace Yarhl.UnitTests.FileSystem
     using Yarhl.FileSystem;
 
     [TestFixture]
-    public class NavegableNodeCollectionTests
+    public class NavigableNodeCollectionTests
     {
-       [Test]
+        [Test]
         public void GetElementAsList()
         {
-            var children = new List<DummyNavegable>();
-            var collection = new NavegableNodeCollection<DummyNavegable>(children);
+            var children = new List<DummyNavigable>();
+            var collection = new NavigableNodeCollection<DummyNavigable>(children);
             Assert.IsEmpty(collection);
 
-            children.Add(new DummyNavegable("Child1"));
-            children.Add(new DummyNavegable("Child2"));
-            children.Add(new DummyNavegable("Child3"));
+            children.Add(new DummyNavigable("Child1"));
+            children.Add(new DummyNavigable("Child2"));
+            children.Add(new DummyNavigable("Child3"));
             Assert.AreEqual(3, collection.Count);
             Assert.AreSame(children[0], collection[0]);
             Assert.AreSame(children[1], collection[1]);
@@ -50,11 +50,11 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void GetNodesByName()
         {
-            var children = new List<DummyNavegable>();
-            var collection = new NavegableNodeCollection<DummyNavegable>(children);
-            children.Add(new DummyNavegable("Child1"));
-            children.Add(new DummyNavegable("Child2"));
-            children.Add(new DummyNavegable("Child3"));
+            var children = new List<DummyNavigable>();
+            var collection = new NavigableNodeCollection<DummyNavigable>(children);
+            children.Add(new DummyNavigable("Child1"));
+            children.Add(new DummyNavigable("Child2"));
+            children.Add(new DummyNavigable("Child3"));
             Assert.AreSame(children[0], collection["Child1"]);
             Assert.AreSame(children[1], collection["Child2"]);
             Assert.AreSame(children[2], collection["Child3"]);
@@ -63,14 +63,14 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void UnknownNameReturnsNull()
         {
-            var children = new List<DummyNavegable>();
-            var collection = new NavegableNodeCollection<DummyNavegable>(children);
+            var children = new List<DummyNavigable>();
+            var collection = new NavigableNodeCollection<DummyNavigable>(children);
             Assert.IsNull(collection["Child1"]);
         }
 
-        class DummyNavegable : NavegableNode<DummyNavegable>
+        class DummyNavigable : NavigableNode<DummyNavigable>
         {
-            public DummyNavegable(string name)
+            public DummyNavigable(string name)
                 : base(name)
             {
             }

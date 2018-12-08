@@ -22,6 +22,10 @@ namespace Yarhl.UnitTests.FileFormat
     using System;
     using Yarhl.FileFormat;
 
+  // Disable file may only contain a single class since we aren't going
+  // to create a file per test converter.
+  #pragma warning disable SA1402, SA1649
+
     public class SingleOuterConverterExample : IConverter<string, uint>
     {
         public uint Convert(string source)
@@ -127,4 +131,7 @@ namespace Yarhl.UnitTests.FileFormat
             return new StringFormatTest(test.Value.ToString());
         }
     }
+
+  #pragma warning restore SA1402, SA1649
+
 }

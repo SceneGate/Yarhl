@@ -140,7 +140,7 @@ msgstr """"
                 RevisionDate = "tomorrow",
                 LastTranslator = "she",
                 LanguageTeam = "bestteam",
-                PluralForms = "pl"
+                PluralForms = "pl",
             };
             header.Extensions["Generator"] = "yarhl";
             header.Extensions["Hey"] = "hoy";
@@ -175,9 +175,6 @@ msgstr """"
             Assert.AreEqual(header.LastTranslator, newHeader.LastTranslator);
             Assert.AreEqual(header.LanguageTeam, newHeader.LanguageTeam);
             Assert.AreEqual(header.Language, newHeader.Language);
-            Assert.AreEqual(header.MimeVersion, newHeader.MimeVersion);
-            Assert.AreEqual(header.ContentType, newHeader.ContentType);
-            Assert.AreEqual(header.ContentTransferEncoding, newHeader.ContentTransferEncoding);
             Assert.AreEqual(header.PluralForms, newHeader.PluralForms);
             Assert.That(header.Extensions["Generator"], Is.EqualTo(newHeader.Extensions["Generator"]));
             Assert.That(header.Extensions["Hey"], Is.EqualTo(newHeader.Extensions["Hey"]));
@@ -279,7 +276,7 @@ msgstr ""translated""
                 Flags = "flag1,flag2",
                 PreviousContext = "prev ctx",
                 PreviousOriginal = "prev org",
-                Context = "a ctx"
+                Context = "a ctx",
             });
 
             string text = @"
@@ -315,7 +312,7 @@ msgstr ""translated""
             var testPo = new Po();
             testPo.Add(new PoEntry {
                 Original = "original",
-                Translated = "trans\nl\"a\"ted"
+                Translated = "trans\nl\"a\"ted",
             });
 
             string text = @"

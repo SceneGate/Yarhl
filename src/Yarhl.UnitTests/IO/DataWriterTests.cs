@@ -735,7 +735,7 @@ namespace Yarhl.UnitTests.IO
                 0x08,
                 0x39, 0x00,
                 0x61,
-                0x38, 0x00
+                0x38, 0x00,
             };
             Assert.AreEqual(expected.Length, stream.Length);
 
@@ -774,7 +774,7 @@ namespace Yarhl.UnitTests.IO
                 0x08,
                 0x39, 0x00,
                 0x61,
-                0x38, 0x00
+                0x38, 0x00,
             };
             Assert.AreEqual(expected.Length, stream.Length);
 
@@ -946,7 +946,7 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            writer.Write((uint)0xCAFE);
+            writer.Write(0xCAFEu);
             writer.WritePadding(0xFF, 4);
 
             byte[] expected = { 0xFE, 0xCA, 0x00, 0x00 };
@@ -967,7 +967,7 @@ namespace Yarhl.UnitTests.IO
             DataStream stream2 = new DataStream(stream, 1, 0);
             DataWriter writer = new DataWriter(stream2);
 
-            writer.Write((uint)0xCAFE);
+            writer.Write(0xCAFEu);
             writer.WritePadding(0xFF, 4);
 
             byte[] expected = { 0xAF, 0xFE, 0xCA, 0x00, 0x00 };
@@ -1003,7 +1003,7 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            writer.Write((uint)0xCAFE);
+            writer.Write(0xCAFEu);
             writer.WritePadding(0xFF, 0);
 
             byte[] expected = { 0xFE, 0xCA, 0x00, 0x00 };

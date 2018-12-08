@@ -42,6 +42,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Position going back from the end of the DataStream.
         /// </summary>
-        End
+        End,
     }
 }
