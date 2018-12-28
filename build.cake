@@ -50,6 +50,20 @@ string netBinDir = $"bin/{configuration}/net{netVersion}";
 string netcoreBinDir = $"bin/{configuration}/netcoreapp{netcoreVersion}";
 string netstandardBinDir = $"bin/{configuration}/netstandard{netstandardVersion}";
 
+Task("Clean")
+    .Does(() =>
+{
+    MSBuild("src/Yarhl.sln", configurator => configurator
+        .WithTarget("Clean")
+        .SetVerbosity(Verbosity.Minimal)
+        .SetConfiguration(configuration));
+    if (DirectoryExists("artifacts")) {
+        DeleteDirectory(
+            "artifacts",
+            new DeleteDirectorySettings { Recursive = true });
+    }
+});
+
 Task("Build")
     .Does(() =>
 {
@@ -300,6 +314,34 @@ Task("Deploy-Doc")
     if (retcode != 0) {
         throw new Exception("Cannot push");
     }
+});
+
+Task("Pack")
+    .Description("Create the NuGet package")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var settings = new DotNetCorePackSettings {
+        Configuration = configuration,
+        OutputDirectory = "artifacts/",
+        IncludeSymbols = true,
+        MSBuildSettings = new DotNetCoreMSBuildSettings()
+            .WithProperty("SymbolPackageFormat", "snupkg")
+    };
+    DotNetCorePack("src/Yarhl.sln", settings);
+});
+
+Task("Deploy")
+    .Description("Deploy the NuGet packages to the server")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Pack")
+    .Does(() =>
+{
+    var settings = new DotNetCoreNuGetPushSettings {
+        Source = "https://api.nuget.org/v3/index.json",
+        ApiKey = Environment.GetEnvironmentVariable("NUGET_KEY"),
+    };
+    DotNetCoreNuGetPush("artifacts/*.nupkg", settings);
 });
 
 Task("Default")
