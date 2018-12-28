@@ -115,6 +115,7 @@ namespace Yarhl.IO
         /// <returns>The read char.</returns>
         public char Read()
         {
+            SkipPreamble();
             return reader.ReadChar(Encoding);
         }
 
@@ -128,6 +129,7 @@ namespace Yarhl.IO
             if (count < 0)
                 throw new ArgumentOutOfRangeException(nameof(count));
 
+            SkipPreamble();
             return reader.ReadChars(count, Encoding);
         }
 
@@ -144,6 +146,8 @@ namespace Yarhl.IO
             // If starting is EOF, then return null
             if (Stream.EndOfStream)
                 return null;
+
+            SkipPreamble();
 
             const int BufferSize = 128;
             byte[] buffer = new byte[BufferSize];
@@ -211,6 +215,7 @@ namespace Yarhl.IO
         /// <returns>The string.</returns>
         public string ReadToEnd()
         {
+            SkipPreamble();
             return reader.ReadString(
                 (int)(Stream.Length - Stream.Position),
                 Encoding);
@@ -264,6 +269,28 @@ namespace Yarhl.IO
             string line = ReadLine();
             Stream.PopPosition();
             return line;
+        }
+
+        void SkipPreamble()
+        {
+            if (Stream.Position > 0) {
+                return;
+            }
+
+            byte[] preamble = Encoding.GetPreamble();
+            if (Stream.Length < preamble.Length) {
+                return;
+            }
+
+            bool match = true;
+            for (int i = 0; i < preamble.Length && match; i++) {
+                match = preamble[i] == reader.ReadByte();
+            }
+
+            // If it didn't fully match it wasn't a preamble, returns to 0
+            if (!match) {
+                Stream.Position = 0;
+            }
         }
     }
 }

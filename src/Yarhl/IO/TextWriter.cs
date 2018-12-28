@@ -61,6 +61,7 @@ namespace Yarhl.IO
             Stream = stream;
             Encoding = encoding;
             NewLine = "\n";
+            AutoPreamble = true;
             writer = new DataWriter(stream);
         }
 
@@ -93,11 +94,24 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether write automatically
+        /// the encoding preamble.
+        /// </summary>
+        /// <value>
+        /// True to write the preamble if the stream is empty, otherwise false.
+        /// </value>
+        public bool AutoPreamble {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Write the specified char.
         /// </summary>
         /// <param name="ch">Char to write.</param>
         public void Write(char ch)
         {
+            CheckWritePreamble();
             writer.Write(ch, Encoding);
         }
 
@@ -110,6 +124,7 @@ namespace Yarhl.IO
             if (chars == null)
                 throw new ArgumentNullException(nameof(chars));
 
+            CheckWritePreamble();
             writer.Write(chars, Encoding);
         }
 
@@ -122,6 +137,7 @@ namespace Yarhl.IO
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
+            CheckWritePreamble();
             writer.Write(text, false, Encoding);
         }
 
@@ -137,6 +153,7 @@ namespace Yarhl.IO
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
 
+            CheckWritePreamble();
             string text = string.Format(CultureInfo.InvariantCulture, format, args);
             writer.Write(text, false, Encoding);
         }
@@ -146,6 +163,7 @@ namespace Yarhl.IO
         /// </summary>
         public void WriteLine()
         {
+            CheckWritePreamble();
             writer.Write(NewLine, false, Encoding);
         }
 
@@ -158,6 +176,7 @@ namespace Yarhl.IO
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
+            CheckWritePreamble();
             writer.Write(text + NewLine, false, Encoding);
         }
 
@@ -173,8 +192,24 @@ namespace Yarhl.IO
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
 
+            CheckWritePreamble();
             string text = string.Format(CultureInfo.InvariantCulture, format, args);
             writer.Write(text + NewLine, false, Encoding);
+        }
+
+        /// <summary>
+        /// Write the encoding preamble.
+        /// </summary>
+        public void WritePreamble()
+        {
+            writer.Write(Encoding.GetPreamble());
+        }
+
+        void CheckWritePreamble()
+        {
+            if (AutoPreamble && Stream.Position == 0) {
+                WritePreamble();
+            }
         }
     }
 }
