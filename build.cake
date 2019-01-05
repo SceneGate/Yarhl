@@ -18,50 +18,60 @@
 //
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#tool "nuget:?package=NUnit.ConsoleRunner"
-#addin nuget:?package=SharpZipLib
-#addin nuget:?package=Cake.Compression
-#addin nuget:?package=Cake.Incubator&version=3.0.0
-#addin nuget:?package=Cake.FileHelpers
-#addin nuget:?package=altcover.api
-#tool "nuget:?package=ReportGenerator"
-#tool coveralls.io
-#addin Cake.Coveralls
-#addin "nuget:?package=Cake.Sonar"
-#tool "nuget:?package=MSBuild.SonarQube.Runner.Tool"
-#addin Cake.DocFx
-#tool nuget:?package=docfx.console
 
-var netVersion = "47";
-var netCoreVersion = "2.1";
-var netstandardVersion = "2.0";
+// NUnit tests
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
+
+// Gendarme: decompress zip
+#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.1
+
+// Test coverage
+#addin nuget:?package=altcover.api&version=5.0.663
+#tool nuget:?package=ReportGenerator&version=4.0.5
+
+// SonarQube quality checks
+#addin nuget:?package=Cake.Sonar&version=1.1.18
+#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1
+
+// Documentation
+#addin nuget:?package=Cake.DocFx&version=0.11.0
+#tool nuget:?package=docfx.console&version=2.40.7
+
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
 var warningsAsError = Argument("warnaserror", true);
 
-var msbuildConfig = new MSBuildSettings {
-    Verbosity = Verbosity.Minimal,
-    Configuration = configuration,
-    Restore = true,
-    MaxCpuCount = 0,  // Auto build parallel mode
-    WarningsAsError = warningsAsError,
-};
+string netVersion = "472";
+string netcoreVersion = "2.1";
+string netstandardVersion = "2.0";
+
+string netBinDir = $"bin/{configuration}/net{netVersion}";
+string netcoreBinDir = $"bin/{configuration}/netcoreapp{netcoreVersion}";
+string netstandardBinDir = $"bin/{configuration}/netstandard{netstandardVersion}";
 
 Task("Build")
     .Does(() =>
 {
+    var msbuildConfig = new MSBuildSettings {
+        Verbosity = Verbosity.Minimal,
+        Configuration = configuration,
+        Restore = true,
+        MaxCpuCount = 0,  // Auto build parallel mode
+        WarningsAsError = warningsAsError,
+    };
     MSBuild("src/Yarhl.sln", msbuildConfig);
 
     // Copy Yarhl.Media for the integration tests
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netBinDir}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Plugins");
+        $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/{netBinDir}/Plugins");
+
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netcoreBinDir}/Plugins");
     CopyFileToDirectory(
-        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/netcoreapp{netCoreVersion}/Plugins");
+        $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/{netcoreBinDir}/Plugins");
 });
 
 Task("Run-Unit-Tests")
@@ -69,23 +79,24 @@ Task("Run-Unit-Tests")
     .Does(() =>
 {
     // NUnit3 to test libraries with .NET Framework / Mono
-    var settings = new NUnit3Settings();
-    settings.NoResults = true;
+    var settings = new NUnit3Settings {
+        NoResults = true,
+    };
 
     if (tests != string.Empty) {
         settings.Test = tests;
     }
 
     var testAssemblies = new List<FilePath> {
-        $"src/Yarhl.UnitTests/bin/{configuration}/net{netVersion}/Yarhl.UnitTests.dll",
-        $"src/Yarhl.IntegrationTests/bin/{configuration}/net{netVersion}/Yarhl.IntegrationTests.dll"
+        $"src/Yarhl.UnitTests/{netBinDir}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/{netBinDir}/Yarhl.IntegrationTests.dll"
     };
     NUnit3(testAssemblies, settings);
 
     // .NET Core test library
     var netcoreSettings = new DotNetCoreTestSettings {
         NoBuild = true,
-        Framework = $"netcoreapp{netCoreVersion}"
+        Framework = $"netcoreapp{netcoreVersion}"
     };
     DotNetCoreTest(
         $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
@@ -99,22 +110,24 @@ Task("Run-Linter-Gendarme")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    var mono_tools = DownloadFile("https://github.com/pleonex/mono-tools/releases/download/v4.2.2/mono-tools-v4.2.2.zip");
-    ZipUncompress(mono_tools, "tools/mono_tools");
+    if (IsRunningOnWindows()) {
+        throw new Exception("Gendarme is not supported on Windows");
+    }
+
+    var monoTools = DownloadFile("https://github.com/pleonex/mono-tools/releases/download/v4.2.2/mono-tools-v4.2.2.zip");
+    ZipUncompress(monoTools, "tools/mono_tools");
     var gendarme = "tools/mono_tools/bin/gendarme";
-    if (!IsRunningOnWindows()) {
-        if (StartProcess("chmod", $"+x {gendarme}") != 0) {
-            Error("Cannot change gendarme permissions");
-        }
+    if (StartProcess("chmod", $"+x {gendarme}") != 0) {
+        Error("Cannot change gendarme permissions");
     }
 
     RunGendarme(
         gendarme,
-        $"src/Yarhl/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.dll",
+        $"src/Yarhl/{netstandardBinDir}/Yarhl.dll",
         "src/Yarhl/Gendarme.ignore");
     RunGendarme(
         gendarme,
-        $"src/Yarhl.Media/bin/{configuration}/netstandard{netstandardVersion}/Yarhl.Media.dll",
+        $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
         "src/Yarhl.Media/Gendarme.ignore");
 });
 
@@ -144,26 +157,27 @@ Task("Run-AltCover")
     // Create the report
     ReportGenerator(
         new FilePath[] { "coverage_unit.xml", "coverage_integration.xml" },
-        "coveragereport",
+        "coverage_report",
         new ReportGeneratorSettings {
             ReportTypes = new[] {
                 ReportGeneratorReportType.Html,
-                ReportGeneratorReportType.TextSummary,
                 ReportGeneratorReportType.XmlSummary } });
 
     // Get final result
-    var xml = System.Xml.Linq.XDocument.Load("coveragereport/Summary.xml");
-    var coverage = xml.Root.Element("Summary").Element("Linecoverage").Value;
-    if (coverage == "100%") {
+    var xml = System.Xml.Linq.XDocument.Load("coverage_report/Summary.xml");
+    var xmlSummary = xml.Root.Element("Summary");
+    var covered = xmlSummary.Element("Coveredlines").Value;
+    var coverable = xmlSummary.Element("Coverablelines").Value;
+    if (covered == coverable) {
         Information("Full coverage!");
     } else {
-        ReportWarning($"Missing coverage: {coverage}");
+        ReportWarning($"Missing coverage: {covered} of {coverable}");
     }
 });
 
 public void TestWithAltCover(string projectPath, string assembly, string outputXml)
 {
-    string inputDir = $"{projectPath}/bin/{configuration}/net{netVersion}";
+    string inputDir = $"{projectPath}/{netBinDir}";
     string outputDir = $"{inputDir}/__Instrumented";
     if (DirectoryExists(outputDir)) {
         DeleteDirectory(
@@ -171,7 +185,7 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
             new DeleteDirectorySettings { Recursive = true });
     }
 
-    var altcoverArgs = new AltCover.PrepareArgs {
+    var altcoverArgs = new AltCover.Parameters.Primitive.PrepareArgs {
         InputDirectory = inputDir,
         OutputDirectory = outputDir,
         AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
@@ -199,11 +213,11 @@ Task("Run-Sonar")
     .IsDependentOn("Run-AltCover")
     .Does(() =>
 {
-    var sonar_token = EnvironmentVariable("SONAR_TOKEN");
+    var sonarToken = EnvironmentVariable("SONAR_TOKEN");
     SonarBegin(new SonarBeginSettings{
         Url = "https://sonarqube.com",
         Key = "yarhl",
-        Login = sonar_token,
+        Login = sonarToken,
         Organization = "pleonex-github",
         Verbose = true
      });
@@ -213,7 +227,7 @@ Task("Run-Sonar")
                 .WithTarget("Rebuild"));
 
      SonarEnd(new SonarEndSettings{
-        Login = sonar_token
+        Login = sonarToken
      });
 });
 
