@@ -112,6 +112,11 @@ Task("Run-Unit-Tests")
         NoBuild = true,
         Framework = $"netcoreapp{netcoreVersion}"
     };
+
+    if (tests != string.Empty) {
+        netcoreSettings.Filter = $"FullyQualifiedName~{tests}";
+    }
+
     DotNetCoreTest(
         $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
         netcoreSettings);
@@ -217,10 +222,6 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
 
     NUnit3($"{outputDir}/{assembly}", new NUnit3Settings { NoResults = true });
 }
-
-Task("Test-Quality")
-    .IsDependentOn("Run-Linter-Gendarme")
-    .IsDependentOn("Run-AltCover");
 
 Task("Run-Sonar")
     .IsDependentOn("Build")
@@ -347,12 +348,13 @@ Task("Deploy")
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Test-Quality");
+    .IsDependentOn("Run-AltCover");
 
 Task("Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Test-Quality")
+    .IsDependentOn("Run-AltCover")
+    .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Build-Doc");  // Try to build the doc but don't deploy
 
 Task("AppVeyor")
