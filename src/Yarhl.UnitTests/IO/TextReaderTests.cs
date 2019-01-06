@@ -121,6 +121,20 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadCharWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x61);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            Assert.AreEqual('a', reader.Read());
+            Assert.AreEqual(4, stream.Position);
+        }
+
+        [Test]
         public void ReadEndOfStreamThrowsException()
         {
             var reader = new TextReader(stream);
@@ -160,6 +174,27 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual('1', chars[0]);
             Assert.AreEqual('9', chars[1]);
             Assert.AreEqual(4, stream.Position);
+        }
+
+        [Test]
+        public void ReadArrayWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            var chars = reader.Read(2);
+
+            Assert.AreEqual('1', chars[0]);
+            Assert.AreEqual('9', chars[1]);
+            Assert.AreEqual(6, stream.Position);
         }
 
         [Test]
@@ -228,6 +263,26 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadToCharWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            var text = reader.ReadToToken("9");
+
+            Assert.AreEqual("1", text);
+            Assert.AreEqual(6, stream.Position);
+        }
+
+        [Test]
         public void ReadToPartialToken()
         {
             stream.WriteByte(0x31);
@@ -255,6 +310,26 @@ namespace Yarhl.UnitTests.IO
 
             Assert.AreEqual("1", text);
             Assert.AreEqual(3, stream.Position);
+        }
+
+        [Test]
+        public void ReadToTokenWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            string text = reader.ReadToToken("95");
+
+            Assert.AreEqual("1", text);
+            Assert.AreEqual(8, stream.Position);
         }
 
         [Test]
@@ -349,6 +424,30 @@ namespace Yarhl.UnitTests.IO
 
             Assert.AreEqual("59", line);
             Assert.AreEqual(3, stream.Position);
+        }
+
+        [Test]
+        public void ReadLineWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x0A);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            reader.AutoNewLine = false;
+            reader.NewLine = "\n";
+            var line = reader.ReadLine();
+
+            Assert.AreEqual("59", line);
+            Assert.AreEqual(8, stream.Position);
         }
 
         [Test]
@@ -478,6 +577,24 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadToEndWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0x35);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            var text = reader.ReadToEnd();
+
+            Assert.AreEqual("15", text);
+            Assert.AreEqual(6, stream.Position);
+        }
+
+        [Test]
         public void ReadToEndStartingAtSomePos()
         {
             stream.WriteByte(0x31);
@@ -515,6 +632,20 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void PeekCharWithEncoding()
         {
+            stream.WriteByte(0x61);
+            stream.WriteByte(0x00);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            Assert.AreEqual('a', reader.Peek());
+            Assert.AreEqual(0, stream.Position);
+        }
+
+        [Test]
+        public void PeekCharWithPreamble()
+        {
+            stream.WriteByte(0xFF);
+            stream.WriteByte(0xFE);
             stream.WriteByte(0x61);
             stream.WriteByte(0x00);
             stream.Position = 0;

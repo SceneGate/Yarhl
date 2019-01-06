@@ -206,7 +206,7 @@ namespace Yarhl.IO
         {
             if (Stream.Position > 0) {
                 throw new InvalidOperationException(
-                    "Preamble can be written only in Position 0.");
+                    "Preamble can be written only in position 0.");
             }
 
             writer.Write(Encoding.GetPreamble());

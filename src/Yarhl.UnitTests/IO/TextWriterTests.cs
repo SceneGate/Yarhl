@@ -87,6 +87,60 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WritePreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.WritePreamble();
+            stream.Position = 0;
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xFF));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xFE));
+
+            writer = new TextWriter(stream, Encoding.BigEndianUnicode);
+            stream.Position = 0;
+            writer.WritePreamble();
+            stream.Position = 0;
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xFE));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xFF));
+
+            writer = new TextWriter(stream, Encoding.UTF8);
+            stream.Position = 0;
+            writer.WritePreamble();
+            stream.Position = 0;
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xEF));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xBB));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xBF));
+
+            writer = new TextWriter(stream, Encoding.UTF32);
+            stream.Position = 0;
+            writer.WritePreamble();
+            stream.Position = 0;
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xFF));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0xFE));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0x00));
+        }
+
+        [Test]
+        public void WritePreambleWithEncodingWithoutItDoesNotThrow()
+        {
+            var writer = new TextWriter(stream, Encoding.ASCII);
+            Assert.That(() => writer.WritePreamble(), Throws.Nothing);
+            Assert.That(stream.Length, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void WritePreambleNotStartThrowsException()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            stream.WriteByte(0x00);
+
+            Assert.That(
+                () => writer.WritePreamble(),
+                Throws.InvalidOperationException.With
+                    .Message.EqualTo("Preamble can be written only in position 0."));
+        }
+
+        [Test]
         public void WriteChar()
         {
             var writer = new TextWriter(stream);
@@ -108,6 +162,24 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             Assert.AreEqual(2, stream.Length);
             Assert.AreEqual('c', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteCharWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.Write('c');
+            writer.Write('a');
+
+            stream.Position = 0;
+            Assert.AreEqual(6, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('c', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('a', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
         }
 
@@ -136,6 +208,26 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual('z', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
             Assert.AreEqual('w', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteCharArrayWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.Write(new char[] { 'z', 'w' });
+            writer.Write(new char[] { 'a' });
+
+            stream.Position = 0;
+            Assert.AreEqual(8, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('z', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('w', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('a', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
         }
 
@@ -171,6 +263,30 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual('h', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
             Assert.AreEqual('e', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteStringWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.Write("he");
+            writer.Write("llo");
+
+            stream.Position = 0;
+            Assert.AreEqual(12, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('h', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('e', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('l', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('l', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('o', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
         }
 
@@ -225,6 +341,28 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteStringFormatWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.Write("a{0}", 3);
+            writer.Write("b{0}", 0);
+
+            stream.Position = 0;
+            Assert.AreEqual(10, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('a', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('3', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('b', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('0', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
         public void WriteNullStringFormatThrowsException()
         {
             var writer = new TextWriter(stream);
@@ -274,6 +412,24 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteLineOnlyWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.WriteLine();
+            writer.WriteLine();
+
+            stream.Position = 0;
+            Assert.AreEqual(6, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('\n', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('\n', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
         public void WriteLineOnlyWithNewLine()
         {
             var writer = new TextWriter(stream);
@@ -311,6 +467,28 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             Assert.AreEqual(4, stream.Length);
             Assert.AreEqual('a', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('\n', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteLineStringWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.WriteLine("a");
+            writer.WriteLine("b");
+
+            stream.Position = 0;
+            Assert.AreEqual(10, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('a', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('\n', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('b', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
             Assert.AreEqual('\n', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
@@ -365,6 +543,32 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual('a', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
             Assert.AreEqual('3', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('\n', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+        }
+
+        [Test]
+        public void WriteLineStringFormatWithPreamble()
+        {
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = true;
+            writer.WriteLine("a{0}", 3);
+            writer.WriteLine("b{0}", 0);
+
+            stream.Position = 0;
+            Assert.AreEqual(14, stream.Length);
+            Assert.AreEqual(0xFF, stream.ReadByte());
+            Assert.AreEqual(0xFE, stream.ReadByte());
+            Assert.AreEqual('a', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('3', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('\n', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('b', stream.ReadByte());
+            Assert.AreEqual('\0', stream.ReadByte());
+            Assert.AreEqual('0', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
             Assert.AreEqual('\n', stream.ReadByte());
             Assert.AreEqual('\0', stream.ReadByte());
