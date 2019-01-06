@@ -31,7 +31,7 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text reader for DataStreams.
+    /// Text reader for <cref href="DataStream" />.
     /// </summary>
     public class TextReader
     {
@@ -55,11 +55,14 @@ namespace Yarhl.IO
         /// <param name="encoding">Encoding to use.</param>
         public TextReader(DataStream stream, Encoding encoding)
         {
-            reader = new DataReader(stream);
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
             NewLine = Environment.NewLine;
             AutoNewLine = true;
+
+            reader = new DataReader(stream) {
+                DefaultEncoding = Encoding,
+            };
         }
 
         /// <summary>
@@ -72,12 +75,12 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Gets or sets the encoding.
+        /// Gets the encoding.
         /// </summary>
         /// <value>The encoding.</value>
         public Encoding Encoding {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -116,7 +119,7 @@ namespace Yarhl.IO
         public char Read()
         {
             SkipPreamble();
-            return reader.ReadChar(Encoding);
+            return reader.ReadChar();
         }
 
         /// <summary>
@@ -130,7 +133,7 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(count));
 
             SkipPreamble();
-            return reader.ReadChars(count, Encoding);
+            return reader.ReadChars(count);
         }
 
         /// <summary>
@@ -159,6 +162,7 @@ namespace Yarhl.IO
             List<byte> textBuffer = new List<byte>();
             string text = string.Empty;
             int matchIndex = -1;
+
             while (matchIndex == -1) {
                 if (Stream.EndOfStream)
                     break;
@@ -216,9 +220,7 @@ namespace Yarhl.IO
         public string ReadToEnd()
         {
             SkipPreamble();
-            return reader.ReadString(
-                (int)(Stream.Length - Stream.Position),
-                Encoding);
+            return reader.ReadString((int)(Stream.Length - Stream.Position));
         }
 
         /// <summary>
@@ -273,6 +275,7 @@ namespace Yarhl.IO
 
         void SkipPreamble()
         {
+            // Preambles can only be at the beginning of the stream.
             if (Stream.Position > 0) {
                 return;
             }

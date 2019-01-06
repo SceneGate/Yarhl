@@ -30,7 +30,7 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text writer for DataStreams.
+    /// Text writer for <cref href="DataStream" />.
     /// </summary>
     public class TextWriter
     {
@@ -61,8 +61,10 @@ namespace Yarhl.IO
             Stream = stream;
             Encoding = encoding;
             NewLine = "\n";
-            AutoPreamble = true;
-            writer = new DataWriter(stream);
+            AutoPreamble = false;
+            writer = new DataWriter(stream) {
+                DefaultEncoding = Encoding,
+            };
         }
 
         /// <summary>
@@ -75,12 +77,12 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Gets or sets the encoding.
+        /// Gets the encoding.
         /// </summary>
         /// <value>The encoding.</value>
         public Encoding Encoding {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -112,7 +114,7 @@ namespace Yarhl.IO
         public void Write(char ch)
         {
             CheckWritePreamble();
-            writer.Write(ch, Encoding);
+            writer.Write(ch);
         }
 
         /// <summary>
@@ -125,7 +127,7 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(chars));
 
             CheckWritePreamble();
-            writer.Write(chars, Encoding);
+            writer.Write(chars);
         }
 
         /// <summary>
@@ -138,7 +140,7 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(text));
 
             CheckWritePreamble();
-            writer.Write(text, false, Encoding);
+            writer.Write(text, false);
         }
 
         /// <summary>
@@ -155,7 +157,7 @@ namespace Yarhl.IO
 
             CheckWritePreamble();
             string text = string.Format(CultureInfo.InvariantCulture, format, args);
-            writer.Write(text, false, Encoding);
+            writer.Write(text, false);
         }
 
         /// <summary>
@@ -164,7 +166,7 @@ namespace Yarhl.IO
         public void WriteLine()
         {
             CheckWritePreamble();
-            writer.Write(NewLine, false, Encoding);
+            writer.Write(NewLine, false);
         }
 
         /// <summary>
@@ -177,7 +179,7 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(text));
 
             CheckWritePreamble();
-            writer.Write(text + NewLine, false, Encoding);
+            writer.Write(text + NewLine, false);
         }
 
         /// <summary>
@@ -194,7 +196,7 @@ namespace Yarhl.IO
 
             CheckWritePreamble();
             string text = string.Format(CultureInfo.InvariantCulture, format, args);
-            writer.Write(text + NewLine, false, Encoding);
+            writer.Write(text + NewLine, false);
         }
 
         /// <summary>
@@ -202,6 +204,11 @@ namespace Yarhl.IO
         /// </summary>
         public void WritePreamble()
         {
+            if (Stream.Position > 0) {
+                throw new InvalidOperationException(
+                    "Preamble can be written only in Position 0.");
+            }
+
             writer.Write(Encoding.GetPreamble());
         }
 

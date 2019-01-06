@@ -34,13 +34,11 @@ namespace Yarhl.UnitTests.IO
     public class TextWriterTests
     {
         DataStream stream;
-        TextWriter writer;
 
         [SetUp]
         public void SetUp()
         {
             stream = new DataStream();
-            writer = new TextWriter(stream);
         }
 
         [TearDown]
@@ -52,15 +50,17 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void DefaultPropertyValues()
         {
+            var writer = new TextWriter(stream);
             Assert.AreSame(stream, writer.Stream);
             Assert.AreSame(Encoding.UTF8, writer.Encoding);
+            Assert.IsFalse(writer.AutoPreamble);
             Assert.AreEqual("\n", writer.NewLine);
         }
 
         [Test]
         public void ConstructorWithEncoding()
         {
-            writer = new TextWriter(stream, Encoding.ASCII);
+            var writer = new TextWriter(stream, Encoding.ASCII);
             Assert.AreSame(Encoding.ASCII, writer.Encoding);
         }
 
@@ -78,16 +78,19 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void PropertiesChangeValues()
         {
-            writer.Encoding = Encoding.ASCII;
-            Assert.AreSame(Encoding.ASCII, writer.Encoding);
-
+            var writer = new TextWriter(stream);
             writer.NewLine = "a";
             Assert.AreEqual("a", writer.NewLine);
+
+            writer.AutoPreamble = true;
+            Assert.IsTrue(writer.AutoPreamble);
         }
 
         [Test]
         public void WriteChar()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.Write('c');
 
             stream.Position = 0;
@@ -98,7 +101,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.Write('c');
 
             stream.Position = 0;
@@ -110,6 +114,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArray()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.Write(new char[] { 'z', 'w' });
 
             stream.Position = 0;
@@ -121,7 +127,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArrayWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.Write(new char[] { 'z', 'w' });
 
             stream.Position = 0;
@@ -135,12 +142,15 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullCharArrayThrowsException()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.Write((char[])null));
         }
 
         [Test]
         public void WriteString()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.Write("he");
 
             stream.Position = 0;
@@ -152,7 +162,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.Write("he");
 
             stream.Position = 0;
@@ -166,12 +177,15 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullStringThrowsException()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.Write((string)null));
         }
 
         [Test]
         public void WriteStringFormat()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.Write("a{0}", 3);
 
             stream.Position = 0;
@@ -183,6 +197,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatEscaping()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.Write("a{{0}}", 3);
 
             stream.Position = 0;
@@ -196,7 +212,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.Write("a{0}", 3);
 
             stream.Position = 0;
@@ -210,6 +227,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullStringFormatThrowsException()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.Write(null, "a"));
             Assert.Throws<ArgumentNullException>(() => writer.Write("a", null));
         }
@@ -217,6 +235,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithLessFormatsThrows()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<FormatException>(() => writer.Write("a{0}{1}", 3));
             Assert.Throws<FormatException>(() => writer.Write("a{1}", 3));
             Assert.Throws<FormatException>(() => writer.Write("a{0}", new object[0]));
@@ -225,12 +244,15 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithMoreArgsDoesNotThrow()
         {
+            var writer = new TextWriter(stream);
             Assert.DoesNotThrow(() => writer.Write("a{0}", 3, 4, 5));
         }
 
         [Test]
         public void WriteLineOnly()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.WriteLine();
 
             stream.Position = 0;
@@ -241,7 +263,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineOnlyWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.WriteLine();
 
             stream.Position = 0;
@@ -253,6 +276,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineOnlyWithNewLine()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.NewLine = "NL";
             writer.WriteLine();
 
@@ -265,6 +290,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineString()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.WriteLine("za");
 
             stream.Position = 0;
@@ -277,7 +304,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.WriteLine("a");
 
             stream.Position = 0;
@@ -291,12 +319,15 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineNullStringThrowsException()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.WriteLine(null));
         }
 
         [Test]
         public void WriteLineStringFormat()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.WriteLine("a{0}", 3);
 
             stream.Position = 0;
@@ -309,6 +340,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatEscaping()
         {
+            var writer = new TextWriter(stream);
+            writer.AutoPreamble = false;
             writer.WriteLine("a{{0}}", 3);
 
             stream.Position = 0;
@@ -323,7 +356,8 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithEncoding()
         {
-            writer.Encoding = Encoding.GetEncoding("utf-16");
+            var writer = new TextWriter(stream, Encoding.Unicode);
+            writer.AutoPreamble = false;
             writer.WriteLine("a{0}", 3);
 
             stream.Position = 0;
@@ -339,6 +373,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineNullStringFormatThrowsException()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.WriteLine(null, "a"));
             Assert.Throws<ArgumentNullException>(() => writer.WriteLine("a", null));
         }
@@ -346,6 +381,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithLessFormatsThrows()
         {
+            var writer = new TextWriter(stream);
             Assert.Throws<FormatException>(() => writer.WriteLine("a{0}{1}", 3));
             Assert.Throws<FormatException>(() => writer.WriteLine("a{1}", 3));
             Assert.Throws<FormatException>(() => writer.WriteLine("a{0}", new object[0]));
@@ -354,6 +390,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithMoreArgsDoesNotThrow()
         {
+            var writer = new TextWriter(stream);
             Assert.DoesNotThrow(() => writer.WriteLine("a{0}", 3, 4, 5));
         }
     }
