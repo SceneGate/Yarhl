@@ -2,9 +2,7 @@
 <RuleSet Name="Rules for Yarhl.IntegrationTests" ToolsVersion="12.0">
   <Include Path="..\StyleCop.ruleset" Action="Default" />
   <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
-    <!-- Disable documentation for public types and members. -->
-    <Rule Id="CS1591" Action="None" />
-    <!-- Disable documentation for methods. -->
-    <Rule Id="SA1600" Action="None" />
+    <!-- Disable documentation in unit tests. -->
+    <Rule Id="SA0001" Action="None" />
   </Rules>
 </RuleSet>

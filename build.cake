@@ -50,6 +50,20 @@ string netBinDir = $"bin/{configuration}/net{netVersion}";
 string netcoreBinDir = $"bin/{configuration}/netcoreapp{netcoreVersion}";
 string netstandardBinDir = $"bin/{configuration}/netstandard{netstandardVersion}";
 
+Task("Clean")
+    .Does(() =>
+{
+    MSBuild("src/Yarhl.sln", configurator => configurator
+        .WithTarget("Clean")
+        .SetVerbosity(Verbosity.Minimal)
+        .SetConfiguration(configuration));
+    if (DirectoryExists("artifacts")) {
+        DeleteDirectory(
+            "artifacts",
+            new DeleteDirectorySettings { Recursive = true });
+    }
+});
+
 Task("Build")
     .Does(() =>
 {
@@ -98,6 +112,11 @@ Task("Run-Unit-Tests")
         NoBuild = true,
         Framework = $"netcoreapp{netcoreVersion}"
     };
+
+    if (tests != string.Empty) {
+        netcoreSettings.Filter = $"FullyQualifiedName~{tests}";
+    }
+
     DotNetCoreTest(
         $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
         netcoreSettings);
@@ -204,10 +223,6 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
     NUnit3($"{outputDir}/{assembly}", new NUnit3Settings { NoResults = true });
 }
 
-Task("Test-Quality")
-    .IsDependentOn("Run-Linter-Gendarme")
-    .IsDependentOn("Run-AltCover");
-
 Task("Run-Sonar")
     .IsDependentOn("Build")
     .IsDependentOn("Run-AltCover")
@@ -302,15 +317,44 @@ Task("Deploy-Doc")
     }
 });
 
+Task("Pack")
+    .Description("Create the NuGet package")
+    .IsDependentOn("Build")
+    .Does(() =>
+{
+    var settings = new DotNetCorePackSettings {
+        Configuration = configuration,
+        OutputDirectory = "artifacts/",
+        IncludeSymbols = true,
+        MSBuildSettings = new DotNetCoreMSBuildSettings()
+            .WithProperty("SymbolPackageFormat", "snupkg")
+    };
+    DotNetCorePack("src/Yarhl.sln", settings);
+});
+
+Task("Deploy")
+    .Description("Deploy the NuGet packages to the server")
+    .IsDependentOn("Clean")
+    .IsDependentOn("Pack")
+    .Does(() =>
+{
+    var settings = new DotNetCoreNuGetPushSettings {
+        Source = "https://api.nuget.org/v3/index.json",
+        ApiKey = Environment.GetEnvironmentVariable("NUGET_KEY"),
+    };
+    DotNetCoreNuGetPush("artifacts/*.nupkg", settings);
+});
+
 Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Test-Quality");
+    .IsDependentOn("Run-AltCover");
 
 Task("Travis")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Test-Quality")
+    .IsDependentOn("Run-AltCover")
+    .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Build-Doc");  // Try to build the doc but don't deploy
 
 Task("AppVeyor")

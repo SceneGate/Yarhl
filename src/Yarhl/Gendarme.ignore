@@ -60,6 +60,7 @@ R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
 T: Yarhl.IO.DataStream
 T: Yarhl.IO.DataWriter
 T: Yarhl.IO.TextReader
+T: Yarhl.IO.TextWriter
 
 R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 # I allow this to happen only for constructors

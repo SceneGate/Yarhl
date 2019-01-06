@@ -1,6 +1,7 @@
 # Output
 bin/
 obj/
+artifacts/
 
 # IDE
 *.userprefs
