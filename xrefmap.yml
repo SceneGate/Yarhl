@@ -107,19 +107,6 @@ references:
   isSpec: "True"
   fullName: Yarhl.FileFormat.ConverterMetadata.CanConvert
   nameWithType: ConverterMetadata.CanConvert
-- uid: Yarhl.FileFormat.ConverterMetadata.Destinations
-  name: Destinations
-  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Destinations
-  commentId: P:Yarhl.FileFormat.ConverterMetadata.Destinations
-  fullName: Yarhl.FileFormat.ConverterMetadata.Destinations
-  nameWithType: ConverterMetadata.Destinations
-- uid: Yarhl.FileFormat.ConverterMetadata.Destinations*
-  name: Destinations
-  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Destinations_
-  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.Destinations
-  isSpec: "True"
-  fullName: Yarhl.FileFormat.ConverterMetadata.Destinations
-  nameWithType: ConverterMetadata.Destinations
 - uid: Yarhl.FileFormat.ConverterMetadata.GetDestinations
   name: GetDestinations()
   href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_GetDestinations
@@ -146,6 +133,32 @@ references:
   isSpec: "True"
   fullName: Yarhl.FileFormat.ConverterMetadata.GetSources
   nameWithType: ConverterMetadata.GetSources
+- uid: Yarhl.FileFormat.ConverterMetadata.InternalDestinations
+  name: InternalDestinations
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_InternalDestinations
+  commentId: P:Yarhl.FileFormat.ConverterMetadata.InternalDestinations
+  fullName: Yarhl.FileFormat.ConverterMetadata.InternalDestinations
+  nameWithType: ConverterMetadata.InternalDestinations
+- uid: Yarhl.FileFormat.ConverterMetadata.InternalDestinations*
+  name: InternalDestinations
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_InternalDestinations_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.InternalDestinations
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.InternalDestinations
+  nameWithType: ConverterMetadata.InternalDestinations
+- uid: Yarhl.FileFormat.ConverterMetadata.InternalSources
+  name: InternalSources
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_InternalSources
+  commentId: P:Yarhl.FileFormat.ConverterMetadata.InternalSources
+  fullName: Yarhl.FileFormat.ConverterMetadata.InternalSources
+  nameWithType: ConverterMetadata.InternalSources
+- uid: Yarhl.FileFormat.ConverterMetadata.InternalSources*
+  name: InternalSources
+  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_InternalSources_
+  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.InternalSources
+  isSpec: "True"
+  fullName: Yarhl.FileFormat.ConverterMetadata.InternalSources
+  nameWithType: ConverterMetadata.InternalSources
 - uid: Yarhl.FileFormat.ConverterMetadata.Name
   name: Name
   href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Name
@@ -159,19 +172,6 @@ references:
   isSpec: "True"
   fullName: Yarhl.FileFormat.ConverterMetadata.Name
   nameWithType: ConverterMetadata.Name
-- uid: Yarhl.FileFormat.ConverterMetadata.Sources
-  name: Sources
-  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Sources
-  commentId: P:Yarhl.FileFormat.ConverterMetadata.Sources
-  fullName: Yarhl.FileFormat.ConverterMetadata.Sources
-  nameWithType: ConverterMetadata.Sources
-- uid: Yarhl.FileFormat.ConverterMetadata.Sources*
-  name: Sources
-  href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Sources_
-  commentId: Overload:Yarhl.FileFormat.ConverterMetadata.Sources
-  isSpec: "True"
-  fullName: Yarhl.FileFormat.ConverterMetadata.Sources
-  nameWithType: ConverterMetadata.Sources
 - uid: Yarhl.FileFormat.ConverterMetadata.Type
   name: Type
   href: api/Yarhl.FileFormat.ConverterMetadata.html#Yarhl_FileFormat_ConverterMetadata_Type
@@ -426,247 +426,247 @@ references:
   commentId: N:Yarhl.FileSystem
   fullName: Yarhl.FileSystem
   nameWithType: Yarhl.FileSystem
-- uid: Yarhl.FileSystem.NavegableNode`1
-  name: NavegableNode<T>
-  href: api/Yarhl.FileSystem.NavegableNode-1.html
-  commentId: T:Yarhl.FileSystem.NavegableNode`1
-  name.vb: NavegableNode(Of T)
-  fullName: Yarhl.FileSystem.NavegableNode<T>
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T)
-  nameWithType: NavegableNode<T>
-  nameWithType.vb: NavegableNode(Of T)
-- uid: Yarhl.FileSystem.NavegableNode`1.#ctor(System.String)
-  name: NavegableNode(String)
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1__ctor_System_String_
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.#ctor(System.String)
-  fullName: Yarhl.FileSystem.NavegableNode<T>.NavegableNode(System.String)
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).NavegableNode(System.String)
-  nameWithType: NavegableNode<T>.NavegableNode(String)
-  nameWithType.vb: NavegableNode(Of T).NavegableNode(String)
-- uid: Yarhl.FileSystem.NavegableNode`1.#ctor*
-  name: NavegableNode
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1__ctor_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.#ctor
+- uid: Yarhl.FileSystem.NavigableNode`1
+  name: NavigableNode<T>
+  href: api/Yarhl.FileSystem.NavigableNode-1.html
+  commentId: T:Yarhl.FileSystem.NavigableNode`1
+  name.vb: NavigableNode(Of T)
+  fullName: Yarhl.FileSystem.NavigableNode<T>
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T)
+  nameWithType: NavigableNode<T>
+  nameWithType.vb: NavigableNode(Of T)
+- uid: Yarhl.FileSystem.NavigableNode`1.#ctor(System.String)
+  name: NavigableNode(String)
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1__ctor_System_String_
+  commentId: M:Yarhl.FileSystem.NavigableNode`1.#ctor(System.String)
+  fullName: Yarhl.FileSystem.NavigableNode<T>.NavigableNode(System.String)
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).NavigableNode(System.String)
+  nameWithType: NavigableNode<T>.NavigableNode(String)
+  nameWithType.vb: NavigableNode(Of T).NavigableNode(String)
+- uid: Yarhl.FileSystem.NavigableNode`1.#ctor*
+  name: NavigableNode
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1__ctor_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.#ctor
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.NavegableNode
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).NavegableNode
-  nameWithType: NavegableNode<T>.NavegableNode
-  nameWithType.vb: NavegableNode(Of T).NavegableNode
-- uid: Yarhl.FileSystem.NavegableNode`1.Add(`0)
+  fullName: Yarhl.FileSystem.NavigableNode<T>.NavigableNode
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).NavigableNode
+  nameWithType: NavigableNode<T>.NavigableNode
+  nameWithType.vb: NavigableNode(Of T).NavigableNode
+- uid: Yarhl.FileSystem.NavigableNode`1.Add(`0)
   name: Add(T)
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Add__0_
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.Add(`0)
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Add(T)
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Add(T)
-  nameWithType: NavegableNode<T>.Add(T)
-  nameWithType.vb: NavegableNode(Of T).Add(T)
-- uid: Yarhl.FileSystem.NavegableNode`1.Add(System.Collections.Generic.IEnumerable{`0})
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Add__0_
+  commentId: M:Yarhl.FileSystem.NavigableNode`1.Add(`0)
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Add(T)
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Add(T)
+  nameWithType: NavigableNode<T>.Add(T)
+  nameWithType.vb: NavigableNode(Of T).Add(T)
+- uid: Yarhl.FileSystem.NavigableNode`1.Add(System.Collections.Generic.IEnumerable{`0})
   name: Add(IEnumerable<T>)
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Add_System_Collections_Generic_IEnumerable__0__
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.Add(System.Collections.Generic.IEnumerable{`0})
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Add_System_Collections_Generic_IEnumerable__0__
+  commentId: M:Yarhl.FileSystem.NavigableNode`1.Add(System.Collections.Generic.IEnumerable{`0})
   name.vb: Add(IEnumerable(Of T))
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Add(System.Collections.Generic.IEnumerable<T>)
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Add(System.Collections.Generic.IEnumerable(Of T))
-  nameWithType: NavegableNode<T>.Add(IEnumerable<T>)
-  nameWithType.vb: NavegableNode(Of T).Add(IEnumerable(Of T))
-- uid: Yarhl.FileSystem.NavegableNode`1.Add*
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Add(System.Collections.Generic.IEnumerable<T>)
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Add(System.Collections.Generic.IEnumerable(Of T))
+  nameWithType: NavigableNode<T>.Add(IEnumerable<T>)
+  nameWithType.vb: NavigableNode(Of T).Add(IEnumerable(Of T))
+- uid: Yarhl.FileSystem.NavigableNode`1.Add*
   name: Add
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Add_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Add
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Add_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Add
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Add
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Add
-  nameWithType: NavegableNode<T>.Add
-  nameWithType.vb: NavegableNode(Of T).Add
-- uid: Yarhl.FileSystem.NavegableNode`1.Children
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Add
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Add
+  nameWithType: NavigableNode<T>.Add
+  nameWithType.vb: NavigableNode(Of T).Add
+- uid: Yarhl.FileSystem.NavigableNode`1.Children
   name: Children
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Children
-  commentId: P:Yarhl.FileSystem.NavegableNode`1.Children
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Children
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Children
-  nameWithType: NavegableNode<T>.Children
-  nameWithType.vb: NavegableNode(Of T).Children
-- uid: Yarhl.FileSystem.NavegableNode`1.Children*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Children
+  commentId: P:Yarhl.FileSystem.NavigableNode`1.Children
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Children
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Children
+  nameWithType: NavigableNode<T>.Children
+  nameWithType.vb: NavigableNode(Of T).Children
+- uid: Yarhl.FileSystem.NavigableNode`1.Children*
   name: Children
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Children_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Children
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Children_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Children
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Children
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Children
-  nameWithType: NavegableNode<T>.Children
-  nameWithType.vb: NavegableNode(Of T).Children
-- uid: Yarhl.FileSystem.NavegableNode`1.Dispose
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Children
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Children
+  nameWithType: NavigableNode<T>.Children
+  nameWithType.vb: NavigableNode(Of T).Children
+- uid: Yarhl.FileSystem.NavigableNode`1.Dispose
   name: Dispose()
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Dispose
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.Dispose
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Dispose()
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Dispose()
-  nameWithType: NavegableNode<T>.Dispose()
-  nameWithType.vb: NavegableNode(Of T).Dispose()
-- uid: Yarhl.FileSystem.NavegableNode`1.Dispose(System.Boolean)
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Dispose
+  commentId: M:Yarhl.FileSystem.NavigableNode`1.Dispose
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Dispose()
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Dispose()
+  nameWithType: NavigableNode<T>.Dispose()
+  nameWithType.vb: NavigableNode(Of T).Dispose()
+- uid: Yarhl.FileSystem.NavigableNode`1.Dispose(System.Boolean)
   name: Dispose(Boolean)
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Dispose_System_Boolean_
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.Dispose(System.Boolean)
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Dispose(System.Boolean)
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Dispose(System.Boolean)
-  nameWithType: NavegableNode<T>.Dispose(Boolean)
-  nameWithType.vb: NavegableNode(Of T).Dispose(Boolean)
-- uid: Yarhl.FileSystem.NavegableNode`1.Dispose*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Dispose_System_Boolean_
+  commentId: M:Yarhl.FileSystem.NavigableNode`1.Dispose(System.Boolean)
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Dispose(System.Boolean)
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Dispose(System.Boolean)
+  nameWithType: NavigableNode<T>.Dispose(Boolean)
+  nameWithType.vb: NavigableNode(Of T).Dispose(Boolean)
+- uid: Yarhl.FileSystem.NavigableNode`1.Dispose*
   name: Dispose
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Dispose_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Dispose
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Dispose_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Dispose
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Dispose
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Dispose
-  nameWithType: NavegableNode<T>.Dispose
-  nameWithType.vb: NavegableNode(Of T).Dispose
-- uid: Yarhl.FileSystem.NavegableNode`1.Disposed
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Dispose
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Dispose
+  nameWithType: NavigableNode<T>.Dispose
+  nameWithType.vb: NavigableNode(Of T).Dispose
+- uid: Yarhl.FileSystem.NavigableNode`1.Disposed
   name: Disposed
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Disposed
-  commentId: P:Yarhl.FileSystem.NavegableNode`1.Disposed
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Disposed
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Disposed
-  nameWithType: NavegableNode<T>.Disposed
-  nameWithType.vb: NavegableNode(Of T).Disposed
-- uid: Yarhl.FileSystem.NavegableNode`1.Disposed*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Disposed
+  commentId: P:Yarhl.FileSystem.NavigableNode`1.Disposed
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Disposed
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Disposed
+  nameWithType: NavigableNode<T>.Disposed
+  nameWithType.vb: NavigableNode(Of T).Disposed
+- uid: Yarhl.FileSystem.NavigableNode`1.Disposed*
   name: Disposed
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Disposed_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Disposed
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Disposed_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Disposed
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Disposed
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Disposed
-  nameWithType: NavegableNode<T>.Disposed
-  nameWithType.vb: NavegableNode(Of T).Disposed
-- uid: Yarhl.FileSystem.NavegableNode`1.Name
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Disposed
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Disposed
+  nameWithType: NavigableNode<T>.Disposed
+  nameWithType.vb: NavigableNode(Of T).Disposed
+- uid: Yarhl.FileSystem.NavigableNode`1.Name
   name: Name
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Name
-  commentId: P:Yarhl.FileSystem.NavegableNode`1.Name
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Name
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Name
-  nameWithType: NavegableNode<T>.Name
-  nameWithType.vb: NavegableNode(Of T).Name
-- uid: Yarhl.FileSystem.NavegableNode`1.Name*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Name
+  commentId: P:Yarhl.FileSystem.NavigableNode`1.Name
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Name
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Name
+  nameWithType: NavigableNode<T>.Name
+  nameWithType.vb: NavigableNode(Of T).Name
+- uid: Yarhl.FileSystem.NavigableNode`1.Name*
   name: Name
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Name_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Name
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Name_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Name
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Name
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Name
-  nameWithType: NavegableNode<T>.Name
-  nameWithType.vb: NavegableNode(Of T).Name
-- uid: Yarhl.FileSystem.NavegableNode`1.Parent
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Name
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Name
+  nameWithType: NavigableNode<T>.Name
+  nameWithType.vb: NavigableNode(Of T).Name
+- uid: Yarhl.FileSystem.NavigableNode`1.Parent
   name: Parent
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Parent
-  commentId: P:Yarhl.FileSystem.NavegableNode`1.Parent
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Parent
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Parent
-  nameWithType: NavegableNode<T>.Parent
-  nameWithType.vb: NavegableNode(Of T).Parent
-- uid: Yarhl.FileSystem.NavegableNode`1.Parent*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Parent
+  commentId: P:Yarhl.FileSystem.NavigableNode`1.Parent
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Parent
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Parent
+  nameWithType: NavigableNode<T>.Parent
+  nameWithType.vb: NavigableNode(Of T).Parent
+- uid: Yarhl.FileSystem.NavigableNode`1.Parent*
   name: Parent
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Parent_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Parent
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Parent_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Parent
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Parent
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Parent
-  nameWithType: NavegableNode<T>.Parent
-  nameWithType.vb: NavegableNode(Of T).Parent
-- uid: Yarhl.FileSystem.NavegableNode`1.Path
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Parent
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Parent
+  nameWithType: NavigableNode<T>.Parent
+  nameWithType.vb: NavigableNode(Of T).Parent
+- uid: Yarhl.FileSystem.NavigableNode`1.Path
   name: Path
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Path
-  commentId: P:Yarhl.FileSystem.NavegableNode`1.Path
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Path
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Path
-  nameWithType: NavegableNode<T>.Path
-  nameWithType.vb: NavegableNode(Of T).Path
-- uid: Yarhl.FileSystem.NavegableNode`1.Path*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Path
+  commentId: P:Yarhl.FileSystem.NavigableNode`1.Path
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Path
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Path
+  nameWithType: NavigableNode<T>.Path
+  nameWithType.vb: NavigableNode(Of T).Path
+- uid: Yarhl.FileSystem.NavigableNode`1.Path*
   name: Path
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Path_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Path
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Path_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Path
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Path
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Path
-  nameWithType: NavegableNode<T>.Path
-  nameWithType.vb: NavegableNode(Of T).Path
-- uid: Yarhl.FileSystem.NavegableNode`1.RemoveChildren
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Path
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Path
+  nameWithType: NavigableNode<T>.Path
+  nameWithType.vb: NavigableNode(Of T).Path
+- uid: Yarhl.FileSystem.NavigableNode`1.RemoveChildren
   name: RemoveChildren()
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_RemoveChildren
-  commentId: M:Yarhl.FileSystem.NavegableNode`1.RemoveChildren
-  fullName: Yarhl.FileSystem.NavegableNode<T>.RemoveChildren()
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).RemoveChildren()
-  nameWithType: NavegableNode<T>.RemoveChildren()
-  nameWithType.vb: NavegableNode(Of T).RemoveChildren()
-- uid: Yarhl.FileSystem.NavegableNode`1.RemoveChildren*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_RemoveChildren
+  commentId: M:Yarhl.FileSystem.NavigableNode`1.RemoveChildren
+  fullName: Yarhl.FileSystem.NavigableNode<T>.RemoveChildren()
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).RemoveChildren()
+  nameWithType: NavigableNode<T>.RemoveChildren()
+  nameWithType.vb: NavigableNode(Of T).RemoveChildren()
+- uid: Yarhl.FileSystem.NavigableNode`1.RemoveChildren*
   name: RemoveChildren
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_RemoveChildren_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.RemoveChildren
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_RemoveChildren_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.RemoveChildren
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.RemoveChildren
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).RemoveChildren
-  nameWithType: NavegableNode<T>.RemoveChildren
-  nameWithType.vb: NavegableNode(Of T).RemoveChildren
-- uid: Yarhl.FileSystem.NavegableNode`1.Tags
+  fullName: Yarhl.FileSystem.NavigableNode<T>.RemoveChildren
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).RemoveChildren
+  nameWithType: NavigableNode<T>.RemoveChildren
+  nameWithType.vb: NavigableNode(Of T).RemoveChildren
+- uid: Yarhl.FileSystem.NavigableNode`1.Tags
   name: Tags
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Tags
-  commentId: P:Yarhl.FileSystem.NavegableNode`1.Tags
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Tags
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Tags
-  nameWithType: NavegableNode<T>.Tags
-  nameWithType.vb: NavegableNode(Of T).Tags
-- uid: Yarhl.FileSystem.NavegableNode`1.Tags*
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Tags
+  commentId: P:Yarhl.FileSystem.NavigableNode`1.Tags
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Tags
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Tags
+  nameWithType: NavigableNode<T>.Tags
+  nameWithType.vb: NavigableNode(Of T).Tags
+- uid: Yarhl.FileSystem.NavigableNode`1.Tags*
   name: Tags
-  href: api/Yarhl.FileSystem.NavegableNode-1.html#Yarhl_FileSystem_NavegableNode_1_Tags_
-  commentId: Overload:Yarhl.FileSystem.NavegableNode`1.Tags
+  href: api/Yarhl.FileSystem.NavigableNode-1.html#Yarhl_FileSystem_NavigableNode_1_Tags_
+  commentId: Overload:Yarhl.FileSystem.NavigableNode`1.Tags
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNode<T>.Tags
-  fullName.vb: Yarhl.FileSystem.NavegableNode(Of T).Tags
-  nameWithType: NavegableNode<T>.Tags
-  nameWithType.vb: NavegableNode(Of T).Tags
-- uid: Yarhl.FileSystem.NavegableNodeCollection`1
-  name: NavegableNodeCollection<T>
-  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html
-  commentId: T:Yarhl.FileSystem.NavegableNodeCollection`1
-  name.vb: NavegableNodeCollection(Of T)
-  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>
-  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T)
-  nameWithType: NavegableNodeCollection<T>
-  nameWithType.vb: NavegableNodeCollection(Of T)
-- uid: Yarhl.FileSystem.NavegableNodeCollection`1.#ctor(System.Collections.Generic.IList{`0})
-  name: NavegableNodeCollection(IList<T>)
-  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1__ctor_System_Collections_Generic_IList__0__
-  commentId: M:Yarhl.FileSystem.NavegableNodeCollection`1.#ctor(System.Collections.Generic.IList{`0})
-  name.vb: NavegableNodeCollection(IList(Of T))
-  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.NavegableNodeCollection(System.Collections.Generic.IList<T>)
-  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).NavegableNodeCollection(System.Collections.Generic.IList(Of T))
-  nameWithType: NavegableNodeCollection<T>.NavegableNodeCollection(IList<T>)
-  nameWithType.vb: NavegableNodeCollection(Of T).NavegableNodeCollection(IList(Of T))
-- uid: Yarhl.FileSystem.NavegableNodeCollection`1.#ctor*
-  name: NavegableNodeCollection
-  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1__ctor_
-  commentId: Overload:Yarhl.FileSystem.NavegableNodeCollection`1.#ctor
+  fullName: Yarhl.FileSystem.NavigableNode<T>.Tags
+  fullName.vb: Yarhl.FileSystem.NavigableNode(Of T).Tags
+  nameWithType: NavigableNode<T>.Tags
+  nameWithType.vb: NavigableNode(Of T).Tags
+- uid: Yarhl.FileSystem.NavigableNodeCollection`1
+  name: NavigableNodeCollection<T>
+  href: api/Yarhl.FileSystem.NavigableNodeCollection-1.html
+  commentId: T:Yarhl.FileSystem.NavigableNodeCollection`1
+  name.vb: NavigableNodeCollection(Of T)
+  fullName: Yarhl.FileSystem.NavigableNodeCollection<T>
+  fullName.vb: Yarhl.FileSystem.NavigableNodeCollection(Of T)
+  nameWithType: NavigableNodeCollection<T>
+  nameWithType.vb: NavigableNodeCollection(Of T)
+- uid: Yarhl.FileSystem.NavigableNodeCollection`1.#ctor(System.Collections.Generic.IList{`0})
+  name: NavigableNodeCollection(IList<T>)
+  href: api/Yarhl.FileSystem.NavigableNodeCollection-1.html#Yarhl_FileSystem_NavigableNodeCollection_1__ctor_System_Collections_Generic_IList__0__
+  commentId: M:Yarhl.FileSystem.NavigableNodeCollection`1.#ctor(System.Collections.Generic.IList{`0})
+  name.vb: NavigableNodeCollection(IList(Of T))
+  fullName: Yarhl.FileSystem.NavigableNodeCollection<T>.NavigableNodeCollection(System.Collections.Generic.IList<T>)
+  fullName.vb: Yarhl.FileSystem.NavigableNodeCollection(Of T).NavigableNodeCollection(System.Collections.Generic.IList(Of T))
+  nameWithType: NavigableNodeCollection<T>.NavigableNodeCollection(IList<T>)
+  nameWithType.vb: NavigableNodeCollection(Of T).NavigableNodeCollection(IList(Of T))
+- uid: Yarhl.FileSystem.NavigableNodeCollection`1.#ctor*
+  name: NavigableNodeCollection
+  href: api/Yarhl.FileSystem.NavigableNodeCollection-1.html#Yarhl_FileSystem_NavigableNodeCollection_1__ctor_
+  commentId: Overload:Yarhl.FileSystem.NavigableNodeCollection`1.#ctor
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.NavegableNodeCollection
-  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).NavegableNodeCollection
-  nameWithType: NavegableNodeCollection<T>.NavegableNodeCollection
-  nameWithType.vb: NavegableNodeCollection(Of T).NavegableNodeCollection
-- uid: Yarhl.FileSystem.NavegableNodeCollection`1.Item(System.String)
+  fullName: Yarhl.FileSystem.NavigableNodeCollection<T>.NavigableNodeCollection
+  fullName.vb: Yarhl.FileSystem.NavigableNodeCollection(Of T).NavigableNodeCollection
+  nameWithType: NavigableNodeCollection<T>.NavigableNodeCollection
+  nameWithType.vb: NavigableNodeCollection(Of T).NavigableNodeCollection
+- uid: Yarhl.FileSystem.NavigableNodeCollection`1.Item(System.String)
   name: Item[String]
-  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1_Item_System_String_
-  commentId: P:Yarhl.FileSystem.NavegableNodeCollection`1.Item(System.String)
+  href: api/Yarhl.FileSystem.NavigableNodeCollection-1.html#Yarhl_FileSystem_NavigableNodeCollection_1_Item_System_String_
+  commentId: P:Yarhl.FileSystem.NavigableNodeCollection`1.Item(System.String)
   name.vb: Item(String)
-  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.Item[System.String]
-  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).Item(System.String)
-  nameWithType: NavegableNodeCollection<T>.Item[String]
-  nameWithType.vb: NavegableNodeCollection(Of T).Item(String)
-- uid: Yarhl.FileSystem.NavegableNodeCollection`1.Item*
+  fullName: Yarhl.FileSystem.NavigableNodeCollection<T>.Item[System.String]
+  fullName.vb: Yarhl.FileSystem.NavigableNodeCollection(Of T).Item(System.String)
+  nameWithType: NavigableNodeCollection<T>.Item[String]
+  nameWithType.vb: NavigableNodeCollection(Of T).Item(String)
+- uid: Yarhl.FileSystem.NavigableNodeCollection`1.Item*
   name: Item
-  href: api/Yarhl.FileSystem.NavegableNodeCollection-1.html#Yarhl_FileSystem_NavegableNodeCollection_1_Item_
-  commentId: Overload:Yarhl.FileSystem.NavegableNodeCollection`1.Item
+  href: api/Yarhl.FileSystem.NavigableNodeCollection-1.html#Yarhl_FileSystem_NavigableNodeCollection_1_Item_
+  commentId: Overload:Yarhl.FileSystem.NavigableNodeCollection`1.Item
   isSpec: "True"
-  fullName: Yarhl.FileSystem.NavegableNodeCollection<T>.Item
-  fullName.vb: Yarhl.FileSystem.NavegableNodeCollection(Of T).Item
-  nameWithType: NavegableNodeCollection<T>.Item
-  nameWithType.vb: NavegableNodeCollection(Of T).Item
+  fullName: Yarhl.FileSystem.NavigableNodeCollection<T>.Item
+  fullName.vb: Yarhl.FileSystem.NavigableNodeCollection(Of T).Item
+  nameWithType: NavigableNodeCollection<T>.Item
+  nameWithType.vb: NavigableNodeCollection(Of T).Item
 - uid: Yarhl.FileSystem.NavigationMode
   name: NavigationMode
   href: api/Yarhl.FileSystem.NavigationMode.html
@@ -1961,38 +1961,6 @@ references:
   commentId: F:Yarhl.IO.FileOpenMode.Write
   fullName: Yarhl.IO.FileOpenMode.Write
   nameWithType: FileOpenMode.Write
-- uid: Yarhl.IO.FileOpenModeExtensions
-  name: FileOpenModeExtensions
-  href: api/Yarhl.IO.FileOpenModeExtensions.html
-  commentId: T:Yarhl.IO.FileOpenModeExtensions
-  fullName: Yarhl.IO.FileOpenModeExtensions
-  nameWithType: FileOpenModeExtensions
-- uid: Yarhl.IO.FileOpenModeExtensions.ToFileAccess(Yarhl.IO.FileOpenMode)
-  name: ToFileAccess(FileOpenMode)
-  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileAccess_Yarhl_IO_FileOpenMode_
-  commentId: M:Yarhl.IO.FileOpenModeExtensions.ToFileAccess(Yarhl.IO.FileOpenMode)
-  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileAccess(Yarhl.IO.FileOpenMode)
-  nameWithType: FileOpenModeExtensions.ToFileAccess(FileOpenMode)
-- uid: Yarhl.IO.FileOpenModeExtensions.ToFileAccess*
-  name: ToFileAccess
-  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileAccess_
-  commentId: Overload:Yarhl.IO.FileOpenModeExtensions.ToFileAccess
-  isSpec: "True"
-  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileAccess
-  nameWithType: FileOpenModeExtensions.ToFileAccess
-- uid: Yarhl.IO.FileOpenModeExtensions.ToFileMode(Yarhl.IO.FileOpenMode)
-  name: ToFileMode(FileOpenMode)
-  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileMode_Yarhl_IO_FileOpenMode_
-  commentId: M:Yarhl.IO.FileOpenModeExtensions.ToFileMode(Yarhl.IO.FileOpenMode)
-  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileMode(Yarhl.IO.FileOpenMode)
-  nameWithType: FileOpenModeExtensions.ToFileMode(FileOpenMode)
-- uid: Yarhl.IO.FileOpenModeExtensions.ToFileMode*
-  name: ToFileMode
-  href: api/Yarhl.IO.FileOpenModeExtensions.html#Yarhl_IO_FileOpenModeExtensions_ToFileMode_
-  commentId: Overload:Yarhl.IO.FileOpenModeExtensions.ToFileMode
-  isSpec: "True"
-  fullName: Yarhl.IO.FileOpenModeExtensions.ToFileMode
-  nameWithType: FileOpenModeExtensions.ToFileMode
 - uid: Yarhl.IO.NumericExtension
   name: NumericExtension
   href: api/Yarhl.IO.NumericExtension.html
@@ -2271,6 +2239,19 @@ references:
   isSpec: "True"
   fullName: Yarhl.IO.TextWriter.TextWriter
   nameWithType: TextWriter.TextWriter
+- uid: Yarhl.IO.TextWriter.AutoPreamble
+  name: AutoPreamble
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_AutoPreamble
+  commentId: P:Yarhl.IO.TextWriter.AutoPreamble
+  fullName: Yarhl.IO.TextWriter.AutoPreamble
+  nameWithType: TextWriter.AutoPreamble
+- uid: Yarhl.IO.TextWriter.AutoPreamble*
+  name: AutoPreamble
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_AutoPreamble_
+  commentId: Overload:Yarhl.IO.TextWriter.AutoPreamble
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.AutoPreamble
+  nameWithType: TextWriter.AutoPreamble
 - uid: Yarhl.IO.TextWriter.Encoding
   name: Encoding
   href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_Encoding
@@ -2375,6 +2356,19 @@ references:
   isSpec: "True"
   fullName: Yarhl.IO.TextWriter.WriteLine
   nameWithType: TextWriter.WriteLine
+- uid: Yarhl.IO.TextWriter.WritePreamble
+  name: WritePreamble()
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WritePreamble
+  commentId: M:Yarhl.IO.TextWriter.WritePreamble
+  fullName: Yarhl.IO.TextWriter.WritePreamble()
+  nameWithType: TextWriter.WritePreamble()
+- uid: Yarhl.IO.TextWriter.WritePreamble*
+  name: WritePreamble
+  href: api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WritePreamble_
+  commentId: Overload:Yarhl.IO.TextWriter.WritePreamble
+  isSpec: "True"
+  fullName: Yarhl.IO.TextWriter.WritePreamble
+  nameWithType: TextWriter.WritePreamble
 - uid: Yarhl.Media.Text
   name: Yarhl.Media.Text
   href: api/Yarhl.Media.Text.html
@@ -2387,253 +2381,147 @@ references:
   commentId: N:Yarhl.Media.Text.Encodings
   fullName: Yarhl.Media.Text.Encodings
   nameWithType: Yarhl.Media.Text.Encodings
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback
-  name: EscapeOutRangeDecoderFallback
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html
-  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback
-  nameWithType: EscapeOutRangeDecoderFallback
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
-  name: CreateFallbackBuffer()
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_CreateFallbackBuffer
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer()
-  nameWithType: EscapeOutRangeDecoderFallback.CreateFallbackBuffer()
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer*
-  name: CreateFallbackBuffer
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_CreateFallbackBuffer_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding
+  name: EscapeOutRangeEncoding
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html
+  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding
+  nameWithType: EscapeOutRangeEncoding
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.#ctor(System.String)
+  name: EscapeOutRangeEncoding(String)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding__ctor_System_String_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.#ctor(System.String)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.EscapeOutRangeEncoding(System.String)
+  nameWithType: EscapeOutRangeEncoding.EscapeOutRangeEncoding(String)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.#ctor(System.Text.Encoding)
+  name: EscapeOutRangeEncoding(Encoding)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding__ctor_System_Text_Encoding_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.#ctor(System.Text.Encoding)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.EscapeOutRangeEncoding(System.Text.Encoding)
+  nameWithType: EscapeOutRangeEncoding.EscapeOutRangeEncoding(Encoding)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.#ctor*
+  name: EscapeOutRangeEncoding
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding__ctor_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.#ctor
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.CreateFallbackBuffer
-  nameWithType: EscapeOutRangeDecoderFallback.CreateFallbackBuffer
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
-  name: MaxCharCount
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_MaxCharCount
-  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
-  nameWithType: EscapeOutRangeDecoderFallback.MaxCharCount
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount*
-  name: MaxCharCount
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallback_MaxCharCount_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallback.MaxCharCount
-  nameWithType: EscapeOutRangeDecoderFallback.MaxCharCount
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer
-  name: EscapeOutRangeDecoderFallbackBuffer
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html
-  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte[],System.Int32)
-  name: Fallback(Byte[], Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Fallback_System_Byte___System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte[],System.Int32)
-  name.vb: Fallback(Byte(), Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte[], System.Int32)
-  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback(System.Byte(), System.Int32)
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Fallback(Byte[], Int32)
-  nameWithType.vb: EscapeOutRangeDecoderFallbackBuffer.Fallback(Byte(), Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback*
-  name: Fallback
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Fallback_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Fallback
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Fallback
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
-  name: GetNextChar()
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_GetNextChar
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar()
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.GetNextChar()
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar*
-  name: GetNextChar
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_GetNextChar_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.GetNextChar
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.GetNextChar
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
-  name: MovePrevious()
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_MovePrevious
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious()
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.MovePrevious()
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious*
-  name: MovePrevious
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_MovePrevious_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.MovePrevious
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.MovePrevious
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
-  name: Remaining
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Remaining
-  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Remaining
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining*
-  name: Remaining
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Remaining_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Remaining
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Remaining
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
-  name: Reset()
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Reset
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset()
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Reset()
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset*
-  name: Reset
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.html#Yarhl_Media_Text_Encodings_EscapeOutRangeDecoderFallbackBuffer_Reset_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeDecoderFallbackBuffer.Reset
-  nameWithType: EscapeOutRangeDecoderFallbackBuffer.Reset
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
-  name: EscapeOutRangeEnconding
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html
-  commentId: T:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding
-  nameWithType: EscapeOutRangeEnconding
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(Encoding)
-  name: EscapeOutRangeEnconding(Encoding)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_Encoding_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(Encoding)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(Encoding)
-  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(Encoding)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.String)
-  name: EscapeOutRangeEnconding(String)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_System_String_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor(System.String)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding(System.String)
-  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding(String)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor*
-  name: EscapeOutRangeEnconding
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding__ctor_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.#ctor
-  isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.EscapeOutRangeEnconding
-  nameWithType: EscapeOutRangeEnconding.EscapeOutRangeEnconding
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char[],System.Int32,System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.EscapeOutRangeEncoding
+  nameWithType: EscapeOutRangeEncoding.EscapeOutRangeEncoding
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount(System.Char[],System.Int32,System.Int32)
   name: GetByteCount(Char[], Int32, Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetByteCount_System_Char___System_Int32_System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char[],System.Int32,System.Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetByteCount_System_Char___System_Int32_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount(System.Char[],System.Int32,System.Int32)
   name.vb: GetByteCount(Char(), Int32, Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char[], System.Int32, System.Int32)
-  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount(System.Char(), System.Int32, System.Int32)
-  nameWithType: EscapeOutRangeEnconding.GetByteCount(Char[], Int32, Int32)
-  nameWithType.vb: EscapeOutRangeEnconding.GetByteCount(Char(), Int32, Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount*
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount(System.Char[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount(System.Char(), System.Int32, System.Int32)
+  nameWithType: EscapeOutRangeEncoding.GetByteCount(Char[], Int32, Int32)
+  nameWithType.vb: EscapeOutRangeEncoding.GetByteCount(Char(), Int32, Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount*
   name: GetByteCount
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetByteCount_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetByteCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetByteCount
-  nameWithType: EscapeOutRangeEnconding.GetByteCount
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetByteCount
+  nameWithType: EscapeOutRangeEncoding.GetByteCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
   name: GetBytes(Char[], Int32, Int32, Byte[], Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetBytes_System_Char___System_Int32_System_Int32_System_Byte___System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetBytes_System_Char___System_Int32_System_Int32_System_Byte___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes(System.Char[],System.Int32,System.Int32,System.Byte[],System.Int32)
   name.vb: GetBytes(Char(), Int32, Int32, Byte(), Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char[], System.Int32, System.Int32, System.Byte[], System.Int32)
-  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes(System.Char(), System.Int32, System.Int32, System.Byte(), System.Int32)
-  nameWithType: EscapeOutRangeEnconding.GetBytes(Char[], Int32, Int32, Byte[], Int32)
-  nameWithType.vb: EscapeOutRangeEnconding.GetBytes(Char(), Int32, Int32, Byte(), Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes*
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes(System.Char[], System.Int32, System.Int32, System.Byte[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes(System.Char(), System.Int32, System.Int32, System.Byte(), System.Int32)
+  nameWithType: EscapeOutRangeEncoding.GetBytes(Char[], Int32, Int32, Byte[], Int32)
+  nameWithType.vb: EscapeOutRangeEncoding.GetBytes(Char(), Int32, Int32, Byte(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes*
   name: GetBytes
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetBytes_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetBytes_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetBytes
-  nameWithType: EscapeOutRangeEnconding.GetBytes
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte[],System.Int32,System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetBytes
+  nameWithType: EscapeOutRangeEncoding.GetBytes
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount(System.Byte[],System.Int32,System.Int32)
   name: GetCharCount(Byte[], Int32, Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetCharCount_System_Byte___System_Int32_System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte[],System.Int32,System.Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetCharCount_System_Byte___System_Int32_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount(System.Byte[],System.Int32,System.Int32)
   name.vb: GetCharCount(Byte(), Int32, Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte[], System.Int32, System.Int32)
-  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount(System.Byte(), System.Int32, System.Int32)
-  nameWithType: EscapeOutRangeEnconding.GetCharCount(Byte[], Int32, Int32)
-  nameWithType.vb: EscapeOutRangeEnconding.GetCharCount(Byte(), Int32, Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount*
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount(System.Byte[], System.Int32, System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount(System.Byte(), System.Int32, System.Int32)
+  nameWithType: EscapeOutRangeEncoding.GetCharCount(Byte[], Int32, Int32)
+  nameWithType.vb: EscapeOutRangeEncoding.GetCharCount(Byte(), Int32, Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount*
   name: GetCharCount
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetCharCount_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetCharCount
-  nameWithType: EscapeOutRangeEnconding.GetCharCount
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetCharCount
+  nameWithType: EscapeOutRangeEncoding.GetCharCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
   name: GetChars(Byte[], Int32, Int32, Char[], Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetChars_System_Byte___System_Int32_System_Int32_System_Char___System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetChars_System_Byte___System_Int32_System_Int32_System_Char___System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars(System.Byte[],System.Int32,System.Int32,System.Char[],System.Int32)
   name.vb: GetChars(Byte(), Int32, Int32, Char(), Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte[], System.Int32, System.Int32, System.Char[], System.Int32)
-  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars(System.Byte(), System.Int32, System.Int32, System.Char(), System.Int32)
-  nameWithType: EscapeOutRangeEnconding.GetChars(Byte[], Int32, Int32, Char[], Int32)
-  nameWithType.vb: EscapeOutRangeEnconding.GetChars(Byte(), Int32, Int32, Char(), Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars*
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars(System.Byte[], System.Int32, System.Int32, System.Char[], System.Int32)
+  fullName.vb: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars(System.Byte(), System.Int32, System.Int32, System.Char(), System.Int32)
+  nameWithType: EscapeOutRangeEncoding.GetChars(Byte[], Int32, Int32, Char[], Int32)
+  nameWithType.vb: EscapeOutRangeEncoding.GetChars(Byte(), Int32, Int32, Char(), Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars*
   name: GetChars
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetChars_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetChars_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetChars
-  nameWithType: EscapeOutRangeEnconding.GetChars
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetChars
+  nameWithType: EscapeOutRangeEncoding.GetChars
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxByteCount(System.Int32)
   name: GetMaxByteCount(Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxByteCount_System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount(System.Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount(System.Int32)
-  nameWithType: EscapeOutRangeEnconding.GetMaxByteCount(Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount*
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetMaxByteCount_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxByteCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxByteCount(System.Int32)
+  nameWithType: EscapeOutRangeEncoding.GetMaxByteCount(Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxByteCount*
   name: GetMaxByteCount
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxByteCount_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetMaxByteCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxByteCount
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxByteCount
-  nameWithType: EscapeOutRangeEnconding.GetMaxByteCount
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxByteCount
+  nameWithType: EscapeOutRangeEncoding.GetMaxByteCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxCharCount(System.Int32)
   name: GetMaxCharCount(Int32)
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxCharCount_System_Int32_
-  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount(System.Int32)
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount(System.Int32)
-  nameWithType: EscapeOutRangeEnconding.GetMaxCharCount(Int32)
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount*
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetMaxCharCount_System_Int32_
+  commentId: M:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxCharCount(System.Int32)
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxCharCount(System.Int32)
+  nameWithType: EscapeOutRangeEncoding.GetMaxCharCount(Int32)
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxCharCount*
   name: GetMaxCharCount
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_GetMaxCharCount_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_GetMaxCharCount_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxCharCount
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.GetMaxCharCount
-  nameWithType: EscapeOutRangeEnconding.GetMaxCharCount
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.GetMaxCharCount
+  nameWithType: EscapeOutRangeEncoding.GetMaxCharCount
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenEnd
   name: TokenEnd
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenEnd
-  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
-  nameWithType: EscapeOutRangeEnconding.TokenEnd
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd*
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_TokenEnd
+  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenEnd
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenEnd
+  nameWithType: EscapeOutRangeEncoding.TokenEnd
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenEnd*
   name: TokenEnd
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenEnd_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_TokenEnd_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenEnd
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenEnd
-  nameWithType: EscapeOutRangeEnconding.TokenEnd
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenEnd
+  nameWithType: EscapeOutRangeEncoding.TokenEnd
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenStart
   name: TokenStart
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenStart
-  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
-  nameWithType: EscapeOutRangeEnconding.TokenStart
-- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart*
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_TokenStart
+  commentId: P:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenStart
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenStart
+  nameWithType: EscapeOutRangeEncoding.TokenStart
+- uid: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenStart*
   name: TokenStart
-  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEnconding_TokenStart_
-  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
+  href: api/Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.html#Yarhl_Media_Text_Encodings_EscapeOutRangeEncoding_TokenStart_
+  commentId: Overload:Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenStart
   isSpec: "True"
-  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding.TokenStart
-  nameWithType: EscapeOutRangeEnconding.TokenStart
+  fullName: Yarhl.Media.Text.Encodings.EscapeOutRangeEncoding.TokenStart
+  nameWithType: EscapeOutRangeEncoding.TokenStart
 - uid: Yarhl.Media.Text.Encodings.EucJpEncoding
   name: EucJpEncoding
   href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html
@@ -2646,11 +2534,11 @@ references:
   commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor
   fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding()
   nameWithType: EucJpEncoding.EucJpEncoding()
-- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(DecoderFallback,EncoderFallback)
+- uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(System.Text.DecoderFallback,System.Text.EncoderFallback)
   name: EucJpEncoding(DecoderFallback, EncoderFallback)
-  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor_DecoderFallback_EncoderFallback_
-  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(DecoderFallback,EncoderFallback)
-  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding(DecoderFallback, EncoderFallback)
+  href: api/Yarhl.Media.Text.Encodings.EucJpEncoding.html#Yarhl_Media_Text_Encodings_EucJpEncoding__ctor_System_Text_DecoderFallback_System_Text_EncoderFallback_
+  commentId: M:Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor(System.Text.DecoderFallback,System.Text.EncoderFallback)
+  fullName: Yarhl.Media.Text.Encodings.EucJpEncoding.EucJpEncoding(System.Text.DecoderFallback, System.Text.EncoderFallback)
   nameWithType: EucJpEncoding.EucJpEncoding(DecoderFallback, EncoderFallback)
 - uid: Yarhl.Media.Text.Encodings.EucJpEncoding.#ctor*
   name: EucJpEncoding
@@ -2800,13 +2688,13 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.Po.Po
   nameWithType: Po.Po
-- uid: Yarhl.Media.Text.Po.Add(IEnumerable{Yarhl.Media.Text.PoEntry})
+- uid: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable{Yarhl.Media.Text.PoEntry})
   name: Add(IEnumerable<PoEntry>)
-  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_IEnumerable_Yarhl_Media_Text_PoEntry__
-  commentId: M:Yarhl.Media.Text.Po.Add(IEnumerable{Yarhl.Media.Text.PoEntry})
+  href: api/Yarhl.Media.Text.Po.html#Yarhl_Media_Text_Po_Add_System_Collections_Generic_IEnumerable_Yarhl_Media_Text_PoEntry__
+  commentId: M:Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable{Yarhl.Media.Text.PoEntry})
   name.vb: Add(IEnumerable(Of PoEntry))
-  fullName: Yarhl.Media.Text.Po.Add(IEnumerable<Yarhl.Media.Text.PoEntry>)
-  fullName.vb: Yarhl.Media.Text.Po.Add(IEnumerable(Of Yarhl.Media.Text.PoEntry))
+  fullName: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable<Yarhl.Media.Text.PoEntry>)
+  fullName.vb: Yarhl.Media.Text.Po.Add(System.Collections.Generic.IEnumerable(Of Yarhl.Media.Text.PoEntry))
   nameWithType: Po.Add(IEnumerable<PoEntry>)
   nameWithType.vb: Po.Add(IEnumerable(Of PoEntry))
 - uid: Yarhl.Media.Text.Po.Add(Yarhl.Media.Text.PoEntry)
@@ -3312,6 +3200,38 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.ReplacerEntry.ReplacerEntry
   nameWithType: ReplacerEntry.ReplacerEntry
+- uid: Yarhl.Media.Text.ReplacerEntry.Equals(System.Object)
+  name: Equals(Object)
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Equals_System_Object_
+  commentId: M:Yarhl.Media.Text.ReplacerEntry.Equals(System.Object)
+  fullName: Yarhl.Media.Text.ReplacerEntry.Equals(System.Object)
+  nameWithType: ReplacerEntry.Equals(Object)
+- uid: Yarhl.Media.Text.ReplacerEntry.Equals(Yarhl.Media.Text.ReplacerEntry)
+  name: Equals(ReplacerEntry)
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Equals_Yarhl_Media_Text_ReplacerEntry_
+  commentId: M:Yarhl.Media.Text.ReplacerEntry.Equals(Yarhl.Media.Text.ReplacerEntry)
+  fullName: Yarhl.Media.Text.ReplacerEntry.Equals(Yarhl.Media.Text.ReplacerEntry)
+  nameWithType: ReplacerEntry.Equals(ReplacerEntry)
+- uid: Yarhl.Media.Text.ReplacerEntry.Equals*
+  name: Equals
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Equals_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.Equals
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.Equals
+  nameWithType: ReplacerEntry.Equals
+- uid: Yarhl.Media.Text.ReplacerEntry.GetHashCode
+  name: GetHashCode()
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_GetHashCode
+  commentId: M:Yarhl.Media.Text.ReplacerEntry.GetHashCode
+  fullName: Yarhl.Media.Text.ReplacerEntry.GetHashCode()
+  nameWithType: ReplacerEntry.GetHashCode()
+- uid: Yarhl.Media.Text.ReplacerEntry.GetHashCode*
+  name: GetHashCode
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_GetHashCode_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.GetHashCode
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.GetHashCode
+  nameWithType: ReplacerEntry.GetHashCode
 - uid: Yarhl.Media.Text.ReplacerEntry.Modified
   name: Modified
   href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Modified
@@ -3325,6 +3245,32 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.ReplacerEntry.Modified
   nameWithType: ReplacerEntry.Modified
+- uid: Yarhl.Media.Text.ReplacerEntry.op_Equality(Yarhl.Media.Text.ReplacerEntry,Yarhl.Media.Text.ReplacerEntry)
+  name: Equality(ReplacerEntry, ReplacerEntry)
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_op_Equality_Yarhl_Media_Text_ReplacerEntry_Yarhl_Media_Text_ReplacerEntry_
+  commentId: M:Yarhl.Media.Text.ReplacerEntry.op_Equality(Yarhl.Media.Text.ReplacerEntry,Yarhl.Media.Text.ReplacerEntry)
+  fullName: Yarhl.Media.Text.ReplacerEntry.Equality(Yarhl.Media.Text.ReplacerEntry, Yarhl.Media.Text.ReplacerEntry)
+  nameWithType: ReplacerEntry.Equality(ReplacerEntry, ReplacerEntry)
+- uid: Yarhl.Media.Text.ReplacerEntry.op_Equality*
+  name: Equality
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_op_Equality_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.op_Equality
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.Equality
+  nameWithType: ReplacerEntry.Equality
+- uid: Yarhl.Media.Text.ReplacerEntry.op_Inequality(Yarhl.Media.Text.ReplacerEntry,Yarhl.Media.Text.ReplacerEntry)
+  name: Inequality(ReplacerEntry, ReplacerEntry)
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_op_Inequality_Yarhl_Media_Text_ReplacerEntry_Yarhl_Media_Text_ReplacerEntry_
+  commentId: M:Yarhl.Media.Text.ReplacerEntry.op_Inequality(Yarhl.Media.Text.ReplacerEntry,Yarhl.Media.Text.ReplacerEntry)
+  fullName: Yarhl.Media.Text.ReplacerEntry.Inequality(Yarhl.Media.Text.ReplacerEntry, Yarhl.Media.Text.ReplacerEntry)
+  nameWithType: ReplacerEntry.Inequality(ReplacerEntry, ReplacerEntry)
+- uid: Yarhl.Media.Text.ReplacerEntry.op_Inequality*
+  name: Inequality
+  href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_op_Inequality_
+  commentId: Overload:Yarhl.Media.Text.ReplacerEntry.op_Inequality
+  isSpec: "True"
+  fullName: Yarhl.Media.Text.ReplacerEntry.Inequality
+  nameWithType: ReplacerEntry.Inequality
 - uid: Yarhl.Media.Text.ReplacerEntry.Original
   name: Original
   href: api/Yarhl.Media.Text.ReplacerEntry.html#Yarhl_Media_Text_ReplacerEntry_Original
@@ -3357,11 +3303,11 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.XmlExtension.EscapeSpace
   nameWithType: XmlExtension.EscapeSpace
-- uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue(XElement)
+- uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
   name: GetIndentedValue(XElement)
-  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_GetIndentedValue_XElement_
-  commentId: M:Yarhl.Media.Text.XmlExtension.GetIndentedValue(XElement)
-  fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue(XElement)
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_GetIndentedValue_System_Xml_Linq_XElement_
+  commentId: M:Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
+  fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue(System.Xml.Linq.XElement)
   nameWithType: XmlExtension.GetIndentedValue(XElement)
 - uid: Yarhl.Media.Text.XmlExtension.GetIndentedValue*
   name: GetIndentedValue
@@ -3370,11 +3316,11 @@ references:
   isSpec: "True"
   fullName: Yarhl.Media.Text.XmlExtension.GetIndentedValue
   nameWithType: XmlExtension.GetIndentedValue
-- uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue(XElement,System.String,System.Int32)
+- uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement,System.String,System.Int32)
   name: SetIndentedValue(XElement, String, Int32)
-  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_SetIndentedValue_XElement_System_String_System_Int32_
-  commentId: M:Yarhl.Media.Text.XmlExtension.SetIndentedValue(XElement,System.String,System.Int32)
-  fullName: Yarhl.Media.Text.XmlExtension.SetIndentedValue(XElement, System.String, System.Int32)
+  href: api/Yarhl.Media.Text.XmlExtension.html#Yarhl_Media_Text_XmlExtension_SetIndentedValue_System_Xml_Linq_XElement_System_String_System_Int32_
+  commentId: M:Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement,System.String,System.Int32)
+  fullName: Yarhl.Media.Text.XmlExtension.SetIndentedValue(System.Xml.Linq.XElement, System.String, System.Int32)
   nameWithType: XmlExtension.SetIndentedValue(XElement, String, Int32)
 - uid: Yarhl.Media.Text.XmlExtension.SetIndentedValue*
   name: SetIndentedValue

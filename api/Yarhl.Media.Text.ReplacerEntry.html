@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Struct ReplacerEntry
    | SceneGate Yarhl ">
-    <meta name="generator" content="docfx 2.40.4.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -76,11 +76,21 @@
   <div class="markdown level0 summary"><p>Entry of the map of replacements.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">IEquatable</a>&lt;<a class="xref" href="Yarhl.Media.Text.ReplacerEntry.html">ReplacerEntry</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.tostring#System_ValueType_ToString">ValueType.ToString()</a>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Yarhl.Media.Text.html">Yarhl.Media.Text</a></h6>
   <h6><strong>Assembly</strong>: Yarhl.Media.dll</h6>
   <h5 id="Yarhl_Media_Text_ReplacerEntry_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public struct ReplacerEntry</code></pre>
+    <pre><code class="lang-csharp hljs">public struct ReplacerEntry : IEquatable&lt;ReplacerEntry&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -89,7 +99,7 @@
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry__ctor_System_String_System_String_.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.%23ctor(System.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L38">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L39">View Source</a>
   </span>
   <a id="Yarhl_Media_Text_ReplacerEntry__ctor_" data-uid="Yarhl.Media.Text.ReplacerEntry.#ctor*"></a>
   <h4 id="Yarhl_Media_Text_ReplacerEntry__ctor_System_String_System_String_" data-uid="Yarhl.Media.Text.ReplacerEntry.#ctor(System.String,System.String)">ReplacerEntry(String, String)</h4>
@@ -131,7 +141,7 @@
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_Modified.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.Modified%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L54">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L55">View Source</a>
   </span>
   <a id="Yarhl_Media_Text_ReplacerEntry_Modified_" data-uid="Yarhl.Media.Text.ReplacerEntry.Modified*"></a>
   <h4 id="Yarhl_Media_Text_ReplacerEntry_Modified" data-uid="Yarhl.Media.Text.ReplacerEntry.Modified">Modified</h4>
@@ -163,7 +173,7 @@
     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_Original.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.Original%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L48">View Source</a>
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L49">View Source</a>
   </span>
   <a id="Yarhl_Media_Text_ReplacerEntry_Original_" data-uid="Yarhl.Media.Text.ReplacerEntry.Original*"></a>
   <h4 id="Yarhl_Media_Text_ReplacerEntry_Original" data-uid="Yarhl.Media.Text.ReplacerEntry.Original">Original</h4>
@@ -190,6 +200,266 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_Equals_System_Object_.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.Equals(System.Object)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L104">View Source</a>
+  </span>
+  <a id="Yarhl_Media_Text_ReplacerEntry_Equals_" data-uid="Yarhl.Media.Text.ReplacerEntry.Equals*"></a>
+  <h4 id="Yarhl_Media_Text_ReplacerEntry_Equals_System_Object_" data-uid="Yarhl.Media.Text.ReplacerEntry.Equals(System.Object)">Equals(Object)</h4>
+  <div class="markdown level1 summary"><p>Determines whether two object instances are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool Equals(object obj)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><span class="parametername">obj</span></td>
+        <td><p>The object to compare with the current object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>true if the specified object is equal to the current object;
+otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.equals#System_ValueType_Equals_System_Object_">ValueType.Equals(Object)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_Equals_Yarhl_Media_Text_ReplacerEntry_.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.Equals(Yarhl.Media.Text.ReplacerEntry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L123">View Source</a>
+  </span>
+  <a id="Yarhl_Media_Text_ReplacerEntry_Equals_" data-uid="Yarhl.Media.Text.ReplacerEntry.Equals*"></a>
+  <h4 id="Yarhl_Media_Text_ReplacerEntry_Equals_Yarhl_Media_Text_ReplacerEntry_" data-uid="Yarhl.Media.Text.ReplacerEntry.Equals(Yarhl.Media.Text.ReplacerEntry)">Equals(ReplacerEntry)</h4>
+  <div class="markdown level1 summary"><p>Determines whether two object instances are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(ReplacerEntry other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Yarhl.Media.Text.ReplacerEntry.html">ReplacerEntry</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The instance to compare with the current instance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>true if the specified object is equal to the current object;
+otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_GetHashCode.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.GetHashCode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L89">View Source</a>
+  </span>
+  <a id="Yarhl_Media_Text_ReplacerEntry_GetHashCode_" data-uid="Yarhl.Media.Text.ReplacerEntry.GetHashCode*"></a>
+  <h4 id="Yarhl_Media_Text_ReplacerEntry_GetHashCode" data-uid="Yarhl.Media.Text.ReplacerEntry.GetHashCode">GetHashCode()</h4>
+  <div class="markdown level1 summary"><p>Serves as the default hash function.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override int GetHashCode()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
+        <td><p>A hash code for the current object.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.valuetype.gethashcode#System_ValueType_GetHashCode">ValueType.GetHashCode()</a></div>
+  <h3 id="operators">Operators
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_op_Equality_Yarhl_Media_Text_ReplacerEntry_Yarhl_Media_Text_ReplacerEntry_.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.op_Equality(Yarhl.Media.Text.ReplacerEntry%2CYarhl.Media.Text.ReplacerEntry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L66">View Source</a>
+  </span>
+  <a id="Yarhl_Media_Text_ReplacerEntry_op_Equality_" data-uid="Yarhl.Media.Text.ReplacerEntry.op_Equality*"></a>
+  <h4 id="Yarhl_Media_Text_ReplacerEntry_op_Equality_Yarhl_Media_Text_ReplacerEntry_Yarhl_Media_Text_ReplacerEntry_" data-uid="Yarhl.Media.Text.ReplacerEntry.op_Equality(Yarhl.Media.Text.ReplacerEntry,Yarhl.Media.Text.ReplacerEntry)">Equality(ReplacerEntry, ReplacerEntry)</h4>
+  <div class="markdown level1 summary"><p>Determines whether two object instances are equal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator ==(ReplacerEntry entry1, ReplacerEntry entry2)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Yarhl.Media.Text.ReplacerEntry.html">ReplacerEntry</a></td>
+        <td><span class="parametername">entry1</span></td>
+        <td><p>First entry to compare.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Yarhl.Media.Text.ReplacerEntry.html">ReplacerEntry</a></td>
+        <td><span class="parametername">entry2</span></td>
+        <td><p>Second entry to compare.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>true if the first object is equal to the second object;
+otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry_op_Inequality_Yarhl_Media_Text_ReplacerEntry_Yarhl_Media_Text_ReplacerEntry_.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry.op_Inequality(Yarhl.Media.Text.ReplacerEntry%2CYarhl.Media.Text.ReplacerEntry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L80">View Source</a>
+  </span>
+  <a id="Yarhl_Media_Text_ReplacerEntry_op_Inequality_" data-uid="Yarhl.Media.Text.ReplacerEntry.op_Inequality*"></a>
+  <h4 id="Yarhl_Media_Text_ReplacerEntry_op_Inequality_Yarhl_Media_Text_ReplacerEntry_Yarhl_Media_Text_ReplacerEntry_" data-uid="Yarhl.Media.Text.ReplacerEntry.op_Inequality(Yarhl.Media.Text.ReplacerEntry,Yarhl.Media.Text.ReplacerEntry)">Inequality(ReplacerEntry, ReplacerEntry)</h4>
+  <div class="markdown level1 summary"><p>Determines whether two object instances are different.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public static bool operator !=(ReplacerEntry entry1, ReplacerEntry entry2)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Yarhl.Media.Text.ReplacerEntry.html">ReplacerEntry</a></td>
+        <td><span class="parametername">entry1</span></td>
+        <td><p>First entry to compare.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Yarhl.Media.Text.ReplacerEntry.html">ReplacerEntry</a></td>
+        <td><span class="parametername">entry2</span></td>
+        <td><p>Second entry to compare.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><p>true if the first object is different to the second object;
+otherwise, false.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.iequatable-1">System.IEquatable&lt;T&gt;</a>
+  </div>
 </article>
           </div>
           
@@ -201,7 +471,7 @@
                     <a href="https://github.com/SceneGate/Yarhl/new/master/docs/apidoc/new?filename=Yarhl_Media_Text_ReplacerEntry.md&amp;value=---%0Auid%3A%20Yarhl.Media.Text.ReplacerEntry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L31" class="contribution-link">View Source</a>
+                    <a href="https://github.com/SceneGate/Yarhl/blob/master/src/Yarhl.Media/Text/ReplacerEntry.cs/#L32" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
