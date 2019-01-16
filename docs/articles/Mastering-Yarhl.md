@@ -1,6 +1,6 @@
 ﻿# Mastering YARHL
 
-[Yarhl Logo](https://i.imgur.com/sOzbhu4.png)
+![Yarhl Logo](https://i.imgur.com/sOzbhu4.png)
 
 **Yarhl** - *Yet Another ROM Hacking Library* - is a library for _ROM Hacking_ and fan-translation projects. It provides a virtual file system, file format, and format conversion features and plugin support.
 
