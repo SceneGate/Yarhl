@@ -1,5 +1,7 @@
 ﻿# Mastering YARHL
 
+[Yarhl Logo](https://i.imgur.com/sOzbhu4.png)
+
 **Yarhl** - *Yet Another ROM Hacking Library* - is a library for _ROM Hacking_ and fan-translation projects. It provides a virtual file system, file format, and format conversion features and plugin support.
 
 But what it really has to offer? Why should you use it? And how? This tutorial series will teach you how to use YARHL and how to take advantage of the 100% of it.
@@ -20,7 +22,7 @@ Remember that if you have any question you can [use our gitter chat](https://git
 
 Oh, hi! I'm Master Yarhl (or M.Y.), nice to meet you, I will be your guide! Erm... y-you can.. picture me like this:
 
-![Master Yarhl](https://i.imgur.com/ewEctpW.png)
+![Master Yarhl](https://i.imgur.com/w4TMqLi.png)
 
 <small>If you want... or can...</small>
 
@@ -97,9 +99,9 @@ public void SaveFile(string fileToSaveName)
 
 Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. YARHL helps you to code objects as you were actually coding a game file.
 
-Continuing with the Palette example, you'd create a new Class called NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the childs.
+Continuing with the Palette example, you'd create a new Class called NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.
 
-¡Let's go for a quick example!
+Let's go for a quick example!
 
 ![Hex view of example file](https://i.imgur.com/KK5CsJH.png)
 
@@ -148,16 +150,18 @@ As always let's take a look [at the docs](https://scenegate.github.io/Yarhl/api/
 
 Also it inhertis from NavigableNode, which has interesting properties as Name, Path (of the virtual file system, not your computers'), Parent and Children, whose behaviour you'll get later at 2.1.
 
-As we said before, every file in a game has a format, that's why our virtual files (Nodes) must have a Format. IsContainer tells you if it has childs (let's ignore this for now) and a DataStream (just if the format is BinaryFormat, null otherwise. It is just a shortcut to access the Stream property of the BinaryFormat).
+As we said before, every file in a game has a format, that's why our virtual files (Nodes) must have a Format. IsContainer tells you if it has children (let's ignore this for now) and a DataStream (just if the format is BinaryFormat, null otherwise. It is just a shortcut to access the Stream property of the BinaryFormat).
 
 Let's clarify it out with an example:
 
-// Ejemplo de crear un nodo a partir de un DataStream, y darle format BinaryData
+```csharp
+new Node("NodeName", new BinaryFormat(new DataStream(filePath, FileOpenMode.Read)));
+```
 
 Heh... nothing special right? What about this?
 
 ```csharp
-NodeFactory.fromFile();
+NodeFactory.fromFile(filePath);
 ```
 
 Yeeeah! That's the face I was looking for! You can create a virtual file that quick!
