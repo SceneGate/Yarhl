@@ -1,0 +1,354 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Mastering YARHL | SceneGate Yarhl </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Mastering YARHL | SceneGate Yarhl ">
+    <meta name="generator" content="docfx 2.40.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="../fusion/toc.html">
+    
+    
+    <meta property="docfx:newtab" content="true">
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="mastering-yarhl">Mastering YARHL</h1>
+
+<p><img src="https://i.imgur.com/sOzbhu4.png" alt="Yarhl Logo"></p>
+<p><strong>Yarhl</strong> - <em>Yet Another ROM Hacking Library</em> - is a library for <em>ROM Hacking</em> and fan-translation projects. It provides a virtual file system, file format, and format conversion features and plugin support.</p>
+<p>But what it really has to offer? Why should you use it? And how? This tutorial series will teach you how to use YARHL and how to take advantage of the 100% of it.</p>
+<p>Remember that if you have any question you can <a href="https://gitter.im/SceneGate/Yarhl">use our gitter chat</a>, but first make sure you've read the whole docs.</p>
+<h1 id="index">Index</h1>
+<ol>
+<li>Your first project: Reading and Writing</li>
+<li>Small introduction to Format
+2.1 BinaryFormat</li>
+<li>Entering the virtual system: Nodes
+3.1. NodeContainerFormat</li>
+<li>Converting Formats, Transform Nodes</li>
+</ol>
+<h1 id="your-first-project-reading-and-writing">Your first Project: Reading and Writing</h1>
+<p>Oh, hi! I'm Master Yarhl (or M.Y.), nice to meet you, I will be your guide! Erm... y-you can.. picture me like this:</p>
+<p><img src="https://i.imgur.com/w4TMqLi.png" alt="Master Yarhl"></p>
+<p><small>If you want... or can...</small></p>
+<p>Lets' get started! The first module I'm teaching you is IO (Input Output), which is very similar to C# IO: MemoryStream, WriterStream, just with more functionality to work with binary and text files.</p>
+<h2 id="main-classes">Main Classes</h2>
+<p>This part is divided by binary files management classes and text files classes.</p>
+<p>We have DataStream, DataReader and DataWriter for binary; TextReader and TextWriter for text. Easy peasy!</p>
+<p><a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.html">Here</a> you can see every class with its properties, but let's see some of the most interesting ones:</p>
+<p><strong>DataStream:</strong> Position, EndOfStream (bool if position is at the end) and Length of the stream.
+<strong>DataReader and DataWriter:</strong> DefaultEncoding, <a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.EndiannessMode.html">Endianness</a> and Stream accessor.</p>
+<h2 id="main-methods">Main methods</h2>
+<h3 id="datastream">DataStream</h3>
+<p><a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataStream.html#methods">Here</a> you can see all the methods, but as before we'll review the most interesting ones:</p>
+<ul>
+<li><strong>Compare (DataStream):</strong> compare the content of the stream with another one.</li>
+<li><strong>PushCurrentPosition():</strong> saves the current position.</li>
+<li><strong>PopPosition():</strong> moves to the last position saved.</li>
+<li>Readers and Writers for buffers.</li>
+<li><strong>WriteTo:</strong> save the stream into a physical file in your computer (giving the path) or into another DataStream. Very useful mate!</li>
+</ul>
+<h3 id="datareader-and-datawriter">DataReader and DataWriter</h3>
+<p>We have a bunch of methods to Read and Write different type of data. You have the whole list <a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataReader.html#methods">here</a> and <a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataWriter.html#methods">here</a>.</p>
+<h2 id="examples">Examples</h2>
+<h3 id="reading-a-file">Reading a File</h3>
+<pre><code class="lang-csharp">public void LoadFile(string fileToExtractName)
+{
+
+ using (DataStream fileToExtractStream = new DataStream(fileToExtractName, FileOpenMode.Read))
+ {
+
+  DataReader fileToExtractReader = new DataReader(fileToExtractStream)
+  {
+   DefaultEncoding = new Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding(&quot;ascii&quot;)
+  };
+
+  // Read!
+
+
+ }
+}
+</code></pre>
+<h3 id="writing-a-file">Writing a File</h3>
+<pre><code class="lang-csharp">public void SaveFile(string fileToSaveName)
+{
+
+ using (DataStream exportedFileStream = new DataStream(fileToSaveName, FileOpenMode.Read))
+ {
+
+  DataWriter exportedFileWriter = new  DataWriter(exportedFileStream);
+
+  // Write into new file!
+
+ }
+}
+</code></pre>
+<h1 id="small-introduction-to-format">Small introduction to Format</h1>
+<p>Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. YARHL helps you to code objects as you were actually coding a game file.</p>
+<p>Continuing with the Palette example, you'd create a new Class called NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.</p>
+<p>Let's go for a quick example!</p>
+<p><img src="https://i.imgur.com/KK5CsJH.png" alt="Hex view of example file"></p>
+<p>This file follows the following specification:</p>
+<pre><code>Int32 - MagicID
+Int16 - Number of Sentences
+Int16 - Size of the file
+String[NumberOfSentences]
+</code></pre>
+<p>So we can create the class Example like this:</p>
+<pre><code class="lang-csharp">using Yarhl.FileFormat;
+
+class Example : Format{
+ public uint MagicID { get; set;}
+ public ushort NumberOfSentences { get;set; }
+ public ushort FileSize{ get; set; }
+ public List&lt;String&gt; Sentences { get; }
+
+ public Example(){
+  Sentences = new List&lt;String&gt;;
+ }
+}
+</code></pre>
+<p>Easy! But for now I can't teach you how to transform this example binary file we'just saw into this clean Object, I need to explain other things first.</p>
+<h2 id="binaryformat">BinaryFormat</h2>
+<p>This is the only Format which Yarhl has in its core, why? Because as the name says, it is the most basic Format you'll ever need: a Binary file.</p>
+<p>Remember what we did at the first chapter? Opening up a file in order to read... What if I told you, we did it wrong?
+Well, actually it's not wrong, but it's not complete! What? What's that nonsense? Okay, okay, phew! Let's go.</p>
+<p>As you can see <a href="https://scenegate.github.io/Yarhl/api/Yarhl.FileFormat.BinaryFormat.html">in the documentation</a> BinaryFormat is just a wrapped DataStream with all the functions of a Format (which we'll see soon), and for now that's the only thing you need to know.</p>
+<p>I know... I talk too much... Let's continue!</p>
+<h1 id="entering-the-virtual-world-nodes">Entering the virtual world: Nodes</h1>
+<p>This is the main feature of YARHL and the most important one, no doubt, 10/10 Yarhl users would say so<sup>1</sup>. Yarhl has a virtual file system to handle your files while mantaining your computer intact, you can now delete your &quot;tests&quot; folder and clean your desktop after-ages.</p>
+<p>As always let's take a look <a href="https://scenegate.github.io/Yarhl/api/Yarhl.FileSystem.Node.html#properties">at the docs</a> a Node is a virtual file with three properties: Format, IsContainer and Stream.</p>
+<p>Also it inhertis from NavigableNode, which has interesting properties as Name, Path (of the virtual file system, not your computers'), Parent and Children, whose behaviour you'll get later at 2.1.</p>
+<p>As we said before, every file in a game has a format, that's why our virtual files (Nodes) must have a Format. IsContainer tells you if it has children (let's ignore this for now) and a DataStream (just if the format is BinaryFormat, null otherwise. It is just a shortcut to access the Stream property of the BinaryFormat).</p>
+<p>Let's clarify it out with an example:</p>
+<pre><code class="lang-csharp">new Node(&quot;NodeName&quot;, new BinaryFormat(new DataStream(filePath, FileOpenMode.Read)));
+</code></pre>
+<p>Heh... nothing special right? What about this?</p>
+<pre><code class="lang-csharp">NodeFactory.fromFile(filePath);
+</code></pre>
+<p>Yeeeah! That's the face I was looking for! You can create a virtual file that quick!</p>
+<p>And there's more! What about creating multiple nodes from multiple files?</p>
+<p><sup>1</sup> <small>None of Yarhl users wants to talk with me anymore, so maybe this is not 100% accurate.</small></p>
+<h2 id="nodecontainerformat">NodeContainerFormat</h2>
+<p>Remember that IsContainer property? Well, this is its implementation:</p>
+<pre><code class="lang-csharp">public bool IsContainer {
+ get { return Format is NodeContainerFormat; }
+}
+</code></pre>
+<p><em>NodeContainerFormat</em> starts a tree of Nodes starting from its Root (the only property it has). With this you create a virtual directory, with its virtual files.</p>
+<p>It's more clear with a picture:</p>
+<p><img src="https://i.imgur.com/80Qik3v.png" alt="A directory named mastering with tho files inside"></p>
+<p>&quot;mastering&quot; would be our root Node, while example.example and example2.example would be our tho child Nodes.</p>
+<p>How can we create that? Do I have more magic for you?</p>
+<pre><code class="lang-csharp">NodeFactory.fromDirectory();
+</code></pre>
+<p>N is the &quot;mastering&quot; virtual folder! That easy!</p>
+<p>Yarhl is way more interesting now, right!? Well, then the next chapter will blow your mind!</p>
+<h1 id="converting-formats-transforming-nodes">Converting Formats, Transforming Nodes</h1>
+<p>Finally! Now everything begin to fall into place, you'll see.</p>
+<p>Coding a tool is just an automation tool to transform files to different formats right? Converting .dat to .txt (text), .Ncgr to .png (images), .pak to multiple files (unpacking)...</p>
+<p>Well, that's how Yarhl works, Yarhl is all about converting formats, let's see an example:</p>
+<pre><code class="lang-csharp">new BinaryFormat(filePath)
+.ConvertWith&lt;Font2Binary, BinaryFormat, Font&gt;()
+.ConvertWith&lt;Font2Image, Font, System.Drawing.Image&gt;()
+.Save(outputPath);
+</code></pre>
+<ul>
+<li>We start creating a new BinaryFormat with a file path (creating a virtual file copying a physical one).</li>
+<li>We convert the virtual File to a Font object.</li>
+<li>We convert the Font object to an Image object.</li>
+<li>And we save it to a physical file.</li>
+</ul>
+<p>&quot;But what's Font2Binary and Font2Image, Master Yarhl?&quot; you would say.
+They are converters! A converter is a class which implements the <a href="https://scenegate.github.io/Yarhl/api/Yarhl.FileFormat.IConverter-2.html">IConverter interface</a>.</p>
+<p>Here you can see the full <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Binary.cs">Font2Binary</a> and <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Image.cs">Font2Image</a> coded by <strong>pleonex</strong> (my father), but I am going to show you a most simpler converter.</p>
+<p>Remember that example from lesson 2? We are coding the converter right now!</p>
+<p>So, here is the hex and the Format class:</p>
+<p><img src="https://i.imgur.com/KK5CsJH.png" alt="Hex view of example file"></p>
+<pre><code class="lang-csharp">using Yarhl.FileFormat;
+
+class Example : Format{
+ public uint MagicID { get; set;}
+ public ushort NumberOfSentences { get;set; }
+ public ushort FileSize{ get; set; }
+ public List&lt;String&gt; Sentences { get; }
+
+ public Example(){
+  Sentences = new List&lt;String&gt;;
+ }
+}
+</code></pre>
+<pre><code class="lang-csharp">using Yarhl.IO;
+
+class Binary2Example : IConverter&lt;BinaryFormat, Example&gt;{
+
+ Example Convert(BinaryFormat file){
+
+  Example e = new Example();
+  DataReader reader = new DataReader(file.Stream);
+
+  e.MagicID = reader.readInt32();
+  e.NumberOfSentences = reader.readInt16();
+  e.FileSize = reader.readInt16();
+
+  for(int i = 0; i &lt; NumberOfSentences; i++){
+   e.Sentences.add(reader.readString());
+  }
+
+  return e;
+ }
+}
+</code></pre>
+<p>So now if we do:</p>
+<pre><code class="lang-csharp">new BinaryFormat(filePath)
+.ConvertWith&lt;Binary2Example, BinaryFormat, Example&gt;();
+</code></pre>
+<p>We would have an Example object with all the data we need.</p>
+<p>Also, we can code the Converter for Example into BinaryFormat:</p>
+<pre><code class="lang-csharp">using Yarhl.IO;
+
+class Binary2Example :
+IConverter&lt;BinaryFormat, Example&gt;,
+IConverter&lt;Example, BinaryFormat&gt;{
+
+ Example Convert(BinaryFormat file){
+
+  Example e = new Example();
+  DataReader reader = new DataReader(file.Stream);
+
+  e.MagicID = reader.readInt32();
+  e.NumberOfSentences = reader.readInt16();
+  e.FileSize = reader.readInt16();
+
+  for(int i = 0; i &lt; NumberOfSentences; i++){
+   e.Sentences.add(reader.readString());
+  }
+
+  return e;
+ }
+
+ BinaryFormat Convert(Example e){
+
+  BinaryFormat bf = new BinaryFormat();
+  DataWriter writer = new DataWriter(bf.Stream);
+
+  int fileSize = 0;
+
+  writer.Write(e.MagicID);
+  fileSize += 4;
+  writer.Write(e.Sentences.Count);
+  fileSize += 2;
+  // We save the current position
+  writer.Stream.PushPosition();
+  writer.Write(0x8); // We'll override this later
+
+  foreach(String s in e.Sentences){
+   writer.Write(s);
+   fileSize += s.Lenght + 1;
+  }
+  writer.Stream.PopPosition();
+  writer.Write(fileSize);
+
+  return e;
+ }
+}
+</code></pre>
+<p>And that's it! I'm pretty sure you've got enough of converters, but, let's see how it's done with Nodes:</p>
+<pre><code class="lang-csharp">NodeFactory.fromFile()
+.Transform&lt;&gt;;
+</code></pre>
+<p>Now we have a Node with the Format we want, and it is quite easy to save into a physical file in our computer.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/SceneGate/Yarhl/blob/master/docs/articles/Mastering-Yarhl.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            Copyright (c) 2018 SceneGate Team
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

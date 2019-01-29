@@ -9,7 +9,7 @@
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "cQa/6sIiyzKFL8BPiWXfCg=="
+          "hash": "XHMBvt6p/xAAf5M4EAgc0Q=="
         }
       },
       "is_incremental": true,
@@ -508,12 +508,24 @@
       "version": ""
     },
     {
+      "type": "Conceptual",
+      "source_relative_path": "articles/Mastering-Yarhl.md",
+      "output": {
+        ".html": {
+          "relative_path": "articles/Mastering-Yarhl.html",
+          "hash": "JlZnDmLRPxRM0JubGDsxig=="
+        }
+      },
+      "is_incremental": true,
+      "version": ""
+    },
+    {
       "type": "Toc",
       "source_relative_path": "fusion/toc.yml",
       "output": {
         ".html": {
           "relative_path": "fusion/toc.html",
-          "hash": "79j9+kxR3zeCB7BYKSIvyQ=="
+          "hash": "zafCXB7q0HLccKT7oVu3qQ=="
         }
       },
       "is_incremental": false,
@@ -525,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "9iQiwMX0jIr1yyDswvZCgQ=="
+          "hash": "lQMXh0o6UKZFvNQJnNYr/g=="
         }
       },
       "is_incremental": true,
@@ -556,11 +568,11 @@
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
+        "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         },
-        "ConceptualDocumentProcessor": {
+        "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         }
