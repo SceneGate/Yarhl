@@ -190,10 +190,16 @@ namespace Yarhl.Media.Text
 
             switch (fields[0]) {
                 case "#":
-                    entry.TranslatorComment = fields[1].TrimStart();
+                    entry.TranslatorComment = ReadMultiLineComment(
+                        reader,
+                        fields[1].TrimStart(),
+                        "# ");
                     break;
                 case "#.":
-                    entry.ExtractedComments = fields[1];
+                    entry.ExtractedComments = ReadMultiLineComment(
+                        reader,
+                        fields[1],
+                        "#.");
                     break;
                 case "#:":
                     entry.Reference = fields[1];
@@ -295,6 +301,18 @@ namespace Yarhl.Media.Text
 
                     throw new FormatException("Unknown header key: " + key);
             }
+        }
+
+        static string ReadMultiLineComment(TextReader reader, string line, string comment)
+        {
+            StringBuilder builder = new StringBuilder(line);
+            while (reader.PeekToToken(" ") == comment) {
+                // We just remove the comment token and take advantage that
+                // there is an space after it.
+                builder.Append(reader.ReadLine().Substring(comment.Length));
+            }
+
+            return builder.ToString();
         }
 
         static string ReadMultiLineContent(TextReader reader, string currentLine)

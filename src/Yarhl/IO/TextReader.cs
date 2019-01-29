@@ -31,7 +31,7 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text reader for <cref href="DataStream" />.
+    /// Text reader for <see cref="DataStream" />.
     /// </summary>
     public class TextReader
     {

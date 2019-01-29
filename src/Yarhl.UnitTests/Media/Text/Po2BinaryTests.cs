@@ -439,6 +439,42 @@ msgstr """"
             Assert.AreEqual("test", newPo.Entries[0].Original);
         }
 
+        [Test]
+        public void EntryWithMultiLineExtractedComments()
+        {
+            var testPo = new Po();
+            testPo.Add(new PoEntry {
+                Original = "The Quick Brown Fox Jumps Over The Lazy Dog",
+                ExtractedComments =
+                    "TRANSLATORS: A test phrase with all letters of the English alphabet." +
+                    " Replace it with a sample text in your language, such that it is" +
+                    " representative of language's writing system.",
+                TranslatorComment =
+                    "NOTE: This is a very long comment that I am writting to test if" +
+                    " this is working properly.",
+                Reference = "kdeui/fonts/kfontchooser.cpp:382",
+            });
+
+            string text = @"
+#  NOTE: This is a very long comment that I am writting to test if
+#  this is working properly.
+#. TRANSLATORS: A test phrase with all letters of the English alphabet.
+#. Replace it with a sample text in your language, such that it is
+#. representative of language's writing system.
+#: kdeui/fonts/kfontchooser.cpp:382
+msgid ""The Quick Brown Fox Jumps Over The Lazy Dog""
+msgstr """"
+";
+            text = text.Replace("\r\n", "\n");
+
+            // TODO #85: CompareText(testPo.ConvertTo<BinaryFormat>(), text);
+            Po newPo = ConvertStringToPo(text);
+            Assert.AreEqual(1, newPo.Entries.Count);
+            Assert.AreEqual(testPo.Entries[0].Original, newPo.Entries[0].Original);
+            Assert.AreEqual(testPo.Entries[0].ExtractedComments, newPo.Entries[0].ExtractedComments);
+            Assert.AreEqual(testPo.Entries[0].Reference, newPo.Entries[0].Reference);
+        }
+
         static void CompareText(BinaryFormat binary, string expected)
         {
             binary.Stream.Position = 0;
