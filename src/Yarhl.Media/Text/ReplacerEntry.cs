@@ -24,10 +24,12 @@
 // THE SOFTWARE.
 namespace Yarhl.Media.Text
 {
+    using System;
+
     /// <summary>
     /// Entry of the map of replacements.
     /// </summary>
-    public struct ReplacerEntry
+    public struct ReplacerEntry : IEquatable<ReplacerEntry>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ReplacerEntry"/> struct.
@@ -51,5 +53,76 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <returns>Modified string.</returns>
         public string Modified { get; }
+
+        /// <summary>
+        /// Determines whether two object instances are equal.
+        /// </summary>
+        /// <param name="entry1">First entry to compare.</param>
+        /// <param name="entry2">Second entry to compare.</param>
+        /// <returns>
+        /// true if the first object is equal to the second object;
+        /// otherwise, false.
+        /// </returns>
+        public static bool operator ==(ReplacerEntry entry1, ReplacerEntry entry2)
+        {
+            return entry1.Equals(entry2);
+        }
+
+        /// <summary>
+        /// Determines whether two object instances are different.
+        /// </summary>
+        /// <param name="entry1">First entry to compare.</param>
+        /// <param name="entry2">Second entry to compare.</param>
+        /// <returns>
+        /// true if the first object is different to the second object;
+        /// otherwise, false.
+        /// </returns>
+        public static bool operator !=(ReplacerEntry entry1, ReplacerEntry entry2)
+        {
+            return !entry1.Equals(entry2);
+        }
+
+        /// <summary>
+        /// Serves as the default hash function.
+        /// </summary>
+        /// <returns> A hash code for the current object.</returns>
+        public override int GetHashCode()
+        {
+            return Original.GetHashCode() ^ Modified.GetHashCode();
+        }
+
+        /// <summary>
+        /// Determines whether two object instances are equal.
+        /// </summary>
+        /// <param name="obj">
+        /// The object to compare with the current object.
+        /// </param>
+        /// <returns>
+        /// true if the specified object is equal to the current object;
+        /// otherwise, false.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (!(obj is ReplacerEntry otherEntry)) {
+                return false;
+            }
+
+            return Equals(otherEntry);
+        }
+
+        /// <summary>
+        /// Determines whether two object instances are equal.
+        /// </summary>
+        /// <param name="other">
+        /// The instance to compare with the current instance.
+        /// </param>
+        /// <returns>
+        /// true if the specified object is equal to the current object;
+        /// otherwise, false.
+        /// </returns>
+        public bool Equals(ReplacerEntry other)
+        {
+            return other.Original == Original && other.Modified == Modified;
+        }
     }
 }

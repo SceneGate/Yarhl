@@ -32,100 +32,9 @@ namespace Yarhl.Media.Text.Encodings
     using System.Text;
 
     /// <summary>
-    /// Provides an encoding fallback mechanism for symbols out of the range
-    /// of an encoding.
-    /// </summary>
-    public sealed class EscapeOutRangeDecoderFallback : DecoderFallback
-    {
-        /// <summary>
-        /// Gets the number of chars for the invalid symbols.
-        /// </summary>
-        /// <value>The max char count.</value>
-        public override int MaxCharCount => EscapeOutRangeEnconding.TokenStart.Length +
-                                            2 + // byte in hexadecimal
-                                            EscapeOutRangeEnconding.TokenEnd.Length;
-
-        /// <summary>
-        /// Creates the fallback buffer.
-        /// </summary>
-        /// <returns>The fallback buffer.</returns>
-        public override DecoderFallbackBuffer CreateFallbackBuffer()
-        {
-            return new EscapeOutRangeDecoderFallbackBuffer();
-        }
-    }
-
-    /// <summary>
-    /// Provides a substitute string for invalid symbols of an encoding.
-    /// </summary>
-    [SuppressMessage(
-        "Microsoft.StyleCop.CSharp.MaintainabilityRules",
-        "SA1402:FileMayOnlyContainASingleClass",
-        Justification = "This class is not used by users and it's related to encoding.")]
-    public class EscapeOutRangeDecoderFallbackBuffer : DecoderFallbackBuffer
-    {
-        string replacement;
-        int currentPos;
-
-        /// <summary>
-        /// Gets the number of remaining chars in the replacement string.
-        /// </summary>
-        /// <value>The number of remaining chars.</value>
-        public override int Remaining => replacement.Length - currentPos;
-
-        /// <summary>
-        /// Creates the fallback for the specified buffer.
-        /// </summary>
-        /// <returns>Returns <c>true</c>.</returns>
-        /// <param name="bytesUnknown">Unknown bytes to replace.</param>
-        /// <param name="index">Index in the external replacement string.</param>
-        public override bool Fallback(byte[] bytesUnknown, int index)
-        {
-            replacement =
-                EscapeOutRangeEnconding.TokenStart +
-                BitConverter.ToString(bytesUnknown).Replace("-", string.Empty) +
-                EscapeOutRangeEnconding.TokenEnd;
-            currentPos = 0;
-            return true;
-        }
-
-        /// <summary>
-        /// Gets the next char of the buffer.
-        /// </summary>
-        /// <returns>The next char.</returns>
-        public override char GetNextChar()
-        {
-            return currentPos == replacement.Length ? '\0' : replacement[currentPos++];
-        }
-
-        /// <summary>
-        /// Moves to the previous position in the buffer.
-        /// </summary>
-        /// <returns>Returns <c>true</c> if it was able to move back.</returns>
-        public override bool MovePrevious()
-        {
-            if (currentPos == 0)
-                return false;
-
-            currentPos--;
-            return true;
-        }
-
-        /// <summary>
-        /// Reset this instance.
-        /// </summary>
-        public override void Reset()
-        {
-            base.Reset();
-            currentPos = 0;
-            replacement = string.Empty;
-        }
-    }
-
-    /// <summary>
     /// Provides an encoding for encode and decode symbols out of range of any encoding.
     /// </summary>
-    public class EscapeOutRangeEnconding : Encoding
+    public class EscapeOutRangeEncoding : Encoding
     {
         const char Replacement = 'x';
         readonly Encoding baseEncoding;
@@ -134,23 +43,23 @@ namespace Yarhl.Media.Text.Encodings
         readonly byte[] replacement;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EscapeOutRangeEnconding"/> class.
+        /// Initializes a new instance of the <see cref="EscapeOutRangeEncoding"/> class.
         /// </summary>
         /// <param name="baseEncodingName">Base encoding name.</param>
-        public EscapeOutRangeEnconding(string baseEncodingName)
+        public EscapeOutRangeEncoding(string baseEncodingName)
             : this(GetEncoding(baseEncodingName, new EncoderExceptionFallback(), new EscapeOutRangeDecoderFallback()))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EscapeOutRangeEnconding"/> class.
+        /// Initializes a new instance of the <see cref="EscapeOutRangeEncoding"/> class.
         /// </summary>
         /// <param name="encoding">Base encoding.</param>
         /// <remarks>
         /// For correct usage, make sure that your encoding uses the
         /// <see cref="EscapeOutRangeDecoderFallback"/> as the decoder fallback.
         /// </remarks>
-        public EscapeOutRangeEnconding(Encoding encoding)
+        public EscapeOutRangeEncoding(Encoding encoding)
         {
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
@@ -318,6 +227,93 @@ namespace Yarhl.Media.Text.Encodings
             }
 
             return transformed.ToString();
+        }
+
+        /// <summary>
+        /// Provides an encoding fallback mechanism for symbols out of the range
+        /// of an encoding.
+        /// </summary>
+        internal sealed class EscapeOutRangeDecoderFallback : DecoderFallback
+        {
+            /// <summary>
+            /// Gets the number of chars for the invalid symbols.
+            /// </summary>
+            /// <value>The max char count.</value>
+            public override int MaxCharCount => EscapeOutRangeEncoding.TokenStart.Length +
+                                                2 + // byte in hexadecimal
+                                                EscapeOutRangeEncoding.TokenEnd.Length;
+
+            /// <summary>
+            /// Creates the fallback buffer.
+            /// </summary>
+            /// <returns>The fallback buffer.</returns>
+            public override DecoderFallbackBuffer CreateFallbackBuffer()
+            {
+                return new EscapeOutRangeDecoderFallbackBuffer();
+            }
+        }
+
+        /// <summary>
+        /// Provides a substitute string for invalid symbols of an encoding.
+        /// </summary>
+        internal sealed class EscapeOutRangeDecoderFallbackBuffer : DecoderFallbackBuffer
+        {
+            string replacement;
+            int currentPos;
+
+            /// <summary>
+            /// Gets the number of remaining chars in the replacement string.
+            /// </summary>
+            /// <value>The number of remaining chars.</value>
+            public override int Remaining => replacement.Length - currentPos;
+
+            /// <summary>
+            /// Creates the fallback for the specified buffer.
+            /// </summary>
+            /// <returns>Returns <c>true</c>.</returns>
+            /// <param name="bytesUnknown">Unknown bytes to replace.</param>
+            /// <param name="index">Index in the external replacement string.</param>
+            public override bool Fallback(byte[] bytesUnknown, int index)
+            {
+                replacement =
+                    EscapeOutRangeEncoding.TokenStart +
+                    BitConverter.ToString(bytesUnknown).Replace("-", string.Empty) +
+                    EscapeOutRangeEncoding.TokenEnd;
+                currentPos = 0;
+                return true;
+            }
+
+            /// <summary>
+            /// Gets the next char of the buffer.
+            /// </summary>
+            /// <returns>The next char.</returns>
+            public override char GetNextChar()
+            {
+                return currentPos == replacement.Length ? '\0' : replacement[currentPos++];
+            }
+
+            /// <summary>
+            /// Moves to the previous position in the buffer.
+            /// </summary>
+            /// <returns>Returns <c>true</c> if it was able to move back.</returns>
+            public override bool MovePrevious()
+            {
+                if (currentPos == 0)
+                    return false;
+
+                currentPos--;
+                return true;
+            }
+
+            /// <summary>
+            /// Reset this instance.
+            /// </summary>
+            public override void Reset()
+            {
+                base.Reset();
+                currentPos = 0;
+                replacement = string.Empty;
+            }
         }
     }
 }

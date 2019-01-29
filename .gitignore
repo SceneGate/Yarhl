@@ -1,6 +1,7 @@
 # Output
 bin/
 obj/
+artifacts/
 
 # IDE
 *.userprefs
@@ -16,10 +17,11 @@ StyleCopViolations.xml
 StyleCop.Cache
 coverage_unit.xml
 coverage_integration.xml
-coveragereport/
+coverage_report/
 
 # Cake
-tools/
+tools/*
+!tools/packages.config
 
 # Docs
 docs/_site/

@@ -1,4 +1,4 @@
-﻿// NavegableNodeCollection.cs
+﻿// NavigableNodeCollection.cs
 //
 // Author:
 //       Benito Palacios Sánchez <benito356@gmail.com>
@@ -29,24 +29,24 @@ namespace Yarhl.FileSystem
     using System.Linq;
 
     /// <summary>
-    /// Read-only collection of NavegableNodes.
+    /// Read-only collection of NavigableNodes.
     /// </summary>
-    /// <typeparam name="T">The implementation of NavegableNodes</typeparam>
-    public class NavegableNodeCollection<T> : ReadOnlyCollection<T>
-        where T : NavegableNode<T>
+    /// <typeparam name="T">The implementation of NavigableNodes.</typeparam>
+    public class NavigableNodeCollection<T> : ReadOnlyCollection<T>
+        where T : NavigableNode<T>
     {
         /// <summary>
         /// Initializes a new instance of the
-        /// <see cref="Yarhl.FileSystem.NavegableNodeCollection`1"/> class.
+        /// <see cref="Yarhl.FileSystem.NavigableNodeCollection{T}"/> class.
         /// </summary>
         /// <param name="list">Original list of nodes.</param>
-        public NavegableNodeCollection(IList<T> list)
+        public NavigableNodeCollection(IList<T> list)
             : base(list)
         {
         }
 
         /// <summary>
-        /// Gets the <see cref="T:Yarhl.FileSystem.NavegableNodeCollection`1"/>
+        /// Gets the <see cref="Yarhl.FileSystem.NavigableNodeCollection{T}"/>
         /// with the specified name.
         /// </summary>
         /// <param name="name">Node name.</param>

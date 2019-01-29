@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>Yarhl.IntegrationTests</AssemblyName>
     <Product>SceneGate</Product>
-    <Version>2.0-alpha.1</Version>
+    <Version>2.0-alpha.2</Version>
     <Description>Plugin integration tests for Yarhl.</Description>
 
     <Authors>pleonex</Authors>
@@ -15,9 +15,8 @@
     <PackageProjectUrl>https://scenegate.github.io/Yarhl/</PackageProjectUrl>
     <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
 
-    <TargetFrameworks>net47;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
     <RootNamespace>Yarhl.IntegrationTests</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>StyleCop.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>
@@ -29,7 +28,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
     <PackageReference Include="nunit" Version="3.11.0" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

@@ -23,7 +23,7 @@ M: System.Object Yarhl.IO.DataReader::Read()
 R: Gendarme.Rules.Design.ListsAreStronglyTypedRule
 # It looks like a bug in Gendarme
 # It makes no sense for a ReadOnlyCollection that furthermore is strongly type because of the generic
-T: Yarhl.FileSystem.NavegableNodeCollection`1
+T: Yarhl.FileSystem.NavigableNodeCollection`1
 
 R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects
@@ -48,16 +48,19 @@ M: System.Void Yarhl.PluginManager::Shutdown()
 R: Gendarme.Rules.Naming.UseCorrectSuffixRule
 # It doesn't inherit but internally use a Stream.
 T: Yarhl.IO.DataStream
+# Gendarme doesn't know about ReadOnlyCollection
+T: Yarhl.FileSystem.NavigableNodeCollection`1
 
 R: Gendarme.Rules.Performance.AvoidUnneededUnboxingRule
 # Actually we are unboxing once
-M: System.Void Yarhl.IO.DataWriter::Write(System.Object,System.Type)
+M: System.Void Yarhl.IO.DataWriter::WriteOfType(System.Type,System.Object)
 
 R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
 # We are implementing a general streams
 T: Yarhl.IO.DataStream
 T: Yarhl.IO.DataWriter
 T: Yarhl.IO.TextReader
+T: Yarhl.IO.TextWriter
 
 R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 # I allow this to happen only for constructors
@@ -68,3 +71,10 @@ R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
 M: System.String Yarhl.IO.TextReader::ReadToToken(System.String)
 # It seems a bug in Gendarme with new $ string formatting
 M: System.Object Yarhl.FileFormat.Format::ConvertTo(System.Type,System.Object)
+
+R: Gendarme.Rules.Design.Generic.DoNotExposeNestedGenericSignaturesRule
+# This should be allowed for Enumeration since user won't work directly with them
+M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`1<T>> Yarhl.PluginManager::FindLazyExtensions()
+M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<T,TMetadata>> Yarhl.PluginManager::FindLazyExtensions()
+M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.Format,Yarhl.FileFormat.FormatMetadata>> Yarhl.PluginManager::GetFormats()
+M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.IConverter,Yarhl.FileFormat.ConverterMetadata>> Yarhl.PluginManager::GetConverters()

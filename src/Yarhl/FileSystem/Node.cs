@@ -20,13 +20,13 @@
 namespace Yarhl.FileSystem
 {
     using System;
-    using FileFormat;
-    using IO;
+    using Yarhl.FileFormat;
+    using Yarhl.IO;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavegableNode<Node>
+    public class Node : NavigableNode<Node>
     {
         Format format;
 

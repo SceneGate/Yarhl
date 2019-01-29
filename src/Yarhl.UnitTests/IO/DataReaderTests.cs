@@ -548,7 +548,7 @@ namespace Yarhl.UnitTests.IO
                 0x07,
                 0x08,
                 0x61,
-                0x38, 0x00
+                0x38, 0x00,
             };
             stream.Write(expected, 0, expected.Length);
 

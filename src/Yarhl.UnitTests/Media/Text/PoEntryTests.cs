@@ -60,7 +60,7 @@ namespace Yarhl.UnitTests.Media.Text
                 Reference = "test5",
                 Flags = "test6",
                 PreviousContext = "test7",
-                PreviousOriginal = "test8"
+                PreviousOriginal = "test8",
             };
 
             Assert.AreEqual("test0", entry.Original);

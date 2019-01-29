@@ -30,7 +30,7 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text writer for DataStreams.
+    /// Text writer for <cref href="DataStream" />.
     /// </summary>
     public class TextWriter
     {
@@ -61,7 +61,10 @@ namespace Yarhl.IO
             Stream = stream;
             Encoding = encoding;
             NewLine = "\n";
-            writer = new DataWriter(stream);
+            AutoPreamble = false;
+            writer = new DataWriter(stream) {
+                DefaultEncoding = Encoding,
+            };
         }
 
         /// <summary>
@@ -74,12 +77,12 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Gets or sets the encoding.
+        /// Gets the encoding.
         /// </summary>
         /// <value>The encoding.</value>
         public Encoding Encoding {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
@@ -93,12 +96,25 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether write automatically
+        /// the encoding preamble.
+        /// </summary>
+        /// <value>
+        /// True to write the preamble if the stream is empty, otherwise false.
+        /// </value>
+        public bool AutoPreamble {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Write the specified char.
         /// </summary>
         /// <param name="ch">Char to write.</param>
         public void Write(char ch)
         {
-            writer.Write(ch, Encoding);
+            CheckWritePreamble();
+            writer.Write(ch);
         }
 
         /// <summary>
@@ -110,7 +126,8 @@ namespace Yarhl.IO
             if (chars == null)
                 throw new ArgumentNullException(nameof(chars));
 
-            writer.Write(chars, Encoding);
+            CheckWritePreamble();
+            writer.Write(chars);
         }
 
         /// <summary>
@@ -122,7 +139,8 @@ namespace Yarhl.IO
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            writer.Write(text, false, Encoding);
+            CheckWritePreamble();
+            writer.Write(text, false);
         }
 
         /// <summary>
@@ -137,8 +155,9 @@ namespace Yarhl.IO
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
 
+            CheckWritePreamble();
             string text = string.Format(CultureInfo.InvariantCulture, format, args);
-            writer.Write(text, false, Encoding);
+            writer.Write(text, false);
         }
 
         /// <summary>
@@ -146,7 +165,8 @@ namespace Yarhl.IO
         /// </summary>
         public void WriteLine()
         {
-            writer.Write(NewLine, false, Encoding);
+            CheckWritePreamble();
+            writer.Write(NewLine, false);
         }
 
         /// <summary>
@@ -158,7 +178,8 @@ namespace Yarhl.IO
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            writer.Write(text + NewLine, false, Encoding);
+            CheckWritePreamble();
+            writer.Write(text + NewLine, false);
         }
 
         /// <summary>
@@ -173,8 +194,29 @@ namespace Yarhl.IO
             if (args == null)
                 throw new ArgumentNullException(nameof(args));
 
+            CheckWritePreamble();
             string text = string.Format(CultureInfo.InvariantCulture, format, args);
-            writer.Write(text + NewLine, false, Encoding);
+            writer.Write(text + NewLine, false);
+        }
+
+        /// <summary>
+        /// Write the encoding preamble.
+        /// </summary>
+        public void WritePreamble()
+        {
+            if (Stream.Position > 0) {
+                throw new InvalidOperationException(
+                    "Preamble can be written only in position 0.");
+            }
+
+            writer.Write(Encoding.GetPreamble());
+        }
+
+        void CheckWritePreamble()
+        {
+            if (AutoPreamble && Stream.Position == 0) {
+                WritePreamble();
+            }
         }
     }
 }

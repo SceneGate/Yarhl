@@ -134,7 +134,7 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Reads an unsigned 32-bit number
+        /// Reads an unsigned 32-bit number.
         /// </summary>
         /// <returns>The next unsigned 32-bit number.</returns>
         [CLSCompliant(false)]

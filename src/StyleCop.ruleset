@@ -16,5 +16,8 @@
 
     <!-- Disable mandatory access modifiers. -->
     <Rule Id="SA1400" Action="None" />
+
+    <!-- Allow initializer to have brace in the same line. -->
+    <Rule Id="SA1137" Action="None" />
   </Rules>
 </RuleSet>
