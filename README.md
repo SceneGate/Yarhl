@@ -1,5 +1,7 @@
 # Yarhl: Yet Another ROM Hacking Library [![GPL v3 License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat)](http://www.gnu.org/copyleft/gpl.html)
 
+![Yarhl Logo](https://i.imgur.com/sOzbhu4.png)
+
 **Yarhl** is a library for *ROM Hacking* and fan-translation projects.
 It provides a virtual file system, file format and format conversion features
 and plugin support. It's built in C# / .NET and works in Windows, Linux and
