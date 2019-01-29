@@ -30,7 +30,7 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text writer for <cref href="DataStream" />.
+    /// Text writer for <see cref="DataStream" />.
     /// </summary>
     public class TextWriter
     {
