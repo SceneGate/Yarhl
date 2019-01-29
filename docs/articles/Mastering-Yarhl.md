@@ -4,21 +4,21 @@
 
 **Yarhl** - *Yet Another ROM Hacking Library* - is a library for _ROM Hacking_ and fan-translation projects. It provides a virtual file system, file format, and format conversion features and plugin support.
 
-But what it really has to offer? Why should you use it? And how? This tutorial series will teach you how to use YARHL and how to take advantage of the 100% of it.
+But what it really has to offer? Why should you use it? And how? This tutorial series will teach you how to use Yarhl and how to take advantage of the 100% of it.
 
 Remember that if you have any question you can [use our gitter chat](https://gitter.im/SceneGate/Yarhl), but first make sure you've read the whole docs.
 
 
-# Index
+## Index
 
- 1. Your first project: Reading and Writing
- 2. Small introduction to Format
-	 2.1 BinaryFormat
- 3. Entering the virtual system: Nodes
-	 3.1. NodeContainerFormat
- 4. Converting Formats, Transform Nodes
+1. Your first project: Reading and Writing
+2. Small introduction to Format
+    2.1 BinaryFormat
+3. Entering the virtual system: Nodes
+    3.1. NodeContainerFormat
+4. Converting Formats, Transform Nodes
 
-# Your first Project: Reading and Writing
+## Your first Project: Reading and Writing
 
 Oh, hi! I'm Master Yarhl (or M.Y.), nice to meet you, I will be your guide! Erm... y-you can.. picture me like this:
 
@@ -26,22 +26,22 @@ Oh, hi! I'm Master Yarhl (or M.Y.), nice to meet you, I will be your guide! Erm.
 
 <small>If you want... or can...</small>
 
-Lets' get started! The first module I'm teaching you is IO (Input Output), which is very similar to C# IO: MemoryStream, WriterStream, just with more functionality to work with binary and text files.
+Lets' get started! The first module I'm teaching you is `Yarhl.IO` (Input Output), which is very similar to C# `System.IO`: `MemoryStream`, `BinaryWriter`, just with more functionality to work with binary and text files.
 
-## Main Classes
+### Main Classes
 
-This part is divided by binary files management classes and text files classes.
+This part is divided by binary file management classes and text file classes.
 
 We have DataStream, DataReader and DataWriter for binary; TextReader and TextWriter for text. Easy peasy!
 
 [Here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.html) you can see every class with its properties, but let's see some of the most interesting ones:
 
-**DataStream:** Position, EndOfStream (bool if position is at the end) and Length of the stream.
-**DataReader and DataWriter:** DefaultEncoding, [Endianness](https://scenegate.github.io/Yarhl/api/Yarhl.IO.EndiannessMode.html) and Stream accessor.
+- **DataStream:** Position, EndOfStream (bool if position is at the end) and Length of the stream.
+- **DataReader** and **DataWriter**: DefaultEncoding, [Endianness](https://scenegate.github.io/Yarhl/api/Yarhl.IO.EndiannessMode.html) and Stream accessor.
 
-## Main methods
+### Main methods
 
-### DataStream
+#### DataStream
 
 [Here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataStream.html#methods) you can see all the methods, but as before we'll review the most interesting ones:
 
@@ -51,55 +51,45 @@ We have DataStream, DataReader and DataWriter for binary; TextReader and TextWri
 - Readers and Writers for buffers.
 - **WriteTo:** save the stream into a physical file in your computer (giving the path) or into another DataStream. Very useful mate!
 
-### DataReader and DataWriter
+#### DataReader and DataWriter
 
 We have a bunch of methods to Read and Write different type of data. You have the whole list [here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataReader.html#methods) and [here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataWriter.html#methods).
 
-## Examples
+### Examples
 
-### Reading a File
+#### Reading a File
 
 ```csharp
-public void LoadFile(string fileToExtractName)
+public void LoadFile(string path)
 {
+    using (var stream = new DataStream(path, FileOpenMode.Read)) {
+        var reader = new DataReader(stream) {
+            DefaultEncoding = new EscapeOutRangeEnconding("ascii"),
+        };
 
- using (DataStream fileToExtractStream = new DataStream(fileToExtractName, FileOpenMode.Read))
- {
-
-  DataReader fileToExtractReader = new DataReader(fileToExtractStream)
-  {
-   DefaultEncoding = new Yarhl.Media.Text.Encodings.EscapeOutRangeEnconding("ascii")
-  };
-
-  // Read!
-
-
- }
+        // Read!
+    }
 }
 ```
 
-### Writing a File
+#### Writing a File
 
 ```csharp
-public void SaveFile(string fileToSaveName)
+public void SaveFile(string path)
 {
+    using (var stream = new DataStream(path, FileOpenMode.Read)) {
+        var writer = new  DataWriter(stream);
 
- using (DataStream exportedFileStream = new DataStream(fileToSaveName, FileOpenMode.Read))
- {
-
-  DataWriter exportedFileWriter = new  DataWriter(exportedFileStream);
-
-  // Write into new file!
-
- }
+        // Write into new file!
+    }
 }
 ```
 
-# Small introduction to Format
+## Small introduction to Format
 
-Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. YARHL helps you to code objects as you were actually coding a game file.
+Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. Yarhl helps you to code objects as you were actually coding a game file.
 
-Continuing with the Palette example, you'd create a new Class called NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.
+Continuing with the Palette example, you'd create a new class named NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.
 
 Let's go for a quick example!
 
@@ -107,31 +97,33 @@ Let's go for a quick example!
 
 This file follows the following specification:
 
-    Int32 - MagicID
-    Int16 - Number of Sentences
-    Int16 - Size of the file
-    String[NumberOfSentences]
+Size | Name
+---- | -----
+4    | Magic ID
+2    |Number of sentences
+2    | Size of the file
+*    | Sentences
 
 So we can create the class Example like this:
 
 ```csharp
-using Yarhl.FileFormat;
+public class Example : Format
+{
+    public uint MagicID { get; set; }
+    public ushort NumberSentences { get; set; }
+    public ushort FileSize { get; set; }
+    public IList<String> Sentences { get; private set; }
 
-class Example : Format{
- public uint MagicID { get; set;}
- public ushort NumberOfSentences { get;set; }
- public ushort FileSize{ get; set; }
- public List<String> Sentences { get; }
-
- public Example(){
-  Sentences = new List<String>;
- }
+    public Example()
+    {
+        Sentences = new List<String>();
+    }
 }
 ```
 
 Easy! But for now I can't teach you how to transform this example binary file we'just saw into this clean Object, I need to explain other things first.
 
-## BinaryFormat
+### BinaryFormat
 
 This is the only Format which Yarhl has in its core, why? Because as the name says, it is the most basic Format you'll ever need: a Binary file.
 
@@ -142,9 +134,9 @@ As you can see [in the documentation](https://scenegate.github.io/Yarhl/api/Yarh
 
 I know... I talk too much... Let's continue!
 
-# Entering the virtual world: Nodes
+## Entering the virtual world: Nodes
 
-This is the main feature of YARHL and the most important one, no doubt, 10/10 Yarhl users would say so<sup>1</sup>. Yarhl has a virtual file system to handle your files while mantaining your computer intact, you can now delete your "tests" folder and clean your desktop after-ages.
+This is the main feature of Yarhl and the most important one, no doubt, 10/10 Yarhl users would say so<sup>1</sup>. Yarhl has a virtual file system to handle your files while mantaining your computer intact, you can now delete your "tests" folder and clean your desktop after-ages.
 
 As always let's take a look [at the docs](https://scenegate.github.io/Yarhl/api/Yarhl.FileSystem.Node.html#properties) a Node is a virtual file with three properties: Format, IsContainer and Stream.
 
@@ -155,13 +147,13 @@ As we said before, every file in a game has a format, that's why our virtual fil
 Let's clarify it out with an example:
 
 ```csharp
-new Node("NodeName", new BinaryFormat(new DataStream(filePath, FileOpenMode.Read)));
+new Node("NodeName", new BinaryFormat(filePath));
 ```
 
 Heh... nothing special right? What about this?
 
 ```csharp
-NodeFactory.fromFile(filePath);
+NodeFactory.FromFile(filePath);
 ```
 
 Yeeeah! That's the face I was looking for! You can create a virtual file that quick!
@@ -170,15 +162,15 @@ And there's more! What about creating multiple nodes from multiple files?
 
 <sup>1</sup> <small>None of Yarhl users wants to talk with me anymore, so maybe this is not 100% accurate.</small>
 
-## NodeContainerFormat
+### NodeContainerFormat
 
 Remember that IsContainer property? Well, this is its implementation:
 
- ```csharp
- public bool IsContainer {
-  get { return Format is NodeContainerFormat; }
- }
- ```
+```csharp
+public bool IsContainer {
+    get { return Format is NodeContainerFormat; }
+}
+```
 
 *NodeContainerFormat* starts a tree of Nodes starting from its Root (the only property it has). With this you create a virtual directory, with its virtual files.
 
@@ -191,14 +183,14 @@ It's more clear with a picture:
 How can we create that? Do I have more magic for you?
 
 ```csharp
-NodeFactory.fromDirectory();
+NodeFactory.FromDirectory(dirPath);
 ```
 
 N is the "mastering" virtual folder! That easy!
 
 Yarhl is way more interesting now, right!? Well, then the next chapter will blow your mind!
 
-# Converting Formats, Transforming Nodes
+## Converting Formats, Transforming Nodes
 
 Finally! Now everything begin to fall into place, you'll see.
 
@@ -208,9 +200,9 @@ Well, that's how Yarhl works, Yarhl is all about converting formats, let's see a
 
 ```csharp
 new BinaryFormat(filePath)
-.ConvertWith<Font2Binary, BinaryFormat, Font>()
-.ConvertWith<Font2Image, Font, System.Drawing.Image>()
-.Save(outputPath);
+    .ConvertWith<Font2Binary, BinaryFormat, Font>()
+    .ConvertWith<Font2Image, Font, System.Drawing.Image>()
+    .Save(outputPath);
 ```
 
 - We start creating a new BinaryFormat with a file path (creating a virtual file copying a physical one).
@@ -230,40 +222,38 @@ So, here is the hex and the Format class:
 ![Hex view of example file](https://i.imgur.com/KK5CsJH.png)
 
 ```csharp
-using Yarhl.FileFormat;
+public class Example : Format
+{
+    public uint MagicID { get; set; }
+    public ushort NumberSentences { get; set; }
+    public ushort FileSize { get; set; }
+    public IList<String> Sentences { get; private set; }
 
-class Example : Format{
- public uint MagicID { get; set;}
- public ushort NumberOfSentences { get;set; }
- public ushort FileSize{ get; set; }
- public List<String> Sentences { get; }
-
- public Example(){
-  Sentences = new List<String>;
- }
+    public Example()
+    {
+        Sentences = new List<String>;
+    }
 }
 ```
 
 ```csharp
-using Yarhl.IO;
+public class Binary2Example : IConverter<BinaryFormat, Example>
+{
+    public Example Convert(BinaryFormat file)
+    {
+        var example = new Example();
+        var reader = new DataReader(file.Stream);
 
-class Binary2Example : IConverter<BinaryFormat, Example>{
+        example.MagicID = reader.ReadUInt32();
+        example.NumberSentences = reader.ReadUInt16();
+        example.FileSize = reader.ReadUInt16();
 
- Example Convert(BinaryFormat file){
+        for (int i = 0; i < example.NumberSentences; i++) {
+            example.Sentences.Add(reader.ReadString());
+        }
 
-  Example e = new Example();
-  DataReader reader = new DataReader(file.Stream);
-
-  e.MagicID = reader.readInt32();
-  e.NumberOfSentences = reader.readInt16();
-  e.FileSize = reader.readInt16();
-
-  for(int i = 0; i < NumberOfSentences; i++){
-   e.Sentences.add(reader.readString());
-  }
-
-  return e;
- }
+        return example;
+    }
 }
 ```
 
@@ -271,7 +261,7 @@ So now if we do:
 
 ```csharp
 new BinaryFormat(filePath)
-.ConvertWith<Binary2Example, BinaryFormat, Example>();
+    .ConvertWith<Binary2Example, BinaryFormat, Example>();
 ```
 
 We would have an Example object with all the data we need.
@@ -279,60 +269,35 @@ We would have an Example object with all the data we need.
 Also, we can code the Converter for Example into BinaryFormat:
 
 ```csharp
-using Yarhl.IO;
+public class Example2Binary :
+    IConverter<Example, BinaryFormat>
+{
+    public BinaryFormat Convert(Example example)
+    {
+        var binary = new BinaryFormat();
+        var writer = new DataWriter(binary.Stream);
 
-class Binary2Example :
-IConverter<BinaryFormat, Example>,
-IConverter<Example, BinaryFormat>{
+        writer.Write(example.MagicID);
+        writer.Write(example.Sentences.Count);
+        writer.Write(0x00); // Placeholder size to override later
 
- Example Convert(BinaryFormat file){
+        foreach (string sentence in example.Sentences) {
+            writer.Write(sentence);
+        }
 
-  Example e = new Example();
-  DataReader reader = new DataReader(file.Stream);
+        binary.Stream.Position = 0x06;
+        writer.Write((ushort)binary.Stream.Length);
 
-  e.MagicID = reader.readInt32();
-  e.NumberOfSentences = reader.readInt16();
-  e.FileSize = reader.readInt16();
-
-  for(int i = 0; i < NumberOfSentences; i++){
-   e.Sentences.add(reader.readString());
-  }
-
-  return e;
- }
-
- BinaryFormat Convert(Example e){
-
-  BinaryFormat bf = new BinaryFormat();
-  DataWriter writer = new DataWriter(bf.Stream);
-
-  int fileSize = 0;
-
-  writer.Write(e.MagicID);
-  fileSize += 4;
-  writer.Write(e.Sentences.Count);
-  fileSize += 2;
-  // We save the current position
-  writer.Stream.PushPosition();
-  writer.Write(0x8); // We'll override this later
-
-  foreach(String s in e.Sentences){
-   writer.Write(s);
-   fileSize += s.Lenght + 1;
-  }
-  writer.Stream.PopPosition();
-  writer.Write(fileSize);
-
-  return e;
- }
+        return binary;
+    }
 }
 ```
 
 And that's it! I'm pretty sure you've got enough of converters, but, let's see how it's done with Nodes:
 
 ```csharp
-NodeFactory.fromFile()
-.Transform<>;
+var node = NodeFactory.FromFile(path);
+node.Transform<Example>;
 ```
 
 Now we have a Node with the Format we want, and it is quite easy to save into a physical file in our computer.

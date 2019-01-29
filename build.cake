@@ -301,7 +301,15 @@ Task("Deploy-Doc")
 
     // Commit and push
     retcode = StartProcess("git", new ProcessSettings {
-        Arguments = "commit -a -u -m 'Update doc from cake'",
+        Arguments = "add --all",
+        WorkingDirectory = repo_doc
+    });
+    if (retcode != 0) {
+        throw new Exception("Cannot add files");
+    }
+
+    retcode = StartProcess("git", new ProcessSettings {
+        Arguments = "commit -m \"Update doc from Cake\"",
         WorkingDirectory = repo_doc
     });
     if (retcode != 0) {
