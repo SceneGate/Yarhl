@@ -513,10 +513,10 @@
       "output": {
         ".html": {
           "relative_path": "articles/Mastering-Yarhl.html",
-          "hash": "JlZnDmLRPxRM0JubGDsxig=="
+          "hash": "dj0e47OVOBkFMNw8quzBrw=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
