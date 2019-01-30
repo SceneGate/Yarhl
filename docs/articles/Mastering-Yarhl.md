@@ -1,63 +1,95 @@
-﻿# Mastering YARHL
+﻿# Mastering Yarhl
 
-![Yarhl Logo](https://i.imgur.com/sOzbhu4.png)
+![Yarhl Logo](../images/logo.png)
 
 **Yarhl** - *Yet Another ROM Hacking Library* - is a library for _ROM Hacking_ and fan-translation projects. It provides a virtual file system, file format, and format conversion features and plugin support.
 
-But what it really has to offer? Why should you use it? And how? This tutorial series will teach you how to use Yarhl and how to take advantage of the 100% of it.
+But what it really has to offer? Why should you use it? And how? This tutorial will teach you how to use Yarhl and how to take advantage of the 100% of it.
 
 Remember that if you have any question you can [use our gitter chat](https://gitter.im/SceneGate/Yarhl), but first make sure you've read the whole docs.
 
+## Your first steps: Reading and Writing
 
-## Index
+Oh, hi! I'm Master Yarhl (or M.Y.). Nice to meet you. I will be your guide! Erm... y-you can... picture me like this:
 
-1. Your first project: Reading and Writing
-2. Small introduction to Format
-    2.1 BinaryFormat
-3. Entering the virtual system: Nodes
-    3.1. NodeContainerFormat
-4. Converting Formats, Transform Nodes
+![Master Yarhl](../images/mister.png)
 
-## Your first Project: Reading and Writing
+Let's get started! The first module I'm teaching you is [`Yarhl.IO`](xref:Yarhl.IO) (IO stands for _Input/Output_), which is similar to .NET standard `System.IO` but with specific features to work with binary files.
 
-Oh, hi! I'm Master Yarhl (or M.Y.), nice to meet you, I will be your guide! Erm... y-you can.. picture me like this:
+This module is divided into binary and text files. Easy peasy!
+Let's go deeper into these classes!
 
-![Master Yarhl](https://i.imgur.com/w4TMqLi.png)
+### DataStream
 
-<small>If you want... or can...</small>
+[`DataStream`](xref:Yarhl.IO.DataStream) wraps any kind of .NET `Stream`.
 
-Lets' get started! The first module I'm teaching you is `Yarhl.IO` (Input Output), which is very similar to C# `System.IO`: `MemoryStream`, `BinaryWriter`, just with more functionality to work with binary and text files.
+#### Reuse of Stream
 
-### Main Classes
+It allows to reuse a parent Stream to have substreams to reduce the number of resources to use. For instance, to unpack a file you would just need to create `DataStream` instances from the same parent `DataStream` having different offsets and lengths.
 
-This part is divided by binary file management classes and text file classes.
+Disposing the last instance of a `DataStream` that has a reference to a `Stream` will dispose its parent `Stream` too.
 
-We have DataStream, DataReader and DataWriter for binary; TextReader and TextWriter for text. Easy peasy!
+#### Comparison
 
-[Here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.html) you can see every class with its properties, but let's see some of the most interesting ones:
+The `DataStream` class provides the [`Compare`](xref:Yarhl.IO.DataStream.Compare(Yarhl.IO.DataStream)) method to check if two streams are identical.
 
-- **DataStream:** Position, EndOfStream (bool if position is at the end) and Length of the stream.
-- **DataReader** and **DataWriter**: DefaultEncoding, [Endianness](https://scenegate.github.io/Yarhl/api/Yarhl.IO.EndiannessMode.html) and Stream accessor.
+#### Push and pop positions
 
-### Main methods
+Similar to the terminal commands `pushd` and `popd`, our `DataStream` provides methos to temporarily moving into a position to perform an operation and then restore the position. This is very useful when you need to read or write a few fields into another section of the file. It works with an stack so you can push several positions.
 
-#### DataStream
+- [`PushCurrentPosition`](xref:Yarhl.IO.DataStream.PushCurrentPosition): save the current position.
+- [`PushToPosition`](xref:Yarhl.IO.DataStream.PushToPosition*): save the current position and move.
+- [`PopPosition`](xref:Yarhl.IO.DataStream.PopPosition): restore the last saved position.
+- [`RunInPosition`](xref:Yarhl.IO.DataStream.RunInPosition(System.Action,System.Int64,Yarhl.IO.SeekMode)): push, run the lambda expression and pop again.
 
-[Here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataStream.html#methods) you can see all the methods, but as before we'll review the most interesting ones:
+#### Read and Write
 
-- **Compare (DataStream):** compare the content of the stream with another one.
-- **PushCurrentPosition():** saves the current position.
-- **PopPosition():** moves to the last position saved.
-- Readers and Writers for buffers.
-- **WriteTo:** save the stream into a physical file in your computer (giving the path) or into another DataStream. Very useful mate!
+We have also the typical read and write methods for arrays of bytes. And don't forget about the [`WriteTo`](xref:Yarhl.IO.DataStream.WriteTo(System.String)) methods that allows to write a full `DataStream` into another `DataStream` or into a file in your HD. Very useful mate!
 
-#### DataReader and DataWriter
+### DataReader and DataWriter
 
-We have a bunch of methods to Read and Write different type of data. You have the whole list [here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataReader.html#methods) and [here](https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataWriter.html#methods).
+[`DataReader`](xref:Yarhl.IO.DataReader) is the equivalent of the .NET `BinaryReader` and [`DataWriter`](xref:Yarhl.IO.DataWriter) of `BinaryWriter. Apart from the typical read and write methods, they provide the following very useful features.
+
+#### Endianness
+
+By properties or constructor you can specify if the endianness of the stream if little or endian. This will affect to all the read and write operations.
+
+#### Strings
+
+By using the different overloads of `ReadString` and `Write` you can read and write strings with different encodings, fixed sizes, null terminated or not or in the class _size + content_ style. I recommend you to take a look into them, they cover all the cases you will need to work with files.
+
+#### Padding
+
+Are you tired of writing logic to skip or write padding bytes? Well, we too!
+If you are reading a file and you want to skip padding bytes, you can call [`ReadPadding`](xref:Yarhl.IO.DataReader.ReadPadding(System.Int32,System.Boolean)) and if you need to write padding bytes, then [`WritePadding`](xref:Yarhl.IO.DataWriter.WritePadding(System.Byte,System.Int32,System.Boolean)) will be your friend.
+
+### TextReader and TextWriter
+
+So far, `DataReader` and `DataWriter` have been very useful when you are dealing with a file that contains some integer fields for size or offset, arrays of bytes and maybe null-terminated strings. But, what about if you need to work with a file that only contains text and you are interested in reading line by line? In that case, you need [`TextReader`](xref:Yarhl.IO.TextReader) and [`TextWriter`](xref:Yarhl.IO.TextWriter).
+
+#### New lines
+
+By default, `TextWriter` uses always (Windows too) the new line `\n`. It doesn't use `\r\n`. The reason is that most file formats uses `\n` and in some games having the `\r` may crash. It's sometimes difficult to notice that. If you want to use any other new line string (you can even use `<br/>`), you just need to change the [`NewLine`](xref:Yarhl.IO.TextWriter.NewLine) property.
+
+In the case of the `TextReader` the behavior is different. The default value for the [`NewLine`](xref:Yarhl.IO.TextReader.NewLine) property depends on the OS (Windows: `\r\n`, Unix: `\n`). In addition, we provided with an automatic mehcanism enabled by default: [`AutoNewLine`](xref:Yarhl.IO.TextReader.AutoNewLine*). If it's enabled, you don't need to know the line ending in advance because we will stop at `\n` and remove the last `\r` if present. This is also useful if a file mix both line endings. And remember, by setting the `NewLine` property `AutoNewLine` is disabled.
+
+#### Encoding
+
+The encoding can only by specified in the constructor. We believe that it doesn't have sense to change the encoding once you start using the reader because a text file must not mix encodings.
+
+#### Peeking
+
+Do you need to read a line without actually moving the position of the stream. Maybe you want to check if the line contains a token but you are not sure and don't want to keep the current position all the time. Well, in that case you have the `Peek*` methods.
+
+#### Preambles / BOM
+
+Some encodings may have a specific [BOM](https://en.wikipedia.org/wiki/Byte_order_mark) (_Byte Order Mark_) (or _preamble_ in the .NET world). These are some bytes at the beginning of the stream that confirms the encoding of the file. For instance, when using UTF-16, the file will begin with the bytes `0xFEFF`. It also specifies if the encoding is little-ending or big-endian (needed for UTF-16).
+
+Our `TextReader` will skip the BOM (_if it's present_) at the beginning of the file. In the case of the `TextWriter`, the behavior is defined by the property [`AutoPreamble`](xref:Yarhl.IO.TextWriter.AutoPreamble) which is set to `false` by default (again, some games may see it as unexpected bytes). When enabled, the first write call will also write the BOM. You can also write it manually by calling [`WritePreamble()`](xref:Yarhl.IO.TextWriter.WritePreamble) (but remember, only if you are at the beginning of the stream).
 
 ### Examples
 
-#### Reading a File
+#### Reading / writing a binary file
 
 ```csharp
 public void LoadFile(string path)
@@ -65,23 +97,64 @@ public void LoadFile(string path)
     using (var stream = new DataStream(path, FileOpenMode.Read)) {
         var reader = new DataReader(stream) {
             DefaultEncoding = new EscapeOutRangeEnconding("ascii"),
+            Endianness = EndiannessMode.BigEndian,
         };
 
-        // Read!
+        string id = reader.ReadString(4);
+        int offset = reader.ReadInt32();
+        reader.ReadPadding(32);
+        double myDouble = reader.ReadDouble();
+
+        string name;
+        stream.RunInPosition(
+            () => name = reader.ReadString(),
+            offset);
+    }
+}
+
+public void SaveFile(string path)
+{
+    using (var stream = new DataStream(path, FileOpenMode.Read)) {
+        var writer = new DataWriter(stream);
+
+        writer.Write("TEX0", false);
+        writer.Write(0xCAFE);
+        writer.Write(0x00);
+        writer.WritePadding(0xFF, 32);
+        writer.Write("My long text of 80 bytes", 80);
+
+        stream.PushToPosition(0x08);
+        writer.Write(0x65402);
+        stream.PopPosition();
     }
 }
 ```
 
-#### Writing a File
+#### Reading / writing a text file
 
 ```csharp
-public void SaveFile(string path)
+public void LoadFile(DataStream stream)
 {
-    using (var stream = new DataStream(path, FileOpenMode.Read)) {
-        var writer = new  DataWriter(stream);
+    var reader = new TextReader(stream, Encoding.Unicode);
 
-        // Write into new file!
-    }
+    string firstLine = reader.ReadLine();
+    char[] someChars = reader.Read(4);
+    string beforeToken = reader.ReadToToken("#");
+
+    if (reader.Peek() == ':')
+        reader.ReadLine();
+    string restFile = reader.ReadToEnd();
+}
+
+public void SaveFile(DataStream stream)
+{
+    var writer = new TextWriter(stream) {
+        AutoPreamble = true,
+    };
+
+    writer.WriteLine("Hello world!");
+    writer.WriteLine("Count is {0}", 42);
+    writer.Write("No new line");
 }
 ```
 
@@ -93,7 +166,7 @@ Continuing with the Palette example, you'd create a new class named NCLR with ev
 
 Let's go for a quick example!
 
-![Hex view of example file](https://i.imgur.com/KK5CsJH.png)
+![Hex view of example file](../images/hex_example.png)
 
 This file follows the following specification:
 
@@ -102,7 +175,7 @@ Size | Name
 4    | Magic ID
 2    |Number of sentences
 2    | Size of the file
-*    | Sentences
+\*   | Sentences
 
 So we can create the class Example like this:
 
@@ -176,7 +249,7 @@ public bool IsContainer {
 
 It's more clear with a picture:
 
-![A directory named mastering with tho files inside](https://i.imgur.com/80Qik3v.png)
+![A directory named mastering with tho files inside](../images/node_example.png)
 
 "mastering" would be our root Node, while example.example and example2.example would be our tho child Nodes.
 
@@ -219,7 +292,7 @@ Remember that example from lesson 2? We are coding the converter right now!
 
 So, here is the hex and the Format class:
 
-![Hex view of example file](https://i.imgur.com/KK5CsJH.png)
+![Hex view of example file](../images/hex_example.png)
 
 ```csharp
 public class Example : Format
