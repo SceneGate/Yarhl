@@ -1,6 +1,6 @@
 # Yarhl: Yet Another ROM Hacking Library [![GPL v3 License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat)](http://www.gnu.org/copyleft/gpl.html)
 
-![Yarhl Logo](https://i.imgur.com/sOzbhu4.png)
+![Yarhl Logo](docs/images/logo.png)
 
 **Yarhl** is a library for *ROM Hacking* and fan-translation projects.
 It provides a virtual file system, file format and format conversion features
@@ -10,7 +10,6 @@ Mac OS X.
 | | Linux & Mac OS X | Windows |
 | ----- | ----- | ----- |
 | **Build & Test** | [![Travis Build Status](https://travis-ci.org/SceneGate/Yarhl.svg?branch=master)](https://travis-ci.org/SceneGate/Yarhl) [![Travis Build history](https://buildstats.info/travisci/chart/SceneGate/Yarhl)](https://travis-ci.org/SceneGate/Yarhl/builds) | [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/master?svg=true)](https://ci.appveyor.com/project/pleonex/libgame/branch/master) [![AppVeyor Build history](https://buildstats.info/appveyor/chart/pleonex/libgame)](https://ci.appveyor.com/project/pleonex/libgame/history) |
-
 
 | NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![Nuget](https://img.shields.io/nuget/dt/Yarhl.svg)](https://github.com/SceneGate/yarhl) |
 | ----- | ------ |
