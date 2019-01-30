@@ -79,13 +79,15 @@ The encoding can only by specified in the constructor. We believe that it doesn'
 
 #### Peeking
 
-Do you need to read a line without actually moving the position of the stream. Maybe you want to check if the line contains a token but you are not sure and don't want to keep the current position all the time. Well, in that case you have the `Peek*` methods.
+Do you need to read a line without actually moving the position of the stream? Maybe you want to check if the line contains a token but you are not sure and don't want to keep the current position all the time. Well, in that case you have the `Peek*` methods.
 
 #### Preambles / BOM
 
 Some encodings may have a specific [BOM](https://en.wikipedia.org/wiki/Byte_order_mark) (_Byte Order Mark_) (or _preamble_ in the .NET world). These are some bytes at the beginning of the stream that confirms the encoding of the file. For instance, when using UTF-16, the file will begin with the bytes `0xFEFF`. It also specifies if the encoding is little-ending or big-endian (needed for UTF-16).
 
 Our `TextReader` will skip the BOM (_if it's present_) at the beginning of the file. In the case of the `TextWriter`, the behavior is defined by the property [`AutoPreamble`](xref:Yarhl.IO.TextWriter.AutoPreamble) which is set to `false` by default (again, some games may see it as unexpected bytes). When enabled, the first write call will also write the BOM. You can also write it manually by calling [`WritePreamble()`](xref:Yarhl.IO.TextWriter.WritePreamble) (but remember, only if you are at the beginning of the stream).
+
+I know... I talk too much... Let's continue!
 
 ### Examples
 
@@ -158,203 +160,237 @@ public void SaveFile(DataStream stream)
 }
 ```
 
-## Small introduction to Format
+## Implementing file formats
 
-Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. Yarhl helps you to code objects as you were actually coding a game file.
+Every game contains many files, which have a specific formats. For example files with extension `.nclr` are a palettes, or `.aar` are a package files. Yarhl helps you to code type as you were actually coding a game format.
 
-Continuing with the Palette example, you'd create a new class named NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.
+To implement a file format, you just need to create a new class that inherits from the [`Format`](xref:Yarhl.FileFormat.Format) class. In this class you just need to add the fields of your format. In more programming terms, your format it's just a data model.
 
-Let's go for a quick example!
+Let's go for a quick example! Take a look into the following bytes from a file that seems to have text from a game menu:
 
 ![Hex view of example file](../images/hex_example.png)
 
-This file follows the following specification:
+This file seems to follow the following specification in little endian:
 
 Size | Name
 ---- | -----
 4    | Magic ID
 2    |Number of sentences
 2    | Size of the file
-\*   | Sentences
+\*   | Null-terminated sentences
 
-So we can create the class Example like this:
+So given this format, we would implement the following class that maps the specification:
 
 ```csharp
-public class Example : Format
+public class MenuSentences : Format
 {
     public uint MagicID { get; set; }
-    public ushort NumberSentences { get; set; }
     public ushort FileSize { get; set; }
     public IList<String> Sentences { get; private set; }
 
-    public Example()
+    public MenuSentences()
     {
         Sentences = new List<String>();
     }
 }
 ```
 
-Easy! But for now I can't teach you how to transform this example binary file we'just saw into this clean Object, I need to explain other things first.
+Easy! Don't worry about how to convert that format, we will talk about that later.
 
 ### BinaryFormat
 
-This is the only Format which Yarhl has in its core, why? Because as the name says, it is the most basic Format you'll ever need: a Binary file.
+[`BinaryFormat`](xref:Yarhl.FileFormat.BinaryFormat) is the most basic format since it just represents raw bytes, a stream. It's... a _binary format_. This format is assigned automatically when we open a file from Yarhl as we will see later.
 
-Remember what we did at the first chapter? Opening up a file in order to read... What if I told you, we did it wrong?
-Well, actually it's not wrong, but it's not complete! What? What's that nonsense? Okay, okay, phew! Let's go.
+Its only property [`Stream`](xref:Yarhl.FileFormat.BinaryFormat.Stream*) allows you to access to its inner stream.
 
-As you can see [in the documentation](https://scenegate.github.io/Yarhl/api/Yarhl.FileFormat.BinaryFormat.html) BinaryFormat is just a wrapped DataStream with all the functions of a Format (which we'll see soon), and for now that's the only thing you need to know.
 
-I know... I talk too much... Let's continue!
+### NodeContainerFormat
+
+You may wonder... what about package formats like `.zip`? They are represented with the format (or by inheriting it) [`NodeContainerFormat`](xref:Yarhl.FileSystem.NodeContainerFormat). This format contains a root folder, also known as `Node`. So let's see what a `Node` is.
 
 ## Entering the virtual world: Nodes
 
 This is the main feature of Yarhl and the most important one, no doubt, 10/10 Yarhl users would say so<sup>1</sup>. Yarhl has a virtual file system to handle your files while mantaining your computer intact, you can now delete your "tests" folder and clean your desktop after-ages.
 
-As always let's take a look [at the docs](https://scenegate.github.io/Yarhl/api/Yarhl.FileSystem.Node.html#properties) a Node is a virtual file with three properties: Format, IsContainer and Stream.
+<sup>1</sup> <small>None of Yarhl users wants to talk with me anymore. This may not be 100% accurate.</small>
 
-Also it inhertis from NavigableNode, which has interesting properties as Name, Path (of the virtual file system, not your computers'), Parent and Children, whose behaviour you'll get later at 2.1.
+### Nodes
 
-As we said before, every file in a game has a format, that's why our virtual files (Nodes) must have a Format. IsContainer tells you if it has children (let's ignore this for now) and a DataStream (just if the format is BinaryFormat, null otherwise. It is just a shortcut to access the Stream property of the BinaryFormat).
+A [`Node`](xref:Yarhl.FileSystem.Node) is a virtual file. It's like having a file system with files and folder but only in memory for the duration of your program. You can dynamically add and remove files / folders. These files and folders are called nodes in Yarhl.
 
-Let's clarify it out with an example:
+A node may have child nodes like a folder may have folders and files. You can add the _subnodes_ with the [`Add`](xref:Yarhl.FileSystem.NavigableNode{Yarhl.FileSystem.Node}.Add(Yarhl.FileSystem.Node)) method and you iterate and access to its children with the [`Children`](xref:Yarhl.FileSystem.NavigableNode{Yarhl.FileSystem.Node}.Children) property.
 
-```csharp
-new Node("NodeName", new BinaryFormat(filePath));
-```
+The node [`Name`](xref:Yarhl.FileSystem.NavigableNode{Yarhl.FileSystem.Node}.Name) must be unique. You can also get the full path to the node in this new virtual filesystem. That is, if you have a _root_ node with name `MyRoot` and you add a node `Node1`, the [`Path`](xref:Yarhl.FileSystem.NavigableNode{Yarhl.FileSystem.Node}.Path) property for `Node1` will be `/MyRoot/Node1`.
 
-Heh... nothing special right? What about this?
+Ah, one more thing before I forget. Regular files in your disk have some bytes associated, right? Well, in the case of nodes they have a [Format](#implementing-file-formats) that we were talking before. That is, it doesn't have to have bytes but it could be a type to represent image, texture, text, font, ... The actual type of the node.
+For instance, let's say we create a node from a disk file, it will have a `BinaryFormat` because for now it's just a bunch of bytes. But if those bytes store a set of menu texts, we could transform its format and associate its actual content type: `MenuSentences`. To the node [`Format`](xref:Yarhl.FileSystem.Node.Format*) property you can set any type that inhertis the [`Format`](xref:Yarhl.FileFormat.Format) class.
 
-```csharp
-NodeFactory.FromFile(filePath);
-```
-
-Yeeeah! That's the face I was looking for! You can create a virtual file that quick!
-
-And there's more! What about creating multiple nodes from multiple files?
-
-<sup>1</sup> <small>None of Yarhl users wants to talk with me anymore, so maybe this is not 100% accurate.</small>
-
-### NodeContainerFormat
-
-Remember that IsContainer property? Well, this is its implementation:
+By the way, there is a property to get the inner `DataStream` when the format of the node is a `BinaryFormat`: [`Stream`](xref:Yarhl.FileSystem.Node.Stream). It will return `null` if the type is not `BinaryFormat`. We added it because to do cool things like:
 
 ```csharp
-public bool IsContainer {
-    get { return Format is NodeContainerFormat; }
-}
+node.Stream.WriteTo("/home/master_yarhl/my_node.bin");
 ```
 
-*NodeContainerFormat* starts a tree of Nodes starting from its Root (the only property it has). With this you create a virtual directory, with its virtual files.
+If the type is different, you may want to check the method [`GetFormatAs<T>()`](xref:Yarhl.FileSystem.Node.GetFormatAs``1).
+
+### Why nodes?
+
+Well, imagine that you have a Nintendo DS game `.nds`, you could open it with Yarhl and access to its files and folders without actually extraing the files into your disk. All access would be in memory, probably even sharing the same stream thanks to the `sub-DataStreams`.
+
+### Files vs folders
+
+As said, folders in our virtual file system are also nodes. They always have the `NodeContainerFormat` or any class that inherits it. This format is just a root node folder that becomes the children of the node. You can use the property [`IsContainer`](xref:Yarhl.FileSystem.Node.IsContainer*) to check if the node is a node container, that is, if it's a folder.
 
 It's more clear with a picture:
 
 ![A directory named mastering with tho files inside](../images/node_example.png)
 
-"mastering" would be our root Node, while example.example and example2.example would be our tho child Nodes.
+`mastering` would be our root node with format `NodeContainerFormat`. While `example.example` and `example2.example` would be our two child nodes. By default they will have a `BinaryFormat` format.
 
-How can we create that? Do I have more magic for you?
+### Navigating the sea of nodes
+
+Do you have many nodes? I guess it will be difficult to navigate through all of them. Then, you want to review the class [`Navigator`](xref:Yarhl.FileSystem.Navigator). It provides with features like iterators and finders.
+
+To iterate over the node children you would just do:
 
 ```csharp
-NodeFactory.FromDirectory(dirPath);
+foreach (var node in root.Children) {
+    // Something
+}
 ```
 
-N is the "mastering" virtual folder! That easy!
-
-Yarhl is way more interesting now, right!? Well, then the next chapter will blow your mind!
-
-## Converting Formats, Transforming Nodes
-
-Finally! Now everything begin to fall into place, you'll see.
-
-Coding a tool is just an automation tool to transform files to different formats right? Converting .dat to .txt (text), .Ncgr to .png (images), .pak to multiple files (unpacking)...
-
-Well, that's how Yarhl works, Yarhl is all about converting formats, let's see an example:
+But if you want to iterate over the full tree of nodes, that is, including the children of your childrens (like `node` in the above example), you can use the `Navigator`.
 
 ```csharp
-new BinaryFormat(filePath)
-    .ConvertWith<Font2Binary, BinaryFormat, Font>()
-    .ConvertWith<Font2Image, Font, System.Drawing.Image>()
-    .Save(outputPath);
+foreach (var node in Navigator.IterateNodes(root)) {
+    // Something
+}
 ```
 
-- We start creating a new BinaryFormat with a file path (creating a virtual file copying a physical one).
-- We convert the virtual File to a Font object.
-- We convert the Font object to an Image object.
-- And we save it to a physical file.
+You can even specify how to do the iteration: going first deeper into each node ([_depth-first search_](https://en.wikipedia.org/wiki/Depth-first_search)) or getting first every children from the current node ([_breadth-first search_](https://en.wikipedia.org/wiki/Breadth-first_search)).
 
-"But what's Font2Binary and Font2Image, Master Yarhl?" you would say.
-They are converters! A converter is a class which implements the [IConverter interface](https://scenegate.github.io/Yarhl/api/Yarhl.FileFormat.IConverter-2.html).
+If you just want to search a specific node given a full path, you want to use [`Navigator.SearchNode(path)`](xref:Yarhl.FileSystem.Navigator.SearchNode``1(``0,System.String)).
 
-Here you can see the full [Font2Binary](https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Binary.cs) and [Font2Image](https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Image.cs) coded by **pleonex** (my father), but I am going to show you a most simpler converter.
+### Creating the file system
 
-Remember that example from lesson 2? We are coding the converter right now!
-
-So, here is the hex and the Format class:
-
-![Hex view of example file](../images/hex_example.png)
+So you want to start using node right now, eh. Well, it will be easy. You will want to check out the static helper class: [`NodeFactory`](xref:Yarhl.FileSystem.NodeFactory). Let's check some of its methods:
 
 ```csharp
-public class Example : Format
+// Manual
+var node1 = new Node("name", new BinaryFormat(filePath));
+
+// Factory
+var node2 = NodeFactory.FromFile(filePath);  // Node name is the file name
+```
+
+So, what about creating a node from a folder you would say.
+
+```csharp
+var emptyFolder = NodeFactory.CreateContainer("name");
+
+var folderFromDisk = NodeFactory.FromDirectory(folderPath);
+```
+
+Yeeeah! That's the face I was looking for! You can create a virtual file that quick!
+
+Don't forget to review the overloads and the method [`FromMemory`](xref:Yarhl.FileSystem.NodeFactory.FromMemory(System.String)) to create a node from a new `MemoryStream`.
+
+Yarhl is way more interesting now, right!?
+
+## Converters: putting together all the pieces
+
+Finally! We have _formats_, _nodes_ and some classes for _IO_ operations. Now everything begin to fall into place, you'll see.
+
+Creating a tool to work with files usually require to work with different formats, right? We need to convert from `.dat` to `.txt`, from `.bin` into a a palette or unpacking several files from a `.pak` file.
+
+Well, that's easy to do. Yarhl is all about converting formats, let's see an example:
+
+```csharp
+public void ExportFontImage(string fontPath, string outputPath)
 {
-    public uint MagicID { get; set; }
-    public ushort NumberSentences { get; set; }
-    public ushort FileSize { get; set; }
-    public IList<String> Sentences { get; private set; }
-
-    public Example()
-    {
-        Sentences = new List<String>;
+    using (var binary = new BinaryFormat(fontPath)) {
+        binary.ConvertWith<Font2Binary, BinaryFormat, Font>()
+            .ConvertWith<Font2Image, Font, System.Drawing.Image>()
+            .Save(outputPath);
     }
 }
 ```
 
+1. We start creating a new `BinaryFormat` from a file path.
+2. We convert the `BinaryFormat` (reading its `Stream`) into a `Font` type.
+3. We convert the `Font` format into an `Image` type.
+4. We save it to a physical file in the hard-drive.
+
+_"But what's `Font2Binary` and `Font2Image`, **Master Yarhl**?"_, you would say.
+They are **converters**! A converter is a class which implements the [IConverter](xref:Yarhl.FileFormat.IConverter`2) interface.
+
+You can check some converter examples from the tools to translate _Pokémon Conquest_. For instance: [Font2Binary](https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Binary.cs) and [Font2Image](https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Image.cs).
+
+### Converting formats
+
+But let's come back to our example of `MenuSentences` from the [format](#implementing-file-formats) section. It's turn to create a converter to fill the `MenuSentences` class from a file. That it's to _read_ a file with that format.
+
 ```csharp
-public class Binary2Example : IConverter<BinaryFormat, Example>
+public class Binary2MenuSentences : IConverter<BinaryFormat, MenuSentences>
 {
-    public Example Convert(BinaryFormat file)
+    public MenuSentences Convert(BinaryFormat source)
     {
-        var example = new Example();
-        var reader = new DataReader(file.Stream);
+        var menu = new MenuSentences();
+        var reader = new DataReader(source.Stream);
 
-        example.MagicID = reader.ReadUInt32();
-        example.NumberSentences = reader.ReadUInt16();
-        example.FileSize = reader.ReadUInt16();
+        menu.MagicID = reader.ReadUInt32();
+        ushort numSentences = reader.ReadUInt16();
+        menu.FileSize = reader.ReadUInt16();
 
-        for (int i = 0; i < example.NumberSentences; i++) {
-            example.Sentences.Add(reader.ReadString());
+        for (int i = 0; i < numSentences; i++) {
+            menu.Sentences.Add(reader.ReadString());
         }
 
-        return example;
+        return menu;
     }
 }
 ```
 
-So now if we do:
+So now we can get our menu instance with:
 
 ```csharp
-new BinaryFormat(filePath)
-    .ConvertWith<Binary2Example, BinaryFormat, Example>();
+public void ReadMenuFile(string filePath)
+{
+    using (var binary = new BinaryFormat(filePath)) {
+        MenuSentences menu = binary
+            .ConvertWith<Binary2MenuSentences, BinaryFormat, MenuSentences>();
+        // Do something with the menu instance
+    }
+}
 ```
 
-We would have an Example object with all the data we need.
-
-Also, we can code the Converter for Example into BinaryFormat:
+Since there is just one converter `BinaryFormat -> MenuSentences` we can simplify it even more:
 
 ```csharp
-public class Example2Binary :
-    IConverter<Example, BinaryFormat>
+public void ReadMenuFile(string filePath)
 {
-    public BinaryFormat Convert(Example example)
+    using (var binary = new BinaryFormat(filePath)) {
+        MenuSentences menu = binary.ConvertTo<MenuSentences>();
+        // Do something with the menu instance
+    }
+}
+```
+
+Do you want to write your _new_ or _updated_ menu instance? Let's write a converter to convert from `MenuSentences` to `BinaryFormat` and save in a file in disk.
+
+```csharp
+public class MenuSentences2Binary : IConverter<MenuSentences, BinaryFormat>
+{
+    public BinaryFormat Convert(MenuSentences menu)
     {
         var binary = new BinaryFormat();
         var writer = new DataWriter(binary.Stream);
 
-        writer.Write(example.MagicID);
-        writer.Write(example.Sentences.Count);
-        writer.Write(0x00); // Placeholder size to override later
+        writer.Write(menu.MagicID);
+        writer.Write((ushort)menu.Sentences.Count);
+        writer.Write((ushort)0x00); // Placeholder size to override later
 
-        foreach (string sentence in example.Sentences) {
+        foreach (string sentence in menu.Sentences) {
             writer.Write(sentence);
         }
 
@@ -366,11 +402,30 @@ public class Example2Binary :
 }
 ```
 
-And that's it! I'm pretty sure you've got enough of converters, but, let's see how it's done with Nodes:
+And that's it! I'm pretty sure you've got enough of converters
+
+### Transforming nodes
+
+Don't format that a node can have a format. How do we _convert_ the format from a node? We could use the approach from before, but there is a method that will **convert and update** the format of the node: [`Transform`](xref:Yarhl.FileSystem.Node.Transform*). It will also dispose the old format so we don't need to do anything, just transform several times the format of our node until it's the one we want.
 
 ```csharp
 var node = NodeFactory.FromFile(path);
-node.Transform<Example>;
+node.Transform<MenuSentences>;
+
+// Now node.Format is MenuSentences
 ```
 
-Now we have a Node with the Format we want, and it is quite easy to save into a physical file in our computer.
+or from the first example:
+
+```csharp
+public void ExportFontImage(string fontPath, string outputPath)
+{
+    using (var node = NodeFactory.FromFile(fontPath)) {
+        node.Transform<Font2Binary, BinaryFormat, Font>()
+            .Transform<Font2Image, Font, Image>();
+
+        node.GetFormatAs<Image>().Save(outputPath);
+    }
+}
+
+```

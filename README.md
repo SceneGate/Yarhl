@@ -1,6 +1,6 @@
 # Yarhl: Yet Another ROM Hacking Library [![GPL v3 License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat)](http://www.gnu.org/copyleft/gpl.html)
 
-![Yarhl Logo](docs/images/logo.png)
+![Yarhl Logo](https://raw.githubusercontent.com/SceneGate/Yarhl/master/docs/images/logo.png)
 
 **Yarhl** is a library for *ROM Hacking* and fan-translation projects.
 It provides a virtual file system, file format and format conversion features

@@ -36,21 +36,21 @@ namespace Yarhl.UnitTests.FileSystem
         public void SearchNullNodeThrowsException()
         {
             Node node = null;
-            Assert.Throws<ArgumentNullException>(() => Navigator.SearchFile(node, "/a/"));
+            Assert.Throws<ArgumentNullException>(() => Navigator.SearchNode(node, "/a/"));
         }
 
         [Test]
         public void SearchNullPathThrowsException()
         {
             Node node = new Node("MyTest");
-            Assert.Throws<ArgumentNullException>(() => Navigator.SearchFile(node, null));
+            Assert.Throws<ArgumentNullException>(() => Navigator.SearchNode(node, null));
         }
 
         [Test]
         public void SearchEmptyPath()
         {
             Node node = new Node("MyNode");
-            Assert.Throws<ArgumentNullException>(() => Navigator.SearchFile(node, string.Empty));
+            Assert.Throws<ArgumentNullException>(() => Navigator.SearchNode(node, string.Empty));
         }
 
         [Test]
@@ -59,7 +59,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node nodeChild = new Node("Child");
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
-            Assert.IsNull(Navigator.SearchFile(nodeChild, "/OtherParent"));
+            Assert.IsNull(Navigator.SearchNode(nodeChild, "/OtherParent"));
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node nodeChild = new Node("Child");
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
-            Assert.AreSame(nodeChild, Navigator.SearchFile(nodeChild, "/Parent/Child"));
+            Assert.AreSame(nodeChild, Navigator.SearchNode(nodeChild, "/Parent/Child"));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node nodeChild = new Node("Child");
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
-            Assert.AreSame(nodeChild, Navigator.SearchFile(nodeParent, "/Parent/Child"));
+            Assert.AreSame(nodeChild, Navigator.SearchNode(nodeParent, "/Parent/Child"));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Yarhl.UnitTests.FileSystem
             nodeChild.Add(nodeSubChild);
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
-            Assert.AreSame(nodeSubChild, Navigator.SearchFile(nodeParent, "/Parent/Child/SubChild"));
+            Assert.AreSame(nodeSubChild, Navigator.SearchNode(nodeParent, "/Parent/Child/SubChild"));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
-            Assert.IsNull(Navigator.SearchFile(nodeParent, "/Parent/Child2"));
+            Assert.IsNull(Navigator.SearchNode(nodeParent, "/Parent/Child2"));
         }
 
         [Test]

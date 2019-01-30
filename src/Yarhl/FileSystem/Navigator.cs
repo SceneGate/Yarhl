@@ -29,7 +29,7 @@ namespace Yarhl.FileSystem
     using System.Linq;
 
     /// <summary>
-    /// FileSystem navigator.
+    /// Filesystem navigator.
     /// Search for nodes and iterate over them.
     /// </summary>
     public static class Navigator
@@ -41,7 +41,7 @@ namespace Yarhl.FileSystem
         /// <param name="path">Path to search.</param>
         /// <returns>Node or null if not found.</returns>
         /// <typeparam name="T">NavigableNode type.</typeparam>
-        public static T SearchFile<T>(T rootNode, string path)
+        public static T SearchNode<T>(T rootNode, string path)
             where T : NavigableNode<T>
         {
             if (rootNode == null)
