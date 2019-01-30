@@ -707,22 +707,22 @@ references:
   fullName.vb: Yarhl.FileSystem.Navigator.IterateNodes(Of T)(T, Yarhl.FileSystem.NavigationMode)
   nameWithType: Navigator.IterateNodes<T>(T, NavigationMode)
   nameWithType.vb: Navigator.IterateNodes(Of T)(T, NavigationMode)
-- uid: Yarhl.FileSystem.Navigator.SearchFile*
-  name: SearchFile
-  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchFile_
-  commentId: Overload:Yarhl.FileSystem.Navigator.SearchFile
+- uid: Yarhl.FileSystem.Navigator.SearchNode*
+  name: SearchNode
+  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchNode_
+  commentId: Overload:Yarhl.FileSystem.Navigator.SearchNode
   isSpec: "True"
-  fullName: Yarhl.FileSystem.Navigator.SearchFile
-  nameWithType: Navigator.SearchFile
-- uid: Yarhl.FileSystem.Navigator.SearchFile``1(``0,System.String)
-  name: SearchFile<T>(T, String)
-  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchFile__1___0_System_String_
-  commentId: M:Yarhl.FileSystem.Navigator.SearchFile``1(``0,System.String)
-  name.vb: SearchFile(Of T)(T, String)
-  fullName: Yarhl.FileSystem.Navigator.SearchFile<T>(T, System.String)
-  fullName.vb: Yarhl.FileSystem.Navigator.SearchFile(Of T)(T, System.String)
-  nameWithType: Navigator.SearchFile<T>(T, String)
-  nameWithType.vb: Navigator.SearchFile(Of T)(T, String)
+  fullName: Yarhl.FileSystem.Navigator.SearchNode
+  nameWithType: Navigator.SearchNode
+- uid: Yarhl.FileSystem.Navigator.SearchNode``1(``0,System.String)
+  name: SearchNode<T>(T, String)
+  href: api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchNode__1___0_System_String_
+  commentId: M:Yarhl.FileSystem.Navigator.SearchNode``1(``0,System.String)
+  name.vb: SearchNode(Of T)(T, String)
+  fullName: Yarhl.FileSystem.Navigator.SearchNode<T>(T, System.String)
+  fullName.vb: Yarhl.FileSystem.Navigator.SearchNode(Of T)(T, System.String)
+  nameWithType: Navigator.SearchNode<T>(T, String)
+  nameWithType.vb: Navigator.SearchNode(Of T)(T, String)
 - uid: Yarhl.FileSystem.Node
   name: Node
   href: api/Yarhl.FileSystem.Node.html

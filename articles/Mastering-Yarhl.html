@@ -113,10 +113,11 @@ If you are reading a file and you want to skip padding bytes, you can call <a cl
 <h4 id="encoding">Encoding</h4>
 <p>The encoding can only by specified in the constructor. We believe that it doesn't have sense to change the encoding once you start using the reader because a text file must not mix encodings.</p>
 <h4 id="peeking">Peeking</h4>
-<p>Do you need to read a line without actually moving the position of the stream. Maybe you want to check if the line contains a token but you are not sure and don't want to keep the current position all the time. Well, in that case you have the <code>Peek*</code> methods.</p>
+<p>Do you need to read a line without actually moving the position of the stream? Maybe you want to check if the line contains a token but you are not sure and don't want to keep the current position all the time. Well, in that case you have the <code>Peek*</code> methods.</p>
 <h4 id="preambles--bom">Preambles / BOM</h4>
 <p>Some encodings may have a specific <a href="https://en.wikipedia.org/wiki/Byte_order_mark">BOM</a> (<em>Byte Order Mark</em>) (or <em>preamble</em> in the .NET world). These are some bytes at the beginning of the stream that confirms the encoding of the file. For instance, when using UTF-16, the file will begin with the bytes <code>0xFEFF</code>. It also specifies if the encoding is little-ending or big-endian (needed for UTF-16).</p>
 <p>Our <code>TextReader</code> will skip the BOM (<em>if it's present</em>) at the beginning of the file. In the case of the <code>TextWriter</code>, the behavior is defined by the property <a class="xref" href="../api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_AutoPreamble"><code>AutoPreamble</code></a> which is set to <code>false</code> by default (again, some games may see it as unexpected bytes). When enabled, the first write call will also write the BOM. You can also write it manually by calling <a class="xref" href="../api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WritePreamble"><code>WritePreamble()</code></a> (but remember, only if you are at the beginning of the stream).</p>
+<p>I know... I talk too much... Let's continue!</p>
 <h3 id="examples">Examples</h3>
 <h4 id="reading--writing-a-binary-file">Reading / writing a binary file</h4>
 <pre><code class="lang-csharp">public void LoadFile(string path)
@@ -181,12 +182,12 @@ public void SaveFile(DataStream stream)
     writer.Write(&quot;No new line&quot;);
 }
 </code></pre>
-<h2 id="small-introduction-to-format">Small introduction to Format</h2>
-<p>Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. Yarhl helps you to code objects as you were actually coding a game file.</p>
-<p>Continuing with the Palette example, you'd create a new class named NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.</p>
-<p>Let's go for a quick example!</p>
+<h2 id="implementing-file-formats">Implementing file formats</h2>
+<p>Every game contains many files, which have a specific formats. For example files with extension <code>.nclr</code> are a palettes, or <code>.aar</code> are a package files. Yarhl helps you to code type as you were actually coding a game format.</p>
+<p>To implement a file format, you just need to create a new class that inherits from the <a class="xref" href="../api/Yarhl.FileFormat.Format.html"><code>Format</code></a> class. In this class you just need to add the fields of your format. In more programming terms, your format it's just a data model.</p>
+<p>Let's go for a quick example! Take a look into the following bytes from a file that seems to have text from a game menu:</p>
 <p><img src="../images/hex_example.png" alt="Hex view of example file"></p>
-<p>This file follows the following specification:</p>
+<p>This file seems to follow the following specification in little endian:</p>
 <table>
 <thead>
 <tr>
@@ -209,132 +210,154 @@ public void SaveFile(DataStream stream)
 </tr>
 <tr>
 <td>*</td>
-<td>Sentences</td>
+<td>Null-terminated sentences</td>
 </tr>
 </tbody>
 </table>
-<p>So we can create the class Example like this:</p>
-<pre><code class="lang-csharp">public class Example : Format
+<p>So given this format, we would implement the following class that maps the specification:</p>
+<pre><code class="lang-csharp">public class MenuSentences : Format
 {
     public uint MagicID { get; set; }
-    public ushort NumberSentences { get; set; }
     public ushort FileSize { get; set; }
     public IList&lt;String&gt; Sentences { get; private set; }
 
-    public Example()
+    public MenuSentences()
     {
         Sentences = new List&lt;String&gt;();
     }
 }
 </code></pre>
-<p>Easy! But for now I can't teach you how to transform this example binary file we'just saw into this clean Object, I need to explain other things first.</p>
+<p>Easy! Don't worry about how to convert that format, we will talk about that later.</p>
 <h3 id="binaryformat">BinaryFormat</h3>
-<p>This is the only Format which Yarhl has in its core, why? Because as the name says, it is the most basic Format you'll ever need: a Binary file.</p>
-<p>Remember what we did at the first chapter? Opening up a file in order to read... What if I told you, we did it wrong?
-Well, actually it's not wrong, but it's not complete! What? What's that nonsense? Okay, okay, phew! Let's go.</p>
-<p>As you can see <a href="https://scenegate.github.io/Yarhl/api/Yarhl.FileFormat.BinaryFormat.html">in the documentation</a> BinaryFormat is just a wrapped DataStream with all the functions of a Format (which we'll see soon), and for now that's the only thing you need to know.</p>
-<p>I know... I talk too much... Let's continue!</p>
+<p><a class="xref" href="../api/Yarhl.FileFormat.BinaryFormat.html"><code>BinaryFormat</code></a> is the most basic format since it just represents raw bytes, a stream. It's... a <em>binary format</em>. This format is assigned automatically when we open a file from Yarhl as we will see later.</p>
+<p>Its only property <a class="xref" href="../api/Yarhl.FileFormat.BinaryFormat.html#Yarhl_FileFormat_BinaryFormat_Stream_"><code>Stream</code></a> allows you to access to its inner stream.</p>
+<h3 id="nodecontainerformat">NodeContainerFormat</h3>
+<p>You may wonder... what about package formats like <code>.zip</code>? They are represented with the format (or by inheriting it) <a class="xref" href="../api/Yarhl.FileSystem.NodeContainerFormat.html"><code>NodeContainerFormat</code></a>. This format contains a root folder, also known as <code>Node</code>. So let's see what a <code>Node</code> is.</p>
 <h2 id="entering-the-virtual-world-nodes">Entering the virtual world: Nodes</h2>
 <p>This is the main feature of Yarhl and the most important one, no doubt, 10/10 Yarhl users would say so<sup>1</sup>. Yarhl has a virtual file system to handle your files while mantaining your computer intact, you can now delete your &quot;tests&quot; folder and clean your desktop after-ages.</p>
-<p>As always let's take a look <a href="https://scenegate.github.io/Yarhl/api/Yarhl.FileSystem.Node.html#properties">at the docs</a> a Node is a virtual file with three properties: Format, IsContainer and Stream.</p>
-<p>Also it inhertis from NavigableNode, which has interesting properties as Name, Path (of the virtual file system, not your computers'), Parent and Children, whose behaviour you'll get later at 2.1.</p>
-<p>As we said before, every file in a game has a format, that's why our virtual files (Nodes) must have a Format. IsContainer tells you if it has children (let's ignore this for now) and a DataStream (just if the format is BinaryFormat, null otherwise. It is just a shortcut to access the Stream property of the BinaryFormat).</p>
-<p>Let's clarify it out with an example:</p>
-<pre><code class="lang-csharp">new Node(&quot;NodeName&quot;, new BinaryFormat(filePath));
+<p><sup>1</sup> <small>None of Yarhl users wants to talk with me anymore. This may not be 100% accurate.</small></p>
+<h3 id="nodes">Nodes</h3>
+<p>A <a class="xref" href="../api/Yarhl.FileSystem.Node.html"><code>Node</code></a> is a virtual file. It's like having a file system with files and folder but only in memory for the duration of your program. You can dynamically add and remove files / folders. These files and folders are called nodes in Yarhl.</p>
+<p>A node may have child nodes like a folder may have folders and files. You can add the <em>subnodes</em> with the <a href="xref:Yarhl.FileSystem.NavigableNode%7BYarhl.FileSystem.Node%7D.Add(Yarhl.FileSystem.Node)"><code>Add</code></a> method and you iterate and access to its children with the <a href="xref:Yarhl.FileSystem.NavigableNode%7BYarhl.FileSystem.Node%7D.Children"><code>Children</code></a> property.</p>
+<p>The node <a href="xref:Yarhl.FileSystem.NavigableNode%7BYarhl.FileSystem.Node%7D.Name"><code>Name</code></a> must be unique. You can also get the full path to the node in this new virtual filesystem. That is, if you have a <em>root</em> node with name <code>MyRoot</code> and you add a node <code>Node1</code>, the <a href="xref:Yarhl.FileSystem.NavigableNode%7BYarhl.FileSystem.Node%7D.Path"><code>Path</code></a> property for <code>Node1</code> will be <code>/MyRoot/Node1</code>.</p>
+<p>Ah, one more thing before I forget. Regular files in your disk have some bytes associated, right? Well, in the case of nodes they have a <a href="#implementing-file-formats">Format</a> that we were talking before. That is, it doesn't have to have bytes but it could be a type to represent image, texture, text, font, ... The actual type of the node.
+For instance, let's say we create a node from a disk file, it will have a <code>BinaryFormat</code> because for now it's just a bunch of bytes. But if those bytes store a set of menu texts, we could transform its format and associate its actual content type: <code>MenuSentences</code>. To the node <a class="xref" href="../api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Format_"><code>Format</code></a> property you can set any type that inhertis the <a class="xref" href="../api/Yarhl.FileFormat.Format.html"><code>Format</code></a> class.</p>
+<p>By the way, there is a property to get the inner <code>DataStream</code> when the format of the node is a <code>BinaryFormat</code>: <a class="xref" href="../api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Stream"><code>Stream</code></a>. It will return <code>null</code> if the type is not <code>BinaryFormat</code>. We added it because to do cool things like:</p>
+<pre><code class="lang-csharp">node.Stream.WriteTo(&quot;/home/master_yarhl/my_node.bin&quot;);
 </code></pre>
-<p>Heh... nothing special right? What about this?</p>
-<pre><code class="lang-csharp">NodeFactory.FromFile(filePath);
-</code></pre>
-<p>Yeeeah! That's the face I was looking for! You can create a virtual file that quick!</p>
-<p>And there's more! What about creating multiple nodes from multiple files?</p>
-<p><sup>1</sup> <small>None of Yarhl users wants to talk with me anymore, so maybe this is not 100% accurate.</small></p>
-<h3 id="nodecontainerformat">NodeContainerFormat</h3>
-<p>Remember that IsContainer property? Well, this is its implementation:</p>
-<pre><code class="lang-csharp">public bool IsContainer {
-    get { return Format is NodeContainerFormat; }
-}
-</code></pre>
-<p><em>NodeContainerFormat</em> starts a tree of Nodes starting from its Root (the only property it has). With this you create a virtual directory, with its virtual files.</p>
+<p>If the type is different, you may want to check the method <a class="xref" href="../api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_GetFormatAs__1"><code>GetFormatAs&lt;T&gt;()</code></a>.</p>
+<h3 id="why-nodes">Why nodes?</h3>
+<p>Well, imagine that you have a Nintendo DS game <code>.nds</code>, you could open it with Yarhl and access to its files and folders without actually extraing the files into your disk. All access would be in memory, probably even sharing the same stream thanks to the <code>sub-DataStreams</code>.</p>
+<h3 id="files-vs-folders">Files vs folders</h3>
+<p>As said, folders in our virtual file system are also nodes. They always have the <code>NodeContainerFormat</code> or any class that inherits it. This format is just a root node folder that becomes the children of the node. You can use the property <a class="xref" href="../api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_IsContainer_"><code>IsContainer</code></a> to check if the node is a node container, that is, if it's a folder.</p>
 <p>It's more clear with a picture:</p>
 <p><img src="../images/node_example.png" alt="A directory named mastering with tho files inside"></p>
-<p>&quot;mastering&quot; would be our root Node, while example.example and example2.example would be our tho child Nodes.</p>
-<p>How can we create that? Do I have more magic for you?</p>
-<pre><code class="lang-csharp">NodeFactory.FromDirectory(dirPath);
+<p><code>mastering</code> would be our root node with format <code>NodeContainerFormat</code>. While <code>example.example</code> and <code>example2.example</code> would be our two child nodes. By default they will have a <code>BinaryFormat</code> format.</p>
+<h3 id="navigating-the-sea-of-nodes">Navigating the sea of nodes</h3>
+<p>Do you have many nodes? I guess it will be difficult to navigate through all of them. Then, you want to review the class <a class="xref" href="../api/Yarhl.FileSystem.Navigator.html"><code>Navigator</code></a>. It provides with features like iterators and finders.</p>
+<p>To iterate over the node children you would just do:</p>
+<pre><code class="lang-csharp">foreach (var node in root.Children) {
+    // Something
+}
 </code></pre>
-<p>N is the &quot;mastering&quot; virtual folder! That easy!</p>
-<p>Yarhl is way more interesting now, right!? Well, then the next chapter will blow your mind!</p>
-<h2 id="converting-formats-transforming-nodes">Converting Formats, Transforming Nodes</h2>
-<p>Finally! Now everything begin to fall into place, you'll see.</p>
-<p>Coding a tool is just an automation tool to transform files to different formats right? Converting .dat to .txt (text), .Ncgr to .png (images), .pak to multiple files (unpacking)...</p>
-<p>Well, that's how Yarhl works, Yarhl is all about converting formats, let's see an example:</p>
-<pre><code class="lang-csharp">new BinaryFormat(filePath)
-    .ConvertWith&lt;Font2Binary, BinaryFormat, Font&gt;()
-    .ConvertWith&lt;Font2Image, Font, System.Drawing.Image&gt;()
-    .Save(outputPath);
+<p>But if you want to iterate over the full tree of nodes, that is, including the children of your childrens (like <code>node</code> in the above example), you can use the <code>Navigator</code>.</p>
+<pre><code class="lang-csharp">foreach (var node in Navigator.IterateNodes(root)) {
+    // Something
+}
 </code></pre>
-<ul>
-<li>We start creating a new BinaryFormat with a file path (creating a virtual file copying a physical one).</li>
-<li>We convert the virtual File to a Font object.</li>
-<li>We convert the Font object to an Image object.</li>
-<li>And we save it to a physical file.</li>
-</ul>
-<p>&quot;But what's Font2Binary and Font2Image, Master Yarhl?&quot; you would say.
-They are converters! A converter is a class which implements the <a href="https://scenegate.github.io/Yarhl/api/Yarhl.FileFormat.IConverter-2.html">IConverter interface</a>.</p>
-<p>Here you can see the full <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Binary.cs">Font2Binary</a> and <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Image.cs">Font2Image</a> coded by <strong>pleonex</strong> (my father), but I am going to show you a most simpler converter.</p>
-<p>Remember that example from lesson 2? We are coding the converter right now!</p>
-<p>So, here is the hex and the Format class:</p>
-<p><img src="../images/hex_example.png" alt="Hex view of example file"></p>
-<pre><code class="lang-csharp">public class Example : Format
-{
-    public uint MagicID { get; set; }
-    public ushort NumberSentences { get; set; }
-    public ushort FileSize { get; set; }
-    public IList&lt;String&gt; Sentences { get; private set; }
+<p>You can even specify how to do the iteration: going first deeper into each node (<a href="https://en.wikipedia.org/wiki/Depth-first_search"><em>depth-first search</em></a>) or getting first every children from the current node (<a href="https://en.wikipedia.org/wiki/Breadth-first_search"><em>breadth-first search</em></a>).</p>
+<p>If you just want to search a specific node given a full path, you want to use <a class="xref" href="../api/Yarhl.FileSystem.Navigator.html#Yarhl_FileSystem_Navigator_SearchNode__1___0_System_String_"><code>Navigator.SearchNode(path)</code></a>.</p>
+<h3 id="creating-the-file-system">Creating the file system</h3>
+<p>So you want to start using node right now, eh. Well, it will be easy. You will want to check out the static helper class: <a class="xref" href="../api/Yarhl.FileSystem.NodeFactory.html"><code>NodeFactory</code></a>. Let's check some of its methods:</p>
+<pre><code class="lang-csharp">// Manual
+var node1 = new Node(&quot;name&quot;, new BinaryFormat(filePath));
 
-    public Example()
-    {
-        Sentences = new List&lt;String&gt;;
+// Factory
+var node2 = NodeFactory.FromFile(filePath);  // Node name is the file name
+</code></pre>
+<p>So, what about creating a node from a folder you would say.</p>
+<pre><code class="lang-csharp">var emptyFolder = NodeFactory.CreateContainer(&quot;name&quot;);
+
+var folderFromDisk = NodeFactory.FromDirectory(folderPath);
+</code></pre>
+<p>Yeeeah! That's the face I was looking for! You can create a virtual file that quick!</p>
+<p>Don't forget to review the overloads and the method <a class="xref" href="../api/Yarhl.FileSystem.NodeFactory.html#Yarhl_FileSystem_NodeFactory_FromMemory_System_String_"><code>FromMemory</code></a> to create a node from a new <code>MemoryStream</code>.</p>
+<p>Yarhl is way more interesting now, right!?</p>
+<h2 id="converters-putting-together-all-the-pieces">Converters: putting together all the pieces</h2>
+<p>Finally! We have <em>formats</em>, <em>nodes</em> and some classes for <em>IO</em> operations. Now everything begin to fall into place, you'll see.</p>
+<p>Creating a tool to work with files usually require to work with different formats, right? We need to convert from <code>.dat</code> to <code>.txt</code>, from <code>.bin</code> into a a palette or unpacking several files from a <code>.pak</code> file.</p>
+<p>Well, that's easy to do. Yarhl is all about converting formats, let's see an example:</p>
+<pre><code class="lang-csharp">public void ExportFontImage(string fontPath, string outputPath)
+{
+    using (var binary = new BinaryFormat(fontPath)) {
+        binary.ConvertWith&lt;Font2Binary, BinaryFormat, Font&gt;()
+            .ConvertWith&lt;Font2Image, Font, System.Drawing.Image&gt;()
+            .Save(outputPath);
     }
 }
 </code></pre>
-<pre><code class="lang-csharp">public class Binary2Example : IConverter&lt;BinaryFormat, Example&gt;
+<ol>
+<li>We start creating a new <code>BinaryFormat</code> from a file path.</li>
+<li>We convert the <code>BinaryFormat</code> (reading its <code>Stream</code>) into a <code>Font</code> type.</li>
+<li>We convert the <code>Font</code> format into an <code>Image</code> type.</li>
+<li>We save it to a physical file in the hard-drive.</li>
+</ol>
+<p><em>&quot;But what's <code>Font2Binary</code> and <code>Font2Image</code>, <strong>Master Yarhl</strong>?&quot;</em>, you would say.
+They are <strong>converters</strong>! A converter is a class which implements the <a class="xref" href="../api/Yarhl.FileFormat.IConverter-2.html">IConverter</a> interface.</p>
+<p>You can check some converter examples from the tools to translate <em>Pokémon Conquest</em>. For instance: <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Binary.cs">Font2Binary</a> and <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Image.cs">Font2Image</a>.</p>
+<h3 id="converting-formats">Converting formats</h3>
+<p>But let's come back to our example of <code>MenuSentences</code> from the <a href="#implementing-file-formats">format</a> section. It's turn to create a converter to fill the <code>MenuSentences</code> class from a file. That it's to <em>read</em> a file with that format.</p>
+<pre><code class="lang-csharp">public class Binary2MenuSentences : IConverter&lt;BinaryFormat, MenuSentences&gt;
 {
-    public Example Convert(BinaryFormat file)
+    public MenuSentences Convert(BinaryFormat source)
     {
-        var example = new Example();
-        var reader = new DataReader(file.Stream);
+        var menu = new MenuSentences();
+        var reader = new DataReader(source.Stream);
 
-        example.MagicID = reader.ReadUInt32();
-        example.NumberSentences = reader.ReadUInt16();
-        example.FileSize = reader.ReadUInt16();
+        menu.MagicID = reader.ReadUInt32();
+        ushort numSentences = reader.ReadUInt16();
+        menu.FileSize = reader.ReadUInt16();
 
-        for (int i = 0; i &lt; example.NumberSentences; i++) {
-            example.Sentences.Add(reader.ReadString());
+        for (int i = 0; i &lt; numSentences; i++) {
+            menu.Sentences.Add(reader.ReadString());
         }
 
-        return example;
+        return menu;
     }
 }
 </code></pre>
-<p>So now if we do:</p>
-<pre><code class="lang-csharp">new BinaryFormat(filePath)
-    .ConvertWith&lt;Binary2Example, BinaryFormat, Example&gt;();
-</code></pre>
-<p>We would have an Example object with all the data we need.</p>
-<p>Also, we can code the Converter for Example into BinaryFormat:</p>
-<pre><code class="lang-csharp">public class Example2Binary :
-    IConverter&lt;Example, BinaryFormat&gt;
+<p>So now we can get our menu instance with:</p>
+<pre><code class="lang-csharp">public void ReadMenuFile(string filePath)
 {
-    public BinaryFormat Convert(Example example)
+    using (var binary = new BinaryFormat(filePath)) {
+        MenuSentences menu = binary
+            .ConvertWith&lt;Binary2MenuSentences, BinaryFormat, MenuSentences&gt;();
+        // Do something with the menu instance
+    }
+}
+</code></pre>
+<p>Since there is just one converter <code>BinaryFormat -&gt; MenuSentences</code> we can simplify it even more:</p>
+<pre><code class="lang-csharp">public void ReadMenuFile(string filePath)
+{
+    using (var binary = new BinaryFormat(filePath)) {
+        MenuSentences menu = binary.ConvertTo&lt;MenuSentences&gt;();
+        // Do something with the menu instance
+    }
+}
+</code></pre>
+<p>Do you want to write your <em>new</em> or <em>updated</em> menu instance? Let's write a converter to convert from <code>MenuSentences</code> to <code>BinaryFormat</code> and save in a file in disk.</p>
+<pre><code class="lang-csharp">public class MenuSentences2Binary : IConverter&lt;MenuSentences, BinaryFormat&gt;
+{
+    public BinaryFormat Convert(MenuSentences menu)
     {
         var binary = new BinaryFormat();
         var writer = new DataWriter(binary.Stream);
 
-        writer.Write(example.MagicID);
-        writer.Write(example.Sentences.Count);
-        writer.Write(0x00); // Placeholder size to override later
+        writer.Write(menu.MagicID);
+        writer.Write((ushort)menu.Sentences.Count);
+        writer.Write((ushort)0x00); // Placeholder size to override later
 
-        foreach (string sentence in example.Sentences) {
+        foreach (string sentence in menu.Sentences) {
             writer.Write(sentence);
         }
 
@@ -345,11 +368,26 @@ They are converters! A converter is a class which implements the <a href="https:
     }
 }
 </code></pre>
-<p>And that's it! I'm pretty sure you've got enough of converters, but, let's see how it's done with Nodes:</p>
+<p>And that's it! I'm pretty sure you've got enough of converters</p>
+<h3 id="transforming-nodes">Transforming nodes</h3>
+<p>Don't format that a node can have a format. How do we <em>convert</em> the format from a node? We could use the approach from before, but there is a method that will <strong>convert and update</strong> the format of the node: <a class="xref" href="../api/Yarhl.FileSystem.Node.html#Yarhl_FileSystem_Node_Transform_"><code>Transform</code></a>. It will also dispose the old format so we don't need to do anything, just transform several times the format of our node until it's the one we want.</p>
 <pre><code class="lang-csharp">var node = NodeFactory.FromFile(path);
-node.Transform&lt;Example&gt;;
+node.Transform&lt;MenuSentences&gt;;
+
+// Now node.Format is MenuSentences
 </code></pre>
-<p>Now we have a Node with the Format we want, and it is quite easy to save into a physical file in our computer.</p>
+<p>or from the first example:</p>
+<pre><code class="lang-csharp">public void ExportFontImage(string fontPath, string outputPath)
+{
+    using (var node = NodeFactory.FromFile(fontPath)) {
+        node.Transform&lt;Font2Binary, BinaryFormat, Font&gt;()
+            .Transform&lt;Font2Image, Font, Image&gt;();
+
+        node.GetFormatAs&lt;Image&gt;().Save(outputPath);
+    }
+}
+
+</code></pre>
 </article>
           </div>
           
