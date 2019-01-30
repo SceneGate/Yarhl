@@ -4,15 +4,18 @@
   "xrefmap": "xrefmap.yml",
   "files": [
     {
+      "log_codes": [
+        "InvalidFileLink"
+      ],
       "type": "Conceptual",
       "source_relative_path": "../README.md",
       "output": {
         ".html": {
           "relative_path": "README.html",
-          "hash": "XHMBvt6p/xAAf5M4EAgc0Q=="
+          "hash": "LnZ26UwgAxcukl8C0+tm6Q=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -513,7 +516,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/Mastering-Yarhl.html",
-          "hash": "dj0e47OVOBkFMNw8quzBrw=="
+          "hash": "yaKytEcX5YvHH1WrgzSHDA=="
         }
       },
       "is_incremental": false,
@@ -532,15 +535,59 @@
       "version": ""
     },
     {
+      "type": "Resource",
+      "source_relative_path": "images/hex_example.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/hex_example.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/logo.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/logo.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/mister.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/mister.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/node_example.png",
+      "output": {
+        "resource": {
+          "relative_path": "images/node_example.png"
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
       "type": "Conceptual",
       "source_relative_path": "index.md",
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "lQMXh0o6UKZFvNQJnNYr/g=="
+          "hash": "m8ZJSjr/Il6vKgyi1Yj6tg=="
         }
       },
-      "is_incremental": true,
+      "is_incremental": false,
       "version": ""
     },
     {
@@ -568,12 +615,17 @@
           "details": "Processor TocDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build"
+        },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build"
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+        "ResourceDocumentProcessor": {
+          "can_incremental": false,
+          "details": "Processor ResourceDocumentProcessor cannot support incremental build because the processor doesn't implement ISupportIncrementalDocumentProcessor interface.",
           "incrementalPhase": "build"
         }
       }

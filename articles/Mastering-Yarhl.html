@@ -5,9 +5,9 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Mastering YARHL | SceneGate Yarhl </title>
+    <title>Mastering Yarhl | SceneGate Yarhl </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Mastering YARHL | SceneGate Yarhl ">
+    <meta name="title" content="Mastering Yarhl | SceneGate Yarhl ">
     <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
@@ -67,74 +67,125 @@
         <div class="article row grid-right">
           <div class="col-md-10">
             <article class="content wrap" id="_content" data-uid="">
-<h1 id="mastering-yarhl">Mastering YARHL</h1>
+<h1 id="mastering-yarhl">Mastering Yarhl</h1>
 
-<p><img src="https://i.imgur.com/sOzbhu4.png" alt="Yarhl Logo"></p>
+<p><img src="../images/logo.png" alt="Yarhl Logo"></p>
 <p><strong>Yarhl</strong> - <em>Yet Another ROM Hacking Library</em> - is a library for <em>ROM Hacking</em> and fan-translation projects. It provides a virtual file system, file format, and format conversion features and plugin support.</p>
-<p>But what it really has to offer? Why should you use it? And how? This tutorial series will teach you how to use Yarhl and how to take advantage of the 100% of it.</p>
+<p>But what it really has to offer? Why should you use it? And how? This tutorial will teach you how to use Yarhl and how to take advantage of the 100% of it.</p>
 <p>Remember that if you have any question you can <a href="https://gitter.im/SceneGate/Yarhl">use our gitter chat</a>, but first make sure you've read the whole docs.</p>
-<h2 id="index">Index</h2>
-<ol>
-<li>Your first project: Reading and Writing</li>
-<li>Small introduction to Format
-2.1 BinaryFormat</li>
-<li>Entering the virtual system: Nodes
-3.1. NodeContainerFormat</li>
-<li>Converting Formats, Transform Nodes</li>
-</ol>
-<h2 id="your-first-project-reading-and-writing">Your first Project: Reading and Writing</h2>
-<p>Oh, hi! I'm Master Yarhl (or M.Y.), nice to meet you, I will be your guide! Erm... y-you can.. picture me like this:</p>
-<p><img src="https://i.imgur.com/w4TMqLi.png" alt="Master Yarhl"></p>
-<p><small>If you want... or can...</small></p>
-<p>Lets' get started! The first module I'm teaching you is <code>Yarhl.IO</code> (Input Output), which is very similar to C# <code>System.IO</code>: <code>MemoryStream</code>, <code>BinaryWriter</code>, just with more functionality to work with binary and text files.</p>
-<h3 id="main-classes">Main Classes</h3>
-<p>This part is divided by binary file management classes and text file classes.</p>
-<p>We have DataStream, DataReader and DataWriter for binary; TextReader and TextWriter for text. Easy peasy!</p>
-<p><a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.html">Here</a> you can see every class with its properties, but let's see some of the most interesting ones:</p>
+<h2 id="your-first-steps-reading-and-writing">Your first steps: Reading and Writing</h2>
+<p>Oh, hi! I'm Master Yarhl (or M.Y.). Nice to meet you. I will be your guide! Erm... y-you can... picture me like this:</p>
+<p><img src="../images/mister.png" alt="Master Yarhl"></p>
+<p>Let's get started! The first module I'm teaching you is <a class="xref" href="../api/Yarhl.IO.html"><code>Yarhl.IO</code></a> (IO stands for <em>Input/Output</em>), which is similar to .NET standard <code>System.IO</code> but with specific features to work with binary files.</p>
+<p>This module is divided into binary and text files. Easy peasy!
+Let's go deeper into these classes!</p>
+<h3 id="datastream">DataStream</h3>
+<p><a class="xref" href="../api/Yarhl.IO.DataStream.html"><code>DataStream</code></a> wraps any kind of .NET <code>Stream</code>.</p>
+<h4 id="reuse-of-stream">Reuse of Stream</h4>
+<p>It allows to reuse a parent Stream to have substreams to reduce the number of resources to use. For instance, to unpack a file you would just need to create <code>DataStream</code> instances from the same parent <code>DataStream</code> having different offsets and lengths.</p>
+<p>Disposing the last instance of a <code>DataStream</code> that has a reference to a <code>Stream</code> will dispose its parent <code>Stream</code> too.</p>
+<h4 id="comparison">Comparison</h4>
+<p>The <code>DataStream</code> class provides the <a class="xref" href="../api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_Compare_Yarhl_IO_DataStream_"><code>Compare</code></a> method to check if two streams are identical.</p>
+<h4 id="push-and-pop-positions">Push and pop positions</h4>
+<p>Similar to the terminal commands <code>pushd</code> and <code>popd</code>, our <code>DataStream</code> provides methos to temporarily moving into a position to perform an operation and then restore the position. This is very useful when you need to read or write a few fields into another section of the file. It works with an stack so you can push several positions.</p>
 <ul>
-<li><strong>DataStream:</strong> Position, EndOfStream (bool if position is at the end) and Length of the stream.</li>
-<li><strong>DataReader</strong> and <strong>DataWriter</strong>: DefaultEncoding, <a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.EndiannessMode.html">Endianness</a> and Stream accessor.</li>
+<li><a class="xref" href="../api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PushCurrentPosition"><code>PushCurrentPosition</code></a>: save the current position.</li>
+<li><a class="xref" href="../api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PushToPosition_"><code>PushToPosition</code></a>: save the current position and move.</li>
+<li><a class="xref" href="../api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_PopPosition"><code>PopPosition</code></a>: restore the last saved position.</li>
+<li><a class="xref" href="../api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_RunInPosition_System_Action_System_Int64_Yarhl_IO_SeekMode_"><code>RunInPosition</code></a>: push, run the lambda expression and pop again.</li>
 </ul>
-<h3 id="main-methods">Main methods</h3>
-<h4 id="datastream">DataStream</h4>
-<p><a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataStream.html#methods">Here</a> you can see all the methods, but as before we'll review the most interesting ones:</p>
-<ul>
-<li><strong>Compare (DataStream):</strong> compare the content of the stream with another one.</li>
-<li><strong>PushCurrentPosition():</strong> saves the current position.</li>
-<li><strong>PopPosition():</strong> moves to the last position saved.</li>
-<li>Readers and Writers for buffers.</li>
-<li><strong>WriteTo:</strong> save the stream into a physical file in your computer (giving the path) or into another DataStream. Very useful mate!</li>
-</ul>
-<h4 id="datareader-and-datawriter">DataReader and DataWriter</h4>
-<p>We have a bunch of methods to Read and Write different type of data. You have the whole list <a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataReader.html#methods">here</a> and <a href="https://scenegate.github.io/Yarhl/api/Yarhl.IO.DataWriter.html#methods">here</a>.</p>
+<h4 id="read-and-write">Read and Write</h4>
+<p>We have also the typical read and write methods for arrays of bytes. And don't forget about the <a class="xref" href="../api/Yarhl.IO.DataStream.html#Yarhl_IO_DataStream_WriteTo_System_String_"><code>WriteTo</code></a> methods that allows to write a full <code>DataStream</code> into another <code>DataStream</code> or into a file in your HD. Very useful mate!</p>
+<h3 id="datareader-and-datawriter">DataReader and DataWriter</h3>
+<p><a class="xref" href="../api/Yarhl.IO.DataReader.html"><code>DataReader</code></a> is the equivalent of the .NET <code>BinaryReader</code> and <a class="xref" href="../api/Yarhl.IO.DataWriter.html"><code>DataWriter</code></a> of `BinaryWriter. Apart from the typical read and write methods, they provide the following very useful features.</p>
+<h4 id="endianness">Endianness</h4>
+<p>By properties or constructor you can specify if the endianness of the stream if little or endian. This will affect to all the read and write operations.</p>
+<h4 id="strings">Strings</h4>
+<p>By using the different overloads of <code>ReadString</code> and <code>Write</code> you can read and write strings with different encodings, fixed sizes, null terminated or not or in the class <em>size + content</em> style. I recommend you to take a look into them, they cover all the cases you will need to work with files.</p>
+<h4 id="padding">Padding</h4>
+<p>Are you tired of writing logic to skip or write padding bytes? Well, we too!
+If you are reading a file and you want to skip padding bytes, you can call <a class="xref" href="../api/Yarhl.IO.DataReader.html#Yarhl_IO_DataReader_ReadPadding_System_Int32_System_Boolean_"><code>ReadPadding</code></a> and if you need to write padding bytes, then <a class="xref" href="../api/Yarhl.IO.DataWriter.html#Yarhl_IO_DataWriter_WritePadding_System_Byte_System_Int32_System_Boolean_"><code>WritePadding</code></a> will be your friend.</p>
+<h3 id="textreader-and-textwriter">TextReader and TextWriter</h3>
+<p>So far, <code>DataReader</code> and <code>DataWriter</code> have been very useful when you are dealing with a file that contains some integer fields for size or offset, arrays of bytes and maybe null-terminated strings. But, what about if you need to work with a file that only contains text and you are interested in reading line by line? In that case, you need <a class="xref" href="../api/Yarhl.IO.TextReader.html"><code>TextReader</code></a> and <a class="xref" href="../api/Yarhl.IO.TextWriter.html"><code>TextWriter</code></a>.</p>
+<h4 id="new-lines">New lines</h4>
+<p>By default, <code>TextWriter</code> uses always (Windows too) the new line <code>\n</code>. It doesn't use <code>\r\n</code>. The reason is that most file formats uses <code>\n</code> and in some games having the <code>\r</code> may crash. It's sometimes difficult to notice that. If you want to use any other new line string (you can even use <code>&lt;br/&gt;</code>), you just need to change the <a class="xref" href="../api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_NewLine"><code>NewLine</code></a> property.</p>
+<p>In the case of the <code>TextReader</code> the behavior is different. The default value for the <a class="xref" href="../api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_NewLine"><code>NewLine</code></a> property depends on the OS (Windows: <code>\r\n</code>, Unix: <code>\n</code>). In addition, we provided with an automatic mehcanism enabled by default: <a class="xref" href="../api/Yarhl.IO.TextReader.html#Yarhl_IO_TextReader_AutoNewLine_"><code>AutoNewLine</code></a>. If it's enabled, you don't need to know the line ending in advance because we will stop at <code>\n</code> and remove the last <code>\r</code> if present. This is also useful if a file mix both line endings. And remember, by setting the <code>NewLine</code> property <code>AutoNewLine</code> is disabled.</p>
+<h4 id="encoding">Encoding</h4>
+<p>The encoding can only by specified in the constructor. We believe that it doesn't have sense to change the encoding once you start using the reader because a text file must not mix encodings.</p>
+<h4 id="peeking">Peeking</h4>
+<p>Do you need to read a line without actually moving the position of the stream. Maybe you want to check if the line contains a token but you are not sure and don't want to keep the current position all the time. Well, in that case you have the <code>Peek*</code> methods.</p>
+<h4 id="preambles--bom">Preambles / BOM</h4>
+<p>Some encodings may have a specific <a href="https://en.wikipedia.org/wiki/Byte_order_mark">BOM</a> (<em>Byte Order Mark</em>) (or <em>preamble</em> in the .NET world). These are some bytes at the beginning of the stream that confirms the encoding of the file. For instance, when using UTF-16, the file will begin with the bytes <code>0xFEFF</code>. It also specifies if the encoding is little-ending or big-endian (needed for UTF-16).</p>
+<p>Our <code>TextReader</code> will skip the BOM (<em>if it's present</em>) at the beginning of the file. In the case of the <code>TextWriter</code>, the behavior is defined by the property <a class="xref" href="../api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_AutoPreamble"><code>AutoPreamble</code></a> which is set to <code>false</code> by default (again, some games may see it as unexpected bytes). When enabled, the first write call will also write the BOM. You can also write it manually by calling <a class="xref" href="../api/Yarhl.IO.TextWriter.html#Yarhl_IO_TextWriter_WritePreamble"><code>WritePreamble()</code></a> (but remember, only if you are at the beginning of the stream).</p>
 <h3 id="examples">Examples</h3>
-<h4 id="reading-a-file">Reading a File</h4>
+<h4 id="reading--writing-a-binary-file">Reading / writing a binary file</h4>
 <pre><code class="lang-csharp">public void LoadFile(string path)
 {
     using (var stream = new DataStream(path, FileOpenMode.Read)) {
         var reader = new DataReader(stream) {
             DefaultEncoding = new EscapeOutRangeEnconding(&quot;ascii&quot;),
+            Endianness = EndiannessMode.BigEndian,
         };
 
-        // Read!
+        string id = reader.ReadString(4);
+        int offset = reader.ReadInt32();
+        reader.ReadPadding(32);
+        double myDouble = reader.ReadDouble();
+
+        string name;
+        stream.RunInPosition(
+            () =&gt; name = reader.ReadString(),
+            offset);
+    }
+}
+
+public void SaveFile(string path)
+{
+    using (var stream = new DataStream(path, FileOpenMode.Read)) {
+        var writer = new DataWriter(stream);
+
+        writer.Write(&quot;TEX0&quot;, false);
+        writer.Write(0xCAFE);
+        writer.Write(0x00);
+        writer.WritePadding(0xFF, 32);
+        writer.Write(&quot;My long text of 80 bytes&quot;, 80);
+
+        stream.PushToPosition(0x08);
+        writer.Write(0x65402);
+        stream.PopPosition();
     }
 }
 </code></pre>
-<h4 id="writing-a-file">Writing a File</h4>
-<pre><code class="lang-csharp">public void SaveFile(string path)
+<h4 id="reading--writing-a-text-file">Reading / writing a text file</h4>
+<pre><code class="lang-csharp">public void LoadFile(DataStream stream)
 {
-    using (var stream = new DataStream(path, FileOpenMode.Read)) {
-        var writer = new  DataWriter(stream);
+    var reader = new TextReader(stream, Encoding.Unicode);
 
-        // Write into new file!
-    }
+    string firstLine = reader.ReadLine();
+    char[] someChars = reader.Read(4);
+    string beforeToken = reader.ReadToToken(&quot;#&quot;);
+
+    if (reader.Peek() == ':')
+        reader.ReadLine();
+    string restFile = reader.ReadToEnd();
+}
+
+public void SaveFile(DataStream stream)
+{
+    var writer = new TextWriter(stream) {
+        AutoPreamble = true,
+    };
+
+    writer.WriteLine(&quot;Hello world!&quot;);
+    writer.WriteLine(&quot;Count is {0}&quot;, 42);
+    writer.Write(&quot;No new line&quot;);
 }
 </code></pre>
 <h2 id="small-introduction-to-format">Small introduction to Format</h2>
 <p>Every game is composed by files, which has a specific format, for example .NCLR is a Palette file, or .aar is a package file. Yarhl helps you to code objects as you were actually coding a game file.</p>
 <p>Continuing with the Palette example, you'd create a new class named NCLR with everything you need to store. Or if you have different Palette types with common content, you could create a Palette format and then the children.</p>
 <p>Let's go for a quick example!</p>
-<p><img src="https://i.imgur.com/KK5CsJH.png" alt="Hex view of example file"></p>
+<p><img src="../images/hex_example.png" alt="Hex view of example file"></p>
 <p>This file follows the following specification:</p>
 <table>
 <thead>
@@ -156,11 +207,12 @@
 <td>2</td>
 <td>Size of the file</td>
 </tr>
+<tr>
+<td>*</td>
+<td>Sentences</td>
+</tr>
 </tbody>
 </table>
-<ul>
-<li>| Sentences</li>
-</ul>
 <p>So we can create the class Example like this:</p>
 <pre><code class="lang-csharp">public class Example : Format
 {
@@ -204,7 +256,7 @@ Well, actually it's not wrong, but it's not complete! What? What's that nonsense
 </code></pre>
 <p><em>NodeContainerFormat</em> starts a tree of Nodes starting from its Root (the only property it has). With this you create a virtual directory, with its virtual files.</p>
 <p>It's more clear with a picture:</p>
-<p><img src="https://i.imgur.com/80Qik3v.png" alt="A directory named mastering with tho files inside"></p>
+<p><img src="../images/node_example.png" alt="A directory named mastering with tho files inside"></p>
 <p>&quot;mastering&quot; would be our root Node, while example.example and example2.example would be our tho child Nodes.</p>
 <p>How can we create that? Do I have more magic for you?</p>
 <pre><code class="lang-csharp">NodeFactory.FromDirectory(dirPath);
@@ -231,7 +283,7 @@ They are converters! A converter is a class which implements the <a href="https:
 <p>Here you can see the full <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Binary.cs">Font2Binary</a> and <a href="https://github.com/pleonex/PokemonConquest/blob/master/AmbitionConquest/AmbitionConquest/Fonts/Font2Image.cs">Font2Image</a> coded by <strong>pleonex</strong> (my father), but I am going to show you a most simpler converter.</p>
 <p>Remember that example from lesson 2? We are coding the converter right now!</p>
 <p>So, here is the hex and the Format class:</p>
-<p><img src="https://i.imgur.com/KK5CsJH.png" alt="Hex view of example file"></p>
+<p><img src="../images/hex_example.png" alt="Hex view of example file"></p>
 <pre><code class="lang-csharp">public class Example : Format
 {
     public uint MagicID { get; set; }
