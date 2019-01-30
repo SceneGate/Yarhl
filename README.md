@@ -20,8 +20,8 @@ Mac OS X.
 
 ## Documentation
 
-Online API documentation is available in the GitHub page
-[here](https://scenegate.github.io/Yarhl/).
+Check our on-line API overview: [Mastering Yarhl](https://scenegate.github.io/Yarhl/articles/Mastering-Yarhl.html)
+and the API documentation [here](https://scenegate.github.io/Yarhl/).
 
 ## Build
 
