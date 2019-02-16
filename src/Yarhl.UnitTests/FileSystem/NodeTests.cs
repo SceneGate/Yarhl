@@ -222,42 +222,53 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void SetFormat()
+        public void ChangeFormat()
         {
             var dummyFormat1 = new StringFormatTest("3");
             var dummyFormat2 = new IntFormatTest(4);
             Node node = new Node("mytest", dummyFormat1);
-            node.Format = dummyFormat2;
+            node.ChangeFormat(dummyFormat2);
             Assert.AreNotSame(node.Format, dummyFormat1);
             Assert.AreSame(node.Format, dummyFormat2);
         }
 
         [Test]
-        public void SetFormatWithoutPreviousFormat()
+        public void ChangeFormatWithoutPreviousFormat()
         {
             var dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest");
-            node.Format = dummyFormat;
+            node.ChangeFormat(dummyFormat);
             Assert.AreSame(node.Format, dummyFormat);
         }
 
         [Test]
-        public void SetFormatDisposePreviousFormat()
+        public void ChangeFormatDisposePreviousFormat()
         {
             var dummyFormat1 = new StringFormatTest("3");
             var dummyFormat2 = new IntFormatTest(4);
             Node node = new Node("mytest", dummyFormat1);
-            node.Format = dummyFormat2;
+            node.ChangeFormat(dummyFormat2);
             Assert.IsTrue(dummyFormat1.Disposed);
             Assert.IsFalse(dummyFormat2.Disposed);
         }
 
         [Test]
-        public void SetFormatToNull()
+        public void ChangeFormatWithoutDisposingPreviousFormat()
+        {
+            var dummyFormat1 = new StringFormatTest("3");
+            var dummyFormat2 = new IntFormatTest(4);
+            Node node = new Node("mytest", dummyFormat1);
+            node.ChangeFormat(dummyFormat2, false);
+            Assert.IsFalse(dummyFormat1.Disposed);
+            Assert.IsFalse(dummyFormat2.Disposed);
+        }
+
+        [Test]
+        public void ChangeFormatToNull()
         {
             var dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
-            node.Format = null;
+            node.ChangeFormat(null);
             Assert.IsNull(node.Format);
         }
 
@@ -311,7 +322,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node node = new Node("MyTest");
             NodeContainerFormat format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
-            node.Format = format;
+            node.ChangeFormat(format);
 
             Assert.AreEqual(1, node.Children.Count);
             Assert.AreSame(format.Root.Children[0], node.Children[0]);
@@ -325,7 +336,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node node = new Node("MyTest");
             NodeContainerFormat format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
-            node.Format = format;
+            node.ChangeFormat(format);
 
             // It must be the same parent
             Assert.AreSame(node, format.Root);
@@ -341,11 +352,11 @@ namespace Yarhl.UnitTests.FileSystem
             Node node = new Node("mytest");
             NodeContainerFormat format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
-            node.Format = format;
+            node.ChangeFormat(format);
             Assert.IsNotEmpty(node.Children);
 
             StringFormatTest newFormat = new StringFormatTest("3");
-            node.Format = newFormat;
+            node.ChangeFormat(newFormat);
             Assert.IsEmpty(node.Children);
         }
 
@@ -379,7 +390,7 @@ namespace Yarhl.UnitTests.FileSystem
             Node node = new Node("MyTest");
             node.Dispose();
             StringFormatTest format = new StringFormatTest("3");
-            Assert.Throws<ObjectDisposedException>(() => node.Format = format);
+            Assert.Throws<ObjectDisposedException>(() => node.ChangeFormat(format));
         }
 
         [Test]
