@@ -30,7 +30,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
-    public class NodeContainerFormat : Format
+    public class NodeContainerFormat : IFormat, IDisposable
     {
         bool manageRoot;
 
@@ -49,6 +49,16 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <value>The root node.</value>
         public Node Root {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="BinaryFormat"/>
+        /// is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
+        public bool Disposed {
             get;
             private set;
         }
@@ -75,6 +85,15 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
+        /// Releases all resource used by the <see cref="BinaryFormat"/> object.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
         /// Releases all resource used by the
         /// <see cref="NodeContainerFormat"/> object.
         /// </summary>
@@ -82,10 +101,12 @@ namespace Yarhl.FileSystem
         /// If set to <c>true</c> free managed resources also.
         /// It happens from Dispose() calls.
         /// </param>
-        protected override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if (Disposed)
+                return;
 
+            Disposed = true;
             if (disposing && manageRoot) {
                 Root.Dispose();
             }

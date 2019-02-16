@@ -28,7 +28,7 @@ namespace Yarhl.FileSystem
     /// </summary>
     public class Node : NavigableNode<Node>
     {
-        Format format;
+        IFormat format;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
@@ -44,7 +44,7 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="name">Node name.</param>
         /// <param name="initialFormat">Node format.</param>
-        public Node(string name, Format initialFormat)
+        public Node(string name, IFormat initialFormat)
             : this(name)
         {
             Format = initialFormat;
@@ -54,7 +54,7 @@ namespace Yarhl.FileSystem
         /// Gets or sets the current format of the node.
         /// </summary>
         /// <value>The current format.</value>
-        public Format Format {
+        public IFormat Format {
             get {
                 return format;
             }
@@ -67,7 +67,8 @@ namespace Yarhl.FileSystem
                 if (IsContainer)
                     RemoveChildren();
 
-                format?.Dispose();
+                var disposable = format as IDisposable;
+                disposable?.Dispose();
                 format = value;
 
                 // If now it's a container, add its children
@@ -100,7 +101,7 @@ namespace Yarhl.FileSystem
         /// <returns>The format casted to the type or null if not possible.</returns>
         /// <typeparam name="T">The format type.</typeparam>
         public T GetFormatAs<T>()
-            where T : Format
+            where T : class, IFormat
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -125,9 +126,9 @@ namespace Yarhl.FileSystem
             }
 
             if (converter == null)
-                Format = (Format)Format.ConvertTo(dst);
+                Format = (IFormat)FormatConversion.ConvertTo(dst, Format);
             else
-                Format = (Format)Format.ConvertWith(converter, dst);
+                Format = (IFormat)FormatConversion.ConvertWith(converter, Format, dst);
 
             return this;
         }
@@ -138,7 +139,7 @@ namespace Yarhl.FileSystem
         /// <returns>This node.</returns>
         /// <typeparam name="T">The new node format.</typeparam>
         public Node Transform<T>()
-            where T : Format
+            where T : IFormat
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -148,7 +149,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            Format = Format.ConvertTo<T>(Format);
+            Format = FormatConversion.ConvertTo<T>(Format);
             return this;
         }
 
@@ -160,8 +161,8 @@ namespace Yarhl.FileSystem
         /// <typeparam name="TSrc">The type of the current format.</typeparam>
         /// <typeparam name="TDst">The type of the new format.</typeparam>
         public Node Transform<TConv, TSrc, TDst>()
-            where TSrc : Format
-            where TDst : Format
+            where TSrc : IFormat
+            where TDst : IFormat
             where TConv : IConverter<TSrc, TDst>, new()
         {
             if (Disposed)
@@ -172,7 +173,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            Format = Format.ConvertWith<TConv, TSrc, TDst>();
+            Format = FormatConversion.ConvertWith<TConv, TSrc, TDst>((TSrc)Format);
             return this;
         }
 
@@ -184,8 +185,8 @@ namespace Yarhl.FileSystem
         /// <typeparam name="TDst">The type of the destination format.</typeparam>
         /// <returns>This node.</returns>
         public Node Transform<TSrc, TDst>(IConverter<TSrc, TDst> converter)
-            where TSrc : Format
-            where TDst : Format
+            where TSrc : IFormat
+            where TDst : IFormat
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -195,7 +196,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            Format = Format.ConvertWith(converter);
+            Format = FormatConversion.ConvertWith(converter, (TSrc)Format);
             return this;
         }
 
@@ -209,7 +210,8 @@ namespace Yarhl.FileSystem
         {
             base.Dispose(freeManagedResourcesAlso);
             if (freeManagedResourcesAlso) {
-                format?.Dispose();
+                var disposable = format as IDisposable;
+                disposable?.Dispose();
             }
         }
 

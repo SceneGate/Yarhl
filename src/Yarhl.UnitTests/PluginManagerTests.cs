@@ -139,7 +139,7 @@ namespace Yarhl.UnitTests
         public void FindLazyExtensionWithMetadata()
         {
             var formats = PluginManager.Instance
-                .FindLazyExtensions<Format, FormatMetadata>()
+                .FindLazyExtensions<IFormat, FormatMetadata>()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Does.Contain(typeof(PluginFormat)));
         }
@@ -148,7 +148,7 @@ namespace Yarhl.UnitTests
         public void FindLazyExtesionWithMetadataIsUnique()
         {
             var formats = PluginManager.Instance
-                .FindLazyExtensions<Format, FormatMetadata>()
+                .FindLazyExtensions<IFormat, FormatMetadata>()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Is.Unique);
         }
@@ -194,7 +194,7 @@ namespace Yarhl.UnitTests
             }
         }
 
-        public class PluginFormat : Format
+        public class PluginFormat : IFormat
         {
             public int Value => 0;
         }

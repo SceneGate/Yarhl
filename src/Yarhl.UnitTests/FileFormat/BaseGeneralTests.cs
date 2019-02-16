@@ -29,7 +29,7 @@ namespace Yarhl.UnitTests.FileFormat
     using Yarhl.FileFormat;
 
     public abstract class BaseGeneralTests<T>
-        where T : Format
+        where T : IFormat
     {
         protected string Name { get => typeof(T).FullName; }
 
@@ -49,15 +49,6 @@ namespace Yarhl.UnitTests.FileFormat
                 .Select(f => f.Metadata.Name);
             Assert.That(names, Does.Contain(Name));
             Assert.That(names, Is.Unique);
-        }
-
-        [Test]
-        public void DisposeChangesDisposed()
-        {
-            T format = CreateDummyFormat();
-            Assert.IsFalse(format.Disposed);
-            format.Dispose();
-            Assert.IsTrue(format.Disposed);
         }
 
         protected abstract T CreateDummyFormat();

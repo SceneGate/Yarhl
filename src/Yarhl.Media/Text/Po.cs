@@ -33,7 +33,7 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Portable Object format for translations.
     /// </summary>
-    public class Po : Format
+    public class Po : IFormat
     {
         readonly IList<PoEntry> entries;
         readonly ReadOnlyCollection<PoEntry> readonlyEntries;
@@ -70,9 +70,6 @@ namespace Yarhl.Media.Text
             }
 
             set {
-                if (Disposed)
-                    throw new ObjectDisposedException(nameof(Po));
-
                 if (value == null) {
                     header = null;
                 } else {
@@ -100,9 +97,6 @@ namespace Yarhl.Media.Text
         /// <param name="item">Entry to add. The ID must be unique.</param>
         public void Add(PoEntry item)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Po));
-
             if (item == null)
                 throw new ArgumentNullException(nameof(item));
 
@@ -124,9 +118,6 @@ namespace Yarhl.Media.Text
         /// <param name="items">Entries to add.</param>
         public void Add(IEnumerable<PoEntry> items)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Po));
-
             if (items == null)
                 throw new ArgumentNullException(nameof(items));
 
@@ -142,9 +133,6 @@ namespace Yarhl.Media.Text
         /// <returns>The found entry or null if not found.</returns>
         public PoEntry FindEntry(string original, string context = null)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Po));
-
             if (string.IsNullOrEmpty(original))
                 throw new ArgumentNullException(nameof(original));
 
