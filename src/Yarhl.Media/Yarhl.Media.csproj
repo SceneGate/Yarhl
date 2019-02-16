@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>Yarhl.Media</AssemblyName>
     <Product>SceneGate</Product>
-    <Version>2.0.0</Version>
+    <Version>3.0.0-alpha01</Version>
     <Description>Yarhl plugin with support of text converters.</Description>
 
     <Authors>pleonex</Authors>

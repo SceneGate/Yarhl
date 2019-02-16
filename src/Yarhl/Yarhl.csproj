@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>Yarhl</AssemblyName>
     <Product>SceneGate</Product>
-    <Version>2.0.0</Version>
+    <Version>3.0.0-alpha01</Version>
     <Description>Library to translation projects. It provides features for implementing file formats, converters and a virtual file system.</Description>
 
     <Authors>pleonex</Authors>
