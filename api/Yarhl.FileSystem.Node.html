@@ -354,6 +354,7 @@ managed resources also.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public T GetFormatAs&lt;T&gt;()
+
     where T : Format</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -459,6 +460,7 @@ managed resources also.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Node Transform&lt;T&gt;()
+
     where T : Format</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -508,6 +510,7 @@ managed resources also.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Node Transform&lt;TSrc, TDst&gt;(IConverter&lt;TSrc, TDst&gt; converter)
+
     where TSrc : Format where TDst : Format</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -580,7 +583,9 @@ managed resources also.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public Node Transform&lt;TConv, TSrc, TDst&gt;()
+
     where TConv : IConverter&lt;TSrc, TDst&gt;, new()
+
     where TSrc : Format where TDst : Format</code></pre>
   </div>
   <h5 class="returns">Returns</h5>

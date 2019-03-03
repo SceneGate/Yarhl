@@ -554,6 +554,7 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public TDst ConvertWith&lt;TSrc, TDst&gt;(IConverter&lt;TSrc, TDst&gt; converter)
+
     where TSrc : Format</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -703,7 +704,9 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public TDst ConvertWith&lt;TConv, TSrc, TDst&gt;()
+
     where TConv : IConverter&lt;TSrc, TDst&gt;, new()
+
     where TSrc : Format</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
@@ -763,6 +766,7 @@
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static TDst ConvertWith&lt;TConv, TSrc, TDst&gt;(TSrc source)
+
     where TConv : IConverter&lt;TSrc, TDst&gt;, new()</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>

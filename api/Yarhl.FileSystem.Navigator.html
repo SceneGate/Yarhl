@@ -105,6 +105,7 @@ Search for nodes and iterate over them.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static IEnumerable&lt;T&gt; IterateNodes&lt;T&gt;(T rootNode, NavigationMode mode = NavigationMode.BreadthFirst)
+
     where T : NavigableNode&lt;T&gt;</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
@@ -178,6 +179,7 @@ Search for nodes and iterate over them.</p>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public static T SearchNode&lt;T&gt;(T rootNode, string path)
+
     where T : NavigableNode&lt;T&gt;</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
