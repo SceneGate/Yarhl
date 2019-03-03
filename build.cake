@@ -346,11 +346,15 @@ Task("Deploy")
     .IsDependentOn("Pack")
     .Does(() =>
 {
+    if (configuration == "Debug") {
+        throw new Exception("Cannot deploy Debug configuration");
+    }
+
     var settings = new DotNetCoreNuGetPushSettings {
         Source = "https://api.nuget.org/v3/index.json",
         ApiKey = Environment.GetEnvironmentVariable("NUGET_KEY"),
     };
-    DotNetCoreNuGetPush("artifacts/*.nupkg", settings);
+    DotNetCoreNuGetPush(System.IO.Path.Combine("artifacts", "*.nupkg"), settings);
 });
 
 Task("Default")
