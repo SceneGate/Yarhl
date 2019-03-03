@@ -153,9 +153,9 @@ namespace Yarhl
         /// Get a list of format extensions.
         /// </summary>
         /// <returns>Enumerable of lazy formats with metadata.</returns>
-        public IEnumerable<ExportFactory<Format, FormatMetadata>> GetFormats()
+        public IEnumerable<ExportFactory<IFormat, FormatMetadata>> GetFormats()
         {
-            return FindLazyExtensions<Format, FormatMetadata>();
+            return FindLazyExtensions<IFormat, FormatMetadata>();
         }
 
         /// <summary>
@@ -170,8 +170,8 @@ namespace Yarhl
         static void DefineFormatConventions(ConventionBuilder conventions)
         {
             conventions
-                .ForTypesDerivedFrom<Format>()
-                .Export<Format>(
+                .ForTypesDerivedFrom<IFormat>()
+                .Export<IFormat>(
                     export => export
                         .AddMetadata("Name", t => t.FullName)
                         .AddMetadata("Type", t => t))

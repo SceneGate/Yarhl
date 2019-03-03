@@ -1,11 +1,5 @@
 R: Gendarme.Rules.Portability.MonoCompatibilityReviewRule
 # Gendarme detects that Type.Equals is not implemented in Mono but this doesn't seem to be the case
-M: System.Boolean Yarhl.FileFormat.Format/<Convert>c__AnonStorey0::<>m__1(System.Type)
-M: System.Boolean Yarhl.FileFormat.Format::<ConvertWith>m__0(System.Type)
-M: System.Boolean Yarhl.FileFormat.Format/<ConvertWith>c__AnonStorey0::<>m__0(System.Type)
-M: System.Boolean Yarhl.FileFormat.Format/<ConvertWith>c__AnonStorey1::<>m__0(System.Type)
-M: System.Boolean Yarhl.FileFormat.Format/<>c__DisplayClass13_0::<ConvertWith>b__1(System.Type)
-M: System.Boolean Yarhl.FileFormat.Format/<>c::<ConvertWith>b__13_0(System.Type)
 M: System.Boolean Yarhl.PluginManager/TypeParamComparer::Equals(System.Type,System.Type)
 M: System.Object Yarhl.IO.DataReader::ReadByType(System.Type)
 M: System.Void Yarhl.IO.DataWriter::Write(System.Type,System.Object)
@@ -14,8 +8,7 @@ M: System.Void Yarhl.IO.DataWriter::Write(System.String,System.Type,System.Boole
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::Transform()
-M: TDst Yarhl.FileFormat.Format::ConvertWith(TSrc)
-M: TDst Yarhl.FileFormat.Format::ConvertWith()
+M: TDst Yarhl.FileFormat.FormatConversion::ConvertWith(TSrc)
 M: System.Collections.Generic.IEnumerable`1<System.Type> Yarhl.PluginManager::FindExtensions()
 M: System.Collections.Generic.IEnumerable`1<System.Type> Yarhl.PluginManager::FindExtensions()
 M: System.Object Yarhl.IO.DataReader::Read()
@@ -69,12 +62,10 @@ T: Yarhl.IO.DataStream
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
 # It looks like a bug in Gendarme, we are adding a char to a string
 M: System.String Yarhl.IO.TextReader::ReadToToken(System.String)
-# It seems a bug in Gendarme with new $ string formatting
-M: System.Object Yarhl.FileFormat.Format::ConvertTo(System.Type,System.Object)
 
 R: Gendarme.Rules.Design.Generic.DoNotExposeNestedGenericSignaturesRule
 # This should be allowed for Enumeration since user won't work directly with them
 M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`1<T>> Yarhl.PluginManager::FindLazyExtensions()
 M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<T,TMetadata>> Yarhl.PluginManager::FindLazyExtensions()
-M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.Format,Yarhl.FileFormat.FormatMetadata>> Yarhl.PluginManager::GetFormats()
+M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.IFormat,Yarhl.FileFormat.FormatMetadata>> Yarhl.PluginManager::GetFormats()
 M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.IConverter,Yarhl.FileFormat.ConverterMetadata>> Yarhl.PluginManager::GetConverters()

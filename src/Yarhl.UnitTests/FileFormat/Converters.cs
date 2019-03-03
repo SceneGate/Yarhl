@@ -81,7 +81,7 @@ namespace Yarhl.UnitTests.FileFormat
     {
     }
 
-    public class StringFormatTest : Format
+    public class StringFormatTest : IFormat, IDisposable
     {
         public StringFormatTest()
         {
@@ -93,9 +93,21 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         public string Value { get; set; }
+
+        public bool Disposed { get; private set; }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected void Dispose(bool isDisposing)
+        {
+            Disposed = true;
+        }
     }
 
-    public class IntFormatTest : Format
+    public class IntFormatTest : IFormat, IDisposable
     {
         public IntFormatTest()
         {
@@ -107,13 +119,17 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         public int Value { get; set; }
-    }
 
-    public class StringFormatTest2IntConverter : IConverter<StringFormatTest, int>
-    {
-        public int Convert(StringFormatTest test)
+        public bool Disposed { get; private set; }
+
+        public void Dispose()
         {
-            return System.Convert.ToInt32(test.Value);
+            Dispose(true);
+        }
+
+        protected void Dispose(bool isDisposing)
+        {
+            Disposed = true;
         }
     }
 

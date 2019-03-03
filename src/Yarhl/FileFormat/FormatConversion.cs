@@ -1,9 +1,6 @@
-﻿// Format.cs
+// FormatConversion.cs
 //
-// Author:
-//      Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
-//
-// Copyright (c) 2016 Benito Palacios Sánchez
+// Copyright (c) 2019 SceneGate Team
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,17 +20,11 @@ namespace Yarhl.FileFormat
     using System.Linq;
 
     /// <summary>
-    /// Abstract file format.
+    /// Convert formats with converters.
     /// </summary>
-    public abstract class Format : IDisposable
+    public static class FormatConversion
     {
-        /// <summary>
-        /// Gets a value indicating whether this <see cref="Format"/> is disposed.
-        /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
-        public bool Disposed { get; private set; }
-
-        /// <summary>
+                /// <summary>
         /// Converts the format to the specified type.
         /// </summary>
         /// <returns>The new format.</returns>
@@ -159,112 +150,6 @@ namespace Yarhl.FileFormat
             }
 
             return converter.Convert(src);
-        }
-
-        /// <summary>
-        /// Converts into the specified type.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <typeparam name="TDst">The type of the destination format.</typeparam>
-        public TDst ConvertTo<TDst>()
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Format));
-
-            return ConvertTo<TDst>(this);
-        }
-
-        /// <summary>
-        /// Converts into the specified type.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="dstType">The type of the destination format.</param>
-        public dynamic ConvertTo(Type dstType)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Format));
-
-            if (dstType == null)
-                throw new ArgumentNullException(nameof(dstType));
-
-            return ConvertTo(dstType, this);
-        }
-
-        /// <summary>
-        /// Converts using the specified converter.
-        /// </summary>
-        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
-        /// <typeparam name="TSrc">The type of the current format.</typeparam>
-        /// <typeparam name="TDst">The type of the destination format.</typeparam>
-        /// <returns>The new format.</returns>
-        public TDst ConvertWith<TConv, TSrc, TDst>()
-            where TSrc : Format
-            where TConv : IConverter<TSrc, TDst>, new()
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Format));
-
-            return ConvertWith<TConv, TSrc, TDst>((TSrc)this);
-        }
-
-        /// <summary>
-        /// Converts using the specified converter.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="converter">Converter to use.</param>
-        /// <typeparam name="TSrc">The type of the current format.</typeparam>
-        /// <typeparam name="TDst">The type of the destination format.</typeparam>
-        public TDst ConvertWith<TSrc, TDst>(IConverter<TSrc, TDst> converter)
-            where TSrc : Format
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Format));
-
-            if (converter == null)
-                throw new ArgumentNullException(nameof(converter));
-
-            return ConvertWith(converter, (TSrc)this);
-        }
-
-        /// <summary>
-        /// Converts using the specified converter.
-        /// </summary>
-        /// <param name="converter">Converter to use.</param>
-        /// <param name="dstType">The type of the destination format.</param>
-        /// <returns>The new format.</returns>
-        public dynamic ConvertWith(dynamic converter, Type dstType)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Format));
-
-            if (converter == null)
-                throw new ArgumentNullException(nameof(converter));
-
-            if (dstType == null)
-                throw new ArgumentNullException(nameof(dstType));
-
-            return ConvertWith(converter, this, dstType);
-        }
-
-        /// <summary>
-        /// Releases all resource used by the <see cref="Format"/> object.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Releases all resource used by the <see cref="Format"/> object.
-        /// </summary>
-        /// <param name="disposing">
-        /// If set to <c>true</c> free managed resources also.
-        /// It happens from Dispose() calls.
-        /// </param>
-        protected virtual void Dispose(bool disposing)
-        {
-            Disposed = true;
         }
     }
 }

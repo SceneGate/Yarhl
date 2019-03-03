@@ -58,17 +58,6 @@ namespace Yarhl.UnitTests.Media.Text
         }
 
         [Test]
-        public void SetHeaderAfterDisposeThrowsException()
-        {
-            PoHeader header = new PoHeader("id", "yo", "es");
-            var po = CreateDummyFormat();
-            po.Dispose();
-            Assert.That(
-                () => po.Header = header,
-                Throws.InstanceOf<ObjectDisposedException>());
-        }
-
-        [Test]
         public void SetNullHeaderDoesNotThrowsException()
         {
             var po = CreateDummyFormat();
@@ -111,9 +100,6 @@ namespace Yarhl.UnitTests.Media.Text
         {
             var po = CreateDummyFormat();
             Assert.Throws<ArgumentNullException>(() => po.Add((PoEntry)null));
-
-            po.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => po.Add((PoEntry)null));
         }
 
         [Test]
@@ -198,16 +184,6 @@ namespace Yarhl.UnitTests.Media.Text
         }
 
         [Test]
-        public void AddMultipleEntriesAfterDisposeThrows()
-        {
-            var po = CreateDummyFormat();
-            po.Dispose();
-            Assert.That(
-                () => po.Add(new[] { new PoEntry("t1") }),
-                Throws.TypeOf<ObjectDisposedException>());
-        }
-
-        [Test]
         public void FindEntryReturnsEntry()
         {
             var po = CreateDummyFormat();
@@ -244,16 +220,6 @@ namespace Yarhl.UnitTests.Media.Text
             po.Add(new PoEntry("t1") { Context = "ctx2" });
 
             Assert.That(po.FindEntry("t1", "unk"), Is.Null);
-        }
-
-        [Test]
-        public void FindEntryAfterDisposeThrows()
-        {
-            var po = CreateDummyFormat();
-            po.Dispose();
-            Assert.That(
-                () => po.FindEntry("t1"),
-                Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]

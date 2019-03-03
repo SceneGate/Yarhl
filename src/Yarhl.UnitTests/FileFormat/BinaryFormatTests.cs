@@ -33,6 +33,26 @@ namespace Yarhl.UnitTests.FileFormat
     public class BinaryFormatTests : BaseGeneralTests<BinaryFormat>
     {
         [Test]
+        public void DisposeChangesDisposed()
+        {
+            BinaryFormat format = CreateDummyFormat();
+            Assert.IsFalse(format.Disposed);
+            format.Dispose();
+            Assert.IsTrue(format.Disposed);
+        }
+
+        [Test]
+        public void DisposeTWicheDoesNotThrow()
+        {
+            BinaryFormat format = CreateDummyFormat();
+            Assert.IsFalse(format.Disposed);
+            format.Dispose();
+            Assert.IsTrue(format.Disposed);
+            Assert.That(() => format.Dispose(), Throws.Nothing);
+            Assert.IsTrue(format.Disposed);
+        }
+
+        [Test]
         public void ConstructorWithStream()
         {
             DataStream stream = new DataStream();

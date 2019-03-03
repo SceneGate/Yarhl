@@ -19,12 +19,13 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.FileFormat
 {
+    using System;
     using Yarhl.IO;
 
     /// <summary>
     /// Binary format.
     /// </summary>
-    public class BinaryFormat : Format
+    public class BinaryFormat : IFormat, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
@@ -76,16 +77,37 @@ namespace Yarhl.FileFormat
         }
 
         /// <summary>
+        /// Gets a value indicating whether this <see cref="BinaryFormat"/>
+        /// is disposed.
+        /// </summary>
+        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
+        public bool Disposed {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Releases all resource used by the <see cref="BinaryFormat"/> object.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
         /// Releases all resource used by the <see cref="BinaryFormat"/> object.
         /// </summary>
         /// <param name="disposing">
         /// If set to <c>true</c> free managed resources also.
         /// It happens from Dispose() calls.
         /// </param>
-        protected override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            base.Dispose(disposing);
+            if (Disposed)
+                return;
 
+            Disposed = true;
             if (disposing) {
                 Stream.Dispose();
             }

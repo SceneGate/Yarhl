@@ -390,7 +390,7 @@ namespace Yarhl.IO
 
             T format;
             using (var binary = new BinaryFormat(this))
-                format = binary.ConvertTo<T>();
+                format = FormatConversion.ConvertTo<T>(binary);
             return format;
         }
 

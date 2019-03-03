@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
     <AssemblyName>Yarhl.IntegrationTests</AssemblyName>
     <Product>SceneGate</Product>
-    <Version>2.0.0.1</Version>
+    <Version>3.0.0-alpha01</Version>
     <Description>Plugin integration tests for Yarhl.</Description>
 
     <Authors>pleonex</Authors>

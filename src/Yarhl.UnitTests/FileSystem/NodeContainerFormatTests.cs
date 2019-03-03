@@ -33,6 +33,26 @@ namespace Yarhl.UnitTests.FileSystem
     public class NodeContainerFormatTests : BaseGeneralTests<NodeContainerFormat>
     {
         [Test]
+        public void DisposeChangesDisposed()
+        {
+            NodeContainerFormat format = CreateDummyFormat();
+            Assert.IsFalse(format.Disposed);
+            format.Dispose();
+            Assert.IsTrue(format.Disposed);
+        }
+
+        [Test]
+        public void DisposeTWicheDoesNotThrow()
+        {
+            NodeContainerFormat format = CreateDummyFormat();
+            Assert.IsFalse(format.Disposed);
+            format.Dispose();
+            Assert.IsTrue(format.Disposed);
+            Assert.That(() => format.Dispose(), Throws.Nothing);
+            Assert.IsTrue(format.Disposed);
+        }
+
+        [Test]
         public void ConstructorSetProperties()
         {
             NodeContainerFormat format = new NodeContainerFormat();
