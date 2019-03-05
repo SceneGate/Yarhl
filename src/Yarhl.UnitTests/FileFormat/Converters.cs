@@ -1,9 +1,6 @@
 ﻿// Converters.cs
 //
-// Author:
-//      Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
-//
-// Copyright (c) 2016 Benito Palacios Sánchez
+// Copyright (c) 2019 SceneGate Team
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -57,14 +54,27 @@ namespace Yarhl.UnitTests.FileFormat
     }
 
     public class ConverterAndOtherInterface :
-        IConverter<string, short>, IDisposable
+        IConverter<string, short>,
+        IDisposable,
+        IInitializer<int>
     {
         public short Convert(string source)
         {
             return System.Convert.ToInt16(source);
         }
 
+        public void Initialize(int param)
+        {
+        }
+
         public void Dispose()
+        {
+        }
+    }
+
+    public class ConverterWithoutGenericInterface : IConverter, IInitializer<int>
+    {
+        public void Initialize(int param)
         {
         }
     }
