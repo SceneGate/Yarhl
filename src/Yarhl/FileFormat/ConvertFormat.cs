@@ -1,4 +1,4 @@
-// FormatConversion.cs
+// ConvertFormat.cs
 //
 // Copyright (c) 2019 SceneGate Team
 //
@@ -22,9 +22,9 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Convert formats with converters.
     /// </summary>
-    public static class FormatConversion
+    public static class ConvertFormat
     {
-                /// <summary>
+        /// <summary>
         /// Converts the format to the specified type.
         /// </summary>
         /// <returns>The new format.</returns>
@@ -32,19 +32,7 @@ namespace Yarhl.FileFormat
         /// <typeparam name="TDst">The destination format type.</typeparam>
         public static TDst ConvertTo<TDst>(dynamic source)
         {
-            return ConvertTo(typeof(TDst), source);
-        }
-
-        /// <summary>
-        /// Converts the format to the specified type.
-        /// </summary>
-        /// <param name="source">Format to convert.</param>
-        /// <typeparam name="TDst">The destination format type.</typeparam>
-        /// <typeparam name="TSrc">The source format type.</typeparam>
-        /// <returns>The new format.</returns>
-        public static TDst ConvertTo<TDst, TSrc>(TSrc source)
-        {
-            return ConvertTo(typeof(TDst), source);
+            return (TDst)ConvertTo(typeof(TDst), source);
         }
 
         /// <summary>
@@ -53,7 +41,7 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="dstType">Type of the destination format.</param>
         /// <param name="src">Format to convert.</param>
-        public static dynamic ConvertTo(Type dstType, dynamic src)
+        public static object ConvertTo(Type dstType, dynamic src)
         {
             if (dstType == null)
                 throw new ArgumentNullException(nameof(dstType));
@@ -66,6 +54,7 @@ namespace Yarhl.FileFormat
             var extensions = PluginManager.Instance.GetConverters()
                 .Where(e => e.Metadata.CanConvert(srcType, dstType));
 
+            // Same as Single operation but with nice errors
             if (!extensions.Any()) {
                 throw new InvalidOperationException(
                     $"Cannot find converter for: {srcType} -> {dstType}");
@@ -74,41 +63,62 @@ namespace Yarhl.FileFormat
                     $"Multiple converters for: {srcType} -> {dstType}");
             }
 
-            dynamic extension = extensions.First();
-            return extension.CreateExport().Value.Convert(src);
-        }
-
-        /// <summary>
-        /// Converts the format using the specified converter type.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="source">Format to converter.</param>
-        /// <typeparam name="TConv">Type of the converter.</typeparam>
-        /// <typeparam name="TSrc">Type of the source format.</typeparam>
-        /// <typeparam name="TDst">Type of the destination format.</typeparam>
-        public static TDst ConvertWith<TConv, TSrc, TDst>(TSrc source)
-            where TConv : IConverter<TSrc, TDst>, new()
-        {
-            TConv converter = new TConv();
-            return converter.Convert(source);
-        }
-
-        /// <summary>
-        /// Converts the format using the specified converter.
-        /// </summary>
-        /// <returns>The new format.</returns>
-        /// <param name="converter">Convert to use.</param>
-        /// <param name="src">Format to convert.</param>
-        /// <typeparam name="TSrc">Type of the source format.</typeparam>
-        /// <typeparam name="TDst">The type of the destination format type.</typeparam>
-        public static TDst ConvertWith<TSrc, TDst>(
-            IConverter<TSrc, TDst> converter,
-            TSrc src)
-        {
-            if (converter == null)
-                throw new ArgumentNullException(nameof(converter));
-
+            dynamic converter = extensions.First().CreateExport().Value;
             return converter.Convert(src);
+        }
+
+        /// <summary>
+        /// Converts the format using a converter with the specified type.
+        /// </summary>
+        /// <param name="converterType">Type of the converter.</param>
+        /// <param name="src">Format to convert.</param>
+        /// <returns>The new format.</returns>
+        public static object ConvertWith(Type converterType, dynamic src)
+        {
+            if (converterType == null)
+                throw new ArgumentNullException(nameof(converterType));
+
+            var extensions = PluginManager.Instance.GetConverters()
+                .Where(x => x.Metadata.Type == converterType);
+
+            // Same as Single operation but with nice errors
+            if (!extensions.Any()) {
+                throw new InvalidOperationException(
+                    $"Cannot find converter {converterType}");
+            }
+
+            dynamic converter = extensions.First().CreateExport().Value;
+            return converter.Convert(src);
+        }
+
+        /// <summary>
+        /// Converts the format using a converter with the specified type.
+        /// </summary>
+        /// <param name="src">Format to convert.</param>
+        /// <typeparam name="TConv">Type of the converter.</typeparam>
+        /// <returns>The new format.</returns>
+        public static object ConvertWith<TConv>(dynamic src)
+            where TConv : IConverter, new()
+        {
+            var converter = new TConv();
+            return ConvertWith(converter, src);
+        }
+
+        /// <summary>
+        /// Converts the format using a converter with the specified type
+        /// and initialized with some parameters.
+        /// </summary>
+        /// <param name="param">Parameters to initialize the converter.</param>
+        /// <param name="src">Format to convert.</param>
+        /// <typeparam name="TConv">Type of the converter.</typeparam>
+        /// <typeparam name="TParam">Type of the parameters.</typeparam>
+        /// <returns>The new format.</returns>
+        public static object ConvertWith<TConv, TParam>(TParam param, dynamic src)
+            where TConv : IConverter, IInitializer<TParam>, new()
+        {
+            var converter = new TConv();
+            converter.Initialize(param);
+            return ConvertWith(converter, src);
         }
 
         /// <summary>
@@ -117,14 +127,13 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="converter">Converter to use.</param>
         /// <param name="src">Format to convert.</param>
-        /// <param name="dstType">Type of the destination format.</param>
-        public static object ConvertWith(dynamic converter, dynamic src, Type dstType)
+        public static object ConvertWith(IConverter converter, dynamic src)
         {
             if (converter == null)
                 throw new ArgumentNullException(nameof(converter));
 
-            if (dstType == null)
-                throw new ArgumentNullException(nameof(dstType));
+            if (src == null)
+                throw new ArgumentNullException(nameof(src));
 
             Type[] converterInterfaces = converter.GetType().GetInterfaces();
             bool implementConverter = converterInterfaces.Any(i =>
@@ -132,24 +141,21 @@ namespace Yarhl.FileFormat
                 i.GetGenericTypeDefinition() == typeof(IConverter<,>));
 
             if (!implementConverter) {
-                throw new ArgumentException(
-                        "Converter doesn't implement IConverter<,>",
-                        nameof(converter));
+                throw new InvalidOperationException(
+                    "Converter doesn't implement IConverter<,>");
             }
 
             bool canConvert = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GenericTypeArguments.Length == 2 &&
-                i.GenericTypeArguments[0] == src.GetType() &&
-                i.GenericTypeArguments[1] == dstType);
+                i.GenericTypeArguments[0] == src.GetType());
 
             if (!canConvert) {
-                throw new ArgumentException(
-                        "Converter cannot convert from/to the type",
-                        nameof(converter));
+                throw new InvalidOperationException(
+                    "Converter cannot convert from/to the type");
             }
 
-            return converter.Convert(src);
+            return ((dynamic)converter).Convert(src);
         }
     }
 }

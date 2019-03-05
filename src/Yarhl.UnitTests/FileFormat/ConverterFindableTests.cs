@@ -19,14 +19,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.UnitTests.FileFormat
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
     [TestFixture]
-    public class ConverterTests
+    public class ConverterFindableTests
     {
         [Test]
         public void FindSingleInnerConverter()

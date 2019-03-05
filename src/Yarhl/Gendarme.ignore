@@ -7,8 +7,11 @@ M: System.Void Yarhl.IO.DataWriter::Write(System.String,System.Type,System.Boole
 
 R: Gendarme.Rules.Design.Generic.AvoidMethodWithUnusedGenericTypeRule
 # We want to convert by specifying the type in a generic
-M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::Transform()
-M: TDst Yarhl.FileFormat.FormatConversion::ConvertWith(TSrc)
+M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::TransformTo()
+M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::TransformWith()
+M: Yarhl.FileSystem.Node Yarhl.FileSystem.Node::TransformWith(TParam)
+M: System.Object Yarhl.FileFormat.ConvertFormat::ConvertWith(System.Object)
+M: System.Object Yarhl.FileFormat.ConvertFormat::ConvertWith(TParam,System.Object)
 M: System.Collections.Generic.IEnumerable`1<System.Type> Yarhl.PluginManager::FindExtensions()
 M: System.Collections.Generic.IEnumerable`1<System.Type> Yarhl.PluginManager::FindExtensions()
 M: System.Object Yarhl.IO.DataReader::Read()

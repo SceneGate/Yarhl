@@ -1,9 +1,6 @@
 // PluginManagerTests.cs
 //
-// Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2016 Benito Palacios Sánchez
+// Copyright (c) 2019 SceneGate Team
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,10 +23,10 @@ namespace Yarhl.UnitTests
 {
     using System;
     using System.Composition;
-    using System.IO;
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
+    using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
     public class PluginManagerTests
@@ -46,6 +43,32 @@ namespace Yarhl.UnitTests
         public void InstanceInitializePluginManager()
         {
             Assert.IsNotNull(PluginManager.Instance);
+        }
+
+        [Test]
+        public void FormatMetadataContainsNameAndType()
+        {
+            var format = PluginManager.Instance.GetFormats()
+                .Single(p => p.Metadata.Type == typeof(StringFormatTest));
+            Assert.That(
+                format.Metadata.Name,
+                Is.EqualTo(typeof(StringFormatTest).FullName));
+        }
+
+        [Test]
+        public void FormatsAreNotDuplicated()
+        {
+            Assert.That(
+                PluginManager.Instance.GetFormats().Select(f => f.Metadata.Type),
+                Is.Unique);
+        }
+
+        [Test]
+        public void GetFormatsReturnsKnownFormats()
+        {
+            Assert.That(
+                PluginManager.Instance.GetFormats().Select(f => f.Metadata.Name),
+                Does.Contain(typeof(BinaryFormat).FullName));
         }
 
         [Test]
