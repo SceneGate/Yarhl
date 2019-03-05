@@ -20,7 +20,7 @@ namespace Yarhl.FileFormat
     /// Initialization interface.
     /// </summary>
     /// <typeparam name="T">Type of the parameters for the initialize.</typeparam>
-    public interface IInitializer<T>
+    public interface IInitializer<in T>
     {
         /// <summary>
         /// Initialize the instance with the specified parameters.
