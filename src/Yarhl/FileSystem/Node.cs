@@ -141,7 +141,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat(Converter.ConvertTo<TDst>(Format));
+            ChangeFormat(ConvertFormat.ConvertTo<TDst>(Format));
             return this;
         }
 
@@ -163,7 +163,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat((IFormat)Converter.ConvertTo(dst, Format));
+            ChangeFormat((IFormat)ConvertFormat.ConvertTo(dst, Format));
             return this;
         }
 
@@ -183,7 +183,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat((IFormat)Converter.ConvertWith<TConv>(Format));
+            ChangeFormat((IFormat)ConvertFormat.ConvertWith<TConv>(Format));
             return this;
         }
 
@@ -206,7 +206,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            var dst = Converter.ConvertWith<TConv, TParam>(param, Format);
+            var dst = ConvertFormat.ConvertWith<TConv, TParam>(param, Format);
             ChangeFormat((IFormat)dst);
             return this;
         }
@@ -229,7 +229,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat((IFormat)Converter.ConvertWith(converterType, Format));
+            ChangeFormat((IFormat)ConvertFormat.ConvertWith(converterType, Format));
             return this;
         }
 

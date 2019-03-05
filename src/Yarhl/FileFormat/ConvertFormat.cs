@@ -1,4 +1,4 @@
-// Converter.cs
+// ConvertFormat.cs
 //
 // Copyright (c) 2019 SceneGate Team
 //
@@ -22,7 +22,7 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Convert formats with converters.
     /// </summary>
-    public static class Converter
+    public static class ConvertFormat
     {
         /// <summary>
         /// Converts the format to the specified type.

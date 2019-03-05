@@ -1,4 +1,4 @@
-﻿// ConverterTests.cs
+﻿// ConvertFormatTests.cs
 //
 // Copyright (c) 2019 SceneGate Team
 //
@@ -23,19 +23,19 @@ namespace Yarhl.UnitTests.FileFormat
     using Yarhl.FileFormat;
 
     [TestFixture]
-    public class ConverterTests
+    public class ConvertFormatTests
     {
         [Test]
         public void ConvertToGeneric()
         {
-            Assert.AreEqual(Converter.ConvertTo<int>("3"), 3);
+            Assert.AreEqual(ConvertFormat.ConvertTo<int>("3"), 3);
         }
 
         [Test]
         public void ConvertToWithType()
         {
-            Assert.AreEqual(Converter.ConvertTo(typeof(int), "3"), 3);
-            Assert.AreEqual(Converter.ConvertTo(typeof(string), 3), "3");
+            Assert.AreEqual(ConvertFormat.ConvertTo(typeof(int), "3"), 3);
+            Assert.AreEqual(ConvertFormat.ConvertTo(typeof(string), 3), "3");
         }
 
         [Test]
@@ -43,7 +43,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             Type dstType = null;
             Assert.That(
-                () => Converter.ConvertTo(dstType, "3"),
+                () => ConvertFormat.ConvertTo(dstType, "3"),
                 Throws.ArgumentNullException);
         }
 
@@ -51,10 +51,10 @@ namespace Yarhl.UnitTests.FileFormat
         public void ConvertToThrowsIfSrcIsNull()
         {
             Assert.That(
-                () => Converter.ConvertTo<int>(null),
+                () => ConvertFormat.ConvertTo<int>(null),
                 Throws.ArgumentNullException);
             Assert.That(
-                () => Converter.ConvertTo(typeof(int), null),
+                () => ConvertFormat.ConvertTo(typeof(int), null),
                 Throws.ArgumentNullException);
         }
 
@@ -63,7 +63,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                Converter.ConvertTo(typeof(short), test));
+                ConvertFormat.ConvertTo(typeof(short), test));
             Assert.AreEqual(
                 "Multiple converters for: " +
                 $"{typeof(StringFormatTest).FullName} -> {typeof(short).FullName}",
@@ -74,7 +74,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void ConvertToThrowsIfNoConverter()
         {
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                Converter.ConvertTo(typeof(short), (short)3));
+                ConvertFormat.ConvertTo(typeof(short), (short)3));
             Assert.AreEqual(
                 "Cannot find converter for: " +
                 $"{typeof(short).FullName} -> {typeof(short).FullName}",
@@ -86,7 +86,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var test = new StringFormatTest { Value = "3" };
             var ex = Assert.Throws<Exception>(() =>
-                Converter.ConvertTo(typeof(ushort), test));
+                ConvertFormat.ConvertTo(typeof(ushort), test));
             Assert.AreEqual(
                 "Exception of type 'System.Exception' was thrown.",
                 ex.Message);
@@ -106,7 +106,7 @@ namespace Yarhl.UnitTests.FileFormat
             // So we need to hide those extensions.
             var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                Converter.ConvertTo(typeof(long), test));
+                ConvertFormat.ConvertTo(typeof(long), test));
             Assert.AreEqual(
                 "Cannot find converter for: " +
                 $"{typeof(StringFormatTest).FullName} -> {typeof(long).FullName}",
@@ -115,7 +115,7 @@ namespace Yarhl.UnitTests.FileFormat
             // But we can use the ConvertWith
             var converter = new FormatTestNoConstructor("3");
             Assert.AreEqual(
-                Converter.ConvertWith(converter, new StringFormatTest("1")),
+                ConvertFormat.ConvertWith(converter, new StringFormatTest("1")),
                 0);
         }
 
@@ -127,7 +127,7 @@ namespace Yarhl.UnitTests.FileFormat
             // So we need to hide those extensions.
             var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
-                Converter.ConvertTo(typeof(ulong), test));
+                ConvertFormat.ConvertTo(typeof(ulong), test));
             Assert.AreEqual(
                 "Cannot find converter for: " +
                 $"{typeof(StringFormatTest).FullName} -> {typeof(ulong).FullName}",
@@ -136,7 +136,7 @@ namespace Yarhl.UnitTests.FileFormat
             // But we can use the ConvertWith of classes with Factory pattern.
             var converter = FormatTestPrivateConstructor.Create();
             Assert.AreEqual(
-                Converter.ConvertWith(converter, new StringFormatTest("1")),
+                ConvertFormat.ConvertWith(converter, new StringFormatTest("1")),
                 0);
         }
 
@@ -147,11 +147,11 @@ namespace Yarhl.UnitTests.FileFormat
             // The converter will generate a derived type and will cast-down
             // to base.
             Base val = null;
-            Assert.DoesNotThrow(() => val = Converter.ConvertTo<Base>((ushort)3));
+            Assert.DoesNotThrow(() => val = ConvertFormat.ConvertTo<Base>((ushort)3));
             Assert.IsInstanceOf<Derived>(val);
             Assert.AreEqual(3, val.X);
 
-            Assert.DoesNotThrow(() => val = Converter.ConvertTo<Base>((int)3));
+            Assert.DoesNotThrow(() => val = ConvertFormat.ConvertTo<Base>((int)3));
             Assert.IsInstanceOf<Base>(val);
             Assert.AreEqual(5, val.X);
         }
@@ -162,7 +162,7 @@ namespace Yarhl.UnitTests.FileFormat
             // We cannot do the inverse, from base type use the derived converter
             Base val = new Base { X = 3 };
             Assert.Throws<InvalidOperationException>(
-                () => Converter.ConvertTo<ushort>(val));
+                () => ConvertFormat.ConvertTo<ushort>(val));
         }
 
         [Test]
@@ -170,12 +170,12 @@ namespace Yarhl.UnitTests.FileFormat
         {
             // Just to validate converter, derived with derived converter
             Derived derived = null;
-            Assert.DoesNotThrow(() => derived = Converter.ConvertTo<Derived>((ushort)4));
+            Assert.DoesNotThrow(() => derived = ConvertFormat.ConvertTo<Derived>((ushort)4));
             Assert.AreEqual(5, derived.Y);
             Assert.AreEqual(4, derived.X);
 
             ushort conv = 0;
-            Assert.DoesNotThrow(() => conv = Converter.ConvertTo<ushort>(derived));
+            Assert.DoesNotThrow(() => conv = ConvertFormat.ConvertTo<ushort>(derived));
             Assert.AreEqual(5, conv);
         }
 
@@ -183,7 +183,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void ConvertToDerivedWithBaseConverterThrows()
         {
             Assert.Throws<InvalidOperationException>(
-                () => Converter.ConvertTo<Derived>(5));
+                () => ConvertFormat.ConvertTo<Derived>(5));
         }
 
         [Test]
@@ -191,7 +191,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var format = new Derived { Y = 11, X = 10 };
             int conv = 0;
-            Assert.DoesNotThrow(() => conv = Converter.ConvertTo<int>(format));
+            Assert.DoesNotThrow(() => conv = ConvertFormat.ConvertTo<int>(format));
             Assert.AreEqual(15, conv);
         }
 
@@ -200,7 +200,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var format = new StringFormatTest("3");
             Assert.That(
-                Converter.ConvertWith(typeof(FormatTestDuplicatedConverter2), format),
+                ConvertFormat.ConvertWith(typeof(FormatTestDuplicatedConverter2), format),
                 Is.EqualTo(3));
         }
 
@@ -210,7 +210,7 @@ namespace Yarhl.UnitTests.FileFormat
             var format = new StringFormatTest("3");
             Type type = null;
             Assert.That(
-                () => Converter.ConvertWith(type, format),
+                () => ConvertFormat.ConvertWith(type, format),
                 Throws.ArgumentNullException);
         }
 
@@ -219,7 +219,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var format = new StringFormatTest("3");
             Assert.That(
-                () => Converter.ConvertWith(typeof(HiddenConverter), format),
+                () => ConvertFormat.ConvertWith(typeof(HiddenConverter), format),
                 Throws.InvalidOperationException.With.Message.EqualTo(
                     $"Cannot find converter {typeof(HiddenConverter).FullName}"));
         }
@@ -229,7 +229,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var format = new StringFormatTest("3");
             Assert.That(
-                () => Converter.ConvertWith(typeof(DateTime), format),
+                () => ConvertFormat.ConvertWith(typeof(DateTime), format),
                 Throws.InvalidOperationException.With.Message.EqualTo(
                     $"Cannot find converter {typeof(DateTime).FullName}"));
         }
@@ -239,7 +239,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var format = new StringFormatTest("3");
             Assert.That(
-                Converter.ConvertWith<FormatTestDuplicatedConverter1>(format),
+                ConvertFormat.ConvertWith<FormatTestDuplicatedConverter1>(format),
                 Is.EqualTo(3));
         }
 
@@ -248,7 +248,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
             var format = new StringFormatTest("3");
             Assert.That(
-                Converter.ConvertWith<HiddenConverter, int>(4, format),
+                ConvertFormat.ConvertWith<HiddenConverter, int>(4, format),
                 Is.EqualTo(7));
         }
 
@@ -258,7 +258,7 @@ namespace Yarhl.UnitTests.FileFormat
             var format = new StringFormatTest("3");
             var converter = new HiddenConverter();
             Assert.That(
-                Converter.ConvertWith(converter, format),
+                ConvertFormat.ConvertWith(converter, format),
                 Is.EqualTo(3));
         }
 
@@ -268,15 +268,15 @@ namespace Yarhl.UnitTests.FileFormat
             StringFormatTest format = null;
 
             Assert.That(
-                () => Converter.ConvertWith<HiddenConverter>(format),
+                () => ConvertFormat.ConvertWith<HiddenConverter>(format),
                 Throws.ArgumentNullException);
             Assert.That(
-                () => Converter.ConvertWith<HiddenConverter, int>(4, format),
+                () => ConvertFormat.ConvertWith<HiddenConverter, int>(4, format),
                 Throws.ArgumentNullException);
 
             var converter = new HiddenConverter();
             Assert.That(
-                () => Converter.ConvertWith(converter, format),
+                () => ConvertFormat.ConvertWith(converter, format),
                 Throws.ArgumentNullException);
         }
 
@@ -286,7 +286,7 @@ namespace Yarhl.UnitTests.FileFormat
             var format = new StringFormatTest("3");
             HiddenConverter converter = null;
             Assert.That(
-                () => Converter.ConvertWith(converter, format),
+                () => ConvertFormat.ConvertWith(converter, format),
                 Throws.ArgumentNullException);
         }
 
@@ -297,15 +297,15 @@ namespace Yarhl.UnitTests.FileFormat
             string msg = "Converter doesn't implement IConverter<,>";
 
             Assert.That(
-                () => Converter.ConvertWith<ConverterWithoutGenericInterface>(format),
+                () => ConvertFormat.ConvertWith<ConverterWithoutGenericInterface>(format),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
             Assert.That(
-                () => Converter.ConvertWith<ConverterWithoutGenericInterface, int>(4, format),
+                () => ConvertFormat.ConvertWith<ConverterWithoutGenericInterface, int>(4, format),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
 
             var converter = new ConverterWithoutGenericInterface();
             Assert.That(
-                () => Converter.ConvertWith(converter, format),
+                () => ConvertFormat.ConvertWith(converter, format),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
         }
 
@@ -316,15 +316,15 @@ namespace Yarhl.UnitTests.FileFormat
             string msg = "Converter cannot convert from/to the type";
 
             Assert.That(
-                () => Converter.ConvertWith<SingleOuterConverterExample>(format),
+                () => ConvertFormat.ConvertWith<SingleOuterConverterExample>(format),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
             Assert.That(
-                () => Converter.ConvertWith<ConverterAndOtherInterface, int>(4, format),
+                () => ConvertFormat.ConvertWith<ConverterAndOtherInterface, int>(4, format),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
 
             var converter = new SingleOuterConverterExample();
             Assert.That(
-                () => Converter.ConvertWith(converter, format),
+                () => ConvertFormat.ConvertWith(converter, format),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
         }
 
