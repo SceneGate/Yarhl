@@ -11,7 +11,7 @@ Mac OS X.
 | ----- | ----- | ----- |
 | **Build & Test** | [![Travis Build Status](https://travis-ci.org/SceneGate/Yarhl.svg?branch=master)](https://travis-ci.org/SceneGate/Yarhl) [![Travis Build history](https://buildstats.info/travisci/chart/SceneGate/Yarhl)](https://travis-ci.org/SceneGate/Yarhl/builds) | [![AppVeyor Build status](https://ci.appveyor.com/api/projects/status/hjgmge090s7962q6/branch/master?svg=true)](https://ci.appveyor.com/project/pleonex/libgame/branch/master) [![AppVeyor Build history](https://buildstats.info/appveyor/chart/pleonex/libgame)](https://ci.appveyor.com/project/pleonex/libgame/history) |
 
-| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![Nuget](https://img.shields.io/nuget/dt/Yarhl.svg)](https://github.com/SceneGate/yarhl) |
+| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![Nuget prerelease](https://img.shields.io/nuget/vpre/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
 | ----- | ------ |
 | **Quality report** | [![Sonar Gate](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=alert_status)](https://sonarcloud.io/dashboard?id=yarhl) |
 | **Coverage** | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=yarhl&metric=coverage)](https://sonarcloud.io/dashboard?id=yarhl) |
@@ -22,6 +22,13 @@ Mac OS X.
 
 Check our on-line API overview: [Mastering Yarhl](https://scenegate.github.io/Yarhl/articles/Mastering-Yarhl.html)
 and the API documentation [here](https://scenegate.github.io/Yarhl/).
+
+## Install
+
+Yarhl is available on NuGet:
+
+* [Yarhl](https://www.nuget.org/packages/Yarhl)
+* [Yarhl.Media](https://www.nuget.org/packages/Yarhl.Media)
 
 ## Build
 
