@@ -7,8 +7,8 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 steps:
-- powershell: build.ps1 -target Build
+- powershell: .\build.ps1 -target Build
   displayName: Build libraries
 
-- powershell: build.ps1 -target Run-Unit-Tests
+- powershell: .\build.ps1 -target Run-Unit-Tests
   displayName: Run unit tests
