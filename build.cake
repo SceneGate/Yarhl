@@ -362,13 +362,6 @@ Task("Default")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-AltCover");
 
-Task("Travis")
-    .IsDependentOn("Build")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-AltCover")
-    .IsDependentOn("Run-Linter-Gendarme")
-    .IsDependentOn("Build-Doc");  // Try to build the doc but don't deploy
-
 Task("AppVeyor")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
