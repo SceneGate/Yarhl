@@ -93,10 +93,7 @@ Task("Run-Unit-Tests")
     .Does(() =>
 {
     // NUnit3 to test libraries with .NET Framework / Mono
-    var settings = new NUnit3Settings {
-        NoResults = true,
-    };
-
+    var settings = new NUnit3Settings();
     if (tests != string.Empty) {
         settings.Test = tests;
     }

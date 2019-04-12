@@ -9,6 +9,12 @@ steps:
 - script: ./build.sh --target=Run-Unit-Tests --verbosity=diagnostic --exclusive
   displayName: Run unit tests
 
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'NUnit'
+    testResultsFiles: 'TestResult.xml'
+    testRunTitle: Yarhl Tests
+
 - script: ./build.sh --target=Run-AltCover --verbosity=diagnostic --exclusive
   displayName: Analyze code coverage
 
