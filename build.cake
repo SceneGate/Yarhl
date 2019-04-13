@@ -32,6 +32,7 @@
 // SonarQube quality checks
 #addin nuget:?package=Cake.Sonar&version=1.1.18
 #tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1
+#addin nuget:?package=Cake.Git&version=0.19.0
 
 // Documentation
 #addin nuget:?package=Cake.DocFx&version=0.11.0
@@ -41,6 +42,10 @@ var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
 var warningsAsError = Argument("warnaserror", true);
+
+var pullRequestNumber = Argument("pr-number", string.Empty);
+var pullRequestBase = Argument("pr-base", string.Empty);
+var pullRequestBranch = Argument("pr-branch", string.Empty);
 
 string netVersion = "472";
 string netcoreVersion = "2.1";
@@ -177,17 +182,15 @@ Task("Run-AltCover")
         new ReportGeneratorSettings {
             ReportTypes = new[] {
                 ReportGeneratorReportType.Html,
-                ReportGeneratorReportType.XmlSummary } });
+                ReportGeneratorReportType.Cobertura } });
 
     // Get final result
-    var xml = System.Xml.Linq.XDocument.Load("coverage_report/Summary.xml");
-    var xmlSummary = xml.Root.Element("Summary");
-    var covered = xmlSummary.Element("Coveredlines").Value;
-    var coverable = xmlSummary.Element("Coverablelines").Value;
-    if (covered == coverable) {
+    var xml = System.Xml.Linq.XDocument.Load("coverage_report/Cobertura.xml");
+    var lineRate = xml.Root.Attribute("line-rate").Value;
+    if (lineRate == "1") {
         Information("Full coverage!");
     } else {
-        ReportWarning($"Missing coverage: {covered} of {coverable}");
+        ReportWarning($"Missing coverage: {lineRate}");
     }
 });
 
@@ -226,19 +229,35 @@ Task("Run-Sonar")
     .Does(() =>
 {
     var sonarToken = EnvironmentVariable("SONAR_TOKEN");
-    SonarBegin(new SonarBeginSettings{
+    var sonarSettings = new SonarBeginSettings {
         Url = "https://sonarqube.com",
         Key = "yarhl",
         Login = sonarToken,
         Organization = "pleonex-github",
-        Verbose = true
-     });
+        Verbose = true,
+        Branch = GitBranchCurrent(".").FriendlyName,
+     };
+
+    bool pullRequestInfo = !string.IsNullOrEmpty(pullRequestNumber)
+        && !string.IsNullOrEmpty(pullRequestBase)
+        && !string.IsNullOrEmpty(pullRequestBranch);
+     if (pullRequestInfo) {
+         sonarSettings.PullRequestProvider = "github";
+         sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
+         sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
+         sonarSettings.PullRequestBase = pullRequestBase;
+         sonarSettings.PullRequestBranch = pullRequestBranch;
+     } else {
+         Information("No pull request information provided");
+     }
+
+    SonarBegin(sonarSettings);
 
     MSBuild("src/Yarhl.sln", configurator =>
-            configurator.SetConfiguration(configuration)
-                .WithTarget("Rebuild"));
+        configurator.SetConfiguration(configuration)
+            .WithTarget("Rebuild"));
 
-     SonarEnd(new SonarEndSettings{
+    SonarEnd(new SonarEndSettings {
         Login = sonarToken
      });
 });
@@ -358,11 +377,6 @@ Task("Default")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-AltCover");
-
-Task("AppVeyor")
-    .IsDependentOn("Build")
-    .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-Sonar");
 
 RunTarget(target);
 
