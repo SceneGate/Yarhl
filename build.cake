@@ -235,13 +235,13 @@ Task("Run-Sonar")
         Login = sonarToken,
         Organization = "pleonex-github",
         Verbose = true,
-        Branch = GitBranchCurrent(".").FriendlyName,
      };
 
     bool pullRequestInfo = !string.IsNullOrEmpty(pullRequestNumber)
         && !string.IsNullOrEmpty(pullRequestBase)
         && !string.IsNullOrEmpty(pullRequestBranch);
      if (pullRequestInfo) {
+        Information("Pull request information available");
          sonarSettings.PullRequestProvider = "github";
          sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
          sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
@@ -249,6 +249,7 @@ Task("Run-Sonar")
          sonarSettings.PullRequestBranch = pullRequestBranch;
      } else {
          Information("No pull request information provided");
+         sonarSettings.Branch = GitBranchCurrent(".").FriendlyName;
      }
 
     SonarBegin(sonarSettings);

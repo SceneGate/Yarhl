@@ -16,22 +16,32 @@ trigger:
   batch: true
 
 steps:
+# Prerequisites
+- script: |
+    SYMLINK=5_20_1
+    MONOPREFIX=/Library/Frameworks/Mono.framework/Versions/$SYMLINK
+    echo "##vso[task.setvariable variable=DYLD_FALLBACK_LIBRARY_PATH;]$MONOPREFIX/lib:/lib:/usr/lib:$DYLD_LIBRARY_FALLBACK_PATH"
+    echo "##vso[task.setvariable variable=PKG_CONFIG_PATH;]$MONOPREFIX/lib/pkgconfig:$MONOPREFIX/share/pkgconfig:$PKG_CONFIG_PATH"
+    echo "##vso[task.setvariable variable=PATH;]$MONOPREFIX/bin:$PATH"
+  displayName: '[MacOS] Enable Mono'
+  condition: eq(variables['Agent.OS'], 'Darwin')
+
 # Build
 - script: ./build.sh --verbosity=diagnostic --exclusive --target=Build
-  displayName: Build
+  displayName: '[Unix] Build'
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
 
 - powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Build
-  displayName: Build
+  displayName: '[Windows] Build'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 # Run unit tests
 - script: ./build.sh --verbosity=diagnostic --exclusive --target=Run-Unit-Tests
-  displayName: Run unit tests
+  displayName: '[Unix] Run unit tests'
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
 
 - powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Run-Unit-Tests
-  displayName: Run unit tests
+  displayName: '[Windows] Run unit tests'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 - task: PublishTestResults@2
@@ -43,11 +53,11 @@ steps:
 
 # Analyze code coverage
 - script: ./build.sh --verbosity=diagnostic --exclusive --target=Run-AltCover
-  displayName: Analyze code coverage
+  displayName: '[Unix] Analyze code coverage'
   condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
 
 - powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Run-AltCover
-  displayName: Analyze code coverage
+  displayName: '[Windows] Analyze code coverage'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 - task: PublishCodeCoverageResults@1
