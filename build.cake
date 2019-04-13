@@ -48,7 +48,7 @@ var pullRequestBase = Argument("pr-base", string.Empty);
 var pullRequestBranch = Argument("pr-branch", string.Empty);
 
 string netVersion = "472";
-string netcoreVersion = "2.1";
+string netcoreVersion = "2.2";
 string netstandardVersion = "2.0";
 
 string netBinDir = $"bin/{configuration}/net{netVersion}";

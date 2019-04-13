@@ -15,7 +15,7 @@
     <PackageProjectUrl>https://scenegate.github.io/Yarhl/</PackageProjectUrl>
     <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
 
-    <TargetFrameworks>net472;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net472;netcoreapp2.2</TargetFrameworks>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
     <CodeAnalysisRuleSet>StyleCop.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->

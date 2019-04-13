@@ -6,7 +6,7 @@ strategy:
     mac:
       imageName: 'macos-10.14'
     windows:
-      imageName: 'windows-2019'
+      imageName: 'vs2017-win2016'
 
 pool:
   vmImage: $(imageName)
@@ -55,7 +55,7 @@ steps:
   inputs:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: coverage_report/Cobertura.xml
-    reportDirectory: coverage_report
+    reportDirectory: $(System.DefaultWorkingDirectory)/coverage_report
     failIfCoverageEmpty: true
 
 # Run Gendarme for QA
