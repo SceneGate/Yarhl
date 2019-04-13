@@ -20,23 +20,23 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // NUnit tests
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.10.0
 
 // Gendarme: decompress zip
-#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.1
+#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.2
 
 // Test coverage
-#addin nuget:?package=altcover.api&version=5.0.663
-#tool nuget:?package=ReportGenerator&version=4.0.5
+#addin nuget:?package=altcover.api&version=5.2.667
+#tool nuget:?package=ReportGenerator&version=4.1.2
 
 // SonarQube quality checks
 #addin nuget:?package=Cake.Sonar&version=1.1.18
-#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1
+#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
 #addin nuget:?package=Cake.Git&version=0.19.0
 
 // Documentation
-#addin nuget:?package=Cake.DocFx&version=0.11.0
-#tool nuget:?package=docfx.console&version=2.40.7
+#addin nuget:?package=Cake.DocFx&version=0.12.0
+#tool nuget:?package=docfx.console&version=2.41.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -181,8 +181,9 @@ Task("Run-AltCover")
         "coverage_report",
         new ReportGeneratorSettings {
             ReportTypes = new[] {
-                ReportGeneratorReportType.Html,
-                ReportGeneratorReportType.Cobertura } });
+                ReportGeneratorReportType.Cobertura,
+                ReportGeneratorReportType.HtmlInline_AzurePipelines,
+                ReportGeneratorReportType.SonarQube } });
 
     // Get final result
     var xml = System.Xml.Linq.XDocument.Load("coverage_report/Cobertura.xml");

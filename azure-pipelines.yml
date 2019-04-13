@@ -60,7 +60,7 @@ steps:
   inputs:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: coverage_report/Cobertura.xml
-    reportDirectory: $(System.DefaultWorkingDirectory)/coverage_report
+    reportDirectory: coverage_report/
     failIfCoverageEmpty: true
 
 # Publish artifacts
@@ -69,3 +69,4 @@ steps:
   inputs:
     artifactName: 'Yarhl'
     targetPath: artifacts/
+  condition: eq(variables['Agent.OS'], 'Linux')
