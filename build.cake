@@ -379,6 +379,25 @@ Task("Default")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-AltCover");
 
+Task("CI-Linux")
+    .IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Linter-Gendarme")
+    .IsDependentOn("Run-AltCover")
+    .IsDependentOn("Build-Doc")
+    .IsDependentOn("Pack");
+
+Task("CI-MacOS")
+    .IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-AltCover");
+
+Task("CI-Windows")
+    .IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-AltCover")
+    .IsDependentOn("Run-Sonar");
+
 RunTarget(target);
 
 

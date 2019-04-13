@@ -3,8 +3,11 @@ strategy:
   matrix:
     linux:
       imageName: 'ubuntu-16.04'
-    mac:
-      imageName: 'macos-10.14'
+    # Disabled MacOS build until Microsoft updates the mono version
+    # The current mono version on the MacOS hosts doesn't support .NET 4.7.2
+    # https://github.com/Microsoft/azure-pipelines-image-generation/issues/654
+    # mac:
+    #   imageName: 'macos-10.14'
     windows:
       imageName: 'vs2017-win2016'
 
@@ -14,6 +17,9 @@ pool:
 # Avoid building twice on PR (branch push + PR)
 trigger:
   batch: true
+  branches:
+    exclude:
+    - gh-pages
 
 steps:
 # Prerequisites
@@ -23,43 +29,31 @@ steps:
     echo "##vso[task.setvariable variable=DYLD_FALLBACK_LIBRARY_PATH;]$MONOPREFIX/lib:/lib:/usr/lib:$DYLD_LIBRARY_FALLBACK_PATH"
     echo "##vso[task.setvariable variable=PKG_CONFIG_PATH;]$MONOPREFIX/lib/pkgconfig:$MONOPREFIX/share/pkgconfig:$PKG_CONFIG_PATH"
     echo "##vso[task.setvariable variable=PATH;]$MONOPREFIX/bin:$PATH"
-    mono --version
   displayName: '[MacOS] Enable Mono'
   condition: eq(variables['Agent.OS'], 'Darwin')
 
-# Build
-- script: echo $PATH && ./build.sh --verbosity=diagnostic --exclusive --target=Build
-  displayName: '[Unix] Build'
-  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
+# Run Cake
+- script: ./build.sh --verbosity=diagnostic --target=CI-Linux
+  displayName: '[Linux] Build, test and validate'
+  condition: eq(variables['Agent.OS'], 'Linux')
 
-- powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Build
-  displayName: '[Windows] Build'
+- script: ./build.sh --verbosity=diagnostic --target=CI-MacOS
+  displayName: '[MacOS] Build, test and validate'
+  condition: eq(variables['Agent.OS'], 'Darwin')
+
+- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows --pr-number=$(System.PullRequest.PullRequestNumber) --pr-base=$(System.PullRequest.SourceBranch) --pr-branch=$(System.PullRequest.TargetBranch)
+  displayName: '[Windows] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
+  env:
+    SONAR_TOKEN: $(SONAR_TOKEN)
 
-# Run unit tests
-- script: ./build.sh --verbosity=diagnostic --exclusive --target=Run-Unit-Tests
-  displayName: '[Unix] Run unit tests'
-  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
-
-- powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Run-Unit-Tests
-  displayName: '[Windows] Run unit tests'
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-
+# Integrate results in Azure DevOps
 - task: PublishTestResults@2
   displayName: Publish test results
   inputs:
     testResultsFormat: 'NUnit'
     testResultsFiles: 'TestResult.xml'
     testRunTitle: Yarhl Tests
-
-# Analyze code coverage
-- script: ./build.sh --verbosity=diagnostic --exclusive --target=Run-AltCover
-  displayName: '[Unix] Analyze code coverage'
-  condition: or(eq(variables['Agent.OS'], 'Linux'), eq(variables['Agent.OS'], 'Darwin'))
-
-- powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Run-AltCover
-  displayName: '[Windows] Analyze code coverage'
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
 
 - task: PublishCodeCoverageResults@1
   displayName: Publish code coverage results
@@ -69,17 +63,9 @@ steps:
     reportDirectory: $(System.DefaultWorkingDirectory)/coverage_report
     failIfCoverageEmpty: true
 
-# Run Gendarme for QA
-- script: ./build.sh --verbosity=diagnostic --exclusive --target=Run-Linter-Gendarme
-  displayName: Analyze code quality with Gendarme
-  condition: eq(variables['Agent.OS'], 'Linux')
-
-# Run SonarQube for QA
-- powershell: .\build.ps1 --verbosity=diagnostic --exclusive --target=Run-Sonar --pr-number=$(System.PullRequest.PullRequestNumber) --pr-base=$(System.PullRequest.SourceBranch) --pr-branch=$(System.PullRequest.TargetBranch)
-  displayName: Analyze code quality with SonarQube
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-
-# Build the documentation
-- script: ./build.sh --verbosity=diagnostic --exclusive --target=Build-Doc
-  displayName: Build documentation
-  condition: eq(variables['Agent.OS'], 'Linux')
+# Publish artifacts
+- task: PublishPipelineArtifact@0
+  displayName: '[Linux] Publish artifacts'
+  inputs:
+    artifactName: 'Yarhl'
+    targetPath: artifacts/
