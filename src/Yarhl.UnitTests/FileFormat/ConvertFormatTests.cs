@@ -18,7 +18,6 @@ namespace Yarhl.UnitTests.FileFormat
 {
     using System;
     using System.Composition;
-    using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 

@@ -20,30 +20,35 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // NUnit tests
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.9.0
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.10.0
 
 // Gendarme: decompress zip
-#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.1
+#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.2
 
 // Test coverage
-#addin nuget:?package=altcover.api&version=5.0.663
-#tool nuget:?package=ReportGenerator&version=4.0.5
+#addin nuget:?package=altcover.api&version=5.2.667
+#tool nuget:?package=ReportGenerator&version=4.1.2
 
 // SonarQube quality checks
 #addin nuget:?package=Cake.Sonar&version=1.1.18
-#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.3.1
+#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
+#addin nuget:?package=Cake.Git&version=0.19.0
 
 // Documentation
-#addin nuget:?package=Cake.DocFx&version=0.11.0
-#tool nuget:?package=docfx.console&version=2.40.7
+#addin nuget:?package=Cake.DocFx&version=0.12.0
+#tool nuget:?package=docfx.console&version=2.41.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
 var warningsAsError = Argument("warnaserror", true);
 
+var pullRequestNumber = Argument("pr-number", string.Empty);
+var pullRequestBase = Argument("pr-base", string.Empty);
+var pullRequestBranch = Argument("pr-branch", string.Empty);
+
 string netVersion = "472";
-string netcoreVersion = "2.1";
+string netcoreVersion = "2.2";
 string netstandardVersion = "2.0";
 
 string netBinDir = $"bin/{configuration}/net{netVersion}";
@@ -56,7 +61,11 @@ Task("Clean")
     MSBuild("src/Yarhl.sln", configurator => configurator
         .WithTarget("Clean")
         .SetVerbosity(Verbosity.Minimal)
-        .SetConfiguration(configuration));
+        .SetConfiguration("Debug"));
+    MSBuild("src/Yarhl.sln", configurator => configurator
+        .WithTarget("Clean")
+        .SetVerbosity(Verbosity.Minimal)
+        .SetConfiguration("Release"));
     if (DirectoryExists("artifacts")) {
         DeleteDirectory(
             "artifacts",
@@ -93,10 +102,7 @@ Task("Run-Unit-Tests")
     .Does(() =>
 {
     // NUnit3 to test libraries with .NET Framework / Mono
-    var settings = new NUnit3Settings {
-        NoResults = true,
-    };
-
+    var settings = new NUnit3Settings();
     if (tests != string.Empty) {
         settings.Test = tests;
     }
@@ -179,18 +185,17 @@ Task("Run-AltCover")
         "coverage_report",
         new ReportGeneratorSettings {
             ReportTypes = new[] {
-                ReportGeneratorReportType.Html,
-                ReportGeneratorReportType.XmlSummary } });
+                ReportGeneratorReportType.Cobertura,
+                ReportGeneratorReportType.HtmlInline_AzurePipelines,
+                ReportGeneratorReportType.SonarQube } });
 
     // Get final result
-    var xml = System.Xml.Linq.XDocument.Load("coverage_report/Summary.xml");
-    var xmlSummary = xml.Root.Element("Summary");
-    var covered = xmlSummary.Element("Coveredlines").Value;
-    var coverable = xmlSummary.Element("Coverablelines").Value;
-    if (covered == coverable) {
+    var xml = System.Xml.Linq.XDocument.Load("coverage_report/Cobertura.xml");
+    var lineRate = xml.Root.Attribute("line-rate").Value;
+    if (lineRate == "1") {
         Information("Full coverage!");
     } else {
-        ReportWarning($"Missing coverage: {covered} of {coverable}");
+        ReportWarning($"Missing coverage: {lineRate}");
     }
 });
 
@@ -229,19 +234,36 @@ Task("Run-Sonar")
     .Does(() =>
 {
     var sonarToken = EnvironmentVariable("SONAR_TOKEN");
-    SonarBegin(new SonarBeginSettings{
+    var sonarSettings = new SonarBeginSettings {
         Url = "https://sonarqube.com",
         Key = "yarhl",
         Login = sonarToken,
         Organization = "pleonex-github",
-        Verbose = true
-     });
+        Verbose = true,
+     };
+
+    bool pullRequestInfo = !string.IsNullOrEmpty(pullRequestNumber)
+        && !string.IsNullOrEmpty(pullRequestBase)
+        && !string.IsNullOrEmpty(pullRequestBranch);
+     if (pullRequestInfo) {
+        Information("Pull request information available");
+         sonarSettings.PullRequestProvider = "github";
+         sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
+         sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
+         sonarSettings.PullRequestBase = pullRequestBase;
+         sonarSettings.PullRequestBranch = pullRequestBranch;
+     } else {
+         Information("No pull request information provided");
+         sonarSettings.Branch = GitBranchCurrent(".").FriendlyName;
+     }
+
+    SonarBegin(sonarSettings);
 
     MSBuild("src/Yarhl.sln", configurator =>
-            configurator.SetConfiguration(configuration)
-                .WithTarget("Rebuild"));
+        configurator.SetConfiguration(configuration)
+            .WithTarget("Rebuild"));
 
-     SonarEnd(new SonarEndSettings{
+    SonarEnd(new SonarEndSettings {
         Login = sonarToken
      });
 });
@@ -327,11 +349,17 @@ Task("Deploy-Doc")
 
 Task("Pack")
     .Description("Create the NuGet package")
-    .IsDependentOn("Build")
     .Does(() =>
 {
+    var msbuildConfig = new MSBuildSettings {
+        Verbosity = Verbosity.Minimal,
+        Configuration = "Release",
+        MaxCpuCount = 0,
+    };
+    MSBuild("src/Yarhl.sln", msbuildConfig);
+
     var settings = new DotNetCorePackSettings {
-        Configuration = configuration,
+        Configuration = "Release",
         OutputDirectory = "artifacts/",
         IncludeSymbols = true,
         MSBuildSettings = new DotNetCoreMSBuildSettings()
@@ -346,10 +374,6 @@ Task("Deploy")
     .IsDependentOn("Pack")
     .Does(() =>
 {
-    if (configuration == "Debug") {
-        throw new Exception("Cannot deploy Debug configuration");
-    }
-
     var settings = new DotNetCoreNuGetPushSettings {
         Source = "https://api.nuget.org/v3/index.json",
         ApiKey = Environment.GetEnvironmentVariable("NUGET_KEY"),
@@ -362,16 +386,23 @@ Task("Default")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-AltCover");
 
-Task("Travis")
+Task("CI-Linux")
+    .IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-Linter-Gendarme")
+    .IsDependentOn("Run-AltCover")
+    .IsDependentOn("Build-Doc")
+    .IsDependentOn("Pack");
+
+Task("CI-MacOS")
+    .IsDependentOn("Build")
+    .IsDependentOn("Run-Unit-Tests")
+    .IsDependentOn("Run-AltCover");
+
+Task("CI-Windows")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-AltCover")
-    .IsDependentOn("Run-Linter-Gendarme")
-    .IsDependentOn("Build-Doc");  // Try to build the doc but don't deploy
-
-Task("AppVeyor")
-    .IsDependentOn("Build")
-    .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-Sonar");
 
 RunTarget(target);
