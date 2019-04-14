@@ -345,11 +345,17 @@ Task("Deploy-Doc")
 
 Task("Pack")
     .Description("Create the NuGet package")
-    .IsDependentOn("Build")
     .Does(() =>
 {
+    var msbuildConfig = new MSBuildSettings {
+        Verbosity = Verbosity.Minimal,
+        Configuration = "Release",
+        MaxCpuCount = 0,
+    };
+    MSBuild("src/Yarhl.sln", msbuildConfig);
+
     var settings = new DotNetCorePackSettings {
-        Configuration = configuration,
+        Configuration = "Release",
         OutputDirectory = "artifacts/",
         IncludeSymbols = true,
         MSBuildSettings = new DotNetCoreMSBuildSettings()
@@ -364,10 +370,6 @@ Task("Deploy")
     .IsDependentOn("Pack")
     .Does(() =>
 {
-    if (configuration == "Debug") {
-        throw new Exception("Cannot deploy Debug configuration");
-    }
-
     var settings = new DotNetCoreNuGetPushSettings {
         Source = "https://api.nuget.org/v3/index.json",
         ApiKey = Environment.GetEnvironmentVariable("NUGET_KEY"),

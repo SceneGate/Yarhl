@@ -58,15 +58,22 @@ steps:
 - task: PublishCodeCoverageResults@1
   displayName: Publish code coverage results
   inputs:
-    codeCoverageTool: 'cobertura'
-    summaryFileLocation: coverage_report/Cobertura.xml
-    reportDirectory: coverage_report/
+    codeCoverageTool: Cobertura
+    summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage_report/Cobertura.xml
+    reportDirectory: $(System.DefaultWorkingDirectory)/coverage_report
     failIfCoverageEmpty: true
 
 # Publish artifacts
 - task: PublishPipelineArtifact@0
-  displayName: '[Linux] Publish artifacts'
+  displayName: '[Linux] Publish NuGet artifacts'
   inputs:
-    artifactName: 'Yarhl'
+    artifactName: 'Yarhl NuGet'
     targetPath: artifacts/
+  condition: eq(variables['Agent.OS'], 'Linux')
+
+- task: PublishPipelineArtifact@0
+  displayName: '[Linux] Publish doc artifacts'
+  inputs:
+    artifactName: 'Documentation'
+    targetPath: docs/_site/
   condition: eq(variables['Agent.OS'], 'Linux')
