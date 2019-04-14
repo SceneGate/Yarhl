@@ -59,8 +59,7 @@ steps:
   displayName: Publish code coverage results
   inputs:
     codeCoverageTool: Cobertura
-    summaryFileLocation: $(System.DefaultWorkingDirectory)/coverage_report/Cobertura.xml
-    reportDirectory: $(System.DefaultWorkingDirectory)/coverage_report
+    summaryFileLocation: coverage_report/Cobertura.xml
     failIfCoverageEmpty: true
 
 # Publish artifacts

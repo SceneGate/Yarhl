@@ -61,7 +61,11 @@ Task("Clean")
     MSBuild("src/Yarhl.sln", configurator => configurator
         .WithTarget("Clean")
         .SetVerbosity(Verbosity.Minimal)
-        .SetConfiguration(configuration));
+        .SetConfiguration("Debug"));
+    MSBuild("src/Yarhl.sln", configurator => configurator
+        .WithTarget("Clean")
+        .SetVerbosity(Verbosity.Minimal)
+        .SetConfiguration("Release"));
     if (DirectoryExists("artifacts")) {
         DeleteDirectory(
             "artifacts",

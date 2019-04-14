@@ -24,7 +24,6 @@
 // THE SOFTWARE.
 namespace Yarhl.UnitTests.Media.Text
 {
-    using System.Collections.Generic;
     using NUnit.Framework;
     using Yarhl.Media.Text;
 

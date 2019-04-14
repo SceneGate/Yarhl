@@ -1,19 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\Common.props" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <AssemblyName>Yarhl.IntegrationTests</AssemblyName>
-    <Product>SceneGate</Product>
-    <Version>3.0.0-alpha01</Version>
     <Description>Plugin integration tests for Yarhl.</Description>
-
-    <Authors>pleonex</Authors>
-    <Company>SceneGate</Company>
-    <Copyright>Copyright (c) 2018 SceneGate</Copyright>
-    <RepositoryUrl>https://github.com/SceneGate/Yarhl/</RepositoryUrl>
-    <License>GPL-3.0-or-later</License>
-    <PackageProjectUrl>https://scenegate.github.io/Yarhl/</PackageProjectUrl>
-    <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
 
     <TargetFrameworks>net472;netcoreapp2.2</TargetFrameworks>
     <RootNamespace>Yarhl.IntegrationTests</RootNamespace>
