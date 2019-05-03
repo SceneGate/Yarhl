@@ -41,7 +41,7 @@ steps:
   displayName: '[MacOS] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Darwin')
 
-- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows --pr-number=$(System.PullRequest.PullRequestNumber) --pr-base=$(System.PullRequest.SourceBranch) --pr-branch=$(System.PullRequest.TargetBranch)
+- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows --pr-number=$(SYSTEM_PULLREQUEST_PULLREQUESTNUMBER) --pr-base=$(SYSTEM_PULLREQUEST_SOURCEBRANCH) --pr-branch=$(SYSTEM_PULLREQUEST_TARGETBRANCH)
   displayName: '[Windows] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   env:
