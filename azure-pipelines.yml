@@ -3,11 +3,8 @@ strategy:
   matrix:
     linux:
       imageName: 'ubuntu-16.04'
-    # Disabled MacOS build until Microsoft updates the mono version
-    # The current mono version on the MacOS hosts doesn't support .NET 4.7.2
-    # https://github.com/Microsoft/azure-pipelines-image-generation/issues/654
-    # mac:
-    #   imageName: 'macos-10.14'
+    mac:
+      imageName: 'macos-10.14'
     windows:
       imageName: 'vs2017-win2016'
 
@@ -18,6 +15,9 @@ pool:
 trigger:
   batch: true
   branches:
+    include:
+    - master
+    - features/*
     exclude:
     - gh-pages
 
@@ -41,7 +41,7 @@ steps:
   displayName: '[MacOS] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Darwin')
 
-- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows --pr-number=$(SYSTEM_PULLREQUEST_PULLREQUESTNUMBER) --pr-base=$(SYSTEM_PULLREQUEST_SOURCEBRANCH) --pr-branch=$(SYSTEM_PULLREQUEST_TARGETBRANCH)
+- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows --pr-number=$Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER --pr-base=$Env:SYSTEM_PULLREQUEST_SOURCEBRANCH --pr-branch=$Env:SYSTEM_PULLREQUEST_TARGETBRANCH
   displayName: '[Windows] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
   env:
