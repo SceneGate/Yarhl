@@ -55,13 +55,13 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Gets the node associated DataStream if the format is BinaryFormat.
+        /// Gets the node associated DataStream if the format is IBinary.
         /// </summary>
         /// <value>
-        /// DataStream if the format is BinaryFormat, null otherwise.
+        /// DataStream if the format is IBinary, null otherwise.
         /// </value>
         public DataStream Stream {
-            get { return GetFormatAs<BinaryFormat>()?.Stream; }
+            get { return GetFormatAs<IBinary>()?.Stream; }
         }
 
         /// <summary>

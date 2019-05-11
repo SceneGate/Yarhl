@@ -54,7 +54,7 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="BinaryFormat"/>
+        /// Gets a value indicating whether this <see cref="NodeContainerFormat"/>
         /// is disposed.
         /// </summary>
         /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
@@ -85,7 +85,7 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="BinaryFormat"/> object.
+        /// Releases all resource used by the <see cref="NodeContainerFormat"/> object.
         /// </summary>
         public void Dispose()
         {

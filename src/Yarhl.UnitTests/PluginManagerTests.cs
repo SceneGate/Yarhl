@@ -26,6 +26,7 @@ namespace Yarhl.UnitTests
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
+    using Yarhl.IO;
     using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]

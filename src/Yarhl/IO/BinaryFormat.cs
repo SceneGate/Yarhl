@@ -17,15 +17,14 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
-namespace Yarhl.FileFormat
+namespace Yarhl.IO
 {
     using System;
-    using Yarhl.IO;
 
     /// <summary>
     /// Binary format.
     /// </summary>
-    public class BinaryFormat : IFormat, IDisposable
+    public class BinaryFormat : IBinary, IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.

@@ -22,12 +22,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-namespace Yarhl.UnitTests.FileFormat
+namespace Yarhl.UnitTests.IO
 {
     using System.IO;
     using NUnit.Framework;
     using Yarhl.FileFormat;
     using Yarhl.IO;
+    using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
     public class BinaryFormatTests : BaseGeneralTests<BinaryFormat>
