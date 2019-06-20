@@ -88,6 +88,26 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
+        /// Creates a Node from a part of a stream.
+        /// </summary>
+        /// <param name="name">The name of the node.</param>
+        /// <param name="source">The source / parent stream.</param>
+        /// <param name="offset">
+        /// The offset in the source stream where the node starts.
+        /// </param>
+        /// <param name="length">The length of the data in the node.</param>
+        /// <returns>The new node.</returns>
+        public static Node FromSubstream(
+            string name,
+            DataStream source,
+            long offset,
+            long length)
+        {
+            var binary = new BinaryFormat(source, offset, length);
+            return new Node(name, binary);
+        }
+
+        /// <summary>
         /// Creates a Node from a file.
         /// </summary>
         /// <returns>The node.</returns>

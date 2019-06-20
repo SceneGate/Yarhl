@@ -28,8 +28,8 @@ namespace Yarhl.UnitTests.FileSystem
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
-    using Yarhl.IO;
     using Yarhl.FileSystem;
+    using Yarhl.IO;
 
     [TestFixture]
     public class NodeFactoryTests
@@ -456,6 +456,7 @@ namespace Yarhl.UnitTests.FileSystem
         {
             Node node = NodeFactory.FromMemory("node");
             Assert.That(node, Is.Not.Null);
+            Assert.That(node.Name, Is.EqualTo("node"));
             Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
             Assert.That(node.Stream, Is.Not.Null);
             Assert.That(node.Stream.BaseStream, Is.TypeOf<MemoryStream>());
@@ -470,6 +471,43 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(
                 () => NodeFactory.FromMemory(string.Empty),
                 Throws.TypeOf<ArgumentNullException>());
+        }
+
+        [Test]
+        public void CreateFromSubstream()
+        {
+            DataStream main = new DataStream();
+            main.WriteByte(0x00);
+            main.WriteByte(0x01);
+            main.WriteByte(0x02);
+
+            Node node = NodeFactory.FromSubstream("node", main, 0x01, 0x02);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Name, Is.EqualTo("node"));
+            Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
+            Assert.That(node.Stream.BaseStream, Is.EqualTo(main.BaseStream));
+            Assert.That(node.Stream.Offset, Is.EqualTo(1));
+            Assert.That(node.Stream.Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CreateFromSubstreamWithInvalidNameThrowsException()
+        {
+            DataStream main = new DataStream();
+            Assert.That(
+                () => NodeFactory.FromSubstream(null, main, 0, 0),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => NodeFactory.FromSubstream(string.Empty, main, 0, 0),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFromSubstreamWithNullStreamThrowsException()
+        {
+            Assert.That(
+                () => NodeFactory.FromSubstream("node", null, 0, 0),
+                Throws.ArgumentNullException);
         }
     }
 }

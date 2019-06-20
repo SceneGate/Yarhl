@@ -41,7 +41,10 @@
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
 var tests = Argument("tests", string.Empty);
-var warningsAsError = Argument("warnaserror", true);
+var warnAsError = Argument("warnaserror", true);
+var warnAsErrorOption = warnAsError
+    ? MSBuildTreatAllWarningsAs.Error
+    : MSBuildTreatAllWarningsAs.Default;
 
 var pullRequestNumber = Argument("pr-number", string.Empty);
 var pullRequestBase = Argument("pr-base", string.Empty);
@@ -51,6 +54,8 @@ string netVersion = "472";
 string netcoreVersion = "2.2";
 string netstandardVersion = "2.0";
 
+string solutionPath = "src/Yarhl.sln";
+
 string netBinDir = $"bin/{configuration}/net{netVersion}";
 string netcoreBinDir = $"bin/{configuration}/netcoreapp{netcoreVersion}";
 string netstandardBinDir = $"bin/{configuration}/netstandard{netstandardVersion}";
@@ -58,14 +63,15 @@ string netstandardBinDir = $"bin/{configuration}/netstandard{netstandardVersion}
 Task("Clean")
     .Does(() =>
 {
-    MSBuild("src/Yarhl.sln", configurator => configurator
-        .WithTarget("Clean")
-        .SetVerbosity(Verbosity.Minimal)
-        .SetConfiguration("Debug"));
-    MSBuild("src/Yarhl.sln", configurator => configurator
-        .WithTarget("Clean")
-        .SetVerbosity(Verbosity.Minimal)
-        .SetConfiguration("Release"));
+    DotNetCoreClean(solutionPath, new DotNetCoreCleanSettings {
+        Configuration = "Debug",
+        Verbosity = DotNetCoreVerbosity.Minimal,
+    });
+    DotNetCoreClean(solutionPath, new DotNetCoreCleanSettings {
+        Configuration = "Release",
+        Verbosity = DotNetCoreVerbosity.Minimal,
+    });
+
     if (DirectoryExists("artifacts")) {
         DeleteDirectory(
             "artifacts",
@@ -76,14 +82,12 @@ Task("Clean")
 Task("Build")
     .Does(() =>
 {
-    var msbuildConfig = new MSBuildSettings {
-        Verbosity = Verbosity.Minimal,
+    DotNetCoreBuild(solutionPath, new DotNetCoreBuildSettings {
         Configuration = configuration,
-        Restore = true,
-        MaxCpuCount = 0,  // Auto build parallel mode
-        WarningsAsError = warningsAsError,
-    };
-    MSBuild("src/Yarhl.sln", msbuildConfig);
+        Verbosity = DotNetCoreVerbosity.Minimal,
+        MSBuildSettings = new DotNetCoreMSBuildSettings()
+            .TreatAllWarningsAs(warnAsErrorOption),
+    });
 
     // Copy Yarhl.Media for the integration tests
     EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netBinDir}/Plugins");
@@ -351,18 +355,12 @@ Task("Pack")
     .Description("Create the NuGet package")
     .Does(() =>
 {
-    var msbuildConfig = new MSBuildSettings {
-        Verbosity = Verbosity.Minimal,
-        Configuration = "Release",
-        MaxCpuCount = 0,
-    };
-    MSBuild("src/Yarhl.sln", msbuildConfig);
-
     var settings = new DotNetCorePackSettings {
         Configuration = "Release",
         OutputDirectory = "artifacts/",
         IncludeSymbols = true,
         MSBuildSettings = new DotNetCoreMSBuildSettings()
+            .TreatAllWarningsAs(warnAsErrorOption)
             .WithProperty("SymbolPackageFormat", "snupkg")
     };
     DotNetCorePack("src/Yarhl.sln", settings);
@@ -410,7 +408,7 @@ RunTarget(target);
 
 public void ReportWarning(string msg)
 {
-    if (warningsAsError) {
+    if (warnAsError) {
         throw new Exception(msg);
     } else {
         Warning(msg);
