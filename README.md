@@ -30,10 +30,14 @@ Yarhl is available on NuGet:
 
 ## Build
 
+Since the unit tests are valited against .NET Core and .NET Framework or Mono
+both runtime must be installed on the machine.
+
 ### Linux & Mac OS X
 
 Requirements:
-[*Mono*](http://www.mono-project.com/docs/getting-started/install/linux/).
+[*Mono*](http://www.mono-project.com/docs/getting-started/install/linux/) and
+[*.NET Core*](https://dotnet.microsoft.com/download).
 
 1. Clone the repository.
 
@@ -41,9 +45,8 @@ Requirements:
 
 ### Windows
 
-Requirements:
-*Visual Studio* or
-[*Xamarin Studio*](http://www.monodevelop.com/download/).
+Requirements: *.NET Framework* and
+[*.NET Core*](https://dotnet.microsoft.com/download).
 
 1. Clone the repository. You can use the
    [GitHub client](https://windows.github.com/)
