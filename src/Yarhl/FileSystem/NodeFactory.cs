@@ -103,6 +103,9 @@ namespace Yarhl.FileSystem
             long offset,
             long length)
         {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
             var binary = new BinaryFormat(source, offset, length);
             return new Node(name, binary);
         }
@@ -114,6 +117,9 @@ namespace Yarhl.FileSystem
         /// <param name="filePath">File path.</param>
         public static Node FromFile(string filePath)
         {
+            if (string.IsNullOrEmpty(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
             string filename = Path.GetFileName(filePath);
             return FromFile(filePath, filename);
         }

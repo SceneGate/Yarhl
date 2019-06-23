@@ -1,7 +1,7 @@
 R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a converter
-M: Yarhl.FileFormat.BinaryFormat Yarhl.Media.Text.Po2Binary::Convert(Yarhl.Media.Text.Po)
-M: Yarhl.Media.Text.Po Yarhl.Media.Text.Po2Binary::Convert(Yarhl.FileFormat.BinaryFormat)
+M: Yarhl.IO.BinaryFormat Yarhl.Media.Text.Po2Binary::Convert(Yarhl.Media.Text.Po)
+M: Yarhl.Media.Text.Po Yarhl.Media.Text.Po2Binary::Convert(Yarhl.IO.BinaryFormat)
 
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
 # The format parameter is reserved, not used
@@ -14,3 +14,8 @@ M: System.Void Yarhl.Media.Text.Encodings.EucJpEncoding::DecodeText(System.IO.St
 R: Gendarme.Rules.Maintainability.AvoidLackOfCohesionOfMethodsRule
 # In a Format this may have sense
 T: Yarhl.Media.Text.Po
+
+R: Gendarme.Rules.Design.MissingAttributeUsageOnCustomAttributeRule
+# Ehm... this is not my code...
+T: Microsoft.CodeAnalysis.EmbeddedAttribute
+T: System.Runtime.CompilerServices.IsReadOnlyAttribute

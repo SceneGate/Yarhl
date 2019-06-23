@@ -34,7 +34,7 @@ namespace Yarhl.Media.Text
     /// </summary>
     public class Po2Binary :
         IConverter<Po, BinaryFormat>,
-        IConverter<BinaryFormat, Po>
+        IConverter<IBinary, Po>
     {
         /// <summary>
         /// Convert the specified PO into a Binary stream.
@@ -65,7 +65,7 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <returns>The converted PO object.</returns>
         /// <param name="source">Source binary stream.</param>
-        public Po Convert(BinaryFormat source)
+        public Po Convert(IBinary source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));

@@ -25,6 +25,7 @@ R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 # It's a factory, we are creating the objects
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromFile(System.String,System.String)
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromDirectory(System.String,System.String,System.String,System.Boolean)
+M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromSubstream(System.String,Yarhl.IO.DataStream,System.Int64,System.Int64)
 # In the DataStream we are sure we will dispose the streams created in the ctor.
 M: System.Void Yarhl.IO.DataStream::.ctor()
 M: System.Void Yarhl.IO.DataStream::.ctor(System.String,Yarhl.IO.FileOpenMode)
@@ -72,3 +73,11 @@ M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`1<T
 M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<T,TMetadata>> Yarhl.PluginManager::FindLazyExtensions()
 M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.IFormat,Yarhl.FileFormat.FormatMetadata>> Yarhl.PluginManager::GetFormats()
 M: System.Collections.Generic.IEnumerable`1<System.Composition.ExportFactory`2<Yarhl.FileFormat.IConverter,Yarhl.FileFormat.ConverterMetadata>> Yarhl.PluginManager::GetConverters()
+
+R: Gendarme.Rules.Design.ConsiderAddingInterfaceRule
+# They are not a format
+T: Yarhl.IO.DataReader
+T: Yarhl.IO.DataWriter
+T: Yarhl.IO.TextReader
+T: Yarhl.IO.TextWriter
+T: Yarhl.FileSystem.Node
