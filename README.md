@@ -53,3 +53,6 @@ Requirements: *.NET Framework* and
    or the [command-line](https://git-scm.com/downloads).
 
 2. Run `.\build.ps1`
+
+You can also validate a Linux build using Docker with:
+`docker build .`
