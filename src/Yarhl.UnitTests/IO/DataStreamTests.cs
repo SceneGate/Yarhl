@@ -34,24 +34,26 @@ namespace Yarhl.UnitTests.IO
     public class DataStreamTests
     {
         [Test]
-        public void ConstructorSetStream()
+        public void ConstructorFromStreamAndOffsetInitializes()
         {
             Stream baseStream = new MemoryStream();
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
+            int beforeCount = DataStream.ActiveStreams;
             DataStream stream = new DataStream(baseStream, 0x1, 0x1);
             Assert.AreSame(baseStream, stream.BaseStream);
             Assert.AreEqual(0x1, stream.Offset);
             Assert.AreEqual(0x1, stream.Length);
             Assert.AreEqual(0x0, stream.Position);
             Assert.IsNull(stream.ParentDataStream);
+            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
         }
 
         [Test]
         public void ConstructorThrowExceptionIfNullStream()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new DataStream((Stream)null, 0x10, 0x10));
+                new DataStream((Stream)null, 0, 0));
         }
 
         [Test]
@@ -71,11 +73,11 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ConstructorThrowExceptionIfLengthLessThanMinusOne()
+        public void ConstructorThrowExceptionIfLengthLessThanZero()
         {
             Stream baseStream = new MemoryStream();
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new DataStream(baseStream, 0, -2));
+                new DataStream(baseStream, 0, -1));
         }
 
         [Test]
@@ -87,13 +89,219 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ConstructorSetLengthIfMinusOne()
+        public void ConstructorWithOnlyStreamInitializes()
         {
             Stream baseStream = new MemoryStream();
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, -1);
-            Assert.AreEqual(2, stream.Length);
+            int beforeCount = DataStream.ActiveStreams;
+            DataStream stream = new DataStream(baseStream);
+            Assert.AreSame(baseStream, stream.BaseStream);
+            Assert.AreEqual(0x0, stream.Offset);
+            Assert.AreEqual(0x2, stream.Length);
+            Assert.AreEqual(0x0, stream.Position);
+            Assert.IsNull(stream.ParentDataStream);
+            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+        }
+
+        [Test]
+        public void ConstructorStreamThrowsIfNull()
+        {
+            Assert.That(
+                () => new DataStream((Stream)null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void DefaultConstructorCreatesAMemoryStream()
+        {
+            int beforeCount = DataStream.ActiveStreams;
+            DataStream stream = new DataStream();
+            Assert.IsInstanceOf<MemoryStream>(stream.BaseStream);
+            Assert.IsTrue(stream.BaseStream.CanWrite);
+            Assert.IsTrue(stream.BaseStream.CanRead);
+            Assert.AreEqual(0x0, stream.Offset);
+            Assert.AreEqual(0x0, stream.Length);
+            Assert.AreEqual(0x0, stream.Position);
+            Assert.IsNull(stream.ParentDataStream);
+            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+        }
+
+        [Test]
+        public void ConstructorFromArrayInitializes()
+        {
+            int beforeCount = DataStream.ActiveStreams;
+            byte[] data = new byte[] { 0x01, 0x02, 0x03 };
+            DataStream stream = new DataStream(data, 1, 2);
+            Assert.That(stream.BaseStream, Is.InstanceOf<MemoryStream>());
+            Assert.That(stream.BaseStream.CanWrite, Is.True);
+            Assert.That(stream.BaseStream.CanRead, Is.True);
+            Assert.That(stream.Offset, Is.EqualTo(1));
+            Assert.That(stream.Length, Is.EqualTo(2));
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.IsNull(stream.ParentDataStream);
+            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+        }
+
+        [Test]
+        public void ConstructorFromArrayWithInvalidThrows()
+        {
+            byte[] data = new byte[] { 0x01 };
+
+            Assert.Throws<ArgumentNullException>(() =>
+                new DataStream((byte[])null, 0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(data, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(data, 2, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(data, 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(data, 0, 2));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(data, 1, 1));
+        }
+
+        [Test]
+        public void FilePathConstructorOpenFile()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            try {
+                int beforeCount = DataStream.ActiveStreams;
+                DataStream writeStream = new DataStream(tempFile, FileOpenMode.Write);
+                Assert.IsInstanceOf<FileStream>(writeStream.BaseStream);
+                Assert.IsTrue(writeStream.BaseStream.CanWrite);
+                Assert.IsFalse(writeStream.BaseStream.CanRead);
+                Assert.AreEqual(0x0, writeStream.Offset);
+                Assert.AreEqual(0x0, writeStream.Length);
+                Assert.AreEqual(0x0, writeStream.Position);
+                Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+                writeStream.WriteByte(0xCA);
+                writeStream.Dispose();
+
+                DataStream readStream = new DataStream(tempFile, FileOpenMode.Read);
+                Assert.IsInstanceOf<FileStream>(readStream.BaseStream);
+                Assert.IsFalse(readStream.BaseStream.CanWrite);
+                Assert.IsTrue(readStream.BaseStream.CanRead);
+                Assert.IsNull(readStream.ParentDataStream);
+                Assert.AreEqual(0x0, readStream.Offset);
+                Assert.AreEqual(0x1, readStream.Length);
+                Assert.AreEqual(0x0, readStream.Position);
+                Assert.AreEqual(0xCA, readStream.ReadByte());
+                readStream.Dispose();
+            } finally {
+                File.Delete(tempFile);
+            }
+        }
+
+        [Test]
+        public void FilePathConstructorWithInvalidThrows()
+        {
+            Assert.That(
+                () => new DataStream(null, FileOpenMode.Append),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => new DataStream(string.Empty, FileOpenMode.Append),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void FilePathConstructorWithOffset()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            DataStream readStream = null;
+            try {
+                using (var stream = new DataStream(tempFile, FileOpenMode.Write)) {
+                    stream.WriteByte(0xCA);
+                    stream.WriteByte(0xFE);
+                    stream.WriteByte(0xAF);
+                    stream.WriteByte(0xFA);
+                }
+
+                int beforeCount = DataStream.ActiveStreams;
+                readStream = new DataStream(tempFile, FileOpenMode.Read, 1, 2);
+                Assert.AreEqual(0x1, readStream.Offset);
+                Assert.AreEqual(0x2, readStream.Length);
+                Assert.AreEqual(0x0, readStream.Position);
+                Assert.AreEqual(0x1, readStream.AbsolutePosition);
+                Assert.AreEqual(0xFE, readStream.ReadByte());
+                Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+            } finally {
+                readStream?.Dispose();
+                File.Delete(tempFile);
+            }
+        }
+
+        [Test]
+        public void FilePathConstructorWithOffsetAndInvalidThrows()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            try {
+                using (var stream = new DataStream(tempFile, FileOpenMode.Write)) {
+                    stream.WriteByte(0xCA);
+                }
+
+                Assert.Throws<ArgumentNullException>(() =>
+                    new DataStream(null, FileOpenMode.Append, 0, 0));
+                Assert.Throws<ArgumentNullException>(() =>
+                    new DataStream(string.Empty, FileOpenMode.Append, 0, 0));
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                    new DataStream(tempFile, FileOpenMode.Read, -1, 0));
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                    new DataStream(tempFile, FileOpenMode.Read, 2, 0));
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                    new DataStream(tempFile, FileOpenMode.Read, 0, -1));
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                    new DataStream(tempFile, FileOpenMode.Read, 0, 2));
+                Assert.Throws<ArgumentOutOfRangeException>(() =>
+                    new DataStream(tempFile, FileOpenMode.Read, 1, 1));
+            } finally {
+                File.Delete(tempFile);
+            }
+        }
+
+        [Test]
+        public void ConstructorFromDataStreamSetProperties()
+        {
+            Stream baseStream = new MemoryStream();
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+            baseStream.WriteByte(0xBE);
+            baseStream.WriteByte(0xBA);
+            DataStream stream1 = new DataStream(baseStream, 1, 3);
+
+            int beforeCount = DataStream.ActiveStreams;
+            DataStream stream2 = new DataStream(stream1, 1, 1);
+            Assert.AreSame(baseStream, stream2.BaseStream);
+            Assert.AreEqual(0x2, stream2.Offset);
+            Assert.AreEqual(0x1, stream2.Length);
+            Assert.AreEqual(0x0, stream2.Position);
+            Assert.AreEqual(0xBE, stream2.ReadByte());
+            Assert.AreSame(stream1, stream2.ParentDataStream);
+            Assert.AreEqual(beforeCount, DataStream.ActiveStreams);
+        }
+
+        [Test]
+        public void ConstructorFromDataStreamInvalidThrows()
+        {
+            DataStream baseStream = new DataStream();
+            baseStream.WriteByte(0x01);
+
+            Assert.Throws<ArgumentNullException>(() =>
+                new DataStream((DataStream)null, 0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, -1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 2, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 0, 2));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 1, 1));
         }
 
         [Test]
@@ -165,111 +373,6 @@ namespace Yarhl.UnitTests.IO
             Assert.DoesNotThrow(() => baseStream2.ReadByte());
 
             stream2.Dispose();
-        }
-
-        [Test]
-        public void ConstructorWithOnlyStreamSetOffsetAndLength()
-        {
-            Stream baseStream = new MemoryStream();
-            baseStream.WriteByte(0xCA);
-            baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream);
-            Assert.AreSame(baseStream, stream.BaseStream);
-            Assert.AreEqual(0x0, stream.Offset);
-            Assert.AreEqual(0x2, stream.Length);
-            Assert.AreEqual(0x0, stream.Position);
-            Assert.IsNull(stream.ParentDataStream);
-        }
-
-        [Test]
-        public void DefaultConstructorCreatesAMemoryStream()
-        {
-            DataStream stream = new DataStream();
-            Assert.IsInstanceOf<MemoryStream>(stream.BaseStream);
-            Assert.IsTrue(stream.BaseStream.CanWrite);
-            Assert.IsTrue(stream.BaseStream.CanRead);
-            Assert.AreEqual(0x0, stream.Offset);
-            Assert.AreEqual(0x0, stream.Length);
-            Assert.AreEqual(0x0, stream.Position);
-            Assert.IsNull(stream.ParentDataStream);
-        }
-
-        [Test]
-        public void FilePathConstructorOpenFile()
-        {
-            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
-            DataStream writeStream = new DataStream(tempFile, FileOpenMode.Write);
-            Assert.IsInstanceOf<FileStream>(writeStream.BaseStream);
-            Assert.IsTrue(writeStream.BaseStream.CanWrite);
-            Assert.IsFalse(writeStream.BaseStream.CanRead);
-            Assert.AreEqual(0x0, writeStream.Offset);
-            Assert.AreEqual(0x0, writeStream.Length);
-            Assert.AreEqual(0x0, writeStream.Position);
-            writeStream.WriteByte(0xCA);
-            writeStream.Dispose();
-
-            DataStream readStream = new DataStream(tempFile, FileOpenMode.Read);
-            Assert.IsInstanceOf<FileStream>(readStream.BaseStream);
-            Assert.IsFalse(readStream.BaseStream.CanWrite);
-            Assert.IsTrue(readStream.BaseStream.CanRead);
-            Assert.IsNull(readStream.ParentDataStream);
-            Assert.AreEqual(0x0, readStream.Offset);
-            Assert.AreEqual(0x1, readStream.Length);
-            Assert.AreEqual(0x0, readStream.Position);
-            Assert.AreEqual(0xCA, readStream.ReadByte());
-            readStream.Dispose();
-
-            File.Delete(tempFile);
-        }
-
-        [Test]
-        public void FilePathConstructorWithOffset()
-        {
-            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
-            DataStream writeStream = new DataStream(tempFile, FileOpenMode.Write);
-            writeStream.WriteByte(0xCA);
-            writeStream.WriteByte(0xFE);
-            writeStream.WriteByte(0xAF);
-            writeStream.WriteByte(0xFA);
-            writeStream.Dispose();
-
-            DataStream readStream = new DataStream(tempFile, 1, 2, FileOpenMode.Read);
-            Assert.AreEqual(0x1, readStream.Offset);
-            Assert.AreEqual(0x2, readStream.Length);
-            Assert.AreEqual(0x0, readStream.Position);
-            Assert.AreEqual(0x1, readStream.AbsolutePosition);
-            Assert.AreEqual(0xFE, readStream.ReadByte());
-            readStream.Dispose();
-
-            File.Delete(tempFile);
-        }
-
-        [Test]
-        public void ConstructorFromDataStreamSetProperties()
-        {
-            Stream baseStream = new MemoryStream();
-            baseStream.WriteByte(0xCA);
-            baseStream.WriteByte(0xFE);
-            baseStream.WriteByte(0xBE);
-            baseStream.WriteByte(0xBA);
-            DataStream stream1 = new DataStream(baseStream, 1, 3);
-
-            DataStream stream2 = new DataStream(stream1, 1, 1);
-            Assert.AreSame(baseStream, stream2.BaseStream);
-            Assert.AreEqual(0x2, stream2.Offset);
-            Assert.AreEqual(0x1, stream2.Length);
-            Assert.AreEqual(0x0, stream2.Position);
-            Assert.AreEqual(0xBE, stream2.ReadByte());
-            Assert.AreSame(stream1, stream2.ParentDataStream);
-        }
-
-        [Test]
-        public void ConstructorThrowExceptionIfNullDataStream()
-        {
-            Assert.Throws<ArgumentNullException>(() =>
-                new DataStream((DataStream)null, 0x10, 0x10));
         }
 
         [Test]
@@ -367,18 +470,6 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(1, stream.Length);
             Assert.AreEqual(1, parentStream2.Length);
             Assert.AreEqual(2, parentStream.Length);
-        }
-
-        [Test]
-        public void SetLengthMinusOneTakesBaseStream()
-        {
-            Stream baseStream = new MemoryStream();
-            baseStream.WriteByte(0xCA);
-            baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 1);
-            Assert.AreEqual(1, stream.Length);
-            stream.Length = -1;
-            Assert.AreEqual(2, stream.Length);
         }
 
         [Test]
@@ -561,7 +652,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0xB);
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(() =>
-                    stream.PushToPosition(-1, SeekMode.Current));
+                stream.PushToPosition(-1, SeekMode.Current));
         }
 
         [Test]

@@ -24,9 +24,9 @@
 // THE SOFTWARE.
 namespace Yarhl.UnitTests.IO
 {
+    using System;
     using System.IO;
     using NUnit.Framework;
-    using Yarhl.FileFormat;
     using Yarhl.IO;
     using Yarhl.UnitTests.FileFormat;
 
@@ -64,6 +64,14 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ConstructorWithNullStreamThrows()
+        {
+            Assert.That(
+                () => new BinaryFormat((DataStream)null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void ConstructorWithStreamArgs()
         {
             DataStream stream = new DataStream();
@@ -82,6 +90,32 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(3, stream.Length);
             format.Dispose();
             stream.Dispose();
+        }
+
+        [Test]
+        public void ConstructorWithStreamArgsInvalidThrows()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0x01);
+
+            Assert.That(
+                () => new BinaryFormat((DataStream)null, 0, 0),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => new BinaryFormat(stream, -1, 0),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(stream, 2, 0),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(stream, 0, -1),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(stream, 0, 2),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(stream, 1, 1),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -117,6 +151,55 @@ namespace Yarhl.UnitTests.IO
 
             format.Dispose();
             File.Delete(tempPath);
+        }
+
+        [Test]
+        public void ConstructorWithNullPathThrows()
+        {
+            Assert.That(
+                () => new BinaryFormat((string)null),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => new BinaryFormat(string.Empty),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ConstructorWithArray()
+        {
+            byte[] data = new byte[] { 0x01, 0x2, 0x3 };
+
+            BinaryFormat format = new BinaryFormat(data, 1, 2);
+            Assert.IsInstanceOf<MemoryStream>(format.Stream.BaseStream);
+            Assert.AreEqual(0, format.Stream.Position);
+            Assert.AreEqual(1, format.Stream.Offset);
+            Assert.AreEqual(2, format.Stream.Length);
+            format.Dispose();
+        }
+
+        [Test]
+        public void ConstructorFromArrayWithInvalidThrows()
+        {
+            byte[] data = new byte[] { 0x01 };
+
+            Assert.That(
+                () => new BinaryFormat((byte[])null, 0, 0),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => new BinaryFormat(data, -1, 0),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(data, 2, 0),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(data, 0, -1),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(data, 0, 2),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => new BinaryFormat(data, 1, 1),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
         }
 
         [Test]

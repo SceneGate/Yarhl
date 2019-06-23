@@ -38,37 +38,21 @@ namespace Yarhl.IO
     public class DataStream : IDisposable
     {
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
-        readonly Stack<long> positionStack;
+        readonly Stack<long> positionStack = new Stack<long>();
         long position;
         long length;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// A new stream is created in the memory.
         /// </summary>
-        /// <param name="stream">Base stream.</param>
-        /// <param name="offset">Offset from the base stream origin.</param>
-        /// <param name="length">
-        /// Length of this DataStream.
-        /// If it's -1 then it takes the stream length.
-        /// </param>
-        public DataStream(Stream stream, long offset, long length)
+        public DataStream()
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (offset < 0 || offset > stream.Length)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < -1 || offset + length > stream.Length)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            BaseStream = new MemoryStream();
+            Offset = 0;
+            Length = 0;
 
-            if (!Instances.ContainsKey(stream))
-                Instances.Add(stream, 1);
-            else
-                Instances[stream] += 1;
-
-            positionStack = new Stack<long>();
-            BaseStream = stream;
-            Offset = offset;
-            Length = length;
+            IncreaseStreamCounter(BaseStream);
         }
 
         /// <summary>
@@ -76,16 +60,59 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Base stream.</param>
         public DataStream(Stream stream)
-            : this(stream, 0, -1)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            BaseStream = stream;
+            Offset = 0;
+            Length = stream.Length;
+
+            IncreaseStreamCounter(stream);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class.
         /// </summary>
-        public DataStream()
-            : this(new MemoryStream())
+        /// <param name="stream">Base stream.</param>
+        /// <param name="offset">Offset from the base stream.</param>
+        /// <param name="length">Length of this DataStream.</param>
+        public DataStream(Stream stream, long offset, long length)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (offset < 0 || offset > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < 0 || offset + length > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            BaseStream = stream;
+            Offset = offset;
+            Length = length;
+
+            IncreaseStreamCounter(stream);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream" /> class.
+        /// </summary>
+        /// <param name="data">Stream data buffer.</param>
+        /// <param name="offset">Offset of the data in the buffer.</param>
+        /// <param name="length">Length of the data.</param>
+        public DataStream(byte[] data, int offset, int length)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+            if (offset < 0 || offset > data.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < 0 || offset + length > data.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            BaseStream = new MemoryStream(data, 0, data.Length);
+            Offset = offset;
+            Length = length;
+
+            IncreaseStreamCounter(BaseStream);
         }
 
         /// <summary>
@@ -94,26 +121,40 @@ namespace Yarhl.IO
         /// <param name="filePath">File path.</param>
         /// <param name="mode">File open mode.</param>
         public DataStream(string filePath, FileOpenMode mode)
-            : this(filePath, 0, -1, mode)
         {
+            if (string.IsNullOrEmpty(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
+            BaseStream = new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess());
+            Offset = 0;
+            Length = BaseStream.Length;
+
+            IncreaseStreamCounter(BaseStream);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class.
         /// </summary>
         /// <param name="filePath">File path.</param>
-        /// <param name="offset">Offset from the start of the file.</param>
-        /// <param name="length">
-        /// Length of this DataStream.
-        /// If it's -1 then it takes the file length.
-        /// </param>
         /// <param name="mode">File open mode.</param>
-        public DataStream(string filePath, long offset, long length, FileOpenMode mode)
-            : this(
-                new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess()),
-                offset,
-                length)
+        /// <param name="offset">Offset from the start of the file.</param>
+        /// <param name="length">Length of this DataStream.</param>
+        public DataStream(string filePath, FileOpenMode mode, long offset, long length)
         {
+            if (string.IsNullOrEmpty(filePath))
+                throw new ArgumentNullException(nameof(filePath));
+
+            long fileSize = new FileInfo(filePath).Length;
+            if (offset < 0 || offset > fileSize)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < 0 || offset + length > fileSize)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            BaseStream = new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess());
+            Offset = offset;
+            Length = length;
+
+            IncreaseStreamCounter(BaseStream);
         }
 
         /// <summary>
@@ -121,20 +162,27 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Base stream.</param>
         /// <param name="offset">Offset from the DataStream start.</param>
-        /// <param name="length">
-        /// Length of this DataStream.
-        /// If it's -1 then it takes the stream length.
-        /// </param>
+        /// <param name="length">Length of this DataStream.</param>
         public DataStream(DataStream stream, long offset, long length)
-            : this(stream?.BaseStream, offset + (stream?.Offset ?? 0), length)
         {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (offset < 0 || offset > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < 0 || offset + length > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
             ParentDataStream = stream;
+            BaseStream = stream.BaseStream;
+            Offset = stream.Offset + offset;
+            Length = length;
+
+            IncreaseStreamCounter(BaseStream);
         }
 
         /// <summary>
         /// Gets the number of streams in use.
         /// </summary>
-        /// <value>The active streams number.</value>
         public static int ActiveStreams => Instances.Count;
 
         /// <summary>
@@ -149,7 +197,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the offset from the BaseStream.
         /// </summary>
-        /// <value>The offset.</value>
         public long Offset {
             get;
             private set;
@@ -158,7 +205,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the position from the start of this stream.
         /// </summary>
-        /// <value>The position.</value>
         public long Position {
             get {
                 return position;
@@ -176,9 +222,7 @@ namespace Yarhl.IO
 
         /// <summary>
         /// Gets or sets the length of this stream.
-        /// If the value set is -1, then the length is taken from the BaseStream.
         /// </summary>
-        /// <value>The length.</value>
         public long Length {
             get {
                 return length;
@@ -187,15 +231,13 @@ namespace Yarhl.IO
             set {
                 if (Disposed)
                     throw new ObjectDisposedException(nameof(DataStream));
-                if (value < -1 || Offset + value > BaseStream.Length)
+                if (value < 0 || Offset + value > BaseStream.Length)
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                long newLength = (value != -1) ? value : BaseStream.Length;
+                if (ParentDataStream != null && Offset + value > ParentDataStream.length)
+                    ParentDataStream.Length = Offset + value;
 
-                if (ParentDataStream != null && Offset + newLength > ParentDataStream.length)
-                    ParentDataStream.Length = Offset + newLength;
-
-                length = newLength;
+                length = value;
                 if (Position > Length)
                     Position = Length;
             }
@@ -204,7 +246,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the parent DataStream.
         /// </summary>
-        /// <value>The parent DataStream.</value>
         public DataStream ParentDataStream {
             get;
             private set;
@@ -550,6 +591,14 @@ namespace Yarhl.IO
                     Instances.Remove(BaseStream);
                 }
             }
+        }
+
+        private static void IncreaseStreamCounter(Stream stream)
+        {
+            if (!Instances.ContainsKey(stream))
+                Instances.Add(stream, 1);
+            else
+                Instances[stream] += 1;
         }
     }
 }
