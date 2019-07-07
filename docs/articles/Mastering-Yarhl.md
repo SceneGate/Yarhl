@@ -309,9 +309,9 @@ Well, that's easy to do. Yarhl is all about converting formats, let's see an exa
 public void ExportFontImage(string fontPath, string outputPath)
 {
     using (var binary = new BinaryFormat(fontPath)) {
-        binary.ConvertWith<Font2Binary, BinaryFormat, Font>()
-            .ConvertWith<Font2Image, Font, System.Drawing.Image>()
-            .Save(outputPath);
+        var font = (Font)ConvertFormat.With<Font2Binary>(binary);
+        var image = (Image)ConvertFormat.With<Font2Image>(font);
+        image.Save(outputPath);
     }
 }
 ```
@@ -357,8 +357,7 @@ So now we can get our menu instance with:
 public void ReadMenuFile(string filePath)
 {
     using (var binary = new BinaryFormat(filePath)) {
-        MenuSentences menu = binary
-            .ConvertWith<Binary2MenuSentences, BinaryFormat, MenuSentences>();
+        var menu = (MenuSentences)ConvertFormat.With<Binary2MenuSentences>(binary);
         // Do something with the menu instance
     }
 }
@@ -370,7 +369,7 @@ Since there is just one converter `BinaryFormat -> MenuSentences` we can simplif
 public void ReadMenuFile(string filePath)
 {
     using (var binary = new BinaryFormat(filePath)) {
-        MenuSentences menu = binary.ConvertTo<MenuSentences>();
+        MenuSentences menu = ConvertFormat.To<MenuSentences>(binary);
         // Do something with the menu instance
     }
 }

@@ -431,7 +431,7 @@ namespace Yarhl.IO
 
             T format;
             using (var binary = new BinaryFormat(this))
-                format = ConvertFormat.ConvertTo<T>(binary);
+                format = ConvertFormat.To<T>(binary);
             return format;
         }
 
