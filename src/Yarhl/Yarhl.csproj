@@ -6,7 +6,7 @@
     <AssemblyName>Yarhl</AssemblyName>
     <Description>Library to translation projects. It provides features for implementing file formats, converters and a virtual file system.</Description>
 
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
     <RootNamespace>Yarhl</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>..\StyleCop.ruleset</CodeAnalysisRuleSet>
