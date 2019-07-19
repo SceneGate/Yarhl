@@ -229,8 +229,11 @@ namespace Yarhl
 
             // Assemblies from the program directory (including this one).
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
-            var programAssemblies = Directory.GetFiles(programDir, "*.dll");
-            containerConfig.WithAssemblies(LoadAssemblies(programAssemblies));
+            var libraryAssemblies = Directory.GetFiles(programDir, "*.dll");
+            var programAssembly = Directory.GetFiles(programDir, "*.exe");
+            containerConfig
+                .WithAssemblies(LoadAssemblies(libraryAssemblies))
+                .WithAssemblies(LoadAssemblies(programAssembly));
 
             // Assemblies from the Plugin directory and subfolders
             string pluginDir = Path.Combine(programDir, PluginDirectory);
