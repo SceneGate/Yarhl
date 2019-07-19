@@ -30,9 +30,9 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="source">Format to convert.</param>
         /// <typeparam name="TDst">The destination format type.</typeparam>
-        public static TDst ConvertTo<TDst>(dynamic source)
+        public static TDst To<TDst>(dynamic source)
         {
-            return (TDst)ConvertTo(typeof(TDst), source);
+            return (TDst)To(typeof(TDst), source);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="dstType">Type of the destination format.</param>
         /// <param name="src">Format to convert.</param>
-        public static object ConvertTo(Type dstType, dynamic src)
+        public static object To(Type dstType, dynamic src)
         {
             if (dstType == null)
                 throw new ArgumentNullException(nameof(dstType));
@@ -73,7 +73,7 @@ namespace Yarhl.FileFormat
         /// <param name="converterType">Type of the converter.</param>
         /// <param name="src">Format to convert.</param>
         /// <returns>The new format.</returns>
-        public static object ConvertWith(Type converterType, dynamic src)
+        public static object With(Type converterType, dynamic src)
         {
             if (converterType == null)
                 throw new ArgumentNullException(nameof(converterType));
@@ -97,11 +97,11 @@ namespace Yarhl.FileFormat
         /// <param name="src">Format to convert.</param>
         /// <typeparam name="TConv">Type of the converter.</typeparam>
         /// <returns>The new format.</returns>
-        public static object ConvertWith<TConv>(dynamic src)
+        public static object With<TConv>(dynamic src)
             where TConv : IConverter, new()
         {
             var converter = new TConv();
-            return ConvertWith(converter, src);
+            return With(converter, src);
         }
 
         /// <summary>
@@ -113,12 +113,12 @@ namespace Yarhl.FileFormat
         /// <typeparam name="TConv">Type of the converter.</typeparam>
         /// <typeparam name="TParam">Type of the parameters.</typeparam>
         /// <returns>The new format.</returns>
-        public static object ConvertWith<TConv, TParam>(TParam param, dynamic src)
+        public static object With<TConv, TParam>(TParam param, dynamic src)
             where TConv : IConverter, IInitializer<TParam>, new()
         {
             var converter = new TConv();
             converter.Initialize(param);
-            return ConvertWith(converter, src);
+            return With(converter, src);
         }
 
         /// <summary>
@@ -127,7 +127,7 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="converter">Converter to use.</param>
         /// <param name="src">Format to convert.</param>
-        public static object ConvertWith(IConverter converter, dynamic src)
+        public static object With(IConverter converter, dynamic src)
         {
             if (converter == null)
                 throw new ArgumentNullException(nameof(converter));
