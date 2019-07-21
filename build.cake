@@ -238,8 +238,12 @@ Task("Run-Sonar")
     .Does(() =>
 {
     var sonarToken = EnvironmentVariable("SONAR_TOKEN");
+    if (string.IsNullOrWhiteSpace(sonarToken)) {
+        throw new Exception("Missing Sonar token");
+    }
+
     var sonarSettings = new SonarBeginSettings {
-        Url = "https://sonarqube.com",
+        Url = "https://sonarcloud.io",
         Key = "SceneGate_Yarhl",
         Login = sonarToken,
         Organization = "scenegate",
