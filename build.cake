@@ -30,7 +30,7 @@
 #tool nuget:?package=ReportGenerator&version=4.1.2
 
 // SonarQube quality checks
-#addin nuget:?package=Cake.Sonar&version=1.1.18
+#addin nuget:?package=Cake.Sonar&version=1.1.22
 #tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
 #addin nuget:?package=Cake.Git&version=0.19.0
 
