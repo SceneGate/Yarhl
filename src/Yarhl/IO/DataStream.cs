@@ -39,6 +39,7 @@ namespace Yarhl.IO
     {
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
         readonly Stack<long> positionStack = new Stack<long>();
+        readonly bool isSubstream;
         long position;
         long length;
 
@@ -49,8 +50,9 @@ namespace Yarhl.IO
         public DataStream()
         {
             BaseStream = new MemoryStream();
+            isSubstream = false;
             Offset = 0;
-            Length = 0;
+            this.length = 0;
 
             IncreaseStreamCounter(BaseStream);
         }
@@ -65,8 +67,9 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(stream));
 
             BaseStream = stream;
+            isSubstream = false;
             Offset = 0;
-            Length = stream.Length;
+            this.length = stream.Length;
 
             IncreaseStreamCounter(stream);
         }
@@ -87,8 +90,9 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             BaseStream = stream;
+            isSubstream = true;
             Offset = offset;
-            Length = length;
+            this.length = length;
 
             IncreaseStreamCounter(stream);
         }
@@ -109,8 +113,9 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             BaseStream = new MemoryStream(data, 0, data.Length);
+            isSubstream = true;
             Offset = offset;
-            Length = length;
+            this.length = length;
 
             IncreaseStreamCounter(BaseStream);
         }
@@ -126,8 +131,9 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(filePath));
 
             BaseStream = new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess());
+            isSubstream = false;
             Offset = 0;
-            Length = BaseStream.Length;
+            this.length = BaseStream.Length;
 
             IncreaseStreamCounter(BaseStream);
         }
@@ -151,8 +157,9 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             BaseStream = new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess());
+            isSubstream = true;
             Offset = offset;
-            Length = length;
+            this.length = length;
 
             IncreaseStreamCounter(BaseStream);
         }
@@ -174,8 +181,9 @@ namespace Yarhl.IO
 
             ParentDataStream = stream;
             BaseStream = stream.BaseStream;
+            isSubstream = true;
             Offset = stream.Offset + offset;
-            Length = length;
+            this.length = length;
 
             IncreaseStreamCounter(BaseStream);
         }
@@ -234,12 +242,16 @@ namespace Yarhl.IO
                 if (value < 0 || Offset + value > BaseStream.Length)
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                if (ParentDataStream != null && Offset + value > ParentDataStream.length)
-                    ParentDataStream.Length = Offset + value;
+                if (isSubstream) {
+                    throw new InvalidOperationException(
+                        "Offset is not 0. " +
+                        "Cannot change the size of sub-streams.");
+                }
 
                 length = value;
-                if (Position > Length)
+                if (Position > Length) {
                     Position = Length;
+                }
             }
         }
 

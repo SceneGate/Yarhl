@@ -81,3 +81,9 @@ T: Yarhl.IO.DataWriter
 T: Yarhl.IO.TextReader
 T: Yarhl.IO.TextWriter
 T: Yarhl.FileSystem.Node
+
+R: Gendarme.Rules.Performance.AvoidUnneededFieldInitializationRule
+# Better be explicit in this case for clarity
+M: System.Void Yarhl.IO.DataStream::.ctor()
+M: System.Void Yarhl.IO.DataStream::.ctor(System.IO.Stream)
+M: System.Void Yarhl.IO.DataStream::.ctor(System.String,Yarhl.IO.FileOpenMode)

@@ -30,7 +30,7 @@
 #tool nuget:?package=ReportGenerator&version=4.1.2
 
 // SonarQube quality checks
-#addin nuget:?package=Cake.Sonar&version=1.1.18
+#addin nuget:?package=Cake.Sonar&version=1.1.22
 #tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
 #addin nuget:?package=Cake.Git&version=0.19.0
 
@@ -238,11 +238,15 @@ Task("Run-Sonar")
     .Does(() =>
 {
     var sonarToken = EnvironmentVariable("SONAR_TOKEN");
+    if (string.IsNullOrWhiteSpace(sonarToken)) {
+        throw new Exception("Missing Sonar token");
+    }
+
     var sonarSettings = new SonarBeginSettings {
-        Url = "https://sonarqube.com",
-        Key = "yarhl",
+        Url = "https://sonarcloud.io",
+        Key = "SceneGate_Yarhl",
         Login = sonarToken,
-        Organization = "pleonex-github",
+        Organization = "scenegate",
         Verbose = true,
      };
 

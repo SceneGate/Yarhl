@@ -451,25 +451,31 @@ namespace Yarhl.UnitTests.IO
             Stream baseStream = new MemoryStream();
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream);
             Assert.AreEqual(2, stream.Length);
             stream.Length = 1;
             Assert.AreEqual(1, stream.Length);
         }
 
         [Test]
-        public void SetLengthUpdatesParentStream()
+        public void CannotIncreaseLengthFromSubStream()
         {
             DataStream parentStream = new DataStream();
-            parentStream.WriteByte(0xFF);
-            parentStream.WriteByte(0xFF);
+            parentStream.WriteByte(0x00);
+            parentStream.WriteByte(0x00);
 
-            DataStream parentStream2 = new DataStream(parentStream, 0, 0);
-            DataStream stream = new DataStream(parentStream2, 0, 0);
-            stream.WriteByte(0xFF);
-            Assert.AreEqual(1, stream.Length);
-            Assert.AreEqual(1, parentStream2.Length);
-            Assert.AreEqual(2, parentStream.Length);
+            DataStream childStream = new DataStream(parentStream, 1, 1);
+            childStream.WriteByte(0x01);
+            Assert.That(
+                () => childStream.WriteByte(0x01),
+                Throws.InvalidOperationException);
+
+            DataStream childStream2 = new DataStream(parentStream, 0, 2);
+            childStream2.WriteByte(0x02);
+            childStream2.WriteByte(0x02);
+            Assert.That(
+                () => childStream2.WriteByte(0x02),
+                Throws.InvalidOperationException);
         }
 
         [Test]
@@ -498,7 +504,7 @@ namespace Yarhl.UnitTests.IO
             Stream baseStream = new MemoryStream();
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream);
             stream.Seek(2, SeekMode.Start);
             Assert.AreEqual(2, stream.Position);
             stream.Length = 1;

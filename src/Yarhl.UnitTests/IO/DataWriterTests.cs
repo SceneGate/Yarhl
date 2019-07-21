@@ -963,15 +963,15 @@ namespace Yarhl.UnitTests.IO
         {
             DataStream stream = new DataStream();
             stream.WriteByte(0xAF);
+            stream.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA }, 0, 7);
 
-            DataStream stream2 = new DataStream(stream, 1, 0);
+            DataStream stream2 = new DataStream(stream, 1, 7);
             DataWriter writer = new DataWriter(stream2);
 
             writer.Write(0xCAFEu);
             writer.WritePadding(0xFF, 4);
 
             byte[] expected = { 0xAF, 0xFE, 0xCA, 0x00, 0x00 };
-            Assert.AreEqual(expected.Length, stream.Length);
 
             stream.Position = 0;
             byte[] actual = new byte[expected.Length];

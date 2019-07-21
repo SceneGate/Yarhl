@@ -646,7 +646,8 @@ namespace Yarhl.UnitTests.IO
         public void ReadPaddingAbsoluteMode()
         {
             stream.WriteByte(0xAF);
-            using (var stream2 = new DataStream(stream, 1, 0)) {
+            stream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, 0, 7);
+            using (var stream2 = new DataStream(stream, 1, 7)) {
                 reader = new DataReader(stream2);
 
                 byte[] buffer = { 0xCA, 0xFE, 0x00, 0x00, 0xFF, 0xFF, 0xFF };
