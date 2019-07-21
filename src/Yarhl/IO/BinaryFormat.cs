@@ -38,7 +38,9 @@ namespace Yarhl.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
         /// </summary>
-        /// <remarks>This format creates a substream from the provided stream.</remarks>
+        /// <remarks>
+        /// <para>This format creates a substream from the provided stream.</para>
+        /// </remarks>
         /// <param name="stream">Binary stream.</param>
         /// <param name="offset">Offset from the DataStream start.</param>
         /// <param name="length">Length of the substream.</param>
@@ -57,7 +59,9 @@ namespace Yarhl.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
         /// </summary>
-        /// <remarks>This format creates a substream from the provided stream.</remarks>
+        /// <remarks>
+        /// <para>This format creates a substream from the provided stream.</para>
+        /// </remarks>
         /// <param name="stream">Binary stream.</param>
         public BinaryFormat(DataStream stream)
         {
@@ -100,7 +104,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        /// <value>The stream.</value>
         public DataStream Stream {
             get;
             private set;
@@ -110,7 +113,6 @@ namespace Yarhl.IO
         /// Gets a value indicating whether this <see cref="BinaryFormat"/>
         /// is disposed.
         /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
             get;
             private set;
@@ -129,7 +131,7 @@ namespace Yarhl.IO
         /// Releases all resource used by the <see cref="BinaryFormat"/> object.
         /// </summary>
         /// <param name="disposing">
-        /// If set to <c>true</c> free managed resources also.
+        /// If set to <see langword="true" /> free managed resources also.
         /// It happens from Dispose() calls.
         /// </param>
         protected virtual void Dispose(bool disposing)

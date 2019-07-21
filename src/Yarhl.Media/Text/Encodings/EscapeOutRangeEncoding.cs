@@ -55,8 +55,8 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         /// <param name="encoding">Base encoding.</param>
         /// <remarks>
-        /// For correct usage, make sure that your encoding uses the
-        /// <see cref="EscapeOutRangeDecoderFallback"/> as the decoder fallback.
+        /// <para>For correct usage, make sure that your encoding uses the
+        /// <see cref="EscapeOutRangeDecoderFallback"/> as the decoder fallback.</para>
         /// </remarks>
         public EscapeOutRangeEncoding(Encoding encoding)
         {
@@ -269,7 +269,7 @@ namespace Yarhl.Media.Text.Encodings
             /// <summary>
             /// Creates the fallback for the specified buffer.
             /// </summary>
-            /// <returns>Returns <c>true</c>.</returns>
+            /// <returns>Returns <see langword="true" />.</returns>
             /// <param name="bytesUnknown">Unknown bytes to replace.</param>
             /// <param name="index">Index in the external replacement string.</param>
             public override bool Fallback(byte[] bytesUnknown, int index)
@@ -294,7 +294,7 @@ namespace Yarhl.Media.Text.Encodings
             /// <summary>
             /// Moves to the previous position in the buffer.
             /// </summary>
-            /// <returns>Returns <c>true</c> if it was able to move back.</returns>
+            /// <returns>Returns <see langword="true" /> if it was able to move back.</returns>
             public override bool MovePrevious()
             {
                 if (currentPos == 0)

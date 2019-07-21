@@ -66,9 +66,8 @@ namespace Yarhl.FileSystem
         /// Gets the path.
         /// </summary>
         /// <remarks>
-        /// It includes the names of all the parent nodes and this node.
+        /// <para>It includes the names of all the parent nodes and this node.</para>
         /// </remarks>
-        /// <value>The path.</value>
         public string Path {
             get {
                 return (Parent?.Path ?? string.Empty) + NodeSystem.PathSeparator + Name;
@@ -78,7 +77,6 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets the parent node.
         /// </summary>
-        /// <value>The node parent.</value>
         public T Parent {
             get;
             private set;
@@ -87,7 +85,6 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets a read-only list of children nodes.
         /// </summary>
-        /// <value>The list of children.</value>
         public NavigableNodeCollection<T> Children
         {
             get;
@@ -97,7 +94,6 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets the dictionary of tags.
         /// </summary>
-        /// <value>The tags.</value>
         public IDictionary<string, dynamic> Tags {
             get;
             private set;
@@ -106,7 +102,6 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets a value indicating whether this node is disposed.
         /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
             get;
             private set;
@@ -116,9 +111,9 @@ namespace Yarhl.FileSystem
         /// Add a node.
         /// </summary>
         /// <remarks>
-        /// Updates the parent of the child node to match this instance.
+        /// <para>Updates the parent of the child node to match this instance.
         /// If the node already contains a child with the same name it will be replaced.
-        /// Otherwise the node is added.
+        /// Otherwise the node is added.</para>
         /// </remarks>
         /// <param name="node">Node to add.</param>
         public void Add(T node)
@@ -185,8 +180,8 @@ namespace Yarhl.FileSystem
         /// Releases all resource used by the
         /// <see cref="Yarhl.FileSystem.NavigableNode{T}"/> object.
         /// </summary>
-        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
-        /// managed resources also.</param>
+        /// <param name="freeManagedResourcesAlso">If set to
+        /// <see langword="true" /> free managed resources also.</param>
         protected virtual void Dispose(bool freeManagedResourcesAlso)
         {
             if (Disposed)

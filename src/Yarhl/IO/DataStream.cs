@@ -33,7 +33,7 @@ namespace Yarhl.IO
     /// Data stream.
     /// </summary>
     /// <remarks>
-    /// Custom implementation of a Stream based on System.IO.Stream.
+    /// <para>Custom implementation of a Stream based on System.IO.Stream.</para>
     /// </remarks>
     public class DataStream : IDisposable
     {
@@ -196,7 +196,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets a value indicating whether this <see cref="DataStream"/> is disposed.
         /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
             get;
             private set;
@@ -266,7 +265,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the base stream.
         /// </summary>
-        /// <value>The base stream.</value>
         public Stream BaseStream {
             get;
             private set;
@@ -275,7 +273,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets a value indicating whether the position is at end of the stream.
         /// </summary>
-        /// <value><c>true</c> if end of stream; otherwise, <c>false</c>.</value>
         public bool EndOfStream {
             get {
                 return Position >= Length;
@@ -285,7 +282,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the position from the base stream.
         /// </summary>
-        /// <value>The absolute position.</value>
         public long AbsolutePosition {
             get { return Offset + Position; }
         }
@@ -586,8 +582,8 @@ namespace Yarhl.IO
         /// Releases all resource used by the <see cref="DataStream"/>
         /// object.
         /// </summary>
-        /// <param name="freeManagedResourcesAlso">If set to <c>true</c> free
-        /// managed resources also.</param>
+        /// <param name="freeManagedResourcesAlso">If set to
+        /// <see langword="true" /> free managed resources also.</param>
         protected virtual void Dispose(bool freeManagedResourcesAlso)
         {
             if (Disposed)

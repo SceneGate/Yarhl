@@ -39,7 +39,8 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <remarks>
-        /// By default the endianess is LittleEndian and the encoding is UTF-8.
+        /// </para>By default the endianess is LittleEndian and
+        /// the encoding is UTF-8.</para>
         /// </remarks>
         public DataWriter(DataStream stream)
         {
@@ -194,7 +195,9 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="ch">Char to write.</param>
         /// <param name="encoding">Optional text encoding to use.</param>
-        /// <remarks>If the encoding is null, it will use the default encoding.</remarks>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
         public void Write(char ch, Encoding encoding = null)
         {
             if (encoding == null)
@@ -208,7 +211,9 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="chars">Chara array to write.</param>
         /// <param name="encoding">Optional text encoding to use.</param>
-        /// <remarks>If the encoding is null, it will use the default encoding.</remarks>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
         public void Write(char[] chars, Encoding encoding = null)
         {
             if (chars == null)
@@ -224,10 +229,14 @@ namespace Yarhl.IO
         /// Write a text string.
         /// </summary>
         /// <param name="text">Text string to write.</param>
-        /// <param name="nullTerminator">If set to <c>true</c> add null terminator.</param>
+        /// <param name="nullTerminator">
+        /// If set to <see langword="true" /> add null terminator.
+        /// </param>
         /// <param name="encoding">Text encoding to use.</param>
         /// <param name="maxSize">Maximum size of the encoded string in bytes.</param>
-        /// <remarks>If the encoding is null, it will use the default encoding.</remarks>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
         public void Write(
                 string text,
                 bool nullTerminator = true,
@@ -257,9 +266,13 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="text">Text string to write.</param>
         /// <param name="fixedSize">Fixed size of the encoded string in bytes.</param>
-        /// <param name="nullTerminator">If set to <c>true</c> add null terminator.</param>
+        /// <param name="nullTerminator">
+        /// If set to <see langword="true" /> add null terminator.
+        /// </param>
         /// <param name="encoding">Text encoding to use.</param>
-        /// <remarks>If the encoding is null, it will use the default encoding.</remarks>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
         public void Write(
                 string text,
                 int fixedSize,
@@ -291,10 +304,14 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="text">Text string to write.</param>
         /// <param name="sizeType">Type of the string size to write.</param>
-        /// <param name="nullTerminator">If set to <c>true</c> add null terminator.</param>
+        /// <param name="nullTerminator">
+        /// If set to <see langword="true" /> add null terminator.
+        /// </param>
         /// <param name="encoding">Text encoding to use.</param>
         /// <param name="maxSize">Maximum size of the encoded string in bytes.</param>
-        /// <remarks>If the encoding is null, it will use the default encoding.</remarks>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
         public void Write(
                 string text,
                 Type sizeType,
@@ -329,8 +346,8 @@ namespace Yarhl.IO
         /// <param name="type">Type of the value.</param>
         /// <param name="val">Value to write.</param>
         /// <remarks>
-        /// The supported types are: long, ulong, int, uint, short, ushort, byte, sbyte,
-        /// char and string.
+        /// <para>The supported types are: long, ulong, int, uint, short,
+        /// ushort, byte, sbyte, char and string.</para>
         /// </remarks>
         public void WriteOfType(Type type, dynamic val)
         {
@@ -445,7 +462,8 @@ namespace Yarhl.IO
         /// <param name="val">Value to repeat.</param>
         /// <param name="padding">Padding value.</param>
         /// <param name="absolutePadding">
-        /// If set to <c>true</c> pad using the absolute position in the stream.
+        /// If set to <see langword="true" /> pad using the absolute position
+        /// in the stream.
         /// </param>
         public void WritePadding(byte val, int padding, bool absolutePadding = false)
         {

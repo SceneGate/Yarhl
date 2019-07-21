@@ -40,7 +40,7 @@ namespace Yarhl.IO
         /// Initializes a new instance of the <see cref="TextWriter"/> class.
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
-        /// <remarks>The default encoding is UTF-8.</remarks>
+        /// <remarks><para>The default encoding is UTF-8.</para></remarks>
         public TextWriter(DataStream stream)
             : this(stream, Encoding.UTF8)
         {
@@ -70,7 +70,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        /// <value>The stream.</value>
         public DataStream Stream {
             get;
             private set;
@@ -79,7 +78,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the encoding.
         /// </summary>
-        /// <value>The encoding.</value>
         public Encoding Encoding {
             get;
             private set;
@@ -89,7 +87,7 @@ namespace Yarhl.IO
         /// Gets or sets the new line character.
         /// </summary>
         /// <value>The new line character.</value>
-        /// <remarks>The default value is \n, the Unix new line.</remarks>
+        /// <remarks><para>The default value is \n, the Unix new line.</para></remarks>
         public string NewLine {
             get;
             set;

@@ -97,8 +97,8 @@ namespace Yarhl.Media.Text
         /// Modified version. False to apply the reverse.
         /// </param>
         /// <remarks>
-        /// When multiple original fields in the map have same start, the
-        /// later map entry will have preference.
+        /// <para>When multiple original fields in the map have same start, the
+        /// later map entry will have preference.</para>
         /// </remarks>
         /// <returns>The transformed text.</returns>
         public string Transform(string text, bool originalText)
