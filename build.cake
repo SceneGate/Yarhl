@@ -263,11 +263,11 @@ Task("Run-Sonar")
         sonarSettings.PullRequestBranch = pullRequestBranch;
      } else {
         Information("No pull request information provided");
-        if (string.IsNullOrWhiteSpace(branch)) {
-            branch = GitBranchCurrent(".").FriendlyName;
+        if (string.IsNullOrWhiteSpace(branchName)) {
+            branchName = GitBranchCurrent(".").FriendlyName;
         }
 
-        sonarSettings.Branch = branch;
+        sonarSettings.Branch = branchName;
      }
 
     SonarBegin(sonarSettings);
