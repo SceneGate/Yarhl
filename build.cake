@@ -240,9 +240,9 @@ Task("Run-Sonar")
     var sonarToken = EnvironmentVariable("SONAR_TOKEN");
     var sonarSettings = new SonarBeginSettings {
         Url = "https://sonarqube.com",
-        Key = "yarhl",
+        Key = "SceneGate_Yarhl",
         Login = sonarToken,
-        Organization = "pleonex-github",
+        Organization = "scenegate",
         Verbose = true,
      };
 
