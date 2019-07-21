@@ -49,6 +49,7 @@ var warnAsErrorOption = warnAsError
 var pullRequestNumber = Argument("pr-number", string.Empty);
 var pullRequestBase = Argument("pr-base", string.Empty);
 var pullRequestBranch = Argument("pr-branch", string.Empty);
+var branchName = Argument("branch", string.Empty);
 
 string netVersion = "472";
 string netcoreVersion = "2.2";
@@ -255,14 +256,18 @@ Task("Run-Sonar")
         && !string.IsNullOrEmpty(pullRequestBranch);
      if (pullRequestInfo) {
         Information("Pull request information available");
-         sonarSettings.PullRequestProvider = "github";
-         sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
-         sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
-         sonarSettings.PullRequestBase = pullRequestBase;
-         sonarSettings.PullRequestBranch = pullRequestBranch;
+        sonarSettings.PullRequestProvider = "github";
+        sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
+        sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
+        sonarSettings.PullRequestBase = pullRequestBase;
+        sonarSettings.PullRequestBranch = pullRequestBranch;
      } else {
-         Information("No pull request information provided");
-         sonarSettings.Branch = GitBranchCurrent(".").FriendlyName;
+        Information("No pull request information provided");
+        if (string.IsNullOrWhiteSpace(branch)) {
+            branch = GitBranchCurrent(".").FriendlyName;
+        }
+
+        sonarSettings.Branch = branch;
      }
 
     SonarBegin(sonarSettings);
