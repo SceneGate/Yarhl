@@ -108,6 +108,7 @@ Task("Run-Unit-Tests")
 {
     // NUnit3 to test libraries with .NET Framework / Mono
     var settings = new NUnit3Settings();
+    settings.NoResults = false;
     if (tests != string.Empty) {
         settings.Test = tests;
     }
@@ -249,6 +250,9 @@ Task("Run-Sonar")
         Login = sonarToken,
         Organization = "scenegate",
         Verbose = true,
+        NUnitReportsPath = MakeAbsolute(File("./TestResult.xml")).FullPath,
+        OpenCoverReportsPath = MakeAbsolute(File("./coverage_unit.xml")).FullPath +
+            "," + MakeAbsolute(File("./coverage_integration.xml")).FullPath,
      };
 
     bool pullRequestInfo = !string.IsNullOrEmpty(pullRequestNumber)
