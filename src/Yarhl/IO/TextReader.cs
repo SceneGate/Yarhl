@@ -42,7 +42,7 @@ namespace Yarhl.IO
         /// Initializes a new instance of the <see cref="TextReader"/> class.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
-        /// <remarks>The default encoding is UTF-8.</remarks>
+        /// <remarks><para>The default encoding is UTF-8.</para></remarks>
         public TextReader(DataStream stream)
             : this(stream, Encoding.UTF8)
         {
@@ -68,7 +68,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        /// <value>The stream.</value>
         public DataStream Stream {
             get;
             private set;
@@ -77,7 +76,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the encoding.
         /// </summary>
-        /// <value>The encoding.</value>
         public Encoding Encoding {
             get;
             private set;
@@ -87,7 +85,7 @@ namespace Yarhl.IO
         /// Gets or sets the new line and set to false AutoNewLine.
         /// </summary>
         /// <value>The new line.</value>
-        /// <remarks>The default value is OS-dependant.</remarks>
+        /// <remarks><para>The default value is OS-dependant.</para></remarks>
         public string NewLine {
             get {
                 return newLine;

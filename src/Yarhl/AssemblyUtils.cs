@@ -49,10 +49,10 @@ namespace Yarhl
         /// Load assemblies from .NET Core.
         /// </summary>
         /// <remarks>
-        /// In .NET Core for some bugs / features we can't use the method
+        /// <para>In .NET Core for some bugs / features we can't use the method
         /// Assembly.LoadFile because two identical types can return false in
         /// an equality. For that reason we need to load the assemblies with
-        /// the AssemblyLoadContext which is only available in .NET Core.
+        /// the AssemblyLoadContext which is only available in .NET Core.</para>
         /// </remarks>
         /// <param name="paths">List of assemblies paths.</param>
         /// <returns>The load assemblies.</returns>

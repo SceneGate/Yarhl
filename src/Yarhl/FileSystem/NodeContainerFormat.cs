@@ -47,7 +47,6 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets the root node containing the children.
         /// </summary>
-        /// <value>The root node.</value>
         public Node Root {
             get;
             private set;
@@ -57,7 +56,6 @@ namespace Yarhl.FileSystem
         /// Gets a value indicating whether this <see cref="NodeContainerFormat"/>
         /// is disposed.
         /// </summary>
-        /// <value><c>true</c> if disposed; otherwise, <c>false</c>.</value>
         public bool Disposed {
             get;
             private set;
@@ -67,8 +65,8 @@ namespace Yarhl.FileSystem
         /// Moves the children from this format to a <see cref="Node"/>.
         /// </summary>
         /// <remarks>
-        /// The node will handle the lifecycle of the children.
-        /// Disposing the format won't dispose the children.
+        /// <para>The node will handle the lifecycle of the children.
+        /// Disposing the format won't dispose the children.</para>
         /// </remarks>
         /// <param name="newNode">Node that will contain the children.</param>
         public void MoveChildrenTo(Node newNode)
@@ -98,7 +96,7 @@ namespace Yarhl.FileSystem
         /// <see cref="NodeContainerFormat"/> object.
         /// </summary>
         /// <param name="disposing">
-        /// If set to <c>true</c> free managed resources also.
+        /// If set to <see langword="true" /> free managed resources also.
         /// It happens from Dispose() calls.
         /// </param>
         protected virtual void Dispose(bool disposing)

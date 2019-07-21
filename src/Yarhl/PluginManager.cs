@@ -33,8 +33,8 @@ namespace Yarhl
     /// Plugin manager.
     /// </summary>
     /// <remarks>
-    /// Plugin assemblies are loaded from the directory with the Yarhl
-    /// assembly and the 'Plugins' subfolder with its children.
+    /// <para>Plugin assemblies are loaded from the directory with the Yarhl
+    /// assembly and the 'Plugins' subfolder with its children.</para>
     /// </remarks>
     public sealed class PluginManager
     {
@@ -61,14 +61,12 @@ namespace Yarhl
         /// <summary>
         /// Gets the name of the plugins directory.
         /// </summary>
-        /// <value>The name of the plugins directory.</value>
         public static string PluginDirectory => "Plugins";
 
         /// <summary>
         /// Gets the plugin manager instance.
         /// </summary>
-        /// <remarks>It initializes the manager if needed.</remarks>
-        /// <value>The plugin manager instance.</value>
+        /// <remarks><para>It initializes the manager if needed.</para></remarks>
         public static PluginManager Instance {
             get {
                 if (singleInstance == null) {

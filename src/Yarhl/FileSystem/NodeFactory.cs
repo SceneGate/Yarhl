@@ -172,7 +172,7 @@ namespace Yarhl.FileSystem
         /// <param name="filter">Filter for files in directory.</param>
         /// <param name="nodeName">Node name.</param>
         /// <param name="subDirectories">
-        /// If <c>true</c> it searchs recursively in subdirectories.
+        /// If <see langword="true" /> it searchs recursively in subdirectories.
         /// </param>
         public static Node FromDirectory(
             string dirPath,

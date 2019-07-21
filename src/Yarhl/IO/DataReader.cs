@@ -40,7 +40,8 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <remarks>
-        /// By default the endianness is LittleEndian and the encoding is UTF-8.
+        /// <para>By default the endianness is LittleEndian and
+        /// the encoding is UTF-8.</para>
         /// </remarks>
         public DataReader(DataStream stream)
         {
@@ -52,7 +53,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        /// <value>The stream.</value>
         public DataStream Stream {
             get;
             private set;
@@ -61,7 +61,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the endianness.
         /// </summary>
-        /// <value>The endianness.</value>
         public EndiannessMode Endianness {
             get;
             set;
@@ -70,7 +69,6 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the default encoding.
         /// </summary>
-        /// <value>The default encoding.</value>
         public Encoding DefaultEncoding {
             get;
             set;
@@ -365,7 +363,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="padding">Padding value.</param>
         /// <param name="absolutePadding">
-        /// If set to <c>true</c> absolute position in the stream.
+        /// If set to <see langword="true" /> absolute position in the stream.
         /// </param>
         public void ReadPadding(int padding, bool absolutePadding = false)
         {
