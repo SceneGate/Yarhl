@@ -164,7 +164,7 @@ public void SaveFile(DataStream stream)
 
 Every game contains many files, which have a specific formats. For example files with extension `.nclr` are a palettes, or `.aar` are a package files. Yarhl helps you to code type as you were actually coding a game format.
 
-To implement a file format, you just need to create a new class that inherits from the [`Format`](xref:Yarhl.FileFormat.Format) class. In this class you just need to add the fields of your format. In more programming terms, your format it's just a data model.
+To implement a file format, you just need to create a new class that implements the (empty) [`IFormat`](xref:Yarhl.FileFormat.IFormat) interface. In this class you just need to add the fields of your format. In more programming terms, your format it's just a data model.
 
 Let's go for a quick example! Take a look into the following bytes from a file that seems to have text from a game menu:
 
@@ -199,9 +199,9 @@ Easy! Don't worry about how to convert that format, we will talk about that late
 
 ### BinaryFormat
 
-[`BinaryFormat`](xref:Yarhl.FileFormat.BinaryFormat) is the most basic format since it just represents raw bytes, a stream. It's... a _binary format_. This format is assigned automatically when we open a file from Yarhl as we will see later.
+[`BinaryFormat`](xref:Yarhl.IO.BinaryFormat) is the most basic format since it just represents raw bytes, a stream. It's... a _binary format_. This format is assigned automatically when we open a file from Yarhl as we will see later.
 
-Its only property [`Stream`](xref:Yarhl.FileFormat.BinaryFormat.Stream*) allows you to access to its inner stream.
+Its only property [`Stream`](xref:Yarhl.IO.BinaryFormat.Stream*) allows you to access to its inner stream.
 
 
 ### NodeContainerFormat
@@ -223,7 +223,7 @@ A node may have child nodes like a folder may have folders and files. You can ad
 The node [`Name`](xref:Yarhl.FileSystem.NavigableNode{Yarhl.FileSystem.Node}.Name) must be unique. You can also get the full path to the node in this new virtual filesystem. That is, if you have a _root_ node with name `MyRoot` and you add a node `Node1`, the [`Path`](xref:Yarhl.FileSystem.NavigableNode{Yarhl.FileSystem.Node}.Path) property for `Node1` will be `/MyRoot/Node1`.
 
 Ah, one more thing before I forget. Regular files in your disk have some bytes associated, right? Well, in the case of nodes they have a [Format](#implementing-file-formats) that we were talking before. That is, it doesn't have to have bytes but it could be a type to represent image, texture, text, font, ... The actual type of the node.
-For instance, let's say we create a node from a disk file, it will have a `BinaryFormat` because for now it's just a bunch of bytes. But if those bytes store a set of menu texts, we could transform its format and associate its actual content type: `MenuSentences`. To the node [`Format`](xref:Yarhl.FileSystem.Node.Format*) property you can set any type that inhertis the [`Format`](xref:Yarhl.FileFormat.Format) class.
+For instance, let's say we create a node from a disk file, it will have a `BinaryFormat` because for now it's just a bunch of bytes. But if those bytes store a set of menu texts, we could transform its format and associate its actual content type: `MenuSentences`. To the node [`Format`](xref:Yarhl.FileSystem.Node.Format*) property you can set any type that implements the [`IFormat`](xref:Yarhl.FileFormat.IFormat) interface.
 
 By the way, there is a property to get the inner `DataStream` when the format of the node is a `BinaryFormat`: [`Stream`](xref:Yarhl.FileSystem.Node.Stream). It will return `null` if the type is not `BinaryFormat`. We added it because to do cool things like:
 
@@ -405,11 +405,11 @@ And that's it! I'm pretty sure you've got enough of converters
 
 ### Transforming nodes
 
-Don't format that a node can have a format. How do we _convert_ the format from a node? We could use the approach from before, but there is a method that will **convert and update** the format of the node: [`Transform`](xref:Yarhl.FileSystem.Node.Transform*). It will also dispose the old format so we don't need to do anything, just transform several times the format of our node until it's the one we want.
+Don't forget that a node can have a format. How do we _convert_ the format from a node? We could use the approach from before, but there are two methods that will **convert and update** the format of the node: [`TransformTo`](xref:Yarhl.FileSystem.Node.TransformTo*) and [`TransformWith`](xref:Yarhl.FileSystem.Node.TransformWith*). They will also dispose the old format so we don't need to do anything, just transform several times the format of our node until it's the one we want.
 
 ```csharp
 var node = NodeFactory.FromFile(path);
-node.Transform<MenuSentences>;
+node.TransformTo<MenuSentences>;
 
 // Now node.Format is MenuSentences
 ```
@@ -420,8 +420,8 @@ or from the first example:
 public void ExportFontImage(string fontPath, string outputPath)
 {
     using (var node = NodeFactory.FromFile(fontPath)) {
-        node.Transform<Font2Binary, BinaryFormat, Font>()
-            .Transform<Font2Image, Font, Image>();
+        node.TransformWith<Font2Binary>()
+            .TransformWith<Font2Image>();
 
         node.GetFormatAs<Image>().Save(outputPath);
     }
