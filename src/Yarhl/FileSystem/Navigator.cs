@@ -41,6 +41,11 @@ namespace Yarhl.FileSystem
         /// <param name="path">Path to search.</param>
         /// <returns>Node or null if not found.</returns>
         /// <typeparam name="T">NavigableNode type.</typeparam>
+        /// <remarks>
+        /// <para>If the path starts with the path separator '/', it is
+        /// considered to be a full path. Otherwise, it would be a relative
+        /// path starting with the node in the argument.</para>
+        /// </remarks>
         public static T SearchNode<T>(T rootNode, string path)
             where T : NavigableNode<T>
         {
@@ -50,22 +55,30 @@ namespace Yarhl.FileSystem
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
 
-            if (!path.StartsWith(rootNode.Path, StringComparison.Ordinal))
-                return null;
+            // Absolute path
+            if (path.StartsWith(NodeSystem.PathSeparator)) {
+                // Path must start the same way
+                if (!path.StartsWith(rootNode.Path, StringComparison.Ordinal)) {
+                    return null;
+                }
 
-            var queue = new Queue<T>();
-            queue.Enqueue(rootNode);
-
-            while (queue.Count > 0) {
-                T currentNode = queue.Dequeue();
-                if (path == currentNode.Path)
-                    return currentNode;
-
-                foreach (T child in currentNode.Children)
-                    queue.Enqueue(child);
+                // And then we remove the initial path and search relative.
+                path = path.Remove(0, rootNode.Path.Length);
             }
 
-            return null;
+            string[] paths = path.Split(
+                new[] { NodeSystem.PathSeparator },
+                StringSplitOptions.RemoveEmptyEntries);
+
+            T currentNode = rootNode;
+            foreach (string segment in paths) {
+                currentNode = currentNode.Children[segment];
+                if (currentNode == null) {
+                    return null;
+                }
+            }
+
+            return currentNode;
         }
 
         /// <summary>
