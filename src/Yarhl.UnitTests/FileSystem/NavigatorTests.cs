@@ -92,6 +92,19 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void SearchRelativePath()
+        {
+            Node nodeSubChild = new Node("SubChild");
+            Node nodeChild = new Node("Child");
+            nodeChild.Add(nodeSubChild);
+            Node nodeParent = new Node("Parent");
+            nodeParent.Add(nodeChild);
+
+            Assert.AreSame(nodeSubChild, Navigator.SearchNode(nodeParent, "Child/SubChild"));
+            Assert.AreSame(nodeSubChild, Navigator.SearchNode(nodeChild, "SubChild"));
+        }
+
+        [Test]
         public void SearchNotFound()
         {
             Node nodeChild = new Node("Child");
