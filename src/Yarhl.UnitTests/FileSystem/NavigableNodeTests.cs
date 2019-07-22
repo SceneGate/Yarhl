@@ -209,6 +209,153 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void RemoveChildByNode()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            var child2 = new DummyNavigable("Child2");
+            node.Add(child1);
+            node.Add(child2);
+
+            Assert.That(node.Children.Count, Is.EqualTo(2));
+            Assert.That(node.Remove(child1), Is.True);
+
+            Assert.That(node.Children.Count, Is.EqualTo(1));
+            Assert.That(node.Children[0], Is.SameAs(child2));
+            Assert.That(child1.Parent, Is.Null);
+        }
+
+        [Test]
+        public void RemoveChildByNodeDoesNotDispose()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            node.Add(child1);
+
+            Assert.That(node.Remove(child1), Is.True);
+
+            Assert.That(child1.Disposed, Is.False);
+        }
+
+        [Test]
+        public void RemoveChildByNodeReturnsFalseIfNoFound()
+        {
+            var node = new DummyNavigable("My parent");
+            var node2 = new DummyNavigable("My parent2");
+            var child1 = new DummyNavigable("Child1");
+            node2.Add(child1);
+            var child2 = new DummyNavigable("Child2");
+            node.Add(child2);
+
+            Assert.That(node.Children.Count, Is.EqualTo(1));
+            Assert.That(node.Children[0], Is.SameAs(child2));
+            Assert.That(node.Remove(child1), Is.False);
+
+            Assert.That(node.Children.Count, Is.EqualTo(1));
+            Assert.That(child1.Disposed, Is.False);
+            Assert.That(child1.Parent, Is.SameAs(node2));
+        }
+
+        [Test]
+        public void RemoveChildByNodeThrowsWhenNull()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            node.Add(child1);
+
+            Assert.That(
+                () => node.Remove((DummyNavigable)null),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void RemoveChildByNodeThrowsWhenDisposed()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            node.Add(child1);
+            node.Dispose();
+
+            Assert.That(
+                () => node.Remove(child1),
+                Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void RemoveChildByName()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            var child2 = new DummyNavigable("Child2");
+            node.Add(child1);
+            node.Add(child2);
+
+            Assert.That(node.Children.Count, Is.EqualTo(2));
+            Assert.That(node.Remove("Child1"), Is.True);
+
+            Assert.That(node.Children.Count, Is.EqualTo(1));
+            Assert.That(node.Children[0], Is.SameAs(child2));
+        }
+
+        [Test]
+        public void RemoveChildByNameDisposes()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            node.Add(child1);
+
+            Assert.That(node.Remove("Child1"), Is.True);
+            Assert.That(child1.Disposed, Is.True);
+        }
+
+        [Test]
+        public void RemoveChildByNameReturnsFalseIfNoFound()
+        {
+            var node = new DummyNavigable("My parent");
+            var node2 = new DummyNavigable("My parent2");
+            var child1 = new DummyNavigable("Child1");
+            node2.Add(child1);
+            var child2 = new DummyNavigable("Child2");
+            node.Add(child2);
+
+            Assert.That(node.Children.Count, Is.EqualTo(1));
+            Assert.That(node.Children[0], Is.SameAs(child2));
+            Assert.That(node.Remove("Child1"), Is.False);
+
+            Assert.That(node.Children.Count, Is.EqualTo(1));
+            Assert.That(child1.Disposed, Is.False);
+            Assert.That(child1.Parent, Is.SameAs(node2));
+        }
+
+        [Test]
+        public void RemoveChildByNameThrowsWhenNull()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            node.Add(child1);
+
+            Assert.That(
+                () => node.Remove((string)null),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => node.Remove(string.Empty),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void RemoveChildByNameThrowsWhenDisposed()
+        {
+            var node = new DummyNavigable("My parent");
+            var child1 = new DummyNavigable("Child1");
+            node.Add(child1);
+            node.Dispose();
+
+            Assert.That(
+                () => node.Remove("Child1"),
+                Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
         public void RemoveChildren()
         {
             var children = new List<DummyNavigable>();

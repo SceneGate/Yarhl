@@ -154,7 +154,60 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Removes all the children from the node.
+        /// Remove a node.
+        /// </summary>
+        /// <param name="node">Node reference to remove.</param>
+        /// <remarks>
+        /// <para>This method does NOT dispose the removed node.</para>
+        /// </remarks>
+        /// <returns>Whether the node was found and removed successfully.</returns>
+        public bool Remove(T node)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
+            bool result = children.Remove(node);
+            if (result) {
+                node.Parent = null;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Remove a node with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the node to remove.</param>
+        /// <remarks>
+        /// <para>This method <strong>does</strong> dispose the removed node.
+        /// If you don't want to dispose it, search the node and call the
+        /// overload with the node argument.</para>
+        /// </remarks>
+        /// <returns>Whether the node was found and removed successfully.</returns>
+        public bool Remove(string name)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+
+            int index = children.FindIndex(child => child.Name == name);
+            if (index == -1) {
+                return false;
+            }
+
+            children[index].Dispose();
+            children.RemoveAt(index);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Removes and dispose all the children from the node.
         /// </summary>
         public void RemoveChildren()
         {
