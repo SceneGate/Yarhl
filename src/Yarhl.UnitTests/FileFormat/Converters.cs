@@ -23,6 +23,11 @@ namespace Yarhl.UnitTests.FileFormat
   // to create a file per test converter.
   #pragma warning disable SA1402, SA1649
 
+    public interface IInterface
+    {
+        int Z { get; }
+    }
+
     public class SingleOuterConverterExample : IConverter<string, uint>
     {
         public uint Convert(string source)

@@ -162,6 +162,8 @@ namespace Yarhl.UnitTests.FileFormat
             Base val = new Base { X = 3 };
             Assert.Throws<InvalidOperationException>(
                 () => ConvertFormat.To<ushort>(val));
+            Assert.Throws<InvalidOperationException>(
+                () => ConvertFormat.With<ConvertDerived>(val));
         }
 
         [Test]
@@ -192,6 +194,21 @@ namespace Yarhl.UnitTests.FileFormat
             int conv = 0;
             Assert.DoesNotThrow(() => conv = ConvertFormat.To<int>(format));
             Assert.AreEqual(15, conv);
+
+            Assert.DoesNotThrow(() => conv = (int)ConvertFormat.With<ConvertBase>(format));
+            Assert.AreEqual(15, conv);
+        }
+
+        [Test]
+        public void ConvertFromImplementationWithInterfaceConverter()
+        {
+            var format = new InterfaceImpl { Z = 14 };
+            int conv = 0;
+            Assert.DoesNotThrow(() => conv = (int)ConvertFormat.With<ConverterInterface>(format));
+            Assert.AreEqual(14, conv);
+
+            Assert.DoesNotThrow(() => conv = ConvertFormat.To<int>(format));
+            Assert.AreEqual(14, conv);
         }
 
         [Test]
@@ -415,6 +432,20 @@ namespace Yarhl.UnitTests.FileFormat
             public byte Convert(StringFormatTest format)
             {
                 return (byte)(System.Convert.ToByte(format.Value) + Offset);
+            }
+        }
+
+        public class InterfaceImpl : IInterface
+        {
+            public int Z { get; set; }
+        }
+
+        public class ConverterInterface :
+            IConverter<IInterface, int>
+        {
+            public int Convert(IInterface source)
+            {
+                return source.Z;
             }
         }
 
