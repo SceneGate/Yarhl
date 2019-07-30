@@ -148,7 +148,7 @@ namespace Yarhl.FileFormat
             bool canConvert = converterInterfaces.Any(i =>
                 i.IsGenericType &&
                 i.GenericTypeArguments.Length == 2 &&
-                i.GenericTypeArguments[0] == src.GetType());
+                i.GenericTypeArguments[0].IsAssignableFrom(src.GetType()));
 
             if (!canConvert) {
                 throw new InvalidOperationException(
