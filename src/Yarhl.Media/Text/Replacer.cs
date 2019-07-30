@@ -89,25 +89,40 @@ namespace Yarhl.Media.Text
         }
 
         /// <summary>
-        /// Transform a text replacing the strings from the map.
+        /// Transform a text replacing the chars from source to destination.
         /// </summary>
         /// <param name="text">The text to transform.</param>
-        /// <param name="originalText">
-        /// True to replace strings from the Original field of the map with the
-        /// Modified version. False to apply the reverse.
-        /// </param>
         /// <remarks>
         /// <para>When multiple original fields in the map have same start, the
         /// later map entry will have preference.</para>
         /// </remarks>
         /// <returns>The transformed text.</returns>
-        public string Transform(string text, bool originalText)
+        public string TransformForward(string text)
+        {
+            return Transform(text, true);
+        }
+
+        /// <summary>
+        /// Transform a text with replacing chars from destination to source.
+        /// </summary>
+        /// <param name="text">The text to transform.</param>
+        /// <remarks>
+        /// <para>When multiple original fields in the map have same start, the
+        /// later map entry will have preference.</para>
+        /// </remarks>
+        /// <returns>The transformed text.</returns>
+        public string TransformBackward(string text)
+        {
+            return Transform(text, false);
+        }
+
+        string Transform(string text, bool isOriginalText)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
             // Get a list of matches by order of the map
-            IDictionary<int, int> matches = MatchMap(text, originalText);
+            IDictionary<int, int> matches = MatchMap(text, isOriginalText);
 
             // From the list of matches, rebuild the string
             StringBuilder builder = new StringBuilder();
@@ -117,8 +132,8 @@ namespace Yarhl.Media.Text
                     builder.Append(text[textIdx++]);
                 } else {
                     ReplacerEntry entry = map[matches[textIdx]];
-                    string original = originalText ? entry.Original : entry.Modified;
-                    string modified = originalText ? entry.Modified : entry.Original;
+                    string original = isOriginalText ? entry.Original : entry.Modified;
+                    string modified = isOriginalText ? entry.Modified : entry.Original;
 
                     // Append the modified in the new string and skip the original
                     builder.Append(modified);
