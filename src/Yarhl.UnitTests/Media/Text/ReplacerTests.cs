@@ -124,8 +124,8 @@ namespace Yarhl.UnitTests.Media.Text
             replacer.Add("a", "z");
             replacer.Add("b", "y");
 
-            Assert.That(replacer.Transform("ababtr", true), Is.EqualTo("zyzytr"));
-            Assert.That(replacer.Transform("zyzytr", false), Is.EqualTo("ababtr"));
+            Assert.That(replacer.TransformForward("ababtr"), Is.EqualTo("zyzytr"));
+            Assert.That(replacer.TransformBackward("zyzytr"), Is.EqualTo("ababtr"));
         }
 
         [Test]
@@ -135,8 +135,8 @@ namespace Yarhl.UnitTests.Media.Text
             replacer.Add("<br/>", "\n");
             replacer.Add("z", ".");
 
-            Assert.That(replacer.Transform("zz<br/>zz", true), Is.EqualTo("..\n.."));
-            Assert.That(replacer.Transform("..\n..", false), Is.EqualTo("zz<br/>zz"));
+            Assert.That(replacer.TransformForward("zz<br/>zz"), Is.EqualTo("..\n.."));
+            Assert.That(replacer.TransformBackward("..\n.."), Is.EqualTo("zz<br/>zz"));
         }
 
         [Test]
@@ -146,15 +146,15 @@ namespace Yarhl.UnitTests.Media.Text
             replacer.Add("a", "z");
             replacer.Add("ab", "y");
 
-            Assert.That(replacer.Transform("aabaa", true), Is.EqualTo("zyzz"));
-            Assert.That(replacer.Transform("zyzz", false), Is.EqualTo("aabaa"));
+            Assert.That(replacer.TransformForward("aabaa"), Is.EqualTo("zyzz"));
+            Assert.That(replacer.TransformBackward("zyzz"), Is.EqualTo("aabaa"));
 
             replacer = new Replacer();
             replacer.Add("ab", "y");
             replacer.Add("a", "z");
 
-            Assert.That(replacer.Transform("aabaa", true), Is.EqualTo("zzbzz"));
-            Assert.That(replacer.Transform("zzbzz", false), Is.EqualTo("aabaa"));
+            Assert.That(replacer.TransformForward("aabaa"), Is.EqualTo("zzbzz"));
+            Assert.That(replacer.TransformBackward("zzbzz"), Is.EqualTo("aabaa"));
         }
 
         [Test]
@@ -164,20 +164,20 @@ namespace Yarhl.UnitTests.Media.Text
             replacer.Add("a", "b");
             replacer.Add("b", "c");
 
-            Assert.That(replacer.Transform("aabaa", true), Is.EqualTo("bbcbb"));
-            Assert.That(replacer.Transform("bbcbb", false), Is.EqualTo("aabaa"));
+            Assert.That(replacer.TransformForward("aabaa"), Is.EqualTo("bbcbb"));
+            Assert.That(replacer.TransformBackward("bbcbb"), Is.EqualTo("aabaa"));
 
             replacer.Add("b", "a");
 
-            Assert.That(replacer.Transform("aabaa", true), Is.EqualTo("bbabb"));
-            Assert.That(replacer.Transform("bbabb", false), Is.EqualTo("aabaa"));
+            Assert.That(replacer.TransformForward("aabaa"), Is.EqualTo("bbabb"));
+            Assert.That(replacer.TransformBackward("bbabb"), Is.EqualTo("aabaa"));
         }
 
         [Test]
         public void TransformWithoutMapReturnsOriginal()
         {
             Replacer replacer = new Replacer();
-            Assert.That(replacer.Transform("abc", true), Is.EqualTo("abc"));
+            Assert.That(replacer.TransformForward("abc"), Is.EqualTo("abc"));
         }
 
         [Test]
@@ -186,7 +186,7 @@ namespace Yarhl.UnitTests.Media.Text
             Replacer replacer = new Replacer();
             replacer.Add("a", "b");
 
-            Assert.That(replacer.Transform(string.Empty, true), Is.EqualTo(string.Empty));
+            Assert.That(replacer.TransformForward(string.Empty), Is.EqualTo(string.Empty));
         }
 
         [Test]
@@ -195,7 +195,7 @@ namespace Yarhl.UnitTests.Media.Text
             Replacer replacer = new Replacer();
             replacer.Add("a", "b");
 
-            Assert.That(() => replacer.Transform(null, true), Throws.ArgumentNullException);
+            Assert.That(() => replacer.TransformForward(null), Throws.ArgumentNullException);
         }
     }
 }
