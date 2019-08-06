@@ -163,7 +163,9 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat((IFormat)ConvertFormat.To(dst, Format));
+            object result = ConvertFormat.To(dst, Format);
+            CastAndChangeFormat(result);
+
             return this;
         }
 
@@ -183,7 +185,9 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat((IFormat)ConvertFormat.With<TConv>(Format));
+            object result = ConvertFormat.With<TConv>(Format);
+            CastAndChangeFormat(result);
+
             return this;
         }
 
@@ -206,8 +210,9 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            var dst = ConvertFormat.With<TConv, TParam>(param, Format);
-            ChangeFormat((IFormat)dst);
+            var result = ConvertFormat.With<TConv, TParam>(param, Format);
+            CastAndChangeFormat(result);
+
             return this;
         }
 
@@ -229,7 +234,9 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            ChangeFormat((IFormat)ConvertFormat.With(converterType, Format));
+            object result = ConvertFormat.With(converterType, Format);
+            CastAndChangeFormat(result);
+
             return this;
         }
 
@@ -278,6 +285,20 @@ namespace Yarhl.FileSystem
         {
             RemoveChildren();
             GetFormatAs<NodeContainerFormat>().MoveChildrenTo(this);
+        }
+
+        void CastAndChangeFormat(object newFormat)
+        {
+            if (newFormat == null) {
+                // Null may be an acceptable format, for now.
+                ChangeFormat(null);
+            } else if (newFormat is IFormat format) {
+                ChangeFormat(format);
+            } else {
+                throw new InvalidOperationException(
+                    "Result format does not implement the IFormat interface. " +
+                    "Cannot assign to the Format property.");
+            }
         }
     }
 }

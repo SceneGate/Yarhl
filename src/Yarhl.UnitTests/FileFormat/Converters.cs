@@ -148,6 +148,18 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
+    public class NoFormat
+    {
+    }
+
+    public class NullSource : IFormat
+    {
+    }
+
+    public class NullDestination : IFormat
+    {
+    }
+
     public class StringFormatTest2IntFormatTestConverter :
         IConverter<StringFormatTest, IntFormatTest>,
         IConverter<IntFormatTest, StringFormatTest>
@@ -160,6 +172,34 @@ namespace Yarhl.UnitTests.FileFormat
         public StringFormatTest Convert(IntFormatTest test)
         {
             return new StringFormatTest(test.Value.ToString());
+        }
+    }
+
+    public class StringFormatTest2NoFormat :
+        IConverter<StringFormatTest, NoFormat>,
+        IInitializer<int>
+    {
+        public void Initialize(int x)
+        {
+        }
+
+        public NoFormat Convert(StringFormatTest source)
+        {
+            return new NoFormat();
+        }
+    }
+
+    public class NullConverter :
+        IConverter<NullSource, NullDestination>,
+        IInitializer<int>
+    {
+        public void Initialize(int x)
+        {
+        }
+
+        public NullDestination Convert(NullSource source)
+        {
+            return null;
         }
     }
 
