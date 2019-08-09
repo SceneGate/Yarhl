@@ -403,7 +403,7 @@ Task("CI-Linux")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover")
-    .IsDependentOn("Build-Doc")
+    //.IsDependentOn("Build-Doc")  // Waiting for https://github.com/dotnet/docfx/issues/4857
     .IsDependentOn("Pack");
 
 Task("CI-MacOS")
