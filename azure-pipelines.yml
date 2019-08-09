@@ -72,9 +72,10 @@ steps:
     targetPath: artifacts/
   condition: eq(variables['Agent.OS'], 'Linux')
 
-- task: PublishPipelineArtifact@0
-  displayName: '[Linux] Publish doc artifacts'
-  inputs:
-    artifactName: 'Documentation'
-    targetPath: docs/_site/
-  condition: eq(variables['Agent.OS'], 'Linux')
+# Disable because of bugs in DocFX
+# - task: PublishPipelineArtifact@0
+#   displayName: '[Linux] Publish doc artifacts'
+#   inputs:
+#     artifactName: 'Documentation'
+#     targetPath: docs/_site/
+#   condition: eq(variables['Agent.OS'], 'Linux')
