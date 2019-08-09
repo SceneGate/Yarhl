@@ -35,8 +35,8 @@
 #addin nuget:?package=Cake.Git&version=0.19.0
 
 // Documentation
-#addin nuget:?package=Cake.DocFx&version=0.12.0
-#tool nuget:?package=docfx.console&version=2.41.0
+#addin nuget:?package=Cake.DocFx&version=0.13.0
+#tool nuget:?package=docfx.console&version=2.44.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -289,16 +289,6 @@ Task("Build-Doc")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    // Workaround for
-    // https://github.com/dotnet/docfx/issues/3389
-    NuGetInstall("SQLitePCLRaw.core", new NuGetInstallSettings {
-        ExcludeVersion  = true,
-        OutputDirectory = "./tools"
-    });
-    CopyFileToDirectory(
-        "tools/SQLitePCLRaw.core/lib/net45/SQLitePCLRaw.core.dll",
-        GetDirectories("tools/docfx.console.*").Single().Combine("tools"));
-
     DocFxMetadata("docs/docfx.json");
     DocFxBuild("docs/docfx.json");
 });
