@@ -306,6 +306,29 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformToWithTypeThrowsIfConverterDoesNotReturnIFormat()
+        {
+            var dummy = new StringFormatTest("3");
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformTo(typeof(NoFormat)),
+                Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void TransformToWithTypeDoesNotThrowIfReturnsNull()
+        {
+            var dummy = new NullSource();
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformTo(typeof(NullDestination)),
+                Throws.Nothing);
+            Assert.That(node.Format, Is.Null);
+        }
+
+        [Test]
         public void TransformToGenericDisposeFormat()
         {
             var dummyFormat = new StringFormatTest("3");
@@ -349,6 +372,29 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformWithGenericThrowsIfConverterDoesNotReturnIFormat()
+        {
+            var dummy = new StringFormatTest("3");
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformWith<StringFormatTest2NoFormat>(),
+                Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void TransformWithGenericDoesNotThrowIfReturnsNull()
+        {
+            var dummy = new NullSource();
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformWith<NullConverter>(),
+                Throws.Nothing);
+            Assert.That(node.Format, Is.Null);
+        }
+
+        [Test]
         public void TransformWithInit()
         {
             var dummyFormat = new StringFormatTest("3");
@@ -369,6 +415,29 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(
                 node.TransformWith<PrivateConverter, int>(4),
                 Is.SameAs(node));
+        }
+
+        [Test]
+        public void TransformWithInitThrowsIfConverterDoesNotReturnIFormat()
+        {
+            var dummy = new StringFormatTest("3");
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformWith<StringFormatTest2NoFormat, int>(2),
+                Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void TransformWithInitDoesNotThrowIfReturnsNull()
+        {
+            var dummy = new NullSource();
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformWith<NullConverter, int>(2),
+                Throws.Nothing);
+            Assert.That(node.Format, Is.Null);
         }
 
         [Test]
@@ -417,6 +486,29 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(
                 () => node.TransformWith(myType),
                 Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void TransformWithTypeThrowsIfConverterDoesNotReturnIFormat()
+        {
+            var dummy = new StringFormatTest("3");
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformWith(typeof(StringFormatTest2NoFormat)),
+                Throws.InvalidOperationException);
+        }
+
+        [Test]
+        public void TransformWithTypeDoesNotThrowIfReturnsNull()
+        {
+            var dummy = new NullSource();
+            Node node = new Node("mytest", dummy);
+
+            Assert.That(
+                () => node.TransformWith(typeof(NullConverter)),
+                Throws.Nothing);
+            Assert.That(node.Format, Is.Null);
         }
 
         [Test]

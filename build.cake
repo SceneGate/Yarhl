@@ -292,6 +292,7 @@ Task("Build-Doc")
     // Workaround for
     // https://github.com/dotnet/docfx/issues/3389
     NuGetInstall("SQLitePCLRaw.core", new NuGetInstallSettings {
+        Version = "1.1.14",
         ExcludeVersion  = true,
         OutputDirectory = "./tools"
     });
@@ -402,7 +403,7 @@ Task("CI-Linux")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover")
-    .IsDependentOn("Build-Doc")
+    //.IsDependentOn("Build-Doc")  // Waiting for https://github.com/dotnet/docfx/issues/4857
     .IsDependentOn("Pack");
 
 Task("CI-MacOS")
