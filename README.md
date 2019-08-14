@@ -19,7 +19,7 @@ Mac OS X.
 ## Documentation
 
 Check our on-line API overview: [Mastering Yarhl](https://scenegate.github.io/Yarhl/articles/Mastering-Yarhl.html)
-and the API documentation [here](https://scenegate.github.io/Yarhl/).
+and the API documentation [here](https://scenegate.github.io/Yarhl/api/Yarhl.html).
 
 ## Install
 
