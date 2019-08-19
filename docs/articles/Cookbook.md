@@ -43,7 +43,7 @@ public class ConverterWithParameter :
   IConverter<BinaryFormat, Po>, 
   IConverter<Po, BinaryFormat>
 
-TransformWith<ConverterWithParameter, MyClass>(MyClass.Property)
+TransformWith<ConverterWithParameter, MyClass>(myClassInstance)
 ```
 
 
