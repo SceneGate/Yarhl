@@ -5,8 +5,48 @@
 ```csharp
 ```
 
-
 ## FileSystem Examples
+### Using converters with parameters
+```csharp
+public class ConverterWithParameter :
+        IInitializer<int>,
+        IConverter<BinaryFormat, Po>,
+        IConverter<Po, BinaryFormat>
+    {
+
+        public int Parameter { get; set; }
+
+        public void Initialize(int param)
+        {
+            Parameter = param;
+        }
+
+        public Po Convert(BinaryFormat source)
+        {
+            // Converter
+        }
+
+        public BinaryFormat Convert(Po source)
+        {
+            // Converter
+        }
+    }
+```
+
+Then you can use `TransformWith<ConverterWithParameter, int>(3)`.
+
+You can use a custom class too:
+
+```csharp
+public class ConverterWithParameter : 
+  IInitializer<MyClass>, 
+  IConverter<BinaryFormat, Po>, 
+  IConverter<Po, BinaryFormat>
+
+TransformWith<ConverterWithParameter, MyClass>(MyClass.Property)
+```
+
+
 ### Creating directory structure
 ```csharp
 ```
