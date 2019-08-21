@@ -617,61 +617,39 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadPadding()
+        public void SkipPadding()
         {
             byte[] buffer = { 0xCA, 0xFE, 0x00, 0x00 };
             stream.Write(buffer, 0, buffer.Length);
 
             stream.Position = 0;
             reader.ReadUInt16();
-            reader.ReadPadding(4);
+            reader.SkipPadding(4);
 
             Assert.AreEqual(buffer.Length, stream.Position);
         }
 
         [Test]
-        public void ReadPaddingWhenNoNeed()
+        public void SkipPaddingWhenNoNeed()
         {
             byte[] buffer = { 0xCA, 0xFE, 0x00, 0x00 };
             stream.Write(buffer, 0, buffer.Length);
 
             stream.Position = 0;
             reader.ReadUInt32();
-            reader.ReadPadding(4);
+            reader.SkipPadding(4);
 
             Assert.AreEqual(buffer.Length, stream.Position);
         }
 
         [Test]
-        public void ReadPaddingAbsoluteMode()
+        public void SkipPaddingInvalidArguments()
         {
-            stream.WriteByte(0xAF);
-            stream.Write(new byte[] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, 0, 7);
-            using (var stream2 = new DataStream(stream, 1, 7)) {
-                reader = new DataReader(stream2);
-
-                byte[] buffer = { 0xCA, 0xFE, 0x00, 0x00, 0xFF, 0xFF, 0xFF };
-                stream2.Write(buffer, 0, buffer.Length);
-
-                stream2.Position = 0;
-                reader.ReadUInt32();
-
-                reader.ReadPadding(4);
-                Assert.AreEqual(4, stream2.Position);
-
-                reader.ReadPadding(4, true);
-                Assert.AreEqual(7, stream2.Position);
-            }
+            Assert.Throws<ArgumentOutOfRangeException>(() => reader.SkipPadding(-2));
         }
 
         [Test]
-        public void ReadPaddingInvalidArguments()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => reader.ReadPadding(-2));
-        }
-
-        [Test]
-        public void ReadPaddingLessEqualOneDoesNothing()
+        public void SkipPaddingLessEqualOneDoesNothing()
         {
             byte[] buffer = { 0xCA, 0xFE, 0x00, 0x00 };
             stream.Write(buffer, 0, buffer.Length);
@@ -679,10 +657,10 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             reader.ReadUInt32();
 
-            reader.ReadPadding(0);
+            reader.SkipPadding(0);
             Assert.AreEqual(buffer.Length, stream.Position);
 
-            reader.ReadPadding(1);
+            reader.SkipPadding(1);
             Assert.AreEqual(buffer.Length, stream.Position);
         }
     }

@@ -42,7 +42,7 @@ namespace Yarhl.IO
         /// <para>By default the endianess is LittleEndian and
         /// the encoding is UTF-8.</para>
         /// </remarks>
-        public DataWriter(DataStream stream)
+        public DataWriter(IStream stream)
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
@@ -53,7 +53,7 @@ namespace Yarhl.IO
         /// Gets the stream.
         /// </summary>
         /// <value>The stream.</value>
-        public DataStream Stream {
+        public IStream Stream {
             get;
             private set;
         }
@@ -461,20 +461,16 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="val">Value to repeat.</param>
         /// <param name="padding">Padding value.</param>
-        /// <param name="absolutePadding">
-        /// If set to <see langword="true" /> pad using the absolute position
-        /// in the stream.
-        /// </param>
-        public void WritePadding(byte val, int padding, bool absolutePadding = false)
+        public void WritePadding(byte val, int padding)
         {
             if (padding < 0)
                 throw new ArgumentOutOfRangeException(nameof(padding));
 
-            if (padding <= 1)
+            if (padding <= 1) {
                 return;
+            }
 
-            long position = absolutePadding ? Stream.AbsolutePosition : Stream.Position;
-            WriteTimes(val, position.Pad(padding) - position);
+            WriteTimes(val, Stream.Position.Pad(padding) - Stream.Position);
         }
 
         void WriteNumber(ulong number, byte numBytes)
