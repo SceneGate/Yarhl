@@ -241,11 +241,12 @@ namespace Yarhl.IO
                 encoding = DefaultEncoding;
 
             long startPos = Stream.Position;
+            long streamLength = Stream.Length;
 
             // Reads the maximum number of bytes possible to get that number of chars
             int charLength = encoding.GetMaxByteCount(count);
-            if (charLength > Stream.Length - Stream.Position)
-                charLength = (int)(Stream.Length - Stream.Position);
+            if (charLength > streamLength - startPos)
+                charLength = (int)(streamLength - startPos);
 
             byte[] buffer = ReadBytes(charLength);
             char[] charArray = encoding.GetChars(buffer);
