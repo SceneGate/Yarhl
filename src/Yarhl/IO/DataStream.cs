@@ -35,7 +35,7 @@ namespace Yarhl.IO
     /// <remarks>
     /// <para>Custom implementation of a Stream based on System.IO.Stream.</para>
     /// </remarks>
-    public class DataStream : IDisposable
+    public class DataStream : IStream, IDisposable
     {
         static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
         readonly Stack<long> positionStack = new Stack<long>();
@@ -212,7 +212,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the position from the start of this stream.
         /// </summary>
-        public long Position {
+        public virtual long Position {
             get {
                 return position;
             }
@@ -230,7 +230,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the length of this stream.
         /// </summary>
-        public long Length {
+        public virtual long Length {
             get {
                 return length;
             }
@@ -384,7 +384,7 @@ namespace Yarhl.IO
         /// Reads the next byte.
         /// </summary>
         /// <returns>The next byte.</returns>
-        public byte ReadByte()
+        public virtual byte ReadByte()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -404,7 +404,7 @@ namespace Yarhl.IO
         /// <param name="buffer">Buffer to copy data.</param>
         /// <param name="index">Index to start copying in buffer.</param>
         /// <param name="count">Number of bytes to read.</param>
-        public int Read(byte[] buffer, int index, int count)
+        public virtual int Read(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -446,17 +446,19 @@ namespace Yarhl.IO
         /// <summary>
         /// Writes a byte.
         /// </summary>
-        /// <param name="val">Byte value.</param>
-        public void WriteByte(byte val)
+        /// <param name="data">Byte value.</param>
+        public virtual void WriteByte(byte data)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
             BaseStream.Position = AbsolutePosition;
-            BaseStream.WriteByte(val);
+            BaseStream.WriteByte(data);
 
-            if (Position == Length)
+            if (Position == Length) {
                 Length++;
+            }
+
             Position++;
         }
 
@@ -466,7 +468,7 @@ namespace Yarhl.IO
         /// <param name="buffer">Buffer to write.</param>
         /// <param name="index">Index in the buffer.</param>
         /// <param name="count">Bytes to write.</param>
-        public void Write(byte[] buffer, int index, int count)
+        public virtual void Write(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));

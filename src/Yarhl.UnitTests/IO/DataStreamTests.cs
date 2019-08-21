@@ -479,6 +479,24 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CanPreallocateLengthForSubstream()
+        {
+            DataStream parent = new DataStream();
+            parent.BaseStream.SetLength(11);
+            parent.Length = 11;
+            parent.WriteByte(0xFF);
+            Assert.That(parent.Length, Is.EqualTo(11));
+
+            DataStream child = new DataStream(parent, 1, 10);
+            Assert.That(child.Length, Is.EqualTo(10));
+            Assert.That(parent.BaseStream.Length, Is.EqualTo(11));
+
+            for (int i = 0; i < 10; i++) {
+                Assert.That(child.ReadByte(), Is.EqualTo(0));
+            }
+        }
+
+        [Test]
         public void LengthAfterDisposeThrowException()
         {
             Stream baseStream = new MemoryStream();

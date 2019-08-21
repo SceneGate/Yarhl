@@ -959,37 +959,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void WritePaddingAbsoluteMode()
-        {
-            DataStream stream = new DataStream();
-            stream.WriteByte(0xAF);
-            stream.Write(new byte[] { 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA }, 0, 7);
-
-            DataStream stream2 = new DataStream(stream, 1, 7);
-            DataWriter writer = new DataWriter(stream2);
-
-            writer.Write(0xCAFEu);
-            writer.WritePadding(0xFF, 4);
-
-            byte[] expected = { 0xAF, 0xFE, 0xCA, 0x00, 0x00 };
-
-            stream.Position = 0;
-            byte[] actual = new byte[expected.Length];
-            stream.Read(actual, 0, expected.Length);
-            Assert.IsTrue(expected.SequenceEqual(actual));
-
-            writer.WritePadding(0xFF, 4, true);
-
-            byte[] expected2 = { 0xAF, 0xFE, 0xCA, 0x00, 0x00, 0xFF, 0xFF, 0xFF };
-            Assert.AreEqual(expected2.Length, stream.Length);
-
-            stream.Position = 0;
-            byte[] actual2 = new byte[expected2.Length];
-            stream.Read(actual2, 0, expected2.Length);
-            Assert.IsTrue(expected2.SequenceEqual(actual2));
-        }
-
-        [Test]
         public void WritePaddingInvalidArguments()
         {
             DataStream stream = new DataStream();
