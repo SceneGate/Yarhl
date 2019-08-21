@@ -273,7 +273,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets a value indicating whether the position is at end of the stream.
         /// </summary>
-        public bool EndOfStream {
+        public virtual bool EndOfStream {
             get {
                 return Position >= Length;
             }
