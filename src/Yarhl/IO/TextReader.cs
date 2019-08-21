@@ -145,30 +145,35 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(token));
 
             // If starting is EOF, then return null
-            if (Stream.EndOfStream)
+            if (Stream.EndOfStream) {
                 return null;
+            }
 
             SkipPreamble();
 
-            const int BufferSize = 128;
-            byte[] buffer = new byte[BufferSize];
+            long startPos = Stream.Position;
+            long streamLength = Stream.Length;
 
             // Gather bytes from buffer to buffer into a list and try to
             // convert to find the token. This approach is faster since we
             // read blocks and it avoids issues with half-encoded chars.
-            long startPos = Stream.Position;
+            const int BufferSize = 128;
+            byte[] buffer = new byte[BufferSize];
+
             List<byte> textBuffer = new List<byte>();
             string text = string.Empty;
             int matchIndex = -1;
 
             while (matchIndex == -1) {
-                if (Stream.EndOfStream)
+                if (Stream.EndOfStream) {
                     break;
+                }
 
                 // Read buffer size if possible, otherwise remaining bytes
-                int size = Stream.Position + BufferSize <= Stream.Length ?
+                long currentPosition = Stream.Position;
+                int size = currentPosition + BufferSize <= streamLength ?
                     BufferSize :
-                    (int)(Stream.Length - Stream.Position);
+                    (int)(streamLength - currentPosition);
 
                 int read = Stream.Read(buffer, 0, size);
                 textBuffer.AddRange(buffer.Take(read));

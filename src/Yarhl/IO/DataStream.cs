@@ -212,7 +212,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the position from the start of this stream.
         /// </summary>
-        public virtual long Position {
+        public long Position {
             get {
                 return position;
             }
@@ -230,7 +230,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets or sets the length of this stream.
         /// </summary>
-        public virtual long Length {
+        public long Length {
             get {
                 return length;
             }
@@ -273,7 +273,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets a value indicating whether the position is at end of the stream.
         /// </summary>
-        public virtual bool EndOfStream {
+        public bool EndOfStream {
             get {
                 return Position >= Length;
             }
