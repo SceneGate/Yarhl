@@ -41,7 +41,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextWriter(DataStream stream)
+        public TextWriter(IStream stream)
             : this(stream, Encoding.UTF8)
         {
         }
@@ -51,7 +51,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextWriter(DataStream stream, Encoding encoding)
+        public TextWriter(IStream stream, Encoding encoding)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -70,7 +70,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public DataStream Stream {
+        public IStream Stream {
             get;
             private set;
         }

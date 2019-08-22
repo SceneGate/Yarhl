@@ -43,7 +43,7 @@ namespace Yarhl.IO
         /// <para>By default the endianness is LittleEndian and
         /// the encoding is UTF-8.</para>
         /// </remarks>
-        public DataReader(DataStream stream)
+        public DataReader(IStream stream)
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
@@ -53,7 +53,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public DataStream Stream {
+        public IStream Stream {
             get;
             private set;
         }
@@ -241,11 +241,12 @@ namespace Yarhl.IO
                 encoding = DefaultEncoding;
 
             long startPos = Stream.Position;
+            long streamLength = Stream.Length;
 
             // Reads the maximum number of bytes possible to get that number of chars
             int charLength = encoding.GetMaxByteCount(count);
-            if (charLength > Stream.Length - Stream.Position)
-                charLength = (int)(Stream.Length - Stream.Position);
+            if (charLength > streamLength - startPos)
+                charLength = (int)(streamLength - startPos);
 
             byte[] buffer = ReadBytes(charLength);
             char[] charArray = encoding.GetChars(buffer);
@@ -359,24 +360,22 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Reads bytes to padd the position in the stream.
+        /// Skip bytes to pad the position in the stream.
         /// </summary>
         /// <param name="padding">Padding value.</param>
-        /// <param name="absolutePadding">
-        /// If set to <see langword="true" /> absolute position in the stream.
-        /// </param>
-        public void ReadPadding(int padding, bool absolutePadding = false)
+        public void SkipPadding(int padding)
         {
             if (padding < 0)
                 throw new ArgumentOutOfRangeException(nameof(padding));
 
-            if (padding <= 1)
+            if (padding <= 1) {
                 return;
+            }
 
-            long position = absolutePadding ? Stream.AbsolutePosition : Stream.Position;
-            int times = (int)(padding - (position % padding));
-            if (times != padding)
-                ReadBytes(times);
+            long remainingBytes = Stream.Position.Pad(padding) - Stream.Position;
+            if (remainingBytes > 0) {
+                Stream.Seek(remainingBytes, SeekMode.Current);
+            }
         }
     }
 }

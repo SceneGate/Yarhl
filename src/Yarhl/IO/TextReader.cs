@@ -43,7 +43,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextReader(DataStream stream)
+        public TextReader(IStream stream)
             : this(stream, Encoding.UTF8)
         {
         }
@@ -53,7 +53,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextReader(DataStream stream, Encoding encoding)
+        public TextReader(IStream stream, Encoding encoding)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
@@ -68,7 +68,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public DataStream Stream {
+        public IStream Stream {
             get;
             private set;
         }
@@ -145,30 +145,35 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(token));
 
             // If starting is EOF, then return null
-            if (Stream.EndOfStream)
+            if (Stream.EndOfStream) {
                 return null;
+            }
 
             SkipPreamble();
 
-            const int BufferSize = 128;
-            byte[] buffer = new byte[BufferSize];
+            long startPos = Stream.Position;
+            long streamLength = Stream.Length;
 
             // Gather bytes from buffer to buffer into a list and try to
             // convert to find the token. This approach is faster since we
             // read blocks and it avoids issues with half-encoded chars.
-            long startPos = Stream.Position;
+            const int BufferSize = 128;
+            byte[] buffer = new byte[BufferSize];
+
             List<byte> textBuffer = new List<byte>();
             string text = string.Empty;
             int matchIndex = -1;
 
             while (matchIndex == -1) {
-                if (Stream.EndOfStream)
+                if (Stream.EndOfStream) {
                     break;
+                }
 
                 // Read buffer size if possible, otherwise remaining bytes
-                int size = Stream.Position + BufferSize <= Stream.Length ?
+                long currentPosition = Stream.Position;
+                int size = currentPosition + BufferSize <= streamLength ?
                     BufferSize :
-                    (int)(Stream.Length - Stream.Position);
+                    (int)(streamLength - currentPosition);
 
                 int read = Stream.Read(buffer, 0, size);
                 textBuffer.AddRange(buffer.Take(read));
@@ -180,7 +185,7 @@ namespace Yarhl.IO
             if (matchIndex != -1) {
                 // We skip the bytes of the token too
                 string fullResult = text.Substring(0, matchIndex + token.Length);
-                Stream.Position = startPos + Encoding.GetByteCount(fullResult);
+                Stream.Seek(startPos + Encoding.GetByteCount(fullResult), SeekMode.Start);
 
                 // Result without token
                 text = text.Substring(0, matchIndex);
@@ -227,9 +232,9 @@ namespace Yarhl.IO
         /// <returns>The next char.</returns>
         public char Peek()
         {
-            Stream.PushCurrentPosition();
+            long startPos = Stream.Position;
             char ch = Read();
-            Stream.PopPosition();
+            Stream.Seek(startPos, SeekMode.Start);
             return ch;
         }
 
@@ -240,9 +245,9 @@ namespace Yarhl.IO
         /// <param name="count">Number of chars to read.</param>
         public char[] Peek(int count)
         {
-            Stream.PushCurrentPosition();
+            long startPos = Stream.Position;
             char[] chars = Read(count);
-            Stream.PopPosition();
+            Stream.Seek(startPos, SeekMode.Start);
             return chars;
         }
 
@@ -253,9 +258,9 @@ namespace Yarhl.IO
         /// <param name="token">Token to find.</param>
         public string PeekToToken(string token)
         {
-            Stream.PushCurrentPosition();
+            long startPos = Stream.Position;
             string content = ReadToToken(token);
-            Stream.PopPosition();
+            Stream.Seek(startPos, SeekMode.Start);
             return content;
         }
 
@@ -265,9 +270,9 @@ namespace Yarhl.IO
         /// <returns>The next line.</returns>
         public string PeekLine()
         {
-            Stream.PushCurrentPosition();
+            long startPos = Stream.Position;
             string line = ReadLine();
-            Stream.PopPosition();
+            Stream.Seek(startPos, SeekMode.Start);
             return line;
         }
 
@@ -290,7 +295,7 @@ namespace Yarhl.IO
 
             // If it didn't fully match it wasn't a preamble, returns to 0
             if (!match) {
-                Stream.Position = 0;
+                Stream.Seek(0, SeekMode.Start);
             }
         }
     }

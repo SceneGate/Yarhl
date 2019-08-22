@@ -44,6 +44,7 @@ M: System.Void Yarhl.PluginManager::Shutdown()
 
 R: Gendarme.Rules.Naming.UseCorrectSuffixRule
 # It doesn't inherit but internally use a Stream.
+T: Yarhl.IO.IStream
 T: Yarhl.IO.DataStream
 # Gendarme doesn't know about ReadOnlyCollection
 T: Yarhl.FileSystem.NavigableNodeCollection`1
