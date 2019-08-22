@@ -8,7 +8,7 @@
 
     <TargetFrameworks>net472;netcoreapp2.2</TargetFrameworks>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
-    <CodeAnalysisRuleSet>StyleCop.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\StyleCopTests.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>
   </PropertyGroup>
