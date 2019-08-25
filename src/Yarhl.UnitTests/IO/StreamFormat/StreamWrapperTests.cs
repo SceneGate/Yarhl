@@ -183,5 +183,30 @@ namespace Yarhl.UnitTests.IO.StreamFormat
             stream.Position = 1;
             Assert.That(stream.ReadByte(), Is.EqualTo(0x14));
         }
+
+        [Test]
+        public void PublicMethodThrowAfterDispose()
+        {
+            var stream = new MemoryStream();
+            var wrapper = new StreamWrapper(stream);
+            wrapper.Dispose();
+
+            byte[] buffer = new byte[1];
+            Assert.That(
+                () => wrapper.SetLength(10),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => wrapper.WriteByte(0x00),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => wrapper.Write(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => wrapper.ReadByte(),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => wrapper.Read(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
+        }
     }
 }

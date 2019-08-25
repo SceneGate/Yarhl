@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 namespace Yarhl.UnitTests.IO.StreamFormat
 {
+    using System;
     using NUnit.Framework;
     using Yarhl.IO.StreamFormat;
 
@@ -79,6 +80,30 @@ namespace Yarhl.UnitTests.IO.StreamFormat
 
             Assert.That(stream.Length, Is.EqualTo(1));
             Assert.That(stream.Position, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void PublicMethodThrowAfterDispose()
+        {
+            var stream = new RecyclableMemoryStream();
+            stream.Dispose();
+
+            byte[] buffer = new byte[1];
+            Assert.That(
+                () => stream.SetLength(10),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.WriteByte(0x00),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.Write(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.ReadByte(),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.Read(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
         }
     }
 }

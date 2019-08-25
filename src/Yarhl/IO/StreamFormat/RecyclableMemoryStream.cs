@@ -45,7 +45,7 @@ namespace Yarhl.IO.StreamFormat
         public override void SetLength(long length)
         {
             if (Disposed)
-                throw new ObjectDisposedException(nameof(LazyFileStream));
+                throw new ObjectDisposedException(nameof(RecyclableMemoryStream));
 
             long oldLength = Length;
             int additionalLength = (int)(length - oldLength);

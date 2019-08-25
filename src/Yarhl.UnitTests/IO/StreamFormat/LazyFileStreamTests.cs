@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 namespace Yarhl.UnitTests.IO.StreamFormat
 {
+    using System;
     using System.IO;
     using NUnit.Framework;
     using Yarhl.IO;
@@ -138,6 +139,30 @@ namespace Yarhl.UnitTests.IO.StreamFormat
                 Assert.That(fs.ReadByte(), Is.EqualTo(0x42));
                 Assert.That(fs.ReadByte(), Is.EqualTo(0xBB));
             }
+        }
+
+        [Test]
+        public void PublicMethodThrowAfterDispose()
+        {
+            var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
+            stream.Dispose();
+
+            byte[] buffer = new byte[1];
+            Assert.That(
+                () => stream.SetLength(10),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.WriteByte(0x00),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.Write(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.ReadByte(),
+                Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => stream.Read(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
         }
     }
 }
