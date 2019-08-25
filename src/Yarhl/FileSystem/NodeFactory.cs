@@ -134,7 +134,8 @@ namespace Yarhl.FileSystem
         {
             // We need to catch if the node creation fails
             // for instance for null names, to dispose the stream.
-            var format = new BinaryFormat(filePath);
+            FileOpenMode mode = FileOpenMode.ReadWrite;
+            var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
                 node = new Node(nodeName, format);

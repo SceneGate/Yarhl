@@ -42,6 +42,21 @@ namespace Yarhl.IO
         /// <para>This format creates a substream from the provided stream.</para>
         /// </remarks>
         /// <param name="stream">Binary stream.</param>
+        public BinaryFormat(DataStream stream)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            Stream = stream;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
+        /// </summary>
+        /// <remarks>
+        /// <para>This format creates a substream from the provided stream.</para>
+        /// </remarks>
+        /// <param name="stream">Binary stream.</param>
         /// <param name="offset">Offset from the DataStream start.</param>
         /// <param name="length">Length of the substream.</param>
         public BinaryFormat(DataStream stream, long offset, long length)
@@ -54,51 +69,6 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             Stream = new DataStream(stream, offset, length);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
-        /// </summary>
-        /// <remarks>
-        /// <para>This format creates a substream from the provided stream.</para>
-        /// </remarks>
-        /// <param name="stream">Binary stream.</param>
-        public BinaryFormat(DataStream stream)
-        {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-
-            Stream = new DataStream(stream, 0, stream.Length);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BinaryFormat" /> class.
-        /// </summary>
-        /// <param name="data">Stream data buffer.</param>
-        /// <param name="offset">Offset of the data in the buffer.</param>
-        /// <param name="length">Length of the data.</param>
-        public BinaryFormat(byte[] data, int offset, int length)
-        {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (offset < 0 || offset > data.Length)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < 0 || offset + length > data.Length)
-                throw new ArgumentOutOfRangeException(nameof(length));
-
-            Stream = new DataStream(data, offset, length);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
-        /// </summary>
-        /// <param name="filePath">The file path.</param>
-        public BinaryFormat(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException(nameof(filePath));
-
-            Stream = new DataStream(filePath, FileOpenMode.ReadWrite);
         }
 
         /// <summary>

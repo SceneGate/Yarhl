@@ -1,4 +1,4 @@
-// Copyright (c) 2017 Benito Palacios Sánchez
+// Copyright (c) 2019 SceneGate Team
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,15 +19,17 @@
 // THE SOFTWARE.
 namespace Yarhl.IO
 {
+    using System;
+
     /// <summary>
     /// Generic data stream interface.
     /// </summary>
-    public interface IStream
+    public interface IStream : IDisposable
     {
         /// <summary>
-        /// Gets the position from the start of this stream.
+        /// Gets or sets the position from the start of this stream.
         /// </summary>
-        long Position { get; }
+        long Position { get; set; }
 
         /// <summary>
         /// Gets the length of this stream.
@@ -35,16 +37,19 @@ namespace Yarhl.IO
         long Length { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the position is at end of the stream.
+        /// Gets a value indicating whether this <see cref="IStream" />
+        /// has been dispsosed.
         /// </summary>
-        bool EndOfStream { get; }
+        bool Disposed { get; }
 
         /// <summary>
-        /// Move the position of the Stream.
+        /// Sets the length of the stream.
         /// </summary>
-        /// <param name="shift">Distance to move position.</param>
-        /// <param name="mode">Mode to move position.</param>
-        void Seek(long shift, SeekMode mode);
+        /// <param name="length">The new length of the stream.</param>
+        /// <remarks>
+        /// Some streams may not implement or support changing the length.
+        /// </remarks>
+        void SetLength(long length);
 
         /// <summary>
         /// Reads the next byte.
