@@ -21,7 +21,10 @@ namespace Yarhl.IO.StreamFormat
 {
     using System.IO;
 
-    internal sealed class LazyFileStream : StreamWrapper
+    /// <summary>
+    /// Open file for reading or writing on the first operation (lazily).
+    /// </summary>
+    sealed class LazyFileStream : StreamWrapper
     {
         readonly string path;
         readonly FileOpenMode mode;
@@ -29,6 +32,11 @@ namespace Yarhl.IO.StreamFormat
 
         bool isInitialized;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LazyFileStream"/> class.
+        /// </summary>
+        /// <param name="path">Path to the file.</param>
+        /// <param name="mode">Mode to open the file.</param>
         public LazyFileStream(string path, FileOpenMode mode)
         {
             this.path = path;
@@ -40,8 +48,15 @@ namespace Yarhl.IO.StreamFormat
             initialLength = info.Exists ? info.Length : 0;
         }
 
+        /// <summary>
+        /// Gets the length of this stream.
+        /// </summary>
         public override long Length => BaseStream?.Length ?? initialLength;
 
+        /// <summary>
+        /// Sets the length of the stream.
+        /// </summary>
+        /// <param name="length">The new length of the stream.</param>
         public override void SetLength(long length)
         {
             if (!isInitialized) {
@@ -51,6 +66,13 @@ namespace Yarhl.IO.StreamFormat
             base.SetLength(length);
         }
 
+        /// <summary>
+        /// Reads from the stream to the buffer.
+        /// </summary>
+        /// <returns>The number of bytes read.</returns>
+        /// <param name="buffer">Buffer to copy data.</param>
+        /// <param name="index">Index to start copying in buffer.</param>
+        /// <param name="count">Number of bytes to read.</param>
         public override int Read(byte[] buffer, int index, int count)
         {
             if (!isInitialized) {
@@ -60,6 +82,10 @@ namespace Yarhl.IO.StreamFormat
             return base.Read(buffer, index, count);
         }
 
+        /// <summary>
+        /// Reads the next byte.
+        /// </summary>
+        /// <returns>The next byte.</returns>
         public override byte ReadByte()
         {
             if (!isInitialized) {
@@ -69,6 +95,12 @@ namespace Yarhl.IO.StreamFormat
             return base.ReadByte();
         }
 
+        /// <summary>
+        /// Writes the a portion of the buffer to the stream.
+        /// </summary>
+        /// <param name="buffer">Buffer to write.</param>
+        /// <param name="index">Index in the buffer.</param>
+        /// <param name="count">Bytes to write.</param>
         public override void Write(byte[] buffer, int index, int count)
         {
             if (!isInitialized) {
@@ -78,6 +110,10 @@ namespace Yarhl.IO.StreamFormat
             base.Write(buffer, index, count);
         }
 
+        /// <summary>
+        /// Writes a byte.
+        /// </summary>
+        /// <param name="data">Byte value.</param>
         public override void WriteByte(byte data)
         {
             if (!isInitialized) {

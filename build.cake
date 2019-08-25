@@ -23,20 +23,20 @@
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.10.0
 
 // Gendarme: decompress zip
-#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.2
+#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.3
 
 // Test coverage
-#addin nuget:?package=altcover.api&version=5.2.667
-#tool nuget:?package=ReportGenerator&version=4.1.2
+#addin nuget:?package=altcover.api&version=6.0.700
+#tool nuget:?package=ReportGenerator&version=4.2.15
 
 // SonarQube quality checks
 #addin nuget:?package=Cake.Sonar&version=1.1.22
 #tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
-#addin nuget:?package=Cake.Git&version=0.19.0
+#addin nuget:?package=Cake.Git&version=0.21.0
 
 // Documentation
-#addin nuget:?package=Cake.DocFx&version=0.12.0
-#tool nuget:?package=docfx.console&version=2.41.0
+#addin nuget:?package=Cake.DocFx&version=0.13.0
+#tool nuget:?package=docfx.console&version=2.44.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -216,8 +216,8 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
     }
 
     var altcoverArgs = new AltCover.Parameters.Primitive.PrepareArgs {
-        InputDirectory = inputDir,
-        OutputDirectory = outputDir,
+        InputDirectories = new[] { inputDir },
+        OutputDirectories = new[] { outputDir },
         AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
         TypeFilter = new[] { "Yarhl.AssemblyUtils" },
         XmlReport = outputXml,

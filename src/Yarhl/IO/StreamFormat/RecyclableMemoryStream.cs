@@ -21,21 +21,34 @@ namespace Yarhl.IO.StreamFormat
 {
     using Microsoft.IO;
 
-    internal sealed class RecyclableMemoryStream : StreamWrapper
+    /// <summary>
+    /// In-memory stream with a pool of buffers.
+    /// </summary>
+    sealed class RecyclableMemoryStream : StreamWrapper
     {
         static readonly RecyclableMemoryStreamManager Manager = CreateManager();
 
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="RecyclableMemoryStream"/> class.
+        /// </summary>
         public RecyclableMemoryStream()
             : base(Manager.GetStream())
         {
         }
 
+        /// <summary>
+        /// Sets the length of the stream.
+        /// </summary>
+        /// <param name="length">The new length of the stream.</param>
         public override void SetLength(long length)
         {
             long oldLength = Length;
             int additionalLength = (int)(length - oldLength);
             base.SetLength(length);
 
+            // Since we are reusing buffers from a pool, it's not guarantee
+            // that requesting more space will return a clean buffer.
             if (additionalLength > 0) {
                 long oldPos = Position;
                 Position = oldLength;
