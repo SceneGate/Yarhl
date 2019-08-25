@@ -24,7 +24,7 @@ namespace Yarhl.IO.StreamFormat
     /// <summary>
     /// Open file for reading or writing on the first operation (lazily).
     /// </summary>
-    sealed class LazyFileStream : StreamWrapper
+    public sealed class LazyFileStream : StreamWrapper
     {
         readonly string path;
         readonly FileOpenMode mode;

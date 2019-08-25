@@ -24,7 +24,7 @@ namespace Yarhl.IO.StreamFormat
     /// <summary>
     /// In-memory stream with a pool of buffers.
     /// </summary>
-    sealed class RecyclableMemoryStream : StreamWrapper
+    public sealed class RecyclableMemoryStream : StreamWrapper
     {
         static readonly RecyclableMemoryStreamManager Manager = CreateManager();
 

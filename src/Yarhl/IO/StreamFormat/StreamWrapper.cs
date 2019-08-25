@@ -25,7 +25,7 @@ namespace Yarhl.IO.StreamFormat
     /// <summary>
     /// Wrapper over .NET streams.
     /// </summary>
-    class StreamWrapper : IStream
+    public class StreamWrapper : IStream
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamWrapper" /> class.
