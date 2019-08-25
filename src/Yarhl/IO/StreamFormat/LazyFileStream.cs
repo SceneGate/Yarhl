@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 namespace Yarhl.IO.StreamFormat
 {
+    using System;
     using System.IO;
 
     /// <summary>
@@ -59,6 +60,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="length">The new length of the stream.</param>
         public override void SetLength(long length)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             if (!isInitialized) {
                 Initialize();
             }
@@ -75,6 +79,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="count">Number of bytes to read.</param>
         public override int Read(byte[] buffer, int index, int count)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             if (!isInitialized) {
                 Initialize();
             }
@@ -88,6 +95,9 @@ namespace Yarhl.IO.StreamFormat
         /// <returns>The next byte.</returns>
         public override byte ReadByte()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             if (!isInitialized) {
                 Initialize();
             }
@@ -103,6 +113,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="count">Bytes to write.</param>
         public override void Write(byte[] buffer, int index, int count)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             if (!isInitialized) {
                 Initialize();
             }
@@ -116,6 +129,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="data">Byte value.</param>
         public override void WriteByte(byte data)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             if (!isInitialized) {
                 Initialize();
             }

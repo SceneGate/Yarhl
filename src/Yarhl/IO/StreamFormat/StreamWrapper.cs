@@ -79,6 +79,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="length">The new length of the stream.</param>
         public virtual void SetLength(long length)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             BaseStream.SetLength(length);
         }
 
@@ -91,6 +94,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="count">Number of bytes to read.</param>
         public virtual int Read(byte[] buffer, int index, int count)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             BaseStream.Position = Position;
             Position += count;
             return BaseStream.Read(buffer, index, count);
@@ -102,6 +108,9 @@ namespace Yarhl.IO.StreamFormat
         /// <returns>The next byte.</returns>
         public virtual byte ReadByte()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             BaseStream.Position = Position;
             Position++;
             return (byte)BaseStream.ReadByte();
@@ -115,6 +124,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="count">Bytes to write.</param>
         public virtual void Write(byte[] buffer, int index, int count)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             BaseStream.Position = Position;
             BaseStream.Write(buffer, index, count);
             Position += count;
@@ -126,6 +138,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="data">Byte value.</param>
         public virtual void WriteByte(byte data)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             BaseStream.Position = Position;
             BaseStream.WriteByte(data);
             Position++;

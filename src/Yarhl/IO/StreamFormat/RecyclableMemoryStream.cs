@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 namespace Yarhl.IO.StreamFormat
 {
+    using System;
     using Microsoft.IO;
 
     /// <summary>
@@ -43,6 +44,9 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="length">The new length of the stream.</param>
         public override void SetLength(long length)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(LazyFileStream));
+
             long oldLength = Length;
             int additionalLength = (int)(length - oldLength);
             base.SetLength(length);
@@ -53,8 +57,8 @@ namespace Yarhl.IO.StreamFormat
                 ClearBuffer(oldLength, additionalLength);
             }
 
-            if (Position > Length) {
-                Position = Length;
+            if (Position > length) {
+                Position = length;
             }
         }
 
