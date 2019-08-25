@@ -50,20 +50,41 @@ namespace Yarhl.IO.StreamFormat
             // Since we are reusing buffers from a pool, it's not guarantee
             // that requesting more space will return a clean buffer.
             if (additionalLength > 0) {
-                long oldPos = Position;
-                Position = oldLength;
+                ClearBuffer(oldLength, additionalLength);
+            }
 
-                // TODO: Write in blocks
-                byte[] clearData = new byte[additionalLength];
-                Write(clearData, 0, additionalLength);
-
-                Position = oldPos;
+            if (Position > Length) {
+                Position = Length;
             }
         }
 
         static RecyclableMemoryStreamManager CreateManager()
         {
             return new RecyclableMemoryStreamManager();
+        }
+
+        void ClearBuffer(long offset, long size)
+        {
+            long oldPos = Position;
+            Position = offset;
+
+            const int BufferSize = 70 * 1024;
+            byte[] buffer = new byte[size > BufferSize ? BufferSize : size];
+
+            int written = 0;
+            do {
+                int loopLength;
+                if (written + buffer.Length > size) {
+                    loopLength = (int)(size - written);
+                } else {
+                    loopLength = buffer.Length;
+                }
+
+                Write(buffer, 0, loopLength);
+                written += loopLength;
+            } while (written != size);
+
+            Position = oldPos;
         }
     }
 }

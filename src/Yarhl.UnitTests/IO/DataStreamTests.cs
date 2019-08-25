@@ -65,29 +65,16 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ConstructorThrowExceptionIfNegativeOffset()
+        public void ConstructorFromStreamAndOffsetThrowsIfInvalid()
         {
+            Assert.Throws<ArgumentNullException>(() =>
+                new DataStream((IStream)null, 0, 0));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, -1, 4));
-        }
-
-        [Test]
-        public void ConstructorThrowExceptionIfOffsetBiggerThanLength()
-        {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, 1, 0));
-        }
-
-        [Test]
-        public void ConstructorThrowExceptionIfLengthLessThanZero()
-        {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, 0, -1));
-        }
-
-        [Test]
-        public void DataStreamLengthLargerThanBaseLengthIsNotAllowed()
-        {
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, 0, 100));
         }
@@ -1174,7 +1161,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteToMoreThanOneBuffer()
         {
-            const int SIZE = 8 * 1024;
+            const int SIZE = 80 * 1024;
             DataStream stream1 = new DataStream();
             for (int i = 0; i < SIZE; i++)
                 stream1.WriteByte((byte)(i % 256));
@@ -1465,6 +1452,29 @@ namespace Yarhl.UnitTests.IO
             stream1.BaseStream.Position = 1;
             stream2.BaseStream.Position = 2;
             Assert.IsTrue(stream1.Compare(stream2));
+
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
+        public void CompareMoreThanOneBuffer()
+        {
+            DataStream stream1 = new DataStream();
+            DataStream stream2 = new DataStream();
+            byte[] data = new byte[80 * 1024];
+            for (int i = 0; i < data.Length; i++) {
+                data[i] = 0xAA;
+            }
+
+            stream1.Write(data, 0, data.Length);
+            stream2.Write(data, 0, data.Length);
+
+            Assert.That(stream1.Compare(stream2), Is.True);
+
+            stream1.Position = (70 * 1024) + 128;
+            stream1.WriteByte(0xBB);
+            Assert.That(stream1.Compare(stream2), Is.False);
 
             stream1.Dispose();
             stream2.Dispose();

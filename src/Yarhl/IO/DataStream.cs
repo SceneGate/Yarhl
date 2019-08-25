@@ -477,15 +477,16 @@ namespace Yarhl.IO
             Seek(0, SeekMode.Start);
 
             const int BufferSize = 70 * 1024;
-            byte[] buffer = new byte[BufferSize];
+            byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
 
             int written = 0;
             int bytesToRead = 0;
             do {
-                if (written + BufferSize > Length)
+                if (written + buffer.Length > Length) {
                     bytesToRead = (int)(Length - written);
-                else
-                    bytesToRead = BufferSize;
+                } else {
+                    bytesToRead = buffer.Length;
+                }
 
                 written += Read(buffer, 0, bytesToRead);
                 stream.Write(buffer, 0, bytesToRead);
@@ -518,16 +519,22 @@ namespace Yarhl.IO
             otherStream.Seek(0, SeekMode.Start);
 
             const int BufferSize = 70 * 1024;
-            byte[] buffer1 = new byte[BufferSize];
-            byte[] buffer2 = new byte[BufferSize];
+            byte[] buffer1 = new byte[Length > BufferSize ? BufferSize : Length];
+            byte[] buffer2 = new byte[buffer1.Length];
 
             bool result = true;
             while (!EndOfStream && result) {
-                int length = (int)(Position + BufferSize > Length ? Length - Position : BufferSize);
-                Read(buffer1, 0, length);
-                otherStream.Read(buffer2, 0, length);
+                int loopLength;
+                if (Position + buffer1.Length > Length) {
+                    loopLength = (int)(Length - Position);
+                } else {
+                    loopLength = buffer1.Length;
+                }
 
-                for (int i = 0; i < length && result; i++) {
+                Read(buffer1, 0, loopLength);
+                otherStream.Read(buffer2, 0, loopLength);
+
+                for (int i = 0; i < loopLength && result; i++) {
                     if (buffer1[i] != buffer2[i]) {
                         result = false;
                     }
