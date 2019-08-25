@@ -43,7 +43,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextReader(IStream stream)
+        public TextReader(DataStream stream)
             : this(stream, Encoding.UTF8)
         {
         }
@@ -53,7 +53,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextReader(IStream stream, Encoding encoding)
+        public TextReader(DataStream stream, Encoding encoding)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
@@ -68,7 +68,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public IStream Stream {
+        public DataStream Stream {
             get;
             private set;
         }

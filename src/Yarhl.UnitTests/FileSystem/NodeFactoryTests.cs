@@ -30,6 +30,7 @@ namespace Yarhl.UnitTests.FileSystem
     using NUnit.Framework;
     using Yarhl.FileSystem;
     using Yarhl.IO;
+    using Yarhl.IO.StreamFormat;
 
     [TestFixture]
     public class NodeFactoryTests
@@ -66,7 +67,10 @@ namespace Yarhl.UnitTests.FileSystem
 
             Assert.IsFalse(File.Exists(tempFile));
             Assert.DoesNotThrow(() => tempNode = NodeFactory.FromFile(tempFile));
-            Assert.IsTrue(File.Exists(tempFile));
+
+            // It's lazy initialize, so we need to trigger an operation
+            Assert.IsFalse(File.Exists(tempFile));
+            tempNode.Stream.WriteByte(0xCA);
 
             tempNode.Dispose();
             File.Delete(tempFile);
@@ -459,7 +463,7 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(node.Name, Is.EqualTo("node"));
             Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
             Assert.That(node.Stream, Is.Not.Null);
-            Assert.That(node.Stream.BaseStream, Is.TypeOf<MemoryStream>());
+            Assert.That(node.Stream.BaseStream, Is.TypeOf<RecyclableMemoryStream>());
         }
 
         [Test]

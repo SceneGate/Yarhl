@@ -42,7 +42,7 @@ namespace Yarhl.IO
         /// <para>By default the endianess is LittleEndian and
         /// the encoding is UTF-8.</para>
         /// </remarks>
-        public DataWriter(IStream stream)
+        public DataWriter(DataStream stream)
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
@@ -53,7 +53,7 @@ namespace Yarhl.IO
         /// Gets the stream.
         /// </summary>
         /// <value>The stream.</value>
-        public IStream Stream {
+        public DataStream Stream {
             get;
             private set;
         }
