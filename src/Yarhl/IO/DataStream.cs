@@ -334,7 +334,7 @@ namespace Yarhl.IO
 
             BaseStream.Position = AbsolutePosition;
             Position++;
-            return (byte)BaseStream.ReadByte();
+            return BaseStream.ReadByte();
         }
 
         /// <summary>
@@ -479,18 +479,10 @@ namespace Yarhl.IO
             const int BufferSize = 70 * 1024;
             byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
 
-            int written = 0;
-            int bytesToRead = 0;
-            do {
-                if (written + buffer.Length > Length) {
-                    bytesToRead = (int)(Length - written);
-                } else {
-                    bytesToRead = buffer.Length;
-                }
-
-                written += Read(buffer, 0, bytesToRead);
-                stream.Write(buffer, 0, bytesToRead);
-            } while (written != Length);
+            while (!EndOfStream) {
+                int read = BlockRead(this, buffer);
+                stream.Write(buffer, 0, read);
+            }
 
             Seek(currPos, SeekMode.Start);
         }
@@ -524,15 +516,8 @@ namespace Yarhl.IO
 
             bool result = true;
             while (!EndOfStream && result) {
-                int loopLength;
-                if (Position + buffer1.Length > Length) {
-                    loopLength = (int)(Length - Position);
-                } else {
-                    loopLength = buffer1.Length;
-                }
-
-                Read(buffer1, 0, loopLength);
-                otherStream.Read(buffer2, 0, loopLength);
+                int loopLength = BlockRead(this, buffer1);
+                BlockRead(otherStream, buffer2);
 
                 for (int i = 0; i < loopLength && result; i++) {
                     if (buffer1[i] != buffer2[i]) {
@@ -568,6 +553,19 @@ namespace Yarhl.IO
                     Instances.Remove(BaseStream);
                 }
             }
+        }
+
+        private static int BlockRead(DataStream stream, byte[] buffer)
+        {
+            int read;
+            if (stream.Position + buffer.Length > stream.Length) {
+                read = (int)(stream.Length - stream.Position);
+            } else {
+                read = buffer.Length;
+            }
+
+            stream.Read(buffer, 0, read);
+            return read;
         }
 
         private void IncreaseStreamCounter()

@@ -25,6 +25,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using NUnit.Framework;
     using Yarhl.FileFormat;
@@ -1215,6 +1216,45 @@ namespace Yarhl.UnitTests.IO
 
             fileStream.Dispose();
             File.Delete(tempFile);
+        }
+
+        [Test]
+        [Ignore("Generates 6 GB of files and takes a lot of time (~1 min)")]
+        [ExcludeFromCodeCoverage]
+        public void WriteToLargeFiles()
+        {
+            const long Size = 3L * 1024 * 1024 * 1024; // 3 GB
+            string inputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string outputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+            DataStream inputStream = null;
+            DataStream outputStream = null;
+            try {
+                inputStream = DataStreamFactory.FromFile(inputFile, FileOpenMode.ReadWrite);
+                byte[] buffer = new byte[70 * 1024]; // 70 KB (SOH)
+                for (int i = 0; i < buffer.Length; i++) {
+                    buffer[i] = (byte)(i % 256);
+                }
+
+                long written = 0;
+                while (written < Size) {
+                    int count = (Size - written) > buffer.Length
+                        ? buffer.Length
+                        : (int)(Size - written);
+                    inputStream.Write(buffer, 0, count);
+                    written += count;
+                }
+
+                inputStream.WriteTo(outputFile);
+
+                outputStream = DataStreamFactory.FromFile(outputFile, FileOpenMode.Read);
+                Assert.IsTrue(inputStream.Compare(outputStream));
+            } finally {
+                inputStream?.Dispose();
+                outputStream?.Dispose();
+                File.Delete(inputFile);
+                File.Delete(outputFile);
+            }
         }
 
         [Test]

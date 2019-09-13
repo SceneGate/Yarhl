@@ -219,6 +219,7 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
         InputDirectories = new[] { inputDir },
         OutputDirectories = new[] { outputDir },
         AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
+        AttributeFilter = new[] { "ExcludeFromCodeCoverage" },
         TypeFilter = new[] { "Yarhl.AssemblyUtils" },
         XmlReport = outputXml,
         OpenCover = true
