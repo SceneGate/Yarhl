@@ -479,7 +479,7 @@ namespace Yarhl.IO
             const int BufferSize = 70 * 1024;
             byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
 
-            int written = 0;
+            long written = 0;
             int bytesToRead = 0;
             do {
                 if (written + buffer.Length > Length) {
