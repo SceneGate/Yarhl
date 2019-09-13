@@ -25,6 +25,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using NUnit.Framework;
     using Yarhl.FileFormat;
@@ -1217,8 +1218,9 @@ namespace Yarhl.UnitTests.IO
             File.Delete(tempFile);
         }
 
-        [Ignore("Generates 6 GB of files and takes a lot of time (~1 min)")]
         [Test]
+        [Ignore("Generates 6 GB of files and takes a lot of time (~1 min)")]
+        [ExcludeFromCodeCoverage]
         public void WriteToLargeFiles()
         {
             const long Size = 3L * 1024 * 1024 * 1024; // 3 GB
