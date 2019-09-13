@@ -46,9 +46,9 @@ namespace Yarhl.IO
         /// Sets the length of the stream.
         /// </summary>
         /// <param name="length">The new length of the stream.</param>
-        /// <remarks>
+        /// <remarks><para>
         /// Some streams may not implement or support changing the length.
-        /// </remarks>
+        /// </para></remarks>
         void SetLength(long length);
 
         /// <summary>
