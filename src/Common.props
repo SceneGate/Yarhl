@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <Version>3.0.0-alpha07</Version>
+        <Version>3.0.0-alpha08</Version>
         <Product>SceneGate</Product>
 
         <Authors>SceneGate Team</Authors>
