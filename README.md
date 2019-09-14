@@ -7,7 +7,7 @@ It provides a virtual file system, file format and format conversion features
 and plugin support. It's built in C# / .NET and works in Windows, Linux and
 Mac OS X.
 
-| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![Nuget prerelease](https://img.shields.io/nuget/vpre/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
+| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![NuGet Alpha](https://img.shields.io/github/v/tag/SceneGate/Yarhl?color=yellow&include_prereleases&label=nuget)](https://github.com/SceneGate/Yarhl/packages) |
 | ----- | ------ |
 | **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=master)](https://dev.azure.com/SceneGate/Yarhl/_build/latest?definitionId=1&branchName=master) |
 | **Quality report** | [![Sonar Gate](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=alert_status)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) [![Total alerts](https://img.shields.io/lgtm/alerts/g/SceneGate/Yarhl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SceneGate/Yarhl/alerts/) |
@@ -23,10 +23,13 @@ and the API documentation [here](https://scenegate.github.io/Yarhl/api/Yarhl.htm
 
 ## Install
 
-Yarhl is available on NuGet:
+Stable releases are available from nuget.org:
 
 * [Yarhl](https://www.nuget.org/packages/Yarhl)
 * [Yarhl.Media](https://www.nuget.org/packages/Yarhl.Media)
+
+Alpha releases can be found in this
+[GitHub package repository](https://github.com/SceneGate/Yarhl/packages).
 
 ## Build
 
