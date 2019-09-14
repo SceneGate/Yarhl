@@ -36,6 +36,13 @@ namespace Yarhl.IO
     {
         readonly DataWriter writer;
 
+        static TextWriter()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextWriter"/> class.
         /// </summary>
