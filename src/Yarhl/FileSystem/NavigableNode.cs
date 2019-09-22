@@ -124,6 +124,9 @@ namespace Yarhl.FileSystem
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
+            if (Path.StartsWith(node.Path))
+                throw new ArgumentException("Cannot add parent as child", nameof(node));
+
             // Update the parent of the child
             node.Parent = (T)this;
 
