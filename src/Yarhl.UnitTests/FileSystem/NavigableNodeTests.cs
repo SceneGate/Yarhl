@@ -109,6 +109,20 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void AddParentThrowException()
+        {
+            var grandparent = new DummyNavigable("Grandparent");
+            var parent = new DummyNavigable("Parent");
+            var child = new DummyNavigable("Child");
+            grandparent.Add(parent);
+            parent.Add(child);
+
+            Assert.That(() => child.Add(parent), Throws.ArgumentException);
+            Assert.That(() => child.Add(grandparent), Throws.ArgumentException);
+            Assert.That(() => parent.Add(grandparent), Throws.ArgumentException);
+        }
+
+        [Test]
         public void ChildrenGetsByName()
         {
             var node = new DummyNavigable("MyChild");
