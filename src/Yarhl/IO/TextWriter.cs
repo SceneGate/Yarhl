@@ -56,6 +56,16 @@ namespace Yarhl.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="TextWriter"/> class.
         /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="encoding">Encoding to use.</param>
+        public TextWriter(DataStream stream, string encoding)
+            : this(stream, Encoding.GetEncoding(encoding))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextWriter"/> class.
+        /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="encoding">Encoding to use.</param>
         public TextWriter(DataStream stream, Encoding encoding)

@@ -60,6 +60,16 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
+        public TextReader(DataStream stream, string encoding)
+            : this(stream, Encoding.GetEncoding(encoding))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextReader"/> class.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="encoding">Encoding to use.</param>
         public TextReader(DataStream stream, Encoding encoding)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
