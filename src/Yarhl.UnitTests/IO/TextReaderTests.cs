@@ -68,12 +68,33 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void PropertyValuesWithConstructorEncodingName()
+        {
+            var reader = new TextReader(stream, "utf-16");
+            Assert.AreSame(stream, reader.Stream);
+            Assert.AreSame(Encoding.Unicode, reader.Encoding);
+            Assert.AreEqual(Environment.NewLine, reader.NewLine);
+            Assert.IsTrue(reader.AutoNewLine);
+        }
+
+        [Test]
+        public void CreateWithShiftJisEncoding()
+        {
+            // It will automatically register the encodings for .NET Core.
+            var reader = new TextReader(stream, "shift-jis");
+            Assert.That(reader.Encoding.CodePage, Is.EqualTo(932));
+        }
+
+        [Test]
         public void TestConstructorWithNullArguments()
         {
             Assert.Throws<ArgumentNullException>(() => new TextReader(null));
 
             Assert.Throws<ArgumentNullException>(() => new TextReader(null, Encoding.ASCII));
-            Assert.Throws<ArgumentNullException>(() => new TextReader(stream, null));
+            Assert.Throws<ArgumentNullException>(() => new TextReader(stream, (Encoding)null));
+
+            Assert.Throws<ArgumentNullException>(() => new TextReader(null, "ascii"));
+            Assert.Throws<ArgumentNullException>(() => new TextReader(stream, (string)null));
         }
 
         [Test]

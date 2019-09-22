@@ -65,14 +65,34 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ConstructorWithEncodingName()
+        {
+            var writer = new TextWriter(stream, "ascii");
+            Assert.AreSame(Encoding.ASCII, writer.Encoding);
+        }
+
+        [Test]
+        public void CreateWithShiftJisEncoding()
+        {
+            var writer = new TextWriter(stream, "shift-jis");
+            Assert.That(writer.Encoding.CodePage, Is.EqualTo(932));
+        }
+
+        [Test]
         public void WrongArgsInConstructorThrowsException()
         {
             Assert.Throws<ArgumentNullException>(
                 () => new TextWriter(null));
+
             Assert.Throws<ArgumentNullException>(
                 () => new TextWriter(null, Encoding.ASCII));
             Assert.Throws<ArgumentNullException>(
-                () => new TextWriter(stream, null));
+                () => new TextWriter(stream, (Encoding)null));
+
+            Assert.Throws<ArgumentNullException>(
+                () => new TextWriter(null, "ascii"));
+            Assert.Throws<ArgumentNullException>(
+                () => new TextWriter(stream, (string)null));
         }
 
         [Test]
