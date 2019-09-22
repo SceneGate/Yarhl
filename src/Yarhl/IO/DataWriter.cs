@@ -34,6 +34,13 @@ namespace Yarhl.IO
     /// </summary>
     public class DataWriter
     {
+        static DataWriter()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Yarhl.IO.DataWriter"/> class.
         /// </summary>

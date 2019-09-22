@@ -38,6 +38,13 @@ namespace Yarhl.IO
         readonly DataReader reader;
         string newLine;
 
+        static TextReader()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextReader"/> class.
         /// </summary>
@@ -45,6 +52,16 @@ namespace Yarhl.IO
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
         public TextReader(DataStream stream)
             : this(stream, Encoding.UTF8)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextReader"/> class.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="encoding">Encoding to use.</param>
+        public TextReader(DataStream stream, string encoding)
+            : this(stream, Encoding.GetEncoding(encoding))
         {
         }
 

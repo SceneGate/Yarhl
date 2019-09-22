@@ -36,6 +36,13 @@ namespace Yarhl.IO
     {
         readonly DataWriter writer;
 
+        static TextWriter()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextWriter"/> class.
         /// </summary>
@@ -43,6 +50,16 @@ namespace Yarhl.IO
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
         public TextWriter(DataStream stream)
             : this(stream, Encoding.UTF8)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextWriter"/> class.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <param name="encoding">Encoding to use.</param>
+        public TextWriter(DataStream stream, string encoding)
+            : this(stream, Encoding.GetEncoding(encoding))
         {
         }
 

@@ -35,6 +35,13 @@ namespace Yarhl.IO
     /// </summary>
     public class DataReader
     {
+        static DataReader()
+        {
+            // Make sure that the shift-jis encoding is initialized in
+            // .NET Core.
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Yarhl.IO.DataReader"/> class.
         /// </summary>
