@@ -7,7 +7,7 @@
     <Description>Performance tests for Yarhl.</Description>
     <IsPackable>false</IsPackable>
 
-    <TargetFrameworks>netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
     <RootNamespace>Yarhl.PerformanceTests</RootNamespace>
     <CodeAnalysisRuleSet>..\StyleCopTests.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->

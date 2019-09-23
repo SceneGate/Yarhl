@@ -30,8 +30,6 @@
 #tool nuget:?package=ReportGenerator&version=4.2.15
 
 // SonarQube quality checks
-#addin nuget:?package=Cake.Sonar&version=1.1.22
-#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
 #addin nuget:?package=Cake.Git&version=0.21.0
 
 // Documentation
@@ -51,8 +49,8 @@ var pullRequestBase = Argument("pr-base", string.Empty);
 var pullRequestBranch = Argument("pr-branch", string.Empty);
 var branchName = Argument("branch", string.Empty);
 
-string netVersion = "472";
-string netcoreVersion = "2.2";
+string netVersion = "48";
+string netcoreVersion = "3.0";
 string netstandardVersion = "2.0";
 
 string solutionPath = "src/Yarhl.sln";
@@ -245,45 +243,52 @@ Task("Run-Sonar")
         throw new Exception("Missing Sonar token");
     }
 
-    var sonarSettings = new SonarBeginSettings {
-        Url = "https://sonarcloud.io",
-        Key = "SceneGate_Yarhl",
-        Login = sonarToken,
-        Organization = "scenegate",
-        Verbose = true,
-        NUnitReportsPath = MakeAbsolute(File("./TestResult.xml")).FullPath,
-        OpenCoverReportsPath = MakeAbsolute(File("./coverage_unit.xml")).FullPath +
-            "," + MakeAbsolute(File("./coverage_integration.xml")).FullPath,
-     };
+    var loginSettings = $"/d:sonar.login={sonarToken}";
+    var sonarSettings = "/d:sonar.host.url=https://sonarcloud.io" +
+        " /k:SceneGate_Yarhl" +
+        " " + loginSettings +
+        " /o:scenegate" +
+        " /d:sonar.verbose=true" +
+        " /d:sonar.cs.nunit.reportsPaths=" + MakeAbsolute(File("./TestResult.xml")).FullPath +
+        " /d:sonar.cs.opencover.reportsPaths=" +
+            MakeAbsolute(File("./coverage_unit.xml")).FullPath +
+            "," + MakeAbsolute(File("./coverage_integration.xml")).FullPath;
 
     bool pullRequestInfo = !string.IsNullOrEmpty(pullRequestNumber)
         && !string.IsNullOrEmpty(pullRequestBase)
         && !string.IsNullOrEmpty(pullRequestBranch);
      if (pullRequestInfo) {
         Information("Pull request information available");
-        sonarSettings.PullRequestProvider = "github";
-        sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
-        sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
-        sonarSettings.PullRequestBase = pullRequestBase;
-        sonarSettings.PullRequestBranch = pullRequestBranch;
+        sonarSettings += " /d:sonar.pullrequest.provider=github" +
+            " /d:sonar.pullrequest.github.repository=SceneGate/Yarhl" +
+            " /d:sonar.pullrequest.key=" + pullRequestNumber +
+            " /d:sonar.pullrequest.base=" + pullRequestBase +
+            " /d:sonar.pullrequest.branch=" + pullRequestBranch;
      } else {
         Information("No pull request information provided");
         if (string.IsNullOrWhiteSpace(branchName)) {
             branchName = GitBranchCurrent(".").FriendlyName;
         }
 
-        sonarSettings.Branch = branchName;
+        sonarSettings += " /d:sonar.pullrequest.branch=" + branchName;
      }
 
-    SonarBegin(sonarSettings);
+    if (StartProcess("dotnet", $"tool install --global dotnet-sonarscanner") != 0) {
+        throw new Exception("Cannot download SonarScanner tool");
+    }
 
-    MSBuild("src/Yarhl.sln", configurator =>
-        configurator.SetConfiguration(configuration)
-            .WithTarget("Rebuild"));
+    if (StartProcess("dotnet", "sonarscanner begin " + sonarSettings) != 0) {
+        throw new Exception("Cannot begin SonarScanner tool");
+    }
 
-    SonarEnd(new SonarEndSettings {
-        Login = sonarToken
-     });
+    DotNetCoreBuild(solutionPath, new DotNetCoreBuildSettings {
+        Configuration = configuration,
+        NoIncremental = true,
+    });
+
+    if (StartProcess("dotnet", "sonarscanner end " + loginSettings) != 0) {
+        throw new Exception("Cannot end SonarScanner tool");
+    }
 });
 
 Task("Build-Doc")
