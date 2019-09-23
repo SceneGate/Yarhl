@@ -51,8 +51,8 @@ var pullRequestBase = Argument("pr-base", string.Empty);
 var pullRequestBranch = Argument("pr-branch", string.Empty);
 var branchName = Argument("branch", string.Empty);
 
-string netVersion = "472";
-string netcoreVersion = "2.2";
+string netVersion = "48";
+string netcoreVersion = "3.0";
 string netstandardVersion = "2.0";
 
 string solutionPath = "src/Yarhl.sln";

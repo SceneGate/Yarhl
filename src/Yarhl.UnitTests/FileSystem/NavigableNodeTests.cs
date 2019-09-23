@@ -57,10 +57,9 @@ namespace Yarhl.UnitTests.FileSystem
         {
             var ex = Assert.Throws<ArgumentException>(() =>
                 new DummyNavigable("MyT/est"));
-            Assert.AreEqual(
-                "Name contains invalid characters" + Environment.NewLine +
-                "Parameter name: name",
-                ex.Message);
+            Assert.That(
+                ex.Message,
+                Contains.Substring("Name contains invalid characters"));
         }
 
         [Test]
