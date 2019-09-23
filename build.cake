@@ -273,13 +273,11 @@ Task("Run-Sonar")
         sonarSettings += " /d:sonar.pullrequest.branch=" + branchName;
      }
 
-    string toolPath = "tools/sonarscanner";
-    string sonarPath = $"{toolPath}/dotnet-sonarscanner";
-    if (StartProcess("dotnet", $"tool install --tool-path {toolPath} dotnet-sonarscanner") != 0) {
+    if (StartProcess("dotnet", $"tool install --global dotnet-sonarscanner") != 0) {
         throw new Exception("Cannot download SonarScanner tool");
     }
 
-    if (StartProcess(sonarPath, "begin " + sonarSettings) != 0) {
+    if (StartProcess("dotnet", "sonarscanner begin " + sonarSettings) != 0) {
         throw new Exception("Cannot begin SonarScanner tool");
     }
 
@@ -288,7 +286,7 @@ Task("Run-Sonar")
         NoIncremental = true,
     });
 
-    if (StartProcess(sonarPath, "end " + loginSettings) != 0) {
+    if (StartProcess("dotnet", "sonarscanner end " + loginSettings) != 0) {
         throw new Exception("Cannot end SonarScanner tool");
     }
 });
