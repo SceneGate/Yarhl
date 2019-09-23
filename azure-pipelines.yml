@@ -22,7 +22,13 @@ trigger:
     - gh-pages
 
 steps:
-# Prerequisites
+# Prerequisites:
+- task: UseDotNet@2
+  displayName: 'Install .NET Core 3.0 SDK'
+  inputs:
+    packageType: sdk
+    version: 3.0.x
+
 - script: |
     SYMLINK=6_0_0
     MONOPREFIX=/Library/Frameworks/Mono.framework/Versions/$SYMLINK
