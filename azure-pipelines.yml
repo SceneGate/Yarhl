@@ -24,6 +24,13 @@ trigger:
 steps:
 # Prerequisites:
 - task: UseDotNet@2
+  displayName: 'Install .NET Core 2.2 SDK for Sonar'
+  inputs:
+    packageType: sdk
+    version: 2.2.x
+  condition: eq(variables['Agent.OS'], 'Windows_NT')
+
+- task: UseDotNet@2
   displayName: 'Install .NET Core 3.0 SDK'
   inputs:
     packageType: sdk
