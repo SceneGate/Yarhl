@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project>
+    <PropertyGroup>
+        <Version>3.0.0-alpha09</Version>
+        <Product>SceneGate</Product>
+
+        <Authors>SceneGate Team</Authors>
+        <Copyright>Copyright (c) 2017 SceneGate</Copyright>
+        <RepositoryUrl>https://github.com/SceneGate/Yarhl/</RepositoryUrl>
+        <License>GPL-3.0-or-later</License>
+        <PackageProjectUrl>https://scenegate.github.io/Yarhl/</PackageProjectUrl>
+        <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <SystemCompositionPackageVersion>1.2.0</SystemCompositionPackageVersion>
+        <SystemRuntimeLoaderPackageVersion>4.3.0</SystemRuntimeLoaderPackageVersion>
+        <EncodingCodePagesPackageVersion>4.5.1</EncodingCodePagesPackageVersion>
+        <RecyclableStreamsPackageVersion>1.2.2</RecyclableStreamsPackageVersion>
+        <MicrosoftCSharpPackageVersion>4.5.0</MicrosoftCSharpPackageVersion>
+        <ReferenceAssembliesPackageVersion>1.0.0-preview.2</ReferenceAssembliesPackageVersion>
+
+        <NUnitPackageVersion>3.11.0</NUnitPackageVersion>
+        <NUnit3TestAdapterPackageVersion>3.11.2</NUnit3TestAdapterPackageVersion>
+        <NetTestSdkPackageVersion>15.9.0</NetTestSdkPackageVersion>
+        <BenchmarkDotNetPackageVersion>0.11.5</BenchmarkDotNetPackageVersion>
+
+        <StyleCopPackageVersion>1.1.1-beta.61</StyleCopPackageVersion>
+        <TextAnalyzerPackageVersion>2.6.2</TextAnalyzerPackageVersion>
+        <CodeQualityAnalyzerPackageVersion>2.6.2</CodeQualityAnalyzerPackageVersion>
+        <DocumentAnalyzerPackageVersion>1.0.0-beta.59</DocumentAnalyzerPackageVersion>
+    </PropertyGroup>
+</Project>
