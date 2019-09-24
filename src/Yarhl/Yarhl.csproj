@@ -11,12 +11,8 @@
     <CodeAnalysisRuleSet>..\StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="$(DocumentAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="$(CodeQualityAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharpPackageVersion)" />
@@ -25,16 +21,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="System.Composition" Version="$(SystemCompositionPackageVersion)" />
     <PackageReference Include="System.Runtime.Loader" Version="$(SystemRuntimeLoaderPackageVersion)" />
     <PackageReference Include="System.Text.Encoding.CodePages" Version="$(EncodingCodePagesPackageVersion)" />
-    <PackageReference Include="Text.Analyzers" Version="$(TextAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
   </ItemGroup>
 </Project>

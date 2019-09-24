@@ -20,9 +20,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="nunit" Version="$(NUnitPackageVersion)" />
+    <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
     <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopPackageVersion)">
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

@@ -15,23 +15,15 @@
     <EmbeddedResource Include="Text\Encodings\index-jis0212.txt" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="DotNetAnalyzers.DocumentationAnalyzers" Version="$(DocumentAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CodeQuality.Analyzers" Version="$(CodeQualityAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="$(ReferenceAssembliesPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Text.Analyzers" Version="$(TextAnalyzerPackageVersion)">
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
