@@ -93,6 +93,20 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CreateFromSubStreamTransferOwnership()
+        {
+            var stream = new MemoryStream();
+            stream.WriteByte(0xCA);
+            int beforeCount = DataStream.ActiveStreams;
+
+            var dataStream = DataStreamFactory.FromStream(stream, 0, 1);
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(beforeCount + 1));
+
+            dataStream.Dispose();
+            Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
         public void CreateFromSubStreamThrowIfInvalidArgument()
         {
             var stream = new MemoryStream();
@@ -113,6 +127,67 @@ namespace Yarhl.UnitTests.IO
                 Throws.InstanceOf<ArgumentOutOfRangeException>());
             Assert.That(
                 () => DataStreamFactory.FromStream(stream, 1, 2),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+
+            stream.Dispose();
+        }
+
+        [Test]
+        public void CreateFromSubStreamKeepingOwnershipUseStream()
+        {
+            var stream = new MemoryStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0xBE);
+            var dataStream = DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2);
+
+            Assert.That(dataStream.BaseStream, Is.AssignableFrom<StreamWrapper>());
+            Assert.That(
+                ((StreamWrapper)dataStream.BaseStream).BaseStream,
+                Is.SameAs(stream));
+            Assert.That(dataStream.Position, Is.EqualTo(0));
+            Assert.That(dataStream.Offset, Is.EqualTo(1));
+            Assert.That(dataStream.Length, Is.EqualTo(2));
+
+            stream.Dispose();
+        }
+
+        [Test]
+        public void CreateFromSubStreamKeepsOwnership()
+        {
+            var stream = new MemoryStream();
+            stream.WriteByte(0xCA);
+            int beforeCount = DataStream.ActiveStreams;
+
+            var dataStream = DataStreamFactory.FromStreamKeepingOwnership(stream, 0, 1);
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(beforeCount));
+
+            dataStream.Dispose();
+            Assert.That(() => stream.ReadByte(), Throws.Nothing);
+            stream.Dispose();
+        }
+
+        [Test]
+        public void CreateFromSubStreamKeepingOwnershipThrowIfInvalidArgument()
+        {
+            var stream = new MemoryStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+
+            Assert.That(
+                () => DataStreamFactory.FromStreamKeepingOwnership(null, 0, 0),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => DataStreamFactory.FromStreamKeepingOwnership(stream, -1, 0),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => DataStreamFactory.FromStreamKeepingOwnership(stream, 0, -1),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => DataStreamFactory.FromStreamKeepingOwnership(stream, 3, 0),
+                Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(
+                () => DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2),
                 Throws.InstanceOf<ArgumentOutOfRangeException>());
 
             stream.Dispose();

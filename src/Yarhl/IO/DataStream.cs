@@ -41,6 +41,7 @@ namespace Yarhl.IO
         static readonly Dictionary<IStream, int> Instances = new Dictionary<IStream, int>();
         readonly Stack<long> positionStack = new Stack<long>();
         readonly bool canExpand;
+        readonly bool hasOwnsership;
         long position;
         long length;
 
@@ -53,7 +54,8 @@ namespace Yarhl.IO
             BaseStream = new RecyclableMemoryStream();
             canExpand = true;
             Offset = 0;
-            this.length = 0;
+            length = 0;
+            hasOwnsership = true;
 
             IncreaseStreamCounter();
         }
@@ -61,6 +63,9 @@ namespace Yarhl.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream" /> class.
         /// </summary>
+        /// <remarks>
+        /// <p>The dispose ownership is transferred to this stream.</p>
+        /// </remarks>
         /// <param name="stream">Base stream.</param>
         public DataStream(IStream stream)
         {
@@ -70,7 +75,8 @@ namespace Yarhl.IO
             BaseStream = stream;
             canExpand = true;
             Offset = 0;
-            this.length = stream.Length;
+            length = stream.Length;
+            hasOwnsership = true;
 
             IncreaseStreamCounter();
         }
@@ -81,7 +87,11 @@ namespace Yarhl.IO
         /// <param name="stream">Base stream.</param>
         /// <param name="offset">Offset from the base stream.</param>
         /// <param name="length">Length of this substream.</param>
-        public DataStream(IStream stream, long offset, long length)
+        /// <param name="transferOwnership">
+        /// Transfer the ownsership of the stream argument to this class so
+        /// it can dispose it.
+        /// </param>
+        public DataStream(IStream stream, long offset, long length, bool transferOwnership)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -94,6 +104,7 @@ namespace Yarhl.IO
             canExpand = false;
             Offset = offset;
             this.length = length;
+            hasOwnsership = transferOwnership;
 
             IncreaseStreamCounter();
         }
@@ -118,6 +129,7 @@ namespace Yarhl.IO
             canExpand = false;
             Offset = stream.Offset + offset;
             this.length = length;
+            hasOwnsership = stream.hasOwnsership;
 
             IncreaseStreamCounter();
         }
@@ -545,8 +557,7 @@ namespace Yarhl.IO
 
             Disposed = true;
 
-            // BaseStream will be null if the constructor throws exception
-            if (BaseStream != null) {
+            if (BaseStream != null && hasOwnsership) {
                 Instances[BaseStream] -= 1;
                 if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
                     BaseStream.Dispose();
@@ -570,6 +581,10 @@ namespace Yarhl.IO
 
         private void IncreaseStreamCounter()
         {
+            if (!hasOwnsership) {
+                return;
+            }
+
             if (!Instances.ContainsKey(BaseStream)) {
                 Instances.Add(BaseStream, 1);
             } else {
