@@ -183,6 +183,18 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void ChangeFormatDoesNothingForSameFormat()
+        {
+            var dummyFormat1 = new StringFormatTest("3");
+            var dummyFormat2 = dummyFormat1;
+            Node node = new Node("mytest", dummyFormat1);
+            node.ChangeFormat(dummyFormat2);
+            Assert.AreEqual(dummyFormat2, node.Format);
+            Assert.IsFalse(dummyFormat1.Disposed);
+            Assert.IsFalse(dummyFormat2.Disposed);
+        }
+
+        [Test]
         public void ChangeFormatWithoutDisposingPreviousFormat()
         {
             var dummyFormat1 = new StringFormatTest("3");
