@@ -16,7 +16,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 namespace Yarhl.IO
 {
-    using System;
     using Yarhl.FileFormat;
 
     /// <summary>

@@ -25,7 +25,6 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.IO;
     using NUnit.Framework;
     using Yarhl.IO;
     using Yarhl.IO.StreamFormat;

@@ -28,11 +28,11 @@ namespace Yarhl.FileFormat
         /// Converts the format to the specified type.
         /// </summary>
         /// <returns>The new format.</returns>
-        /// <param name="source">Format to convert.</param>
+        /// <param name="src">Format to convert.</param>
         /// <typeparam name="TDst">The destination format type.</typeparam>
-        public static TDst To<TDst>(dynamic source)
+        public static TDst To<TDst>(dynamic src)
         {
-            return (TDst)To(typeof(TDst), source);
+            return (TDst)To(typeof(TDst), src);
         }
 
         /// <summary>

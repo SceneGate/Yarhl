@@ -46,6 +46,14 @@ namespace Yarhl.IO
         /// Creates a new <see cref="DataStream"/> from a section of a
         /// <see cref="Stream"/>.
         /// </summary>
+        /// <remarks>
+        /// <p>The life-management of the stream is transferred to the
+        /// <see cref="DataStream"/>. This means that disposing the new
+        /// <see cref="DataStream"/> will potentially dispose the underlying
+        /// stream.</p>
+        /// <p>Check <see cref="FromStreamKeepingOwnership" /> if you don't
+        /// want this behavior.</p>
+        /// </remarks>
         /// <param name="stream">The stream to use as a base.</param>
         /// <param name="offset">Offset of the base stream.</param>
         /// <param name="length">Length of the new substream.</param>
@@ -60,7 +68,33 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             var baseStream = new StreamWrapper(stream);
-            return new DataStream(baseStream, offset, length);
+            return new DataStream(baseStream, offset, length, true);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DataStream"/> from a section of a
+        /// <see cref="Stream"/>.
+        /// </summary>
+        /// <remarks>
+        /// <p>The dispose ownership is not transferred to the new
+        /// <see cref="DataStream" />. Instead, the caller is still responsible
+        /// to dispose according the stream argument.</p>
+        /// </remarks>
+        /// <param name="stream">The stream to use as a base.</param>
+        /// <param name="offset">Offset of the base stream.</param>
+        /// <param name="length">Length of the new substream.</param>
+        /// <returns>A new <see cref="DataStream"/>.</returns>
+        public static DataStream FromStreamKeepingOwnership(Stream stream, long offset, long length)
+        {
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (offset < 0 || offset > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            if (length < 0 || offset + length > stream.Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            var baseStream = new StreamWrapper(stream);
+            return new DataStream(baseStream, offset, length, false);
         }
 
         /// <summary>
@@ -91,7 +125,7 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             var baseStream = new StreamWrapper(new MemoryStream(data, 0, data.Length));
-            return new DataStream(baseStream, offset, length);
+            return new DataStream(baseStream, offset, length, true);
         }
 
         /// <summary>
@@ -129,7 +163,7 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             var baseStream = new LazyFileStream(path, mode);
-            return new DataStream(baseStream, offset, length);
+            return new DataStream(baseStream, offset, length, true);
         }
     }
 }

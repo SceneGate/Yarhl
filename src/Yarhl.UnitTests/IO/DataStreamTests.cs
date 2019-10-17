@@ -56,28 +56,28 @@ namespace Yarhl.UnitTests.IO
             baseStream.WriteByte(0xFE);
             int beforeCount = DataStream.ActiveStreams;
 
-            DataStream stream = new DataStream(baseStream, 0x1, 0x1);
+            DataStream stream = new DataStream(baseStream, 0x1, 0x1, false);
             Assert.AreSame(baseStream, stream.BaseStream);
             Assert.AreEqual(0x1, stream.Offset);
             Assert.AreEqual(0x1, stream.Length);
             Assert.AreEqual(0x0, stream.Position);
             Assert.IsNull(stream.ParentDataStream);
-            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+            stream.Dispose();
         }
 
         [Test]
         public void ConstructorFromStreamAndOffsetThrowsIfInvalid()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new DataStream((IStream)null, 0, 0));
+                new DataStream((IStream)null, 0, 0, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new DataStream(baseStream, -1, 4));
+                new DataStream(baseStream, -1, 4, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new DataStream(baseStream, 1, 0));
+                new DataStream(baseStream, 1, 0, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new DataStream(baseStream, 0, -1));
+                new DataStream(baseStream, 0, -1, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
-                new DataStream(baseStream, 0, 100));
+                new DataStream(baseStream, 0, 100, false));
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Yarhl.UnitTests.IO
             baseStream.WriteByte(0xFE);
             baseStream.WriteByte(0xBE);
             baseStream.WriteByte(0xBA);
-            DataStream stream1 = new DataStream(baseStream, 1, 3);
+            DataStream stream1 = new DataStream(baseStream, 1, 3, false);
 
             int beforeCount = DataStream.ActiveStreams;
             DataStream stream2 = new DataStream(stream1, 1, 1);
@@ -135,6 +135,26 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(0xBE, stream2.ReadByte());
             Assert.AreSame(stream1, stream2.ParentDataStream);
             Assert.AreEqual(beforeCount, DataStream.ActiveStreams);
+        }
+
+        [Test]
+        public void ConstructorFromDataStreamForwardOwnershipStatus()
+        {
+            int beforeCount = DataStream.ActiveStreams;
+
+            // No ownership
+            DataStream parent = new DataStream(baseStream, 0, 0, false);
+            DataStream child = new DataStream(parent, 0, 0);
+            Assert.AreEqual(beforeCount, DataStream.ActiveStreams);
+            child.Dispose();
+            parent.Dispose();
+
+            // Ownership
+            parent = new DataStream(baseStream, 0, 0, true);
+            child = new DataStream(parent, 0, 0);
+            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+            child.Dispose();
+            parent.Dispose();
         }
 
         [Test]
@@ -157,6 +177,32 @@ namespace Yarhl.UnitTests.IO
                 new DataStream(stream, 1, 1));
 
             stream.Dispose();
+        }
+
+        [Test]
+        public void ConstructorFromStreamWithoutOwnership()
+        {
+            int beforeCount = DataStream.ActiveStreams;
+            baseStream.WriteByte(0x00);
+
+            DataStream noOwnershipStream = new DataStream(baseStream, 0, 0, false);
+            Assert.AreEqual(beforeCount, DataStream.ActiveStreams);
+
+            noOwnershipStream.Dispose();
+            Assert.DoesNotThrow(() => baseStream.ReadByte());
+        }
+
+        [Test]
+        public void ConstructorFromStreamWithOwnership()
+        {
+            int beforeCount = DataStream.ActiveStreams;
+            baseStream.WriteByte(0x00);
+
+            DataStream ownershipStream = new DataStream(baseStream, 0, 0, true);
+            Assert.AreEqual(beforeCount + 1, DataStream.ActiveStreams);
+
+            ownershipStream.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => baseStream.ReadByte());
         }
 
         [Test]
@@ -261,11 +307,12 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Position = 1;
             Assert.AreEqual(1, stream.Position);
             stream.Position += 1;
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -273,7 +320,7 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(() => stream.Position = 2);
         }
@@ -283,8 +330,9 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Position = -1);
+            stream.Dispose();
         }
 
         [Test]
@@ -292,8 +340,9 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Position = 10);
+            stream.Dispose();
         }
 
         [Test]
@@ -305,6 +354,7 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(2, stream.Length);
             stream.Length = 1;
             Assert.AreEqual(1, stream.Length);
+            stream.Dispose();
         }
 
         [Test]
@@ -383,19 +433,19 @@ namespace Yarhl.UnitTests.IO
             parentStream.WriteByte(0x00);
             parentStream.WriteByte(0x00);
 
-            DataStream childStream = new DataStream(parentStream, 1, 1);
+            DataStream childStream = new DataStream(parentStream, 1, 1, false);
             childStream.WriteByte(0x01);
             Assert.That(
                 () => childStream.WriteByte(0x01),
                 Throws.InvalidOperationException);
 
-            DataStream childStream2 = new DataStream(parentStream, 0, 2);
+            DataStream childStream2 = new DataStream(parentStream, 0, 2, false);
             byte[] data = new byte[] { 0x02, 0x02, 0x02 };
             Assert.That(
                 () => childStream2.Write(data, 0, data.Length),
                 Throws.InvalidOperationException);
 
-            DataStream childStream3 = new DataStream(parentStream, 0, 1);
+            DataStream childStream3 = new DataStream(parentStream, 0, 1, false);
             Assert.That(
                 () => childStream3.Length = 2,
                 Throws.InvalidOperationException);
@@ -464,7 +514,7 @@ namespace Yarhl.UnitTests.IO
         public void LengthAfterDisposeThrowException()
         {
             baseStream.WriteByte(0xCA);
-            DataStream stream = new DataStream(baseStream, 0, 1);
+            DataStream stream = new DataStream(baseStream, 0, 1, false);
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(() => stream.Length = 1);
         }
@@ -473,8 +523,9 @@ namespace Yarhl.UnitTests.IO
         public void OutOfRangeLengthThrowException()
         {
             baseStream.WriteByte(0xCA);
-            DataStream stream = new DataStream(baseStream, 0, 0);
+            DataStream stream = new DataStream(baseStream, 0, 0, false);
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Length = -2);
+            stream.Dispose();
         }
 
         [Test]
@@ -494,10 +545,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             Assert.IsFalse(stream.EndOfStream);
             stream.Seek(2, SeekMode.Start);
             Assert.IsTrue(stream.EndOfStream);
+            stream.Dispose();
         }
 
         [Test]
@@ -505,10 +557,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 1, 1);
+            DataStream stream = new DataStream(baseStream, 1, 1, false);
             stream.Seek(1, SeekMode.Start);
             Assert.AreEqual(1, stream.Position);
             Assert.AreEqual(2, stream.AbsolutePosition);
+            stream.Dispose();
         }
 
         [Test]
@@ -516,9 +569,10 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Seek(1, SeekMode.Start);
             Assert.AreEqual(1, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -526,11 +580,12 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Seek(1, SeekMode.Start);
             Assert.AreEqual(1, stream.Position);
             stream.Seek(1, SeekMode.Current);
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -538,9 +593,10 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Seek(0, SeekMode.End);
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -571,7 +627,7 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(() => stream.Seek(1, SeekMode.Start));
             Assert.AreEqual(0, stream.Position);
@@ -582,11 +638,12 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Seek(10, SeekMode.End));
             Assert.AreEqual(0, stream.Position);
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Seek(-10, SeekMode.Current));
             Assert.AreEqual(0, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -594,10 +651,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Position = 1;
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Seek(10, SeekMode.Start));
             Assert.AreEqual(1, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -760,11 +818,12 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             Assert.AreEqual(0xCA, stream.ReadByte());
             Assert.AreEqual(1, stream.Position);
             Assert.AreEqual(0xFE, stream.ReadByte());
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -772,7 +831,7 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Dispose();
             Assert.Throws<ObjectDisposedException>(() => stream.ReadByte());
         }
@@ -782,10 +841,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Seek(0, SeekMode.End);
             Assert.Throws<EndOfStreamException>(() => stream.ReadByte());
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -793,9 +853,10 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             baseStream.Position = 1;
             Assert.AreEqual(0xCA, stream.ReadByte());
+            stream.Dispose();
         }
 
         [Test]
@@ -803,7 +864,7 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             byte[] buffer = new byte[2];
             Assert.AreEqual(1, stream.Read(buffer, 0, 1));
             Assert.AreEqual(0xCA, buffer[0]);
@@ -814,6 +875,7 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(0xCA, buffer[0]);
             Assert.AreEqual(0xFE, buffer[1]);
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -821,10 +883,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Dispose();
             byte[] buffer = new byte[2];
             Assert.Throws<ObjectDisposedException>(() => stream.Read(buffer, 0, 0));
+            stream.Dispose();
         }
 
         [Test]
@@ -832,11 +895,12 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Seek(0, SeekMode.End);
             byte[] buffer = new byte[2];
             Assert.Throws<EndOfStreamException>(() => stream.Read(buffer, 0, 1));
             Assert.AreEqual(2, stream.Position);
+            stream.Dispose();
         }
 
         [Test]
@@ -844,11 +908,12 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             baseStream.Position = 1;
             byte[] buffer = new byte[1];
             stream.Read(buffer, 0, 1);
             Assert.AreEqual(0xCA, buffer[0]);
+            stream.Dispose();
         }
 
         [Test]
@@ -856,10 +921,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             byte[] buffer = new byte[2];
             Assert.DoesNotThrow(() => stream.Read(buffer, 10, 0));
             Assert.AreEqual(0, stream.Read(buffer, 10, 0));
+            stream.Dispose();
         }
 
         [Test]
@@ -867,9 +933,10 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             Assert.DoesNotThrow(() => stream.Read(null, 0, 0));
             Assert.Throws<ArgumentNullException>(() => stream.Read(null, 0, 1));
+            stream.Dispose();
         }
 
         [Test]
@@ -877,10 +944,11 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2);
+            DataStream stream = new DataStream(baseStream, 0, 2, false);
             byte[] buffer = new byte[2];
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Read(buffer, 10, 1));
             Assert.Throws<ArgumentOutOfRangeException>(() => stream.Read(buffer, 0, 10));
+            stream.Dispose();
         }
 
         [Test]
