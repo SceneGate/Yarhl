@@ -426,7 +426,7 @@ msgstr """"
         [Test]
         public void NullBinaryThrowException()
         {
-            Po2Binary converter = new Po2Binary();
+            Binary2Po converter = new Binary2Po();
             Assert.Throws<ArgumentNullException>(() => converter.Convert((BinaryFormat)null));
         }
 
