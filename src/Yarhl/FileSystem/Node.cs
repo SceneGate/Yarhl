@@ -97,6 +97,8 @@ namespace Yarhl.FileSystem
         /// remove the children of the node.
         /// If the new format is a container, this method will add the format
         /// children to the node.</para>
+        /// <para>If the new format is the same reference as the current format
+        /// the method is a no-op.</para>
         /// </remarks>
         /// <param name="newFormat">The new format to assign.</param>
         /// <param name="disposePreviousFormat">
@@ -107,6 +109,10 @@ namespace Yarhl.FileSystem
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
+
+            if (newFormat == Format) {
+                return;
+            }
 
             // If it was a container, clean children
             if (IsContainer) {
