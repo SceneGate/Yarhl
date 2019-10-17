@@ -323,6 +323,26 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadSinglePositiveZero()
+        {
+            byte[] buffer = { 0x00, 0x00, 0x00, 0x00 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = EndiannessMode.LittleEndian;
+            Assert.That(reader.ReadSingle(), Is.EqualTo(+0.0f));
+        }
+
+        [Test]
+        public void ReadSingleNegativeZero()
+        {
+            byte[] buffer = { 0x00, 0x00, 0x00, 0x80 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+            reader.Endianness = EndiannessMode.LittleEndian;
+            Assert.That(reader.ReadSingle(), Is.EqualTo(-0.0f));
+        }
+
+        [Test]
         public void ReadSingleInvalidEndianness()
         {
             byte[] buffer = { 0x40, 0x48, 0xF5, 0xC3 };

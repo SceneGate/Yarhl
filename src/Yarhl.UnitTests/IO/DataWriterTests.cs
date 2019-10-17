@@ -334,6 +334,38 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSingleNegativeZero()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(-0.0f);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(4));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x80));
+        }
+
+        [Test]
+        public void WriteSinglePositiveZero()
+        {
+            DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(+0.0f);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(4));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+        }
+
+        [Test]
         public void WriteDoubleLittle()
         {
             DataStream stream = new DataStream();
