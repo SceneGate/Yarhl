@@ -20,6 +20,7 @@
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using Yarhl.IO;
 
@@ -33,6 +34,10 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>The new node.</returns>
         /// <param name="name">Node name.</param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node CreateContainer(string name)
         {
             return new Node(name, new NodeContainerFormat());
@@ -82,6 +87,10 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="name">The name of the node.</param>
         /// <returns>The new node.</returns>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromMemory(string name)
         {
             return new Node(name, new BinaryFormat());
@@ -97,6 +106,10 @@ namespace Yarhl.FileSystem
         /// </param>
         /// <param name="length">The length of the data in the node.</param>
         /// <returns>The new node.</returns>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromSubstream(
             string name,
             DataStream source,
@@ -130,6 +143,10 @@ namespace Yarhl.FileSystem
         /// <returns>The node.</returns>
         /// <param name="filePath">File path.</param>
         /// <param name="nodeName">Node name.</param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromFile(string filePath, string nodeName)
         {
             // We need to catch if the node creation fails
@@ -175,6 +192,10 @@ namespace Yarhl.FileSystem
         /// <param name="subDirectories">
         /// If <see langword="true" /> it searchs recursively in subdirectories.
         /// </param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromDirectory(
             string dirPath,
             string filter,

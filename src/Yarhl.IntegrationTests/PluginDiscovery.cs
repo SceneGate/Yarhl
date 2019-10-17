@@ -28,7 +28,6 @@ namespace Yarhl.IntegrationTests
     using System.IO;
     using System.Linq;
     using NUnit.Framework;
-    using Yarhl;
 
     [TestFixture]
     public class PluginDiscovery
