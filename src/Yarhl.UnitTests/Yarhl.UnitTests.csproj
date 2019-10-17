@@ -7,7 +7,7 @@
 
     <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
-    <CodeAnalysisRuleSet>..\StyleCopTests.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>
   </PropertyGroup>
@@ -16,6 +16,10 @@
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(NetTestSdkPackageVersion)" />
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="$(ReferenceAssembliesPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -23,6 +27,10 @@
     </PackageReference>
     <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
     <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="$(SonarAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>

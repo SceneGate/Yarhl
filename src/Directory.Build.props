@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <Version>3.0.0-alpha09</Version>
+        <Version>3.0.0-alpha10</Version>
         <Product>SceneGate</Product>
 
         <Authors>SceneGate Team</Authors>
@@ -27,5 +27,6 @@
 
         <StyleCopAnalyzerPackageVersion>1.1.118</StyleCopAnalyzerPackageVersion>
         <FxCopAnalyzerPackageVersion>2.9.4</FxCopAnalyzerPackageVersion>
+        <SonarAnalyzerPackageVersion>7.17.0.9346</SonarAnalyzerPackageVersion>
     </PropertyGroup>
 </Project>
