@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for Lemon" ToolsVersion="12.0">
+  <Include Path="SceneGate.Standard.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <!-- Testing of different class and interface implementations. -->
+    <Rule Id="CA1034" Action="None" />
+
+    <!-- No need of null checking for quick test method implementations. -->
+    <Rule Id="CA1062" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <!-- Testing of different class and interface implementations. -->
+    <Rule Id="CA1040" Action="None" />
+
+    <!-- Quick code for pasing or formatting, no need to be robust against locales. -->
+    <Rule Id="CA1305" Action="None" />
+    <Rule Id="CA1307" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <!-- Disable documentation in unit tests. -->
+    <Rule Id="SA0001" Action="None" />
+    <Rule Id="SA1600" Action="None" />
+  </Rules>
+</RuleSet>

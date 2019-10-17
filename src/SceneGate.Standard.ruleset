@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for Lemon" ToolsVersion="12.0">
+  <IncludeAll Action="Warning" />
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <!-- We don't translate exception and log messages from English. -->
+    <Rule Id="CA1303" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <!-- Disable XML file headers. -->
+    <Rule Id="SA1633" Action="None" />
+
+    <!-- Allow inline braces. -->
+    <Rule Id="SA1500" Action="None" />
+
+    <!-- Braces can be omitted (for if-guards). -->
+    <Rule Id="SA1503" Action="None" />
+
+    <!-- Do not force to prefix local calls with 'this'. -->
+    <Rule Id="SA1101" Action="None" />
+
+    <!-- Disable mandatory access modifiers. -->
+    <Rule Id="SA1400" Action="None" />
+
+    <!-- Allow initializer to have brace in the same line. -->
+    <Rule Id="SA1137" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <!-- It's common and almost inevitable to have TODO in reverse-engineering software -->
+    <Rule Id="S1135" Action="Info" />
+  </Rules>
+</RuleSet>

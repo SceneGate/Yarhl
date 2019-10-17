@@ -42,7 +42,9 @@ namespace Yarhl
             "System.",
             "Microsoft.",
             "netstandard",
+            "nuget",
             "nunit",
+            "testhost",
         };
 
         static readonly object LockObj = new object();
