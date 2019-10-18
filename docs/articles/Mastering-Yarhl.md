@@ -61,7 +61,7 @@ By using the different overloads of `ReadString` and `Write` you can read and wr
 #### Padding
 
 Are you tired of writing logic to skip or write padding bytes? Well, we too!
-If you are reading a file and you want to skip padding bytes, you can call [`ReadPadding`](xref:Yarhl.IO.DataReader.SkipPadding(System.Int32)) and if you need to write padding bytes, then `WritePadding` will be your friend.
+If you are reading a file and you want to skip padding bytes, you can call [`SkipPadding`](xref:Yarhl.IO.DataReader.SkipPadding(System.Int32)) and if you need to write padding bytes, then [`WritePadding`](xref:Yarhl.IO.DataWriter.WritePadding(System.Byte,System.Int32)) will be your friend.
 
 ### TextReader and TextWriter
 
