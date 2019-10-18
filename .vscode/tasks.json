@@ -9,19 +9,6 @@
                 "kind": "build",
                 "isDefault": true
             }
-        },
-        {
-            "label": "test",
-            "type": "shell",
-            "command": "automation/run_linters.sh && automation/run_unittests.sh",
-            "group": {
-                "isDefault": true,
-                "kind": "test"
-            },
-            "presentation": {
-                "reveal": "always"
-            },
-            "dependsOn": "build"
         }
     ]
 }

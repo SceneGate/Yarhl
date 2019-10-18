@@ -1,23 +1,22 @@
-//
-//  build.cake
-//
-//  Author:
-//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
-//
-//  Copyright (c) 2018 Benito Palacios Sánchez
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (c) 2019 SceneGate
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 // NUnit tests
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.10.0
@@ -30,8 +29,10 @@
 #tool nuget:?package=ReportGenerator&version=4.2.15
 
 // Documentation
-#addin nuget:?package=Cake.DocFx&version=0.13.0
-#tool nuget:?package=docfx.console&version=2.44.0
+// DocFX is disabled because it throws a StackOverflowException
+// https://github.com/dotnet/docfx/issues/4857
+#addin nuget:?package=Cake.DocFx&version=0.13.1
+#tool nuget:?package=docfx.console&version=2.46.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -233,17 +234,6 @@ Task("Build-Doc")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    // Workaround for
-    // https://github.com/dotnet/docfx/issues/3389
-    NuGetInstall("SQLitePCLRaw.core", new NuGetInstallSettings {
-        Version = "1.1.14",
-        ExcludeVersion  = true,
-        OutputDirectory = "./tools"
-    });
-    CopyFileToDirectory(
-        "tools/SQLitePCLRaw.core/lib/net45/SQLitePCLRaw.core.dll",
-        GetDirectories("tools/docfx.console.*").Single().Combine("tools"));
-
     DocFxMetadata("docs/docfx.json");
     DocFxBuild("docs/docfx.json");
 });
