@@ -4,10 +4,10 @@
         <Version>3.0.0-alpha10</Version>
         <Product>SceneGate</Product>
 
-        <Authors>SceneGate Team</Authors>
-        <Copyright>Copyright (c) 2017 SceneGate</Copyright>
+        <Authors>SceneGate</Authors>
+        <Copyright>Copyright (c) 2019 SceneGate</Copyright>
         <RepositoryUrl>https://github.com/SceneGate/Yarhl/</RepositoryUrl>
-        <License>GPL-3.0-or-later</License>
+        <License>MIT</License>
         <PackageProjectUrl>https://scenegate.github.io/Yarhl/</PackageProjectUrl>
         <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
     </PropertyGroup>
