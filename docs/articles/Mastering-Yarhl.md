@@ -218,9 +218,9 @@ This is the main feature of Yarhl and the most important one, no doubt, 10/10 Ya
 
 A [`Node`](xref:Yarhl.FileSystem.Node) is a virtual file. It's like having a file system with files and folder but only in memory for the duration of your program. You can dynamically add and remove files / folders. These files and folders are called nodes in Yarhl.
 
-A node may have child nodes like a folder may have folders and files. You can add the _subnodes_ with the `Add` method and you iterate and access to its children with the `Children` property.
+A node may have child nodes like a folder may have folders and files. You can add the _subnodes_ with the [`Add`](xref:Yarhl.FileSystem.NavigableNode`1.Add(`0)) method and you iterate and access to its children with the [`Children`](xref:Yarhl.FileSystem.NavigableNode`1.Children) property.
 
-The node `Name` must be unique. You can also get the full path to the node in this new virtual filesystem. That is, if you have a _root_ node with name `MyRoot` and you add a node `Node1`, the `Path` property for `Node1` will be `/MyRoot/Node1`.
+The node [`Name`](xref:Yarhl.FileSystem.NavigableNode`1.Name) must be unique. You can also get the full path to the node in this new virtual filesystem. That is, if you have a _root_ node with name `MyRoot` and you add a node `Node1`, the [`Path`](xref:Yarhl.FileSystem.NavigableNode`1.Path) property for `Node1` will be `/MyRoot/Node1`.
 
 Ah, one more thing before I forget. Regular files in your disk have some bytes associated, right? Well, in the case of nodes they have a [Format](#implementing-file-formats) that we were talking before. That is, it doesn't have to have bytes but it could be a type to represent image, texture, text, font, ... The actual type of the node.
 For instance, let's say we create a node from a disk file, it will have a `BinaryFormat` because for now it's just a bunch of bytes. But if those bytes store a set of menu texts, we could transform its format and associate its actual content type: `MenuSentences`. To the node [`Format`](xref:Yarhl.FileSystem.Node.Format*) property you can set any type that implements the [`IFormat`](xref:Yarhl.FileFormat.IFormat) interface.
