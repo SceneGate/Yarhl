@@ -29,8 +29,6 @@
 #tool nuget:?package=ReportGenerator&version=4.2.15
 
 // Documentation
-// DocFX is disabled because it throws a StackOverflowException
-// https://github.com/dotnet/docfx/issues/4857
 #addin nuget:?package=Cake.DocFx&version=0.13.1
 #tool nuget:?package=docfx.console&version=2.46.0
 
