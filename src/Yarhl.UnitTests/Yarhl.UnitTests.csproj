@@ -7,6 +7,7 @@
 
     <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
+    <LangVersion>8.0</LangVersion>
     <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>

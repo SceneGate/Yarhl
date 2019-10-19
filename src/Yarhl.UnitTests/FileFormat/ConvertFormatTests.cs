@@ -30,14 +30,14 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertToGeneric()
         {
-            Assert.AreEqual(ConvertFormat.To<int>("3"), 3);
+            Assert.AreEqual(3, ConvertFormat.To<int>("3"));
         }
 
         [Test]
         public void ConvertToWithType()
         {
-            Assert.AreEqual(ConvertFormat.To(typeof(int), "3"), 3);
-            Assert.AreEqual(ConvertFormat.To(typeof(string), 3), "3");
+            Assert.AreEqual(3, ConvertFormat.To(typeof(int), "3"));
+            Assert.AreEqual("3", ConvertFormat.To(typeof(string), 3));
         }
 
         [Test]
@@ -63,7 +63,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertToThrowsIfThereAreTwoEqualConverters()
         {
-            var test = new StringFormatTest("3");
+            using var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 ConvertFormat.To(typeof(short), test));
             Assert.AreEqual(
@@ -86,7 +86,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertToThrowsIfConstructorFails()
         {
-            var test = new StringFormatTest { Value = "3" };
+            using var test = new StringFormatTest { Value = "3" };
             var ex = Assert.Throws<Exception>(() =>
                 ConvertFormat.To(typeof(ushort), test));
             Assert.AreEqual(
@@ -97,7 +97,7 @@ namespace Yarhl.UnitTests.FileFormat
             var converter = new FormatTestBadConstructor("2");
             Assert.That(
                 converter.Convert(new StringFormatTest("3")),
-                Is.EqualTo(0));
+                Is.EqualTo(3));
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace Yarhl.UnitTests.FileFormat
             // With MEF we can't have an extension without a default constructor
             // because it will throw an exception in every general request.
             // So we need to hide those extensions.
-            var test = new StringFormatTest("3");
+            using var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 ConvertFormat.To(typeof(long), test));
             Assert.AreEqual(
@@ -117,8 +117,8 @@ namespace Yarhl.UnitTests.FileFormat
             // But we can use the With()
             var converter = new FormatTestNoConstructor("3");
             Assert.AreEqual(
-                ConvertFormat.With(converter, new StringFormatTest("1")),
-                0);
+                0,
+                ConvertFormat.With(converter, new StringFormatTest("1")));
         }
 
         [Test]
@@ -127,7 +127,7 @@ namespace Yarhl.UnitTests.FileFormat
             // With MEF we can't have an extension without a default constructor
             // because it will throw an exception in every general request.
             // So we need to hide those extensions.
-            var test = new StringFormatTest("3");
+            using var test = new StringFormatTest("3");
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 ConvertFormat.To(typeof(ulong), test));
             Assert.AreEqual(
@@ -138,8 +138,8 @@ namespace Yarhl.UnitTests.FileFormat
             // But we can use the With() of classes with Factory pattern.
             var converter = FormatTestPrivateConstructor.Create();
             Assert.AreEqual(
-                ConvertFormat.With(converter, new StringFormatTest("1")),
-                0);
+                0,
+                ConvertFormat.With(converter, new StringFormatTest("1")));
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.IsInstanceOf<Derived>(val);
             Assert.AreEqual(3, val.X);
 
-            Assert.DoesNotThrow(() => val = ConvertFormat.To<Base>((int)3));
+            Assert.DoesNotThrow(() => val = ConvertFormat.To<Base>(3));
             Assert.IsInstanceOf<Base>(val);
             Assert.AreEqual(5, val.X);
         }
@@ -217,7 +217,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithType()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             Assert.That(
                 ConvertFormat.With(typeof(FormatTestDuplicatedConverter2), format),
                 Is.EqualTo(3));
@@ -226,7 +226,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithTypeThrowsIfTypeIsNull()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             Type type = null;
             Assert.That(
                 () => ConvertFormat.With(type, format),
@@ -236,7 +236,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithTypeThrowsIfConverterNotFound()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             Assert.That(
                 () => ConvertFormat.With(typeof(HiddenConverter), format),
                 Throws.InvalidOperationException.With.Message.EqualTo(
@@ -246,7 +246,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithTypeThrowsIfNoImplementIConverter()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             Assert.That(
                 () => ConvertFormat.With(typeof(DateTime), format),
                 Throws.InvalidOperationException.With.Message.EqualTo(
@@ -256,7 +256,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithGeneric()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             Assert.That(
                 ConvertFormat.With<FormatTestDuplicatedConverter1>(format),
                 Is.EqualTo(3));
@@ -265,7 +265,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithInit()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             Assert.That(
                 ConvertFormat.With<HiddenConverter, int>(4, format),
                 Is.EqualTo(7));
@@ -274,7 +274,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithInstance()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             var converter = new HiddenConverter();
             Assert.That(
                 ConvertFormat.With(converter, format),
@@ -302,7 +302,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithInstanceThrowsIfConverterIsNull()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             HiddenConverter converter = null;
             Assert.That(
                 () => ConvertFormat.With(converter, format),
@@ -312,7 +312,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithThrowsExceptionIfNoImplementIConverter()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             string msg = "Converter doesn't implement IConverter<,>";
 
             Assert.That(
@@ -331,7 +331,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void ConvertWithInstanceThrowsExceptionIfInvalidConverter()
         {
-            var format = new StringFormatTest("3");
+            using var format = new StringFormatTest("3");
             string msg = "Converter cannot convert from/to the type";
 
             Assert.That(
@@ -350,18 +350,18 @@ namespace Yarhl.UnitTests.FileFormat
         public class FormatTestDuplicatedConverter1 :
             IConverter<StringFormatTest, short>
         {
-            public short Convert(StringFormatTest test)
+            public short Convert(StringFormatTest source)
             {
-                return System.Convert.ToInt16(test.Value);
+                return System.Convert.ToInt16(source.Value);
             }
         }
 
         public class FormatTestDuplicatedConverter2 :
             IConverter<StringFormatTest, short>
         {
-            public short Convert(StringFormatTest test)
+            public short Convert(StringFormatTest source)
             {
-                return System.Convert.ToInt16(test.Value);
+                return System.Convert.ToInt16(source.Value);
             }
         }
 
@@ -376,11 +376,14 @@ namespace Yarhl.UnitTests.FileFormat
             public FormatTestBadConstructor(string dummy)
             {
                 // This one doesn't throw
+                Dummy = dummy;
             }
 
-            public ushort Convert(StringFormatTest test)
+            public string Dummy { get; }
+
+            public ushort Convert(StringFormatTest source)
             {
-                return 0;
+                return ushort.Parse(source.Value);
             }
         }
 
@@ -395,7 +398,7 @@ namespace Yarhl.UnitTests.FileFormat
 
             public string Dummy { get; set; }
 
-            public long Convert(StringFormatTest format)
+            public long Convert(StringFormatTest source)
             {
                 return 0;
             }
@@ -414,7 +417,7 @@ namespace Yarhl.UnitTests.FileFormat
                 return new FormatTestPrivateConstructor();
             }
 
-            public ulong Convert(StringFormatTest format)
+            public ulong Convert(StringFormatTest source)
             {
                 return 0;
             }
@@ -427,14 +430,14 @@ namespace Yarhl.UnitTests.FileFormat
         {
             public int Offset { get; private set; }
 
-            public void Initialize(int param)
+            public void Initialize(int parameters)
             {
-                Offset = param;
+                Offset = parameters;
             }
 
-            public byte Convert(StringFormatTest format)
+            public byte Convert(StringFormatTest source)
             {
-                return (byte)(System.Convert.ToByte(format.Value) + Offset);
+                return (byte)(System.Convert.ToByte(source.Value) + Offset);
             }
         }
 

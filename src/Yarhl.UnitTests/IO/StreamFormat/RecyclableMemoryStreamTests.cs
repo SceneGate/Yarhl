@@ -39,7 +39,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         [Test]
         public void CanIncreaseLength()
         {
-            var stream = new RecyclableMemoryStream();
+            using var stream = new RecyclableMemoryStream();
             Assert.That(() => stream.SetLength(4), Throws.Nothing);
             Assert.That(stream.Length, Is.EqualTo(4));
         }
@@ -70,7 +70,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         [Test]
         public void CanDecreaseLength()
         {
-            var stream = new RecyclableMemoryStream();
+            using var stream = new RecyclableMemoryStream();
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
             Assert.That(stream.Length, Is.EqualTo(2));

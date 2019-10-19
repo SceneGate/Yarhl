@@ -390,7 +390,7 @@ namespace Yarhl.UnitTests.IO
             var writer = new TextWriter(stream);
             Assert.Throws<FormatException>(() => writer.Write("a{0}{1}", 3));
             Assert.Throws<FormatException>(() => writer.Write("a{1}", 3));
-            Assert.Throws<FormatException>(() => writer.Write("a{0}", new object[0]));
+            Assert.Throws<FormatException>(() => writer.Write("a{0}", Array.Empty<object>()));
         }
 
         [Test]
@@ -602,7 +602,7 @@ namespace Yarhl.UnitTests.IO
             var writer = new TextWriter(stream);
             Assert.Throws<FormatException>(() => writer.WriteLine("a{0}{1}", 3));
             Assert.Throws<FormatException>(() => writer.WriteLine("a{1}", 3));
-            Assert.Throws<FormatException>(() => writer.WriteLine("a{0}", new object[0]));
+            Assert.Throws<FormatException>(() => writer.WriteLine("a{0}", Array.Empty<object>()));
         }
 
         [Test]

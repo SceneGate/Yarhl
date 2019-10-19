@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using NUnit.Framework;
     using Yarhl.FileFormat;
 
@@ -223,6 +224,7 @@ namespace Yarhl.UnitTests.FileFormat
         {
         }
 
+        [SuppressMessage("Build", "CA1812", Justification = "Indirect instances")]
         class Derived : Base
         {
         }

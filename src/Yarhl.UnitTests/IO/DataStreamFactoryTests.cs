@@ -45,10 +45,11 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CreateFromStreamAllowsToExpand()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             var dataStream = DataStreamFactory.FromStream(stream);
             Assert.That(() => stream.WriteByte(0xFE), Throws.Nothing);
-            stream.Dispose();
+            Assert.That(stream.Length, Is.EqualTo(1));
+            dataStream.Dispose();
         }
 
         [Test]
@@ -82,7 +83,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CreateFromSubStreamDoesNotAllowToExpand()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
             stream.WriteByte(0xBE);
@@ -95,7 +96,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CreateFromSubStreamTransferOwnership()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             stream.WriteByte(0xCA);
             int beforeCount = DataStream.ActiveStreams;
 

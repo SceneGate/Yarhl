@@ -46,14 +46,14 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         [Test]
         public void ConstructorDoesNotOpenStream()
         {
-            var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
+            using var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
             Assert.That(stream.BaseStream, Is.Null);
         }
 
         [Test]
         public void ConstructorSetFileLengthOrZero()
         {
-            var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
+            using var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
             Assert.That(stream.Length, Is.EqualTo(0));
             Assert.That(stream.BaseStream, Is.Null);
             Assert.That(File.Exists(tempFile), Is.False);
@@ -62,9 +62,9 @@ namespace Yarhl.UnitTests.IO.StreamFormat
                 fs.WriteByte(0xAA);
             }
 
-            using (stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite)) {
-                Assert.That(stream.Length, Is.EqualTo(1));
-                Assert.That(stream.BaseStream, Is.Null);
+            using (var stream2 = new LazyFileStream(tempFile, FileOpenMode.ReadWrite)) {
+                Assert.That(stream2.Length, Is.EqualTo(1));
+                Assert.That(stream2.BaseStream, Is.Null);
             }
         }
 

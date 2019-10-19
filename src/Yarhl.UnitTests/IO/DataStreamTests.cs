@@ -49,7 +49,6 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            int beforeCount = DataStream.ActiveStreams;
 
             DataStream stream = new DataStream(baseStream, 0x1, 0x1, false);
             Assert.AreSame(baseStream, stream.BaseStream);
@@ -81,7 +80,7 @@ namespace Yarhl.UnitTests.IO
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
             int beforeCount = DataStream.ActiveStreams;
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             Assert.AreSame(baseStream, stream.BaseStream);
             Assert.AreEqual(0x0, stream.Offset);
             Assert.AreEqual(0x2, stream.Length);
@@ -119,10 +118,10 @@ namespace Yarhl.UnitTests.IO
             baseStream.WriteByte(0xFE);
             baseStream.WriteByte(0xBE);
             baseStream.WriteByte(0xBA);
-            DataStream stream1 = new DataStream(baseStream, 1, 3, false);
+            using DataStream stream1 = new DataStream(baseStream, 1, 3, false);
 
             int beforeCount = DataStream.ActiveStreams;
-            DataStream stream2 = new DataStream(stream1, 1, 1);
+            using DataStream stream2 = new DataStream(stream1, 1, 1);
             Assert.AreSame(baseStream, stream2.BaseStream);
             Assert.AreEqual(0x2, stream2.Offset);
             Assert.AreEqual(0x1, stream2.Length);
@@ -219,7 +218,6 @@ namespace Yarhl.UnitTests.IO
             DataStream stream2 = new DataStream(baseStream);
 
             stream1.Dispose();
-            stream1.Dispose();
 
             Assert.DoesNotThrow(() => baseStream.ReadByte());
             stream2.Dispose();
@@ -256,9 +254,9 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void DiposeCloseCorrectStream()
         {
-            IStream baseStream1 = new RecyclableMemoryStream();
+            using IStream baseStream1 = new RecyclableMemoryStream();
             baseStream1.WriteByte(0xCA);
-            IStream baseStream2 = new RecyclableMemoryStream();
+            using IStream baseStream2 = new RecyclableMemoryStream();
             baseStream2.WriteByte(0xCA);
 
             DataStream stream1 = new DataStream(baseStream1);
@@ -489,7 +487,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CanPreallocateLengthForSubstream()
         {
-            DataStream parent = new DataStream();
+            using DataStream parent = new DataStream();
             parent.Length = 11;
             parent.WriteByte(0xFF);
             Assert.That(parent.Length, Is.EqualTo(11));
@@ -501,8 +499,6 @@ namespace Yarhl.UnitTests.IO
             for (int i = 0; i < 10; i++) {
                 Assert.That(child.ReadByte(), Is.EqualTo(0));
             }
-
-            parent.Dispose();
         }
 
         [Test]
@@ -528,7 +524,7 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             stream.Seek(2, SeekMode.Start);
             Assert.AreEqual(2, stream.Position);
             stream.Length = 1;
@@ -971,7 +967,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritesAByteAndIncreasePosition()
         {
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             stream.WriteByte(0xCA);
             Assert.AreEqual(1, stream.Position);
             stream.Position = 0;
@@ -981,7 +977,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteByteIncreaseLength()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             Assert.DoesNotThrow(() => stream.WriteByte(0xCA));
             Assert.AreEqual(1, stream.Length);
             Assert.AreEqual(1, stream.Position);
@@ -1001,7 +997,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteByteSetBaseStreamPosition()
         {
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             baseStream.Position = 1;
             stream.WriteByte(0xCA);
             baseStream.Position = 0;
@@ -1011,7 +1007,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteBufferAndIncreasePosition()
         {
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             byte[] buffer = { 0x00, 0xCA };
             stream.Write(buffer, 1, 1);
             Assert.AreEqual(1, stream.Position);
@@ -1023,7 +1019,7 @@ namespace Yarhl.UnitTests.IO
         public void WriteBufferAndIncreaseLength()
         {
             baseStream.WriteByte(0xFF);
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             Assert.AreEqual(1, stream.Length);
             byte[] buffer = { 0xCA, 0xFE };
             Assert.DoesNotThrow(() => stream.Write(buffer, 0, 2));
@@ -1061,7 +1057,7 @@ namespace Yarhl.UnitTests.IO
         public void WriteBufferSetBaseStreamPosition()
         {
             baseStream.WriteByte(0xFF);
-            DataStream stream = new DataStream(baseStream);
+            using DataStream stream = new DataStream(baseStream);
             Assert.AreEqual(1, baseStream.Position);
             byte[] buffer = { 0xCA };
             stream.Write(buffer, 0, 1);
@@ -1267,7 +1263,7 @@ namespace Yarhl.UnitTests.IO
         {
             string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
             stream.WriteByte(0x00);

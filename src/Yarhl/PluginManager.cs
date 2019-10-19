@@ -213,8 +213,10 @@ namespace Yarhl
             // Skip libraries that match the ignored libraries because
             // MEF would try to load its dependencies.
             return paths
-                .Where(f => !IgnoredLibraries.Any(
-                    n => Path.GetFileName(f).ToLower().StartsWith(n)))
+                .Select(p => new { Name = Path.GetFileName(p), Path = p })
+                .Where(p => !IgnoredLibraries.Any(
+                    ign => p.Name.StartsWith(ign, StringComparison.OrdinalIgnoreCase)))
+                .Select(p => p.Path)
                 .LoadAssemblies();
         }
 

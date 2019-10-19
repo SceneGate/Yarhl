@@ -31,7 +31,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void ConstructorSetProperties()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
             Assert.That(wrapper.BaseStream, Is.SameAs(stream));
         }
 
@@ -40,7 +40,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         {
             var stream = new MemoryStream();
             stream.WriteByte(0x11);
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
             Assert.That(wrapper.Length, Is.EqualTo(1));
 
             stream.WriteByte(0xAA);
@@ -83,7 +83,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void SetLengthChangesStreamLength()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
             Assert.That(wrapper.Length, Is.EqualTo(0));
             Assert.That(stream.Length, Is.EqualTo(0));
 
@@ -97,7 +97,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void ReadByteReadsAndAdvance()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
             stream.WriteByte(0x11);
             stream.WriteByte(0x12);
             stream.WriteByte(0x13);
@@ -115,7 +115,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void ReadArrayReadsAndAdvance()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
             stream.WriteByte(0x11);
             stream.WriteByte(0x12);
             stream.WriteByte(0x13);
@@ -141,7 +141,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void WriteByteWritesAndAdvance()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
 
             wrapper.WriteByte(0x11);
             Assert.That(wrapper.Position, Is.EqualTo(1));
@@ -164,7 +164,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void WriteArrayWritesAndAdvance()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapper(stream);
 
             byte[] buffer = new byte[] { 0x11, 0x12, 0x13, 0xFF, 0x14 };
             wrapper.Write(buffer, 0, 2);

@@ -191,8 +191,7 @@ namespace Yarhl.UnitTests
             Assert.That(formats, Does.Contain(typeof(PluginConverter)));
 
             var conv = (PluginConverter)PluginManager.Instance.GetConverters()
-                    .Where(f => f.Metadata.Type == typeof(PluginConverter))
-                    .Single()
+                    .Single(f => f.Metadata.Type == typeof(PluginConverter))
                     .CreateExport().Value;
             Assert.That(conv.Convert(new PluginFormat()), Is.EqualTo(0));
         }
@@ -218,14 +217,14 @@ namespace Yarhl.UnitTests
 
         public class PluginFormat : IFormat
         {
-            public int Value => 0;
+            public static int Value => 0;
         }
 
         public class PluginConverter : IConverter<PluginFormat, int>
         {
-            public int Convert(PluginFormat src)
+            public int Convert(PluginFormat source)
             {
-                return src.Value;
+                return PluginFormat.Value;
             }
         }
     }

@@ -37,22 +37,22 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SearchNullPathThrowsException()
         {
-            Node node = new Node("MyTest");
+            using Node node = new Node("MyTest");
             Assert.Throws<ArgumentNullException>(() => Navigator.SearchNode(node, null));
         }
 
         [Test]
         public void SearchEmptyPath()
         {
-            Node node = new Node("MyNode");
+            using Node node = new Node("MyNode");
             Assert.Throws<ArgumentNullException>(() => Navigator.SearchNode(node, string.Empty));
         }
 
         [Test]
         public void SearchInvalidPrefixPath()
         {
-            Node nodeChild = new Node("Child");
-            Node nodeParent = new Node("Parent");
+            using Node nodeChild = new Node("Child");
+            using Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
             Assert.IsNull(Navigator.SearchNode(nodeChild, "/OtherParent"));
         }
@@ -60,8 +60,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SearchExactPath()
         {
-            Node nodeChild = new Node("Child");
-            Node nodeParent = new Node("Parent");
+            using Node nodeChild = new Node("Child");
+            using Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
             Assert.AreSame(nodeChild, Navigator.SearchNode(nodeChild, "/Parent/Child"));
         }
@@ -69,8 +69,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SearchInChildren()
         {
-            Node nodeChild = new Node("Child");
-            Node nodeParent = new Node("Parent");
+            using Node nodeChild = new Node("Child");
+            using Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
             Assert.AreSame(nodeChild, Navigator.SearchNode(nodeParent, "/Parent/Child"));
         }
@@ -78,10 +78,10 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SearchRecursivelyTwoLevels()
         {
-            Node nodeSubChild = new Node("SubChild");
-            Node nodeChild = new Node("Child");
+            using Node nodeSubChild = new Node("SubChild");
+            using Node nodeChild = new Node("Child");
             nodeChild.Add(nodeSubChild);
-            Node nodeParent = new Node("Parent");
+            using Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
             Assert.AreSame(nodeSubChild, Navigator.SearchNode(nodeParent, "/Parent/Child/SubChild"));
         }
@@ -89,10 +89,10 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SearchRelativePath()
         {
-            Node nodeSubChild = new Node("SubChild");
-            Node nodeChild = new Node("Child");
+            using Node nodeSubChild = new Node("SubChild");
+            using Node nodeChild = new Node("Child");
             nodeChild.Add(nodeSubChild);
-            Node nodeParent = new Node("Parent");
+            using Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
             Assert.AreSame(nodeSubChild, Navigator.SearchNode(nodeParent, "Child/SubChild"));
@@ -102,8 +102,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SearchNotFound()
         {
-            Node nodeChild = new Node("Child");
-            Node nodeParent = new Node("Parent");
+            using Node nodeChild = new Node("Child");
+            using Node nodeParent = new Node("Parent");
             nodeParent.Add(nodeChild);
 
             Assert.IsNull(Navigator.SearchNode(nodeParent, "/Parent/Child2"));
@@ -119,16 +119,16 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void IterateNoChildren()
         {
-            Node node = new Node("MyTest");
+            using Node node = new Node("MyTest");
             Assert.IsEmpty(Navigator.IterateNodes(node));
         }
 
         [Test]
         public void IterateChildren()
         {
-            Node child1 = new Node("Child1");
-            Node child2 = new Node("Child2");
-            Node node = new Node("MyTest");
+            using Node child1 = new Node("Child1");
+            using Node child2 = new Node("Child2");
+            using Node node = new Node("MyTest");
             node.Add(child1);
             node.Add(child2);
 
@@ -141,11 +141,11 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void IterateRecursivelyTwoLevelsDefaultIsBreadthFirst()
         {
-            Node subChild1 = new Node("SubChild1");
-            Node child1 = new Node("Child1");
+            using Node subChild1 = new Node("SubChild1");
+            using Node child1 = new Node("Child1");
             child1.Add(subChild1);
-            Node child2 = new Node("Child2");
-            Node node = new Node("MyTest");
+            using Node child2 = new Node("Child2");
+            using Node node = new Node("MyTest");
             node.Add(child1);
             node.Add(child2);
 
@@ -159,7 +159,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void IterateBreadthFirst()
         {
-            Node node = new Node("A");
+            using Node node = new Node("A");
             node.Add(new Node("B"));
             node.Add(new Node("C"));
             node.Add(new Node("D"));
@@ -178,7 +178,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void IterateRecursiveDepthFirst()
         {
-            Node node = new Node("A");
+            using Node node = new Node("A");
             node.Add(new Node("B"));
             node.Add(new Node("C"));
             node.Add(new Node("D"));
@@ -197,7 +197,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void IterateRecursiveInvalidMode()
         {
-            Node node = new Node("A");
+            using Node node = new Node("A");
             Assert.That(
                 () => Navigator.IterateNodes(node, (NavigationMode)0x100),
                 Throws.TypeOf<ArgumentOutOfRangeException>());
