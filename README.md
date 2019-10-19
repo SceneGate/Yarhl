@@ -1,4 +1,4 @@
-# Yarhl: Yet Another ROM Hacking Library [![GPL v3 License](https://img.shields.io/badge/license-GPL%20V3-blue.svg?style=flat)](http://www.gnu.org/copyleft/gpl.html)
+# Yarhl: Yet Another ROM Hacking Library [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://choosealicense.com/licenses/mit/)
 
 ![Yarhl Logo](https://raw.githubusercontent.com/SceneGate/Yarhl/master/docs/images/logo.png)
 
@@ -7,14 +7,10 @@ It provides a virtual file system, file format and format conversion features
 and plugin support. It's built in C# / .NET and works in Windows, Linux and
 Mac OS X.
 
-| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![Nuget prerelease](https://img.shields.io/nuget/vpre/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
+| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![NuGet Alpha](https://img.shields.io/github/v/tag/SceneGate/Yarhl?color=yellow&include_prereleases&label=nuget)](https://github.com/SceneGate/Yarhl/packages) |
 | ----- | ------ |
-| **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=master)](https://dev.azure.com/SceneGate/Yarhl/_build/latest?definitionId=1&branchName=master) |
-| **Quality report** | [![Sonar Gate](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=alert_status)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) [![Total alerts](https://img.shields.io/lgtm/alerts/g/SceneGate/Yarhl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SceneGate/Yarhl/alerts/) |
-| **Coverage** | [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=coverage)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) |
-| **Project Best Practices** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) |
-| **Quality Details** | [![Maintainability](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=bugs)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) [![Code smells](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=code_smells)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) [![Duplicated lines](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) |
-| **Code Stats** | [![Lines of code](https://sonarcloud.io/api/project_badges/measure?project=SceneGate_Yarhl&metric=ncloc)](https://sonarcloud.io/dashboard?id=SceneGate_Yarhl) |
+| **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=master)](https://dev.azure.com/SceneGate/Yarhl/_build/latest?definitionId=1&branchName=master) ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/SceneGate/Yarhl/1?compact_message) ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/SceneGate/Yarhl/1) |
+| **Quality report** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) [![Total alerts](https://img.shields.io/lgtm/alerts/g/SceneGate/Yarhl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SceneGate/Yarhl/alerts/) |
 
 ## Documentation
 
@@ -23,10 +19,13 @@ and the API documentation [here](https://scenegate.github.io/Yarhl/api/Yarhl.htm
 
 ## Install
 
-Yarhl is available on NuGet:
+Stable releases are available from nuget.org:
 
 * [Yarhl](https://www.nuget.org/packages/Yarhl)
 * [Yarhl.Media](https://www.nuget.org/packages/Yarhl.Media)
+
+Alpha releases can be found in this
+[GitHub package repository](https://github.com/SceneGate/Yarhl/packages).
 
 ## Build
 

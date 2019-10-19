@@ -27,3 +27,6 @@ tools/*
 docs/_site/
 docs/api/
 doc-branch/
+
+# Benchmarks
+BenchmarkDotNet.Artifacts/

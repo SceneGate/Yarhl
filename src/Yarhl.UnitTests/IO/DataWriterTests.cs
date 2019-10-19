@@ -1,27 +1,22 @@
-﻿// DataWriterTests.cs
-//
-// Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2017 Benito Palacios Sánchez
-//
+﻿// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.UnitTests.IO
 {
     using System;
@@ -36,7 +31,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ConstructorSetProperties()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.AreSame(stream, writer.Stream);
         }
@@ -44,7 +39,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void EndiannesProperty()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.AreEqual(EndiannessMode.LittleEndian, writer.Endianness);
             writer.Endianness = EndiannessMode.BigEndian;
@@ -54,7 +49,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void EncodingProperty()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.AreSame(Encoding.UTF8, writer.DefaultEncoding);
             writer.DefaultEncoding = Encoding.GetEncoding(932);
@@ -64,7 +59,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteByte()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             byte expected = 0xAB;
             writer.Write(expected);
@@ -77,7 +72,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteSByte()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             sbyte expected = -5;
             writer.Write(expected);
@@ -90,7 +85,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUShortLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -105,7 +100,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUShortBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -120,7 +115,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteShortLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -135,7 +130,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteShortBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -150,7 +145,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUIntLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -167,7 +162,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUIntBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -184,7 +179,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteIntLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -201,7 +196,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteIntBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -218,7 +213,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteULongLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -239,7 +234,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteULongBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -260,7 +255,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLongLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -281,7 +276,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLongBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -302,7 +297,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteSingleLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -319,7 +314,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteSingleBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -334,9 +329,41 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSingleNegativeZero()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(-0.0f);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(4));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x80));
+        }
+
+        [Test]
+        public void WriteSinglePositiveZero()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.Write(+0.0f);
+
+            stream.Position = 0;
+            Assert.That(stream.Length, Is.EqualTo(4));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+            Assert.That(stream.ReadByte, Is.EqualTo(0x00));
+        }
+
+        [Test]
         public void WriteDoubleLittle()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.LittleEndian;
 
@@ -357,7 +384,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteDoubleBig()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             writer.Endianness = EndiannessMode.BigEndian;
 
@@ -378,7 +405,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteByteArray()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             byte[] buffer = { 0xCA, 0xFE, 0xBE, 0xBE };
@@ -395,7 +422,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullByteArrayThrowsException()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             byte[] buffer = null;
@@ -405,7 +432,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharWithDefaultEncoding()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write('あ');
@@ -421,7 +448,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharWithSpecificEncoding()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write('あ', Encoding.GetEncoding(932));
@@ -436,7 +463,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArrayWithDefaultEncoding()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             char[] chars = { 'あ', 'ア' };
@@ -456,7 +483,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArrayWithSpecificEncoding()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             char[] chars = { 'あ', 'ア' };
@@ -474,7 +501,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArrayNullThrowsException()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             char[] chars = null;
@@ -484,7 +511,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAndNoNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -501,7 +528,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextWithEncodingAndNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -518,7 +545,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextWithMaxSizeAndNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -535,7 +562,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextWithInvalidArgumentsThrowsException()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = null;
@@ -547,7 +574,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextFixedSize()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -564,7 +591,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAvoidDuplicateNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア\0";
@@ -581,7 +608,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextFixedSizeTruncating()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -598,7 +625,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextFixedSizeWithEncodingAndNoNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -615,7 +642,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextFixedSizeWithInvalidArgumentsThrowsException()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = null;
@@ -625,7 +652,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAndSize()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -642,7 +669,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAndSizeWithEncodingAndNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -659,7 +686,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAndSizeWithAvoidDuplicateNullTerminators()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア\0";
@@ -676,7 +703,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAndSizeWithMaxSizeAndNullTerminator()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string text = "あア";
@@ -693,7 +720,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTextAndSizeWithInvalidArgumentsThrowsException()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             string nullText = null;
@@ -709,7 +736,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteObjects()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.WriteOfType(typeof(long), "3");
@@ -748,7 +775,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteGenericObject()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.WriteOfType<long>(3);
@@ -787,7 +814,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteObjectsInvalidConversion()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             Assert.Throws<InvalidCastException>(() => writer.WriteOfType(typeof(DateTime), 1));
@@ -796,7 +823,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteObjectsUnsupportedType()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             Assert.Throws<FormatException>(() => writer.WriteOfType(typeof(bool), true));
@@ -805,7 +832,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteObjectsInvalidArguments()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             Type nullType = null;
@@ -817,7 +844,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTimesLessBufferSize()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.WriteTimes(0xFF, 3);
@@ -834,7 +861,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteTimesMoreThanOneBuffer()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.WriteTimes(0xFF, (5 * 1024) + 8);
@@ -854,7 +881,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNegativeTimes()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             Assert.Throws<ArgumentOutOfRangeException>(() => writer.WriteTimes(0xFF, -2));
@@ -863,7 +890,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUntilLength()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.WriteUntilLength(0xAF, 7);
@@ -880,7 +907,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUntilLengthLessThanStream()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write(0xFFFFFFFF);
@@ -898,7 +925,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUntilLengthMoveToEnd()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write(0xFFFFFFFF);
@@ -917,7 +944,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUntilLengthInvalidArguments()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.Throws<ArgumentOutOfRangeException>(() => writer.WriteUntilLength(0x00, -2));
         }
@@ -925,7 +952,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePadding()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write((ushort)0xCAFE);
@@ -943,7 +970,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePaddingWhenNoNeed()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write(0xCAFEu);
@@ -961,7 +988,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePaddingInvalidArguments()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.Throws<ArgumentOutOfRangeException>(() => writer.WritePadding(0x00, -2));
         }
@@ -969,7 +996,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePaddingLessEqualOneDoesNothing()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
             writer.Write(0xCAFEu);

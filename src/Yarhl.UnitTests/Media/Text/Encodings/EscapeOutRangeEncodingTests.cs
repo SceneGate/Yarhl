@@ -1,27 +1,22 @@
-﻿// EscapeOutRangeEncodingTests.cs
-//
-// Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2017 Benito Palacios Sánchez
-//
+﻿// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.UnitTests.Media.Text.Encodings
 {
     using System;
@@ -190,6 +185,31 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
             Encoding encoding = new EscapeOutRangeEncoding("utf-8");
             string input = "あ[@!!Q3]あ";
             Assert.Throws<FormatException>(() => encoding.GetBytes(input));
+        }
+
+        [Test]
+        public void EncodingThrowsWithInvalidArguments()
+        {
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
+            char[] input = "test".ToCharArray();
+            byte[] output = new byte[10];
+
+            Assert.Throws<ArgumentNullException>(
+                () => encoding.GetBytes((char[])null, 0, 0, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, -1, 1, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 10, 0, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 0, -1, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 2, 4, output, 0));
+            Assert.Throws<ArgumentNullException>(
+                () => encoding.GetBytes(input, 0, 4, null, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 0, 4, output, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 0, 4, output, 15));
         }
     }
 }

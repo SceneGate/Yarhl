@@ -26,6 +26,7 @@ R: Gendarme.Rules.Correctness.EnsureLocalDisposalRule
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromFile(System.String,System.String)
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromDirectory(System.String,System.String,System.String,System.Boolean)
 M: Yarhl.FileSystem.Node Yarhl.FileSystem.NodeFactory::FromSubstream(System.String,Yarhl.IO.DataStream,System.Int64,System.Int64)
+T: Yarhl.IO.DataStreamFactory
 # In the DataStream we are sure we will dispose the streams created in the ctor.
 M: System.Void Yarhl.IO.DataStream::.ctor()
 M: System.Void Yarhl.IO.DataStream::.ctor(System.String,Yarhl.IO.FileOpenMode)
@@ -43,9 +44,11 @@ R: Gendarme.Rules.Concurrency.ReviewLockUsedOnlyForOperationsOnVariablesRule
 M: System.Void Yarhl.PluginManager::Shutdown()
 
 R: Gendarme.Rules.Naming.UseCorrectSuffixRule
-# It doesn't inherit but internally use a Stream.
+# It is our implementation of Stream.
 T: Yarhl.IO.IStream
 T: Yarhl.IO.DataStream
+T: Yarhl.IO.StreamFormat.LazyFileStream
+T: Yarhl.IO.StreamFormat.RecyclableMemoryStream
 # Gendarme doesn't know about ReadOnlyCollection
 T: Yarhl.FileSystem.NavigableNodeCollection`1
 
@@ -59,10 +62,12 @@ T: Yarhl.IO.DataStream
 T: Yarhl.IO.DataWriter
 T: Yarhl.IO.TextReader
 T: Yarhl.IO.TextWriter
+T: Yarhl.IO.StreamFormat.LazyFileStream
 
 R: Gendarme.Rules.Maintainability.VariableNamesShouldNotMatchFieldNamesRule
 # I allow this to happen only for constructors
 T: Yarhl.IO.DataStream
+T: Yarhl.IO.StreamFormat.LazyFileStream
 
 R: Gendarme.Rules.Globalization.PreferIFormatProviderOverrideRule
 # It looks like a bug in Gendarme, we are adding a char to a string
@@ -86,5 +91,5 @@ T: Yarhl.FileSystem.Node
 R: Gendarme.Rules.Performance.AvoidUnneededFieldInitializationRule
 # Better be explicit in this case for clarity
 M: System.Void Yarhl.IO.DataStream::.ctor()
-M: System.Void Yarhl.IO.DataStream::.ctor(System.IO.Stream)
-M: System.Void Yarhl.IO.DataStream::.ctor(System.String,Yarhl.IO.FileOpenMode)
+M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.IStream,System.Int64,System.Int64,System.Boolean)
+M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)

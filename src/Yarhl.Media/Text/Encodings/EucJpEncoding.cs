@@ -1,27 +1,22 @@
-﻿// EucJpEncoding.cs
-//
-// Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2017 Benito Palacios Sánchez
-//
+﻿// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.Media.Text.Encodings
 {
     using System;
@@ -36,22 +31,19 @@ namespace Yarhl.Media.Text.Encodings
     /// </summary>
     public sealed class EucJpEncoding : Encoding
     {
-        static Table tableJis212 =
+        static readonly Table TableJis212 =
             Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0212.txt");
 
-        static Table tableJis208 =
+        static readonly Table TableJis208 =
             Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0208.txt");
-
-        readonly DecoderFallback decoderFallback;
-        readonly EncoderFallback encoderFallback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EucJpEncoding"/> class.
         /// </summary>
         public EucJpEncoding()
         {
-            decoderFallback = new DecoderExceptionFallback();
-            encoderFallback = new EncoderExceptionFallback();
+            DecoderFallback = new DecoderExceptionFallback();
+            EncoderFallback = new EncoderExceptionFallback();
         }
 
         /// <summary>
@@ -61,13 +53,8 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="encFallback">Encoder fallback.</param>
         public EucJpEncoding(DecoderFallback decFallback, EncoderFallback encFallback)
         {
-            if (decFallback == null)
-                throw new ArgumentNullException(nameof(decFallback));
-            if (encFallback == null)
-                throw new ArgumentNullException(nameof(encFallback));
-
-            decoderFallback = decFallback;
-            encoderFallback = encFallback;
+            DecoderFallback = decFallback ?? throw new ArgumentNullException(nameof(decFallback));
+            EncoderFallback = encFallback ?? throw new ArgumentNullException(nameof(encFallback));
         }
 
         /// <summary>
@@ -75,7 +62,7 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         /// <value>The decoder fallback.</value>
         public new DecoderFallback DecoderFallback {
-            get { return decoderFallback; }
+            get;
         }
 
         /// <summary>
@@ -83,7 +70,7 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         /// <value>The encoder fallback.</value>
         public new EncoderFallback EncoderFallback {
-            get { return encoderFallback; }
+            get;
         }
 
         /// <summary>
@@ -264,14 +251,14 @@ namespace Yarhl.Media.Text.Encodings
                     // 5
                     encodedByte(stream, 0x8E);
                     encodedByte(stream, (byte)(codePoint - 0xFF61 + 0xA1));
-                } else if (tableJis208.CodePoint2Index.ContainsKey(codePoint)) {
+                } else if (TableJis208.CodePoint2Index.ContainsKey(codePoint)) {
                     // 7
-                    int pointer = tableJis208.CodePoint2Index[codePoint];
+                    int pointer = TableJis208.CodePoint2Index[codePoint];
                     encodedByte(stream, (byte)((pointer / 94) + 0xA1)); // 9, 11
                     encodedByte(stream, (byte)((pointer % 94) + 0xA1)); // 10, 11
-                } else if (tableJis212.CodePoint2Index.ContainsKey(codePoint)) {
+                } else if (TableJis212.CodePoint2Index.ContainsKey(codePoint)) {
                     // 8, Fixed, not in the specs
-                    int pointer212 = tableJis212.CodePoint2Index[codePoint];
+                    int pointer212 = TableJis212.CodePoint2Index[codePoint];
                     encodedByte(stream, 0x8F);
                     encodedByte(stream, (byte)((pointer212 / 94) + 0xA1));
                     encodedByte(stream, (byte)((pointer212 % 94) + 0xA1));
@@ -283,7 +270,7 @@ namespace Yarhl.Media.Text.Encodings
 
         void EncodeInvalidChar(int codePoint, Stream stream, Action<Stream, byte> encodedByte)
         {
-            var fallback = encoderFallback.CreateFallbackBuffer();
+            var fallback = EncoderFallback.CreateFallbackBuffer();
             string ch = char.ConvertFromUtf32(codePoint);
             if (ch.Length == 1)
                 fallback.Fallback(ch[0], 0);
@@ -302,7 +289,7 @@ namespace Yarhl.Media.Text.Encodings
         void DecodeText(Stream stream, Action<Stream, string> decodedText)
         {
             byte lead = 0;
-            IDictionary<int, int> codePointTable = tableJis208.Index2CodePoint;
+            IDictionary<int, int> codePointTable = TableJis208.Index2CodePoint;
             while (stream.Position < stream.Length) {
                 byte current = (byte)stream.ReadByte();
                 if (lead == 0x8E && IsInRange(current, 0xA1, 0xDF)) {
@@ -311,7 +298,7 @@ namespace Yarhl.Media.Text.Encodings
                     decodedText(stream, char.ConvertFromUtf32(0xFF61 - 0xA1 + current));
                 } else if (lead == 0x8F && IsInRange(current, 0xA1, 0xFE)) {
                     // 4
-                    codePointTable = tableJis212.Index2CodePoint;
+                    codePointTable = TableJis212.Index2CodePoint;
                     lead = current;
                 } else if (IsInRange(lead, 0xA1, 0xFE) && IsInRange(current, 0xA1, 0xFE)) {
                     // 5
@@ -320,7 +307,7 @@ namespace Yarhl.Media.Text.Encodings
                     decodedText(stream, char.ConvertFromUtf32(codePoint));
 
                     lead = 0x00;
-                    codePointTable = tableJis208.Index2CodePoint;
+                    codePointTable = TableJis208.Index2CodePoint;
                 } else if (lead != 0x00) {
                     DecodeInvalidBytes(stream, decodedText, lead, current);
                 } else if (current <= 0x7F) {
@@ -342,10 +329,11 @@ namespace Yarhl.Media.Text.Encodings
 
         void DecodeInvalidBytes(Stream stream, Action<Stream, string> decodedText, params byte[] data)
         {
-            DecoderFallbackBuffer fallback = decoderFallback.CreateFallbackBuffer();
+            DecoderFallbackBuffer fallback = DecoderFallback.CreateFallbackBuffer();
             bool result = fallback.Fallback(data, 0);
-            while (result && fallback.Remaining > 0)
-                decodedText(stream, fallback.GetNextChar().ToString());
+            while (result && fallback.Remaining > 0) {
+                decodedText(stream, $"{fallback.GetNextChar()}");
+            }
         }
 
         sealed class Table

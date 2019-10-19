@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\Common.props" />
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <AssemblyName>Yarhl.UnitTests</AssemblyName>
     <Description>Yarhl unit tests.</Description>
 
-    <TargetFrameworks>net472;netcoreapp2.2</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
-    <CodeAnalysisRuleSet>StyleCop.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>8.0</LangVersion>
+    <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
     <SonarQubeTestProject>true</SonarQubeTestProject>
   </PropertyGroup>
@@ -17,17 +17,24 @@
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0-preview.2">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(NetTestSdkPackageVersion)" />
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="$(ReferenceAssembliesPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="nunit" Version="3.11.0" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61">
+    <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
+    <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
+    <PackageReference Include="SonarAnalyzer.CSharp" Version="$(SonarAnalyzerPackageVersion)">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.0" />
   </ItemGroup>
 </Project>

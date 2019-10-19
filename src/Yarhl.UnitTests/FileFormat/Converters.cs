@@ -1,19 +1,22 @@
-﻿// Converters.cs
-//
-// Copyright (c) 2019 SceneGate Team
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+﻿// Copyright (c) 2019 SceneGate
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
@@ -58,7 +61,7 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    public class ConverterAndOtherInterface :
+    public sealed class ConverterAndOtherInterface :
         IConverter<string, short>,
         IDisposable,
         IInitializer<int>
@@ -68,19 +71,22 @@ namespace Yarhl.UnitTests.FileFormat
             return System.Convert.ToInt16(source);
         }
 
-        public void Initialize(int param)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
 
         public void Dispose()
         {
+            // Test dispose
         }
     }
 
     public class ConverterWithoutGenericInterface : IConverter, IInitializer<int>
     {
-        public void Initialize(int param)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
     }
 
@@ -96,7 +102,7 @@ namespace Yarhl.UnitTests.FileFormat
     {
     }
 
-    public class StringFormatTest : IFormat, IDisposable
+    public sealed class StringFormatTest : IFormat, IDisposable
     {
         public StringFormatTest()
         {
@@ -113,16 +119,11 @@ namespace Yarhl.UnitTests.FileFormat
 
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        protected void Dispose(bool isDisposing)
-        {
             Disposed = true;
         }
     }
 
-    public class IntFormatTest : IFormat, IDisposable
+    public sealed class IntFormatTest : IFormat, IDisposable
     {
         public IntFormatTest()
         {
@@ -138,11 +139,6 @@ namespace Yarhl.UnitTests.FileFormat
         public bool Disposed { get; private set; }
 
         public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected void Dispose(bool isDisposing)
         {
             Disposed = true;
         }
@@ -164,14 +160,14 @@ namespace Yarhl.UnitTests.FileFormat
         IConverter<StringFormatTest, IntFormatTest>,
         IConverter<IntFormatTest, StringFormatTest>
     {
-        public IntFormatTest Convert(StringFormatTest test)
+        public IntFormatTest Convert(StringFormatTest source)
         {
-            return new IntFormatTest(System.Convert.ToInt32(test.Value));
+            return new IntFormatTest(System.Convert.ToInt32(source.Value));
         }
 
-        public StringFormatTest Convert(IntFormatTest test)
+        public StringFormatTest Convert(IntFormatTest source)
         {
-            return new StringFormatTest(test.Value.ToString());
+            return new StringFormatTest(source.Value.ToString());
         }
     }
 
@@ -179,8 +175,9 @@ namespace Yarhl.UnitTests.FileFormat
         IConverter<StringFormatTest, NoFormat>,
         IInitializer<int>
     {
-        public void Initialize(int x)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
 
         public NoFormat Convert(StringFormatTest source)
@@ -193,8 +190,9 @@ namespace Yarhl.UnitTests.FileFormat
         IConverter<NullSource, NullDestination>,
         IInitializer<int>
     {
-        public void Initialize(int x)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
 
         public NullDestination Convert(NullSource source)

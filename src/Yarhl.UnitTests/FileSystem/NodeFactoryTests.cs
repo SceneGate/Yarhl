@@ -1,27 +1,22 @@
-﻿// NodeFactoryTests.cs
-//
-// Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2016 Benito Palacios Sánchez
-//
+﻿// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.UnitTests.FileSystem
 {
     using System;
@@ -30,6 +25,7 @@ namespace Yarhl.UnitTests.FileSystem
     using NUnit.Framework;
     using Yarhl.FileSystem;
     using Yarhl.IO;
+    using Yarhl.IO.StreamFormat;
 
     [TestFixture]
     public class NodeFactoryTests
@@ -37,7 +33,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainerWithName()
         {
-            Node container = NodeFactory.CreateContainer("MyTest");
+            using Node container = NodeFactory.CreateContainer("MyTest");
             Assert.AreEqual("MyTest", container.Name);
             Assert.IsInstanceOf<NodeContainerFormat>(container.Format);
             Assert.IsTrue(container.IsContainer);
@@ -66,7 +62,10 @@ namespace Yarhl.UnitTests.FileSystem
 
             Assert.IsFalse(File.Exists(tempFile));
             Assert.DoesNotThrow(() => tempNode = NodeFactory.FromFile(tempFile));
-            Assert.IsTrue(File.Exists(tempFile));
+
+            // It's lazy initialize, so we need to trigger an operation
+            Assert.IsFalse(File.Exists(tempFile));
+            tempNode.Stream.WriteByte(0xCA);
 
             tempNode.Dispose();
             File.Delete(tempFile);
@@ -319,9 +318,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersAndAdd()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = "/parent1/parent2/";
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.AreEqual(1, root.Children.Count);
@@ -336,9 +335,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainerWithWindowsPaths()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = @"\parent1\parent2\";
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.That(root.Children["parent1"], Is.Not.Null);
@@ -352,9 +351,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersWithEmptyParents()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = "/parent1///parent2/";
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
@@ -364,9 +363,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersForChildWhenPathDoesNotStartWithSeparator()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = "parent1/parent2";
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.AreSame(child, root.Children[0].Children[0].Children[0]);
@@ -376,9 +375,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersForChildWhenPathIsEmpty()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = string.Empty;
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.AreSame(child, root.Children[0]);
@@ -388,11 +387,11 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersForChildWhenSomeContainersExists()
         {
-            Node root = new Node("root");
-            Node parent1 = new Node("parent1");
+            using Node root = new Node("root");
+            using Node parent1 = new Node("parent1");
             root.Add(parent1);
             string path = "/parent1/parent2/";
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.AreSame(parent1, root.Children[0]);
@@ -403,13 +402,13 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersForChildWhenAllContainersExists()
         {
-            Node root = new Node("root");
-            Node parent1 = new Node("parent1");
-            Node parent2 = new Node("parent2");
+            using Node root = new Node("root");
+            using Node parent1 = new Node("parent1");
+            using Node parent2 = new Node("parent2");
             parent1.Add(parent2);
             root.Add(parent1);
             string path = "/parent1///parent2/";
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             NodeFactory.CreateContainersForChild(root, path, child);
             Assert.AreSame(parent1, root.Children["parent1"]);
@@ -423,7 +422,7 @@ namespace Yarhl.UnitTests.FileSystem
         {
             Node root = null;
             string path = string.Empty;
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             Assert.Throws<ArgumentNullException>(() =>
                 NodeFactory.CreateContainersForChild(root, path, child));
@@ -432,9 +431,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersForChildWhenPathIsNullThrowsException()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = null;
-            Node child = new Node("child");
+            using Node child = new Node("child");
 
             Assert.Throws<ArgumentNullException>(() =>
                 NodeFactory.CreateContainersForChild(root, path, child));
@@ -443,7 +442,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateContainersForChildWhenChildIsNullThrowsException()
         {
-            Node root = new Node("root");
+            using Node root = new Node("root");
             string path = string.Empty;
             Node child = null;
 
@@ -454,12 +453,12 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateFromMemory()
         {
-            Node node = NodeFactory.FromMemory("node");
+            using Node node = NodeFactory.FromMemory("node");
             Assert.That(node, Is.Not.Null);
             Assert.That(node.Name, Is.EqualTo("node"));
             Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
             Assert.That(node.Stream, Is.Not.Null);
-            Assert.That(node.Stream.BaseStream, Is.TypeOf<MemoryStream>());
+            Assert.That(node.Stream.BaseStream, Is.TypeOf<RecyclableMemoryStream>());
         }
 
         [Test]
@@ -476,7 +475,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateFromSubstream()
         {
-            DataStream main = new DataStream();
+            using DataStream main = new DataStream();
             main.WriteByte(0x00);
             main.WriteByte(0x01);
             main.WriteByte(0x02);
@@ -493,7 +492,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CreateFromSubstreamWithInvalidNameThrowsException()
         {
-            DataStream main = new DataStream();
+            using DataStream main = new DataStream();
             Assert.That(
                 () => NodeFactory.FromSubstream(null, main, 0, 0),
                 Throws.ArgumentNullException);

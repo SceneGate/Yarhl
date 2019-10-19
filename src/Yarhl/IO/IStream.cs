@@ -1,33 +1,35 @@
-// Copyright (c) 2017 Benito Palacios Sánchez
-//
+// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.IO
 {
+    using System;
+
     /// <summary>
     /// Generic data stream interface.
     /// </summary>
-    public interface IStream
+    public interface IStream : IDisposable
     {
         /// <summary>
-        /// Gets the position from the start of this stream.
+        /// Gets or sets the position from the start of this stream.
         /// </summary>
-        long Position { get; }
+        long Position { get; set; }
 
         /// <summary>
         /// Gets the length of this stream.
@@ -35,16 +37,19 @@ namespace Yarhl.IO
         long Length { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the position is at end of the stream.
+        /// Gets a value indicating whether this <see cref="IStream" />
+        /// has been dispsosed.
         /// </summary>
-        bool EndOfStream { get; }
+        bool Disposed { get; }
 
         /// <summary>
-        /// Move the position of the Stream.
+        /// Sets the length of the stream.
         /// </summary>
-        /// <param name="shift">Distance to move position.</param>
-        /// <param name="mode">Mode to move position.</param>
-        void Seek(long shift, SeekMode mode);
+        /// <param name="length">The new length of the stream.</param>
+        /// <remarks><para>
+        /// Some streams may not implement or support changing the length.
+        /// </para></remarks>
+        void SetLength(long length);
 
         /// <summary>
         /// Reads the next byte.

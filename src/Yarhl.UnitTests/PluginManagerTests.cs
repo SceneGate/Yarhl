@@ -1,24 +1,22 @@
-// PluginManagerTests.cs
-//
-// Copyright (c) 2019 SceneGate Team
-//
+// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.UnitTests
 {
     using System;
@@ -193,8 +191,7 @@ namespace Yarhl.UnitTests
             Assert.That(formats, Does.Contain(typeof(PluginConverter)));
 
             var conv = (PluginConverter)PluginManager.Instance.GetConverters()
-                    .Where(f => f.Metadata.Type == typeof(PluginConverter))
-                    .Single()
+                    .Single(f => f.Metadata.Type == typeof(PluginConverter))
                     .CreateExport().Value;
             Assert.That(conv.Convert(new PluginFormat()), Is.EqualTo(0));
         }
@@ -220,14 +217,14 @@ namespace Yarhl.UnitTests
 
         public class PluginFormat : IFormat
         {
-            public int Value => 0;
+            public static int Value => 0;
         }
 
         public class PluginConverter : IConverter<PluginFormat, int>
         {
-            public int Convert(PluginFormat src)
+            public int Convert(PluginFormat source)
             {
-                return src.Value;
+                return PluginFormat.Value;
             }
         }
     }

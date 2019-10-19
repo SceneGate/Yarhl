@@ -1,33 +1,29 @@
-// DataStream.cs
-//
-// Author:
-//       Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2017 Benito Palacios Sánchez
-//
+// Copyright (c) 2019 SceneGate
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.IO
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using Yarhl.FileFormat;
+    using Yarhl.IO.StreamFormat;
 
     /// <summary>
     /// Data stream.
@@ -35,52 +31,62 @@ namespace Yarhl.IO
     /// <remarks>
     /// <para>Custom implementation of a Stream based on System.IO.Stream.</para>
     /// </remarks>
-    public class DataStream : IStream, IDisposable
+    public class DataStream : IDisposable
     {
-        static readonly Dictionary<Stream, int> Instances = new Dictionary<Stream, int>();
+        static readonly Dictionary<IStream, int> Instances = new Dictionary<IStream, int>();
         readonly Stack<long> positionStack = new Stack<long>();
-        readonly bool isSubstream;
+        readonly bool canExpand;
+        readonly bool hasOwnsership;
         long position;
         long length;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataStream"/> class.
-        /// A new stream is created in the memory.
+        /// A new stream is created in memory.
         /// </summary>
         public DataStream()
         {
-            BaseStream = new MemoryStream();
-            isSubstream = false;
+            BaseStream = new RecyclableMemoryStream();
+            canExpand = true;
             Offset = 0;
-            this.length = 0;
+            length = 0;
+            hasOwnsership = true;
 
-            IncreaseStreamCounter(BaseStream);
+            IncreaseStreamCounter();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// Initializes a new instance of the <see cref="DataStream" /> class.
         /// </summary>
+        /// <remarks>
+        /// <p>The dispose ownership is transferred to this stream.</p>
+        /// </remarks>
         /// <param name="stream">Base stream.</param>
-        public DataStream(Stream stream)
+        public DataStream(IStream stream)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
             BaseStream = stream;
-            isSubstream = false;
+            canExpand = true;
             Offset = 0;
-            this.length = stream.Length;
+            length = stream.Length;
+            hasOwnsership = true;
 
-            IncreaseStreamCounter(stream);
+            IncreaseStreamCounter();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DataStream"/> class.
+        /// Initializes a new instance of the <see cref="DataStream" /> class.
         /// </summary>
         /// <param name="stream">Base stream.</param>
         /// <param name="offset">Offset from the base stream.</param>
-        /// <param name="length">Length of this DataStream.</param>
-        public DataStream(Stream stream, long offset, long length)
+        /// <param name="length">Length of this substream.</param>
+        /// <param name="transferOwnership">
+        /// Transfer the ownsership of the stream argument to this class so
+        /// it can dispose it.
+        /// </param>
+        public DataStream(IStream stream, long offset, long length, bool transferOwnership)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -90,78 +96,12 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(length));
 
             BaseStream = stream;
-            isSubstream = true;
+            canExpand = false;
             Offset = offset;
             this.length = length;
+            hasOwnsership = transferOwnership;
 
-            IncreaseStreamCounter(stream);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataStream" /> class.
-        /// </summary>
-        /// <param name="data">Stream data buffer.</param>
-        /// <param name="offset">Offset of the data in the buffer.</param>
-        /// <param name="length">Length of the data.</param>
-        public DataStream(byte[] data, int offset, int length)
-        {
-            if (data == null)
-                throw new ArgumentNullException(nameof(data));
-            if (offset < 0 || offset > data.Length)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < 0 || offset + length > data.Length)
-                throw new ArgumentOutOfRangeException(nameof(length));
-
-            BaseStream = new MemoryStream(data, 0, data.Length);
-            isSubstream = true;
-            Offset = offset;
-            this.length = length;
-
-            IncreaseStreamCounter(BaseStream);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataStream"/> class.
-        /// </summary>
-        /// <param name="filePath">File path.</param>
-        /// <param name="mode">File open mode.</param>
-        public DataStream(string filePath, FileOpenMode mode)
-        {
-            if (string.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException(nameof(filePath));
-
-            BaseStream = new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess());
-            isSubstream = false;
-            Offset = 0;
-            this.length = BaseStream.Length;
-
-            IncreaseStreamCounter(BaseStream);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataStream"/> class.
-        /// </summary>
-        /// <param name="filePath">File path.</param>
-        /// <param name="mode">File open mode.</param>
-        /// <param name="offset">Offset from the start of the file.</param>
-        /// <param name="length">Length of this DataStream.</param>
-        public DataStream(string filePath, FileOpenMode mode, long offset, long length)
-        {
-            if (string.IsNullOrEmpty(filePath))
-                throw new ArgumentNullException(nameof(filePath));
-
-            long fileSize = new FileInfo(filePath).Length;
-            if (offset < 0 || offset > fileSize)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < 0 || offset + length > fileSize)
-                throw new ArgumentOutOfRangeException(nameof(length));
-
-            BaseStream = new FileStream(filePath, mode.ToFileMode(), mode.ToFileAccess());
-            isSubstream = true;
-            Offset = offset;
-            this.length = length;
-
-            IncreaseStreamCounter(BaseStream);
+            IncreaseStreamCounter();
         }
 
         /// <summary>
@@ -169,7 +109,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Base stream.</param>
         /// <param name="offset">Offset from the DataStream start.</param>
-        /// <param name="length">Length of this DataStream.</param>
+        /// <param name="length">Length of this substream.</param>
         public DataStream(DataStream stream, long offset, long length)
         {
             if (stream == null)
@@ -181,11 +121,12 @@ namespace Yarhl.IO
 
             ParentDataStream = stream;
             BaseStream = stream.BaseStream;
-            isSubstream = true;
+            canExpand = false;
             Offset = stream.Offset + offset;
             this.length = length;
+            hasOwnsership = stream.hasOwnsership;
 
-            IncreaseStreamCounter(BaseStream);
+            IncreaseStreamCounter();
         }
 
         /// <summary>
@@ -238,13 +179,18 @@ namespace Yarhl.IO
             set {
                 if (Disposed)
                     throw new ObjectDisposedException(nameof(DataStream));
-                if (value < 0 || Offset + value > BaseStream.Length)
+                if (value < 0)
                     throw new ArgumentOutOfRangeException(nameof(value));
 
-                if (isSubstream) {
-                    throw new InvalidOperationException(
-                        "Offset is not 0. " +
-                        "Cannot change the size of sub-streams.");
+                if (value > length) {
+                    if (!canExpand) {
+                        throw new InvalidOperationException(
+                            "Cannot change the size of sub-streams.");
+                    } else if (value > BaseStream.Length) {
+                        // If we can expand, it's not a substream so forget
+                        // about offset (always 0). Increase base stream too.
+                        BaseStream.SetLength(value);
+                    }
                 }
 
                 length = value;
@@ -255,7 +201,8 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Gets the parent DataStream.
+        /// Gets the parent DataStream only if this stream was initialized from
+        /// a DataStream.
         /// </summary>
         public DataStream ParentDataStream {
             get;
@@ -265,7 +212,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the base stream.
         /// </summary>
-        public Stream BaseStream {
+        public IStream BaseStream {
             get;
             private set;
         }
@@ -384,7 +331,7 @@ namespace Yarhl.IO
         /// Reads the next byte.
         /// </summary>
         /// <returns>The next byte.</returns>
-        public virtual byte ReadByte()
+        public byte ReadByte()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -394,7 +341,7 @@ namespace Yarhl.IO
 
             BaseStream.Position = AbsolutePosition;
             Position++;
-            return (byte)BaseStream.ReadByte();
+            return BaseStream.ReadByte();
         }
 
         /// <summary>
@@ -404,7 +351,7 @@ namespace Yarhl.IO
         /// <param name="buffer">Buffer to copy data.</param>
         /// <param name="index">Index to start copying in buffer.</param>
         /// <param name="count">Number of bytes to read.</param>
-        public virtual int Read(byte[] buffer, int index, int count)
+        public int Read(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -447,10 +394,13 @@ namespace Yarhl.IO
         /// Writes a byte.
         /// </summary>
         /// <param name="data">Byte value.</param>
-        public virtual void WriteByte(byte data)
+        public void WriteByte(byte data)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
+
+            if (Position == Length && !canExpand)
+                throw new InvalidOperationException("Cannot expand stream");
 
             BaseStream.Position = AbsolutePosition;
             BaseStream.WriteByte(data);
@@ -468,7 +418,7 @@ namespace Yarhl.IO
         /// <param name="buffer">Buffer to write.</param>
         /// <param name="index">Index in the buffer.</param>
         /// <param name="count">Bytes to write.</param>
-        public virtual void Write(byte[] buffer, int index, int count)
+        public void Write(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -480,6 +430,9 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(buffer));
             if (index + count > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(index));
+
+            if (Position + count > Length && !canExpand)
+                throw new InvalidOperationException("Cannot expand stream");
 
             BaseStream.Position = AbsolutePosition;
             BaseStream.Write(buffer, index, count);
@@ -504,11 +457,13 @@ namespace Yarhl.IO
             // Parent dir can be empty if we just specified the file name.
             // In that case, the folder (cwd) already exists.
             string parentDir = Path.GetDirectoryName(fileOut);
-            if (!string.IsNullOrEmpty(parentDir))
+            if (!string.IsNullOrEmpty(parentDir)) {
                 Directory.CreateDirectory(parentDir);
+            }
 
-            using (var stream = new DataStream(fileOut, FileOpenMode.Write))
+            using (var stream = DataStreamFactory.FromFile(fileOut, FileOpenMode.Write)) {
                 WriteTo(stream);
+            }
         }
 
         /// <summary>
@@ -528,20 +483,13 @@ namespace Yarhl.IO
             long currPos = Position;
             Seek(0, SeekMode.Start);
 
-            const int BufferSize = 5 * 1024;
-            byte[] buffer = new byte[BufferSize];
+            const int BufferSize = 70 * 1024;
+            byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
 
-            int written = 0;
-            int bytesToRead = 0;
-            do {
-                if (written + BufferSize > Length)
-                    bytesToRead = (int)(Length - written);
-                else
-                    bytesToRead = BufferSize;
-
-                written += Read(buffer, 0, bytesToRead);
-                stream.Write(buffer, 0, bytesToRead);
-            } while (written != Length);
+            while (!EndOfStream) {
+                int read = BlockRead(this, buffer);
+                stream.Write(buffer, 0, read);
+            }
 
             Seek(currPos, SeekMode.Start);
         }
@@ -560,18 +508,29 @@ namespace Yarhl.IO
             if (otherStream.Disposed)
                 throw new ObjectDisposedException(nameof(otherStream));
 
-            if (Length != otherStream.Length)
+            if (Length != otherStream.Length) {
                 return false;
+            }
 
             long startPosition = Position;
             long otherStreamStartPosition = otherStream.position;
             Seek(0, SeekMode.Start);
             otherStream.Seek(0, SeekMode.Start);
 
+            const int BufferSize = 70 * 1024;
+            byte[] buffer1 = new byte[Length > BufferSize ? BufferSize : Length];
+            byte[] buffer2 = new byte[buffer1.Length];
+
             bool result = true;
             while (!EndOfStream && result) {
-                if (ReadByte() != otherStream.ReadByte())
-                    result = false;
+                int loopLength = BlockRead(this, buffer1);
+                BlockRead(otherStream, buffer2);
+
+                for (int i = 0; i < loopLength && result; i++) {
+                    if (buffer1[i] != buffer2[i]) {
+                        result = false;
+                    }
+                }
             }
 
             Seek(startPosition, SeekMode.Start);
@@ -593,8 +552,7 @@ namespace Yarhl.IO
 
             Disposed = true;
 
-            // BaseStream will be null if the constructor throws exception
-            if (BaseStream != null) {
+            if (BaseStream != null && hasOwnsership) {
                 Instances[BaseStream] -= 1;
                 if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
                     BaseStream.Dispose();
@@ -603,12 +561,30 @@ namespace Yarhl.IO
             }
         }
 
-        private static void IncreaseStreamCounter(Stream stream)
+        private static int BlockRead(DataStream stream, byte[] buffer)
         {
-            if (!Instances.ContainsKey(stream))
-                Instances.Add(stream, 1);
-            else
-                Instances[stream] += 1;
+            int read;
+            if (stream.Position + buffer.Length > stream.Length) {
+                read = (int)(stream.Length - stream.Position);
+            } else {
+                read = buffer.Length;
+            }
+
+            stream.Read(buffer, 0, read);
+            return read;
+        }
+
+        private void IncreaseStreamCounter()
+        {
+            if (!hasOwnsership) {
+                return;
+            }
+
+            if (!Instances.ContainsKey(BaseStream)) {
+                Instances.Add(BaseStream, 1);
+            } else {
+                Instances[BaseStream] += 1;
+            }
         }
     }
 }

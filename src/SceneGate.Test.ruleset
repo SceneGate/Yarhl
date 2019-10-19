@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Rules for the tests" ToolsVersion="12.0">
+  <Include Path="SceneGate.Standard.ruleset" Action="Default" />
+  <Rules AnalyzerId="Microsoft.CodeQuality.CSharp.Analyzers" RuleNamespace="Microsoft.CodeQuality.CSharp.Analyzers">
+    <!-- The majority of the test class implement the clean up in special methods. -->
+    <Rule Id="CA1001" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.CodeQuality.Analyzers" RuleNamespace="Microsoft.CodeQuality.Analyzers">
+    <!-- Testing of different class and interface implementations. -->
+    <Rule Id="CA1034" Action="None" />
+
+    <!-- No need of null checking for quick test method implementations. -->
+    <Rule Id="CA1062" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <!-- Testing of different class and interface implementations. -->
+    <Rule Id="CA1040" Action="None" />
+
+    <!-- Quick code for pasing or formatting, no need to be robust against locales. -->
+    <Rule Id="CA1305" Action="None" />
+    <Rule Id="CA1307" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <!-- Disable documentation in unit tests. -->
+    <Rule Id="SA0001" Action="None" />
+    <Rule Id="SA1600" Action="None" />
+  </Rules>
+  <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
+    <!-- Too many fake positives when Assert are in other methods. -->
+    <Rule Id="S2699" Action="None" />
+
+    <!-- Fake positives -->
+    <Rule Id="S3966" Action="None" />
+  </Rules>
+</RuleSet>

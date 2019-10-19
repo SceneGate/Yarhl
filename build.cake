@@ -1,42 +1,36 @@
-//
-//  build.cake
-//
-//  Author:
-//       Benito Palacios Sánchez (aka pleonex) <benito356@gmail.com>
-//
-//  Copyright (c) 2018 Benito Palacios Sánchez
-//
-//  This program is free software: you can redistribute it and/or modify
-//  it under the terms of the GNU General Public License as published by
-//  the Free Software Foundation, either version 3 of the License, or
-//  (at your option) any later version.
-//
-//  This program is distributed in the hope that it will be useful,
-//  but WITHOUT ANY WARRANTY; without even the implied warranty of
-//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//  GNU General Public License for more details.
-//
-//  You should have received a copy of the GNU General Public License
-//  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+// Copyright (c) 2019 SceneGate
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 
 // NUnit tests
 #tool nuget:?package=NUnit.ConsoleRunner&version=3.10.0
 
 // Gendarme: decompress zip
-#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.2
+#addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.4
 
 // Test coverage
-#addin nuget:?package=altcover.api&version=5.2.667
-#tool nuget:?package=ReportGenerator&version=4.1.2
-
-// SonarQube quality checks
-#addin nuget:?package=Cake.Sonar&version=1.1.22
-#tool nuget:?package=MSBuild.SonarQube.Runner.Tool&version=4.6.0
-#addin nuget:?package=Cake.Git&version=0.19.0
+#addin nuget:?package=altcover.api&version=6.0.700
+#tool nuget:?package=ReportGenerator&version=4.2.15
 
 // Documentation
-#addin nuget:?package=Cake.DocFx&version=0.12.0
-#tool nuget:?package=docfx.console&version=2.41.0
+#addin nuget:?package=Cake.DocFx&version=0.13.1
+#tool nuget:?package=docfx.console&version=2.46.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -51,8 +45,8 @@ var pullRequestBase = Argument("pr-base", string.Empty);
 var pullRequestBranch = Argument("pr-branch", string.Empty);
 var branchName = Argument("branch", string.Empty);
 
-string netVersion = "472";
-string netcoreVersion = "2.2";
+string netVersion = "48";
+string netcoreVersion = "3.0";
 string netstandardVersion = "2.0";
 
 string solutionPath = "src/Yarhl.sln";
@@ -192,8 +186,7 @@ Task("Run-AltCover")
         new ReportGeneratorSettings {
             ReportTypes = new[] {
                 ReportGeneratorReportType.Cobertura,
-                ReportGeneratorReportType.HtmlInline_AzurePipelines,
-                ReportGeneratorReportType.SonarQube } });
+                ReportGeneratorReportType.HtmlInline_AzurePipelines } });
 
     // Get final result
     var xml = System.Xml.Linq.XDocument.Load("coverage_report/Cobertura.xml");
@@ -216,9 +209,10 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
     }
 
     var altcoverArgs = new AltCover.Parameters.Primitive.PrepareArgs {
-        InputDirectory = inputDir,
-        OutputDirectory = outputDir,
+        InputDirectories = new[] { inputDir },
+        OutputDirectories = new[] { outputDir },
         AssemblyFilter = new[] { "nunit.framework", "NUnit3" },
+        AttributeFilter = new[] { "ExcludeFromCodeCoverage" },
         TypeFilter = new[] { "Yarhl.AssemblyUtils" },
         XmlReport = outputXml,
         OpenCover = true
@@ -234,72 +228,10 @@ public void TestWithAltCover(string projectPath, string assembly, string outputX
     NUnit3($"{outputDir}/{assembly}", new NUnit3Settings { NoResults = true });
 }
 
-Task("Run-Sonar")
-    .IsDependentOn("Build")
-    .IsDependentOn("Run-AltCover")
-    .Does(() =>
-{
-    var sonarToken = EnvironmentVariable("SONAR_TOKEN");
-    if (string.IsNullOrWhiteSpace(sonarToken)) {
-        throw new Exception("Missing Sonar token");
-    }
-
-    var sonarSettings = new SonarBeginSettings {
-        Url = "https://sonarcloud.io",
-        Key = "SceneGate_Yarhl",
-        Login = sonarToken,
-        Organization = "scenegate",
-        Verbose = true,
-        NUnitReportsPath = MakeAbsolute(File("./TestResult.xml")).FullPath,
-        OpenCoverReportsPath = MakeAbsolute(File("./coverage_unit.xml")).FullPath +
-            "," + MakeAbsolute(File("./coverage_integration.xml")).FullPath,
-     };
-
-    bool pullRequestInfo = !string.IsNullOrEmpty(pullRequestNumber)
-        && !string.IsNullOrEmpty(pullRequestBase)
-        && !string.IsNullOrEmpty(pullRequestBranch);
-     if (pullRequestInfo) {
-        Information("Pull request information available");
-        sonarSettings.PullRequestProvider = "github";
-        sonarSettings.PullRequestGithubRepository = "SceneGate/Yarhl";
-        sonarSettings.PullRequestKey = int.Parse(pullRequestNumber);
-        sonarSettings.PullRequestBase = pullRequestBase;
-        sonarSettings.PullRequestBranch = pullRequestBranch;
-     } else {
-        Information("No pull request information provided");
-        if (string.IsNullOrWhiteSpace(branchName)) {
-            branchName = GitBranchCurrent(".").FriendlyName;
-        }
-
-        sonarSettings.Branch = branchName;
-     }
-
-    SonarBegin(sonarSettings);
-
-    MSBuild("src/Yarhl.sln", configurator =>
-        configurator.SetConfiguration(configuration)
-            .WithTarget("Rebuild"));
-
-    SonarEnd(new SonarEndSettings {
-        Login = sonarToken
-     });
-});
-
 Task("Build-Doc")
     .IsDependentOn("Build")
     .Does(() =>
 {
-    // Workaround for
-    // https://github.com/dotnet/docfx/issues/3389
-    NuGetInstall("SQLitePCLRaw.core", new NuGetInstallSettings {
-        Version = "1.1.14",
-        ExcludeVersion  = true,
-        OutputDirectory = "./tools"
-    });
-    CopyFileToDirectory(
-        "tools/SQLitePCLRaw.core/lib/net45/SQLitePCLRaw.core.dll",
-        GetDirectories("tools/docfx.console.*").Single().Combine("tools"));
-
     DocFxMetadata("docs/docfx.json");
     DocFxBuild("docs/docfx.json");
 });
@@ -403,7 +335,7 @@ Task("CI-Linux")
     .IsDependentOn("Run-Unit-Tests")
     .IsDependentOn("Run-Linter-Gendarme")
     .IsDependentOn("Run-AltCover")
-    //.IsDependentOn("Build-Doc")  // Waiting for https://github.com/dotnet/docfx/issues/4857
+    .IsDependentOn("Build-Doc")
     .IsDependentOn("Pack");
 
 Task("CI-MacOS")
@@ -414,8 +346,7 @@ Task("CI-MacOS")
 Task("CI-Windows")
     .IsDependentOn("Build")
     .IsDependentOn("Run-Unit-Tests")
-    .IsDependentOn("Run-AltCover")
-    .IsDependentOn("Run-Sonar");
+    .IsDependentOn("Run-AltCover");
 
 RunTarget(target);
 

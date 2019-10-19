@@ -1,25 +1,26 @@
-﻿// NodeFactory.cs
-//
-// Author:
-//      Benito Palacios Sánchez <benito356@gmail.com>
-//
-// Copyright (c) 2016 Benito Palacios Sánchez
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+﻿// Copyright (c) 2019 SceneGate
+
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using Yarhl.IO;
 
@@ -33,6 +34,10 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>The new node.</returns>
         /// <param name="name">Node name.</param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node CreateContainer(string name)
         {
             return new Node(name, new NodeContainerFormat());
@@ -82,6 +87,10 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="name">The name of the node.</param>
         /// <returns>The new node.</returns>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromMemory(string name)
         {
             return new Node(name, new BinaryFormat());
@@ -97,6 +106,10 @@ namespace Yarhl.FileSystem
         /// </param>
         /// <param name="length">The length of the data in the node.</param>
         /// <returns>The new node.</returns>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromSubstream(
             string name,
             DataStream source,
@@ -130,11 +143,16 @@ namespace Yarhl.FileSystem
         /// <returns>The node.</returns>
         /// <param name="filePath">File path.</param>
         /// <param name="nodeName">Node name.</param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromFile(string filePath, string nodeName)
         {
             // We need to catch if the node creation fails
             // for instance for null names, to dispose the stream.
-            var format = new BinaryFormat(filePath);
+            FileOpenMode mode = FileOpenMode.ReadWrite;
+            var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
                 node = new Node(nodeName, format);
@@ -174,6 +192,10 @@ namespace Yarhl.FileSystem
         /// <param name="subDirectories">
         /// If <see langword="true" /> it searchs recursively in subdirectories.
         /// </param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
         public static Node FromDirectory(
             string dirPath,
             string filter,
