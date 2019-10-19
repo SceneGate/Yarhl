@@ -186,5 +186,30 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
             string input = "あ[@!!Q3]あ";
             Assert.Throws<FormatException>(() => encoding.GetBytes(input));
         }
+
+        [Test]
+        public void EncodingThrowsWithInvalidArguments()
+        {
+            Encoding encoding = new EscapeOutRangeEncoding("utf-8");
+            char[] input = "test".ToCharArray();
+            byte[] output = new byte[10];
+
+            Assert.Throws<ArgumentNullException>(
+                () => encoding.GetBytes((char[])null, 0, 0, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, -1, 1, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 10, 0, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 0, -1, output, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 2, 4, output, 0));
+            Assert.Throws<ArgumentNullException>(
+                () => encoding.GetBytes(input, 0, 4, null, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 0, 4, output, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => encoding.GetBytes(input, 0, 4, output, 15));
+        }
     }
 }

@@ -51,7 +51,7 @@ namespace Yarhl.FileSystem
                 throw new ArgumentNullException(nameof(path));
 
             // Absolute path
-            if (path.StartsWith(NodeSystem.PathSeparator)) {
+            if (path.StartsWith(NodeSystem.PathSeparator, StringComparison.Ordinal)) {
                 // Path must start the same way
                 if (!path.StartsWith(rootNode.Path, StringComparison.Ordinal)) {
                     return null;

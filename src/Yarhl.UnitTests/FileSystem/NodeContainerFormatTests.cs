@@ -50,7 +50,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ConstructorSetProperties()
         {
-            NodeContainerFormat format = new NodeContainerFormat();
+            using NodeContainerFormat format = new NodeContainerFormat();
             Assert.IsNotNull(format.Root);
             Assert.IsEmpty(format.Root.Children);
         }
@@ -68,7 +68,7 @@ namespace Yarhl.UnitTests.FileSystem
         {
             NodeContainerFormat format = CreateDummyFormat();
             format.Dispose();
-            Node child = new Node("Child");
+            using Node child = new Node("Child");
             Assert.Throws<ObjectDisposedException>(
                 () => format.Root.Add(child));
         }
@@ -77,7 +77,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void MoveChildrenReplaceRootNode()
         {
             Node node = new Node("MyTest");
-            NodeContainerFormat format = new NodeContainerFormat();
+            using NodeContainerFormat format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
 
             format.MoveChildrenTo(node);
@@ -88,7 +88,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void MoveChildrenDoesNotDisposeOldNode()
         {
             Node node = new Node("MyTest");
-            NodeContainerFormat format = new NodeContainerFormat();
+            using NodeContainerFormat format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
             Node prevNode = format.Root;
 
@@ -101,7 +101,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void MoveChildrenDoesNotDisposeChildrenAfterDispose()
         {
             Node node = new Node("MyTest");
-            NodeContainerFormat format = new NodeContainerFormat();
+            using NodeContainerFormat format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
             format.MoveChildrenTo(node);
 
@@ -115,7 +115,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void MoveChildrenToNodeAfterDisposeThrowsException()
         {
             NodeContainerFormat format = CreateDummyFormat();
-            Node dummy = new Node("Dummy");
+            using Node dummy = new Node("Dummy");
             format.Dispose();
             Assert.Throws<ObjectDisposedException>(() => format.MoveChildrenTo(dummy));
         }
@@ -123,7 +123,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void MoveChildrenToNodeThrowsIfNullNode()
         {
-            NodeContainerFormat format = CreateDummyFormat();
+            using NodeContainerFormat format = CreateDummyFormat();
             Assert.Throws<ArgumentNullException>(() => format.MoveChildrenTo(null));
         }
 

@@ -462,7 +462,7 @@ msgstr """"
 ";
             text = text.Replace("\r\n", "\n");
 
-            // TODO #85: CompareText(testPo.ConvertTo<BinaryFormat>(), text);
+            // Enable after #85: CompareText(testPo.ConvertTo<BinaryFormat>(), text)
             Po newPo = ConvertStringToPo(text);
             Assert.AreEqual(1, newPo.Entries.Count);
             Assert.AreEqual(testPo.Entries[0].Original, newPo.Entries[0].Original);
@@ -479,7 +479,7 @@ msgstr """"
 
         static Po ConvertStringToPo(string binary)
         {
-            BinaryFormat textFormat = new BinaryFormat();
+            using BinaryFormat textFormat = new BinaryFormat();
             new TextWriter(textFormat.Stream).Write(binary);
             textFormat.Stream.Position = 0;
 

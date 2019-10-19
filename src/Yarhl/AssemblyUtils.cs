@@ -19,6 +19,7 @@
 // SOFTWARE.
 namespace Yarhl
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
@@ -38,7 +39,7 @@ namespace Yarhl
         public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<string> paths)
         {
             string framework = RuntimeInformation.FrameworkDescription;
-            if (framework.StartsWith(".NET Core")) {
+            if (framework.StartsWith(".NET Core", StringComparison.Ordinal)) {
                 return LoadAssembliesNetCore(paths);
             } else {
                 return paths.Select(Assembly.LoadFile);

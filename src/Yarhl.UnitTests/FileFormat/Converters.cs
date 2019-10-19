@@ -61,7 +61,7 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-    public class ConverterAndOtherInterface :
+    public sealed class ConverterAndOtherInterface :
         IConverter<string, short>,
         IDisposable,
         IInitializer<int>
@@ -71,19 +71,22 @@ namespace Yarhl.UnitTests.FileFormat
             return System.Convert.ToInt16(source);
         }
 
-        public void Initialize(int param)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
 
         public void Dispose()
         {
+            // Test dispose
         }
     }
 
     public class ConverterWithoutGenericInterface : IConverter, IInitializer<int>
     {
-        public void Initialize(int param)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
     }
 
@@ -99,7 +102,7 @@ namespace Yarhl.UnitTests.FileFormat
     {
     }
 
-    public class StringFormatTest : IFormat, IDisposable
+    public sealed class StringFormatTest : IFormat, IDisposable
     {
         public StringFormatTest()
         {
@@ -116,16 +119,11 @@ namespace Yarhl.UnitTests.FileFormat
 
         public void Dispose()
         {
-            Dispose(true);
-        }
-
-        protected void Dispose(bool isDisposing)
-        {
             Disposed = true;
         }
     }
 
-    public class IntFormatTest : IFormat, IDisposable
+    public sealed class IntFormatTest : IFormat, IDisposable
     {
         public IntFormatTest()
         {
@@ -141,11 +139,6 @@ namespace Yarhl.UnitTests.FileFormat
         public bool Disposed { get; private set; }
 
         public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected void Dispose(bool isDisposing)
         {
             Disposed = true;
         }
@@ -167,14 +160,14 @@ namespace Yarhl.UnitTests.FileFormat
         IConverter<StringFormatTest, IntFormatTest>,
         IConverter<IntFormatTest, StringFormatTest>
     {
-        public IntFormatTest Convert(StringFormatTest test)
+        public IntFormatTest Convert(StringFormatTest source)
         {
-            return new IntFormatTest(System.Convert.ToInt32(test.Value));
+            return new IntFormatTest(System.Convert.ToInt32(source.Value));
         }
 
-        public StringFormatTest Convert(IntFormatTest test)
+        public StringFormatTest Convert(IntFormatTest source)
         {
-            return new StringFormatTest(test.Value.ToString());
+            return new StringFormatTest(source.Value.ToString());
         }
     }
 
@@ -182,8 +175,9 @@ namespace Yarhl.UnitTests.FileFormat
         IConverter<StringFormatTest, NoFormat>,
         IInitializer<int>
     {
-        public void Initialize(int x)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
 
         public NoFormat Convert(StringFormatTest source)
@@ -196,8 +190,9 @@ namespace Yarhl.UnitTests.FileFormat
         IConverter<NullSource, NullDestination>,
         IInitializer<int>
     {
-        public void Initialize(int x)
+        public void Initialize(int parameters)
         {
+            // Test initialize
         }
 
         public NullDestination Convert(NullSource source)

@@ -22,7 +22,6 @@ namespace Yarhl.Media.Text.Encodings
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
     using System.Text;
 
     /// <summary>
@@ -111,6 +110,18 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="byteIndex">Indes in the byte array.</param>
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
         {
+            if (chars == null)
+                throw new ArgumentNullException(nameof(chars));
+            if (charIndex < 0 || charIndex > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charIndex));
+            if (charCount < 0 || charIndex + charCount > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charCount));
+
+            if (bytes == null)
+                throw new ArgumentNullException(nameof(bytes));
+            if (byteIndex < 0 || byteIndex >= bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(byteIndex));
+
             int startIdx = byteIndex;
 
             // Gets the decoded bytes
@@ -182,12 +193,14 @@ namespace Yarhl.Media.Text.Encodings
 
         static bool MatchSequence(IList<byte> buffer, int index, params byte[] sequence)
         {
-            if (index + sequence.Length > buffer.Count())
+            if (index + sequence.Length > buffer.Count) {
                 return false;
+            }
 
             for (int i = 0; i < sequence.Length; i++) {
-                if (buffer[index + i] != sequence[i])
+                if (buffer[index + i] != sequence[i]) {
                     return false;
+                }
             }
 
             return true;

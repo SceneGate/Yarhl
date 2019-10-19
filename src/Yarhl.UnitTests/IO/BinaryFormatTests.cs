@@ -60,7 +60,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ConstructorWithStream()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             BinaryFormat format = new BinaryFormat(stream);
             Assert.AreSame(stream, format.Stream);
             Assert.AreSame(stream.BaseStream, format.Stream.BaseStream);
@@ -99,7 +99,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ConstructorWithStreamArgsInvalidThrows()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             stream.WriteByte(0x01);
 
             Assert.That(
@@ -134,7 +134,7 @@ namespace Yarhl.UnitTests.IO
 
         protected override BinaryFormat CreateDummyFormat()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             return new BinaryFormat(stream);
         }
     }

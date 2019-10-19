@@ -26,7 +26,7 @@
         <BenchmarkDotNetPackageVersion>0.11.5</BenchmarkDotNetPackageVersion>
 
         <StyleCopAnalyzerPackageVersion>1.1.118</StyleCopAnalyzerPackageVersion>
-        <FxCopAnalyzerPackageVersion>2.9.4</FxCopAnalyzerPackageVersion>
+        <FxCopAnalyzerPackageVersion>2.9.6</FxCopAnalyzerPackageVersion>
         <SonarAnalyzerPackageVersion>7.17.0.9346</SonarAnalyzerPackageVersion>
     </PropertyGroup>
 </Project>
