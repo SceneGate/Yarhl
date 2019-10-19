@@ -25,8 +25,8 @@
 #addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.4
 
 // Test coverage
-#addin nuget:?package=altcover.api&version=6.2.727
-#tool nuget:?package=ReportGenerator&version=4.3.1
+#addin nuget:?package=altcover.api&version=6.0.700
+#tool nuget:?package=ReportGenerator&version=4.2.15
 
 // Documentation
 #addin nuget:?package=Cake.DocFx&version=0.13.1
