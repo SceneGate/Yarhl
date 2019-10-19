@@ -112,8 +112,15 @@ namespace Yarhl.Media.Text.Encodings
         {
             if (chars == null)
                 throw new ArgumentNullException(nameof(chars));
+            if (charIndex < 0 || charIndex > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charIndex));
+            if (charCount < 0 || charIndex + charCount > chars.Length)
+                throw new ArgumentOutOfRangeException(nameof(charCount));
+
             if (bytes == null)
                 throw new ArgumentNullException(nameof(bytes));
+            if (byteIndex < 0 || byteIndex >= bytes.Length)
+                throw new ArgumentOutOfRangeException(nameof(byteIndex));
 
             int startIdx = byteIndex;
 
