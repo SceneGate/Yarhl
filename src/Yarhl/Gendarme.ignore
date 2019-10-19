@@ -91,5 +91,5 @@ T: Yarhl.FileSystem.Node
 R: Gendarme.Rules.Performance.AvoidUnneededFieldInitializationRule
 # Better be explicit in this case for clarity
 M: System.Void Yarhl.IO.DataStream::.ctor()
-M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.IStream,System.Int64,System.Int64)
+M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.IStream,System.Int64,System.Int64,System.Boolean)
 M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)
