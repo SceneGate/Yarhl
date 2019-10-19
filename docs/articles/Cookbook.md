@@ -3,9 +3,9 @@
 ## IO Examples
 ### Padding
 ```csharp
-    // Add 0s until position is divisible by 4
+    // Add 0s until position is divisible by 0x4
     filesWriter.WritePadding(0x00, 0x4);
-    // Add 0s until position is divisible by 10
+    // Add 0s until position is divisible by 0x10
     myDataWriter.WritePadding(0x00, 0x10);
 ```
 
