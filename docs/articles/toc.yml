@@ -1,4 +1,6 @@
 - name: Mastering Yarhl
   href: Mastering-Yarhl.md
+- name: Cookbook
+  href: Cookbook.md
 - name: Contributing & C# Coding Standards
   href: CONTRIBUTING.md
