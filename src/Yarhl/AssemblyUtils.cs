@@ -83,10 +83,13 @@ namespace Yarhl
             List<Assembly> assemblies = new List<Assembly>();
             foreach (string path in paths) {
                 try {
-#pragma warning disable S3885 // "Assembly.Load" should be used
-                    Assembly assembly = Assembly.LoadFile(path);
-#pragma warning restore S3885 // "Assembly.Load" should be used
-                    assemblies.Add(assembly);
+                    // We try to avoid the non-recommended load from file methods.
+                    // Instead we get the full assembly name.
+                    // In the future we could realize assembly validations with
+                    // public keys, name or version.
+                    AssemblyName libName = AssemblyName.GetAssemblyName(path);
+                    Assembly library = Assembly.Load(libName);
+                    assemblies.Add(library);
                 } catch (BadImageFormatException) {
                     // Bad IL. Skip.
                 }
