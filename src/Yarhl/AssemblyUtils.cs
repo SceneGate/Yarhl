@@ -21,7 +21,6 @@ namespace Yarhl
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Reflection;
     using System.Runtime.InteropServices;
     using System.Runtime.Loader;
@@ -42,7 +41,7 @@ namespace Yarhl
             if (framework.StartsWith(".NET Core", StringComparison.Ordinal)) {
                 return LoadAssembliesNetCore(paths);
             } else {
-                return paths.Select(Assembly.LoadFile);
+                return LoadAssembliesNetFramework(paths);
             }
         }
 
@@ -60,7 +59,40 @@ namespace Yarhl
         static IEnumerable<Assembly> LoadAssembliesNetCore(
             IEnumerable<string> paths)
         {
-            return paths.Select(AssemblyLoadContext.Default.LoadFromAssemblyPath);
+            List<Assembly> assemblies = new List<Assembly>();
+            foreach (string path in paths) {
+                try {
+                    Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
+                    assemblies.Add(assembly);
+                } catch (BadImageFormatException) {
+                    // Bad IL. Skip.
+                }
+            }
+
+            return assemblies;
+        }
+
+        /// <summary>
+        /// Load assemblies from .NET Framework.
+        /// </summary>
+        /// <param name="paths">List of assemblies paths.</param>
+        /// <returns>The load assemblies.</returns>
+        static IEnumerable<Assembly> LoadAssembliesNetFramework(
+            IEnumerable<string> paths)
+        {
+            List<Assembly> assemblies = new List<Assembly>();
+            foreach (string path in paths) {
+                try {
+#pragma warning disable S3885 // "Assembly.Load" should be used
+                    Assembly assembly = Assembly.LoadFile(path);
+#pragma warning restore S3885 // "Assembly.Load" should be used
+                    assemblies.Add(assembly);
+                } catch (BadImageFormatException) {
+                    // Bad IL. Skip.
+                }
+            }
+
+            return assemblies;
         }
     }
 }
