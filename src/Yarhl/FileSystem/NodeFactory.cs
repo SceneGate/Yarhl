@@ -155,9 +155,10 @@ namespace Yarhl.FileSystem
             var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
-                node = new Node(nodeName, format);
-                var fileInfo = new FileInfo(filePath);
-                node.Tags["FileInfo"] = fileInfo;
+                node = new Node(nodeName, format)
+                {
+                    Tags = { ["FileInfo"] = new FileInfo(filePath) },
+                };
             } catch {
                 format.Dispose();
                 throw;
@@ -222,8 +223,7 @@ namespace Yarhl.FileSystem
 
                 int rootPathLength = $"{NodeSystem.PathSeparator}{nodeName}".Length;
                 string nodePath = Path.GetFullPath(string.Concat(dirPath, node.Path.Substring(rootPathLength)));
-                var directoryInfo = new DirectoryInfo(nodePath);
-                node.Tags["DirectoryInfo"] = directoryInfo;
+                node.Tags["DirectoryInfo"] = new DirectoryInfo(nodePath);
             }
 
             return folder;
