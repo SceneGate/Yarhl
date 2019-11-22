@@ -316,6 +316,39 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CreateFromDirectoryHasValidInfo()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFolder = Path.Combine(tempDir, "folder");
+            Assert.That(Directory.CreateDirectory(tempFolder).Exists, Is.True);
+
+            string tempFile1 = Path.Combine(tempFolder, "file1.bin");
+            File.Create(tempFile1).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir, "*", "MyDir", true);
+
+            Assert.That(node.Tags.Count, Is.EqualTo(1));
+            Assert.That(node.Tags.ContainsKey("DirectoryInfo"), Is.True);
+            Assert.That(node.Tags.ContainsKey("FileInfo"), Is.False);
+            Assert.That(node.Tags["DirectoryInfo"], Is.TypeOf<DirectoryInfo>());
+
+            Assert.That(node.Children["folder"].Tags.Count, Is.EqualTo(1));
+            Assert.That(node.Children["folder"].Tags.ContainsKey("DirectoryInfo"), Is.True);
+            Assert.That(node.Children["folder"].Tags.ContainsKey("FileInfo"), Is.False);
+            Assert.That(node.Children["folder"].Tags["DirectoryInfo"], Is.TypeOf<DirectoryInfo>());
+
+            Assert.That(node.Children["folder"].Children["file1.bin"].Tags.Count, Is.EqualTo(1));
+            Assert.That(node.Children["folder"].Children["file1.bin"].Tags.ContainsKey("DirectoryInfo"), Is.False);
+            Assert.That(node.Children["folder"].Children["file1.bin"].Tags.ContainsKey("FileInfo"), Is.True);
+            Assert.That(node.Children["folder"].Children["file1.bin"].Tags["FileInfo"], Is.TypeOf<FileInfo>());
+
+            node.Dispose();
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
         public void CreateContainersAndAdd()
         {
             using Node root = new Node("root");
