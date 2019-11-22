@@ -48,11 +48,7 @@ namespace Yarhl.IO
         /// </summary>
         public DataStream()
         {
-            BaseStream = new RecyclableMemoryStream
-            {
-                LockObj = new object(),
-            };
-
+            BaseStream = new RecyclableMemoryStream();
             canExpand = true;
             Offset = 0;
             length = 0;

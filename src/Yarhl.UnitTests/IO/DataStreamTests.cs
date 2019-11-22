@@ -36,9 +36,7 @@ namespace Yarhl.UnitTests.IO
         [SetUp]
         public void SetUp()
         {
-            baseStream = new RecyclableMemoryStream {
-                LockObj = new object(),
-            };
+            baseStream = new RecyclableMemoryStream();
         }
 
         [TearDown]
