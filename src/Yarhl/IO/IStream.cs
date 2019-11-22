@@ -27,6 +27,11 @@ namespace Yarhl.IO
     public interface IStream : IDisposable
     {
         /// <summary>
+        /// Gets the lock object of this stream (and all its substreams).
+        /// </summary>
+        object LockObj { get; }
+
+        /// <summary>
         /// Gets or sets the position from the start of this stream.
         /// </summary>
         long Position { get; set; }
