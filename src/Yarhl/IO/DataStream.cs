@@ -593,7 +593,8 @@ namespace Yarhl.IO
             }
 
             if (!Instances.ContainsKey(BaseStream)) {
-                Instances.TryAdd(BaseStream, 1);
+                if (!Instances.TryAdd(BaseStream, 1))
+                    Instances[BaseStream] += 1;
             } else {
                 Instances[BaseStream] += 1;
             }
