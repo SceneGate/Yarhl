@@ -54,11 +54,10 @@ namespace Yarhl.IO.StreamFormat
         }
 
         /// <summary>
-        /// Gets or sets the lock object of this stream (and all its substreams).
+        /// Gets the lock object of this stream (and all its substreams).
         /// </summary>
         public object LockObj {
             get;
-            set;
         }
 
         /// <summary>

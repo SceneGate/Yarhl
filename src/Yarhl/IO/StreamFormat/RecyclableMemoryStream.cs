@@ -36,7 +36,6 @@ namespace Yarhl.IO.StreamFormat
         public RecyclableMemoryStream()
             : base(Manager.GetStream())
         {
-            LockObj = new object();
         }
 
         /// <summary>
