@@ -38,7 +38,7 @@ namespace Yarhl.IO
         readonly Stack<long> positionStack = new Stack<long>();
         readonly bool canExpand;
         readonly bool hasOwnsership;
-        readonly object lockObj;
+
         long position;
         long length;
 
@@ -48,12 +48,15 @@ namespace Yarhl.IO
         /// </summary>
         public DataStream()
         {
-            BaseStream = new RecyclableMemoryStream();
+            BaseStream = new RecyclableMemoryStream
+            {
+                LockObj = new object(),
+            };
+
             canExpand = true;
             Offset = 0;
             length = 0;
             hasOwnsership = true;
-            lockObj = new object();
 
             IncreaseStreamCounter();
         }
@@ -75,7 +78,6 @@ namespace Yarhl.IO
             Offset = 0;
             length = stream.Length;
             hasOwnsership = true;
-            lockObj = stream.LockObj;
 
             IncreaseStreamCounter();
         }
@@ -104,7 +106,6 @@ namespace Yarhl.IO
             Offset = offset;
             this.length = length;
             hasOwnsership = transferOwnership;
-            lockObj = stream.LockObj;
 
             IncreaseStreamCounter();
         }
@@ -130,7 +131,6 @@ namespace Yarhl.IO
             Offset = stream.Offset + offset;
             this.length = length;
             hasOwnsership = stream.hasOwnsership;
-            lockObj = stream.lockObj;
 
             IncreaseStreamCounter();
         }
@@ -345,7 +345,7 @@ namespace Yarhl.IO
             if (Position >= Length)
                 throw new EndOfStreamException();
 
-            lock (lockObj) {
+            lock (BaseStream.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 Position++;
                 return BaseStream.ReadByte();
@@ -376,7 +376,7 @@ namespace Yarhl.IO
                 throw new EndOfStreamException();
 
             int read = 0;
-            lock (lockObj) {
+            lock (BaseStream.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 read = BaseStream.Read(buffer, index, count);
             }
@@ -414,7 +414,7 @@ namespace Yarhl.IO
             if (Position == Length && !canExpand)
                 throw new InvalidOperationException("Cannot expand stream");
 
-            lock (lockObj) {
+            lock (BaseStream.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 BaseStream.WriteByte(data);
             }
@@ -448,7 +448,7 @@ namespace Yarhl.IO
             if (Position + count > Length && !canExpand)
                 throw new InvalidOperationException("Cannot expand stream");
 
-            lock (lockObj) {
+            lock (BaseStream.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 BaseStream.Write(buffer, index, count);
             }
