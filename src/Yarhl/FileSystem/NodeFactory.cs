@@ -155,7 +155,10 @@ namespace Yarhl.FileSystem
             var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
-                node = new Node(nodeName, format);
+                node = new Node(nodeName, format)
+                {
+                    Tags = { ["FileInfo"] = new FileInfo(filePath) },
+                };
             } catch {
                 format.Dispose();
                 throw;
@@ -206,10 +209,21 @@ namespace Yarhl.FileSystem
                 SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             Node folder = CreateContainer(nodeName);
+            folder.Tags["DirectoryInfo"] = new DirectoryInfo(dirPath);
+
             foreach (string filePath in Directory.GetFiles(dirPath, filter, options)) {
                 string relParent = Path.GetDirectoryName(filePath)
                                        .Replace(dirPath, string.Empty);
                 CreateContainersForChild(folder, relParent, FromFile(filePath));
+            }
+
+            foreach (Node node in Navigator.IterateNodes(folder)) {
+                if (!node.IsContainer || node.Tags.ContainsKey("DirectoryInfo"))
+                    continue;
+
+                int rootPathLength = $"{NodeSystem.PathSeparator}{nodeName}".Length;
+                string nodePath = Path.GetFullPath(string.Concat(dirPath, node.Path.Substring(rootPathLength)));
+                node.Tags["DirectoryInfo"] = new DirectoryInfo(nodePath);
             }
 
             return folder;
