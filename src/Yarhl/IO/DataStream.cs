@@ -602,8 +602,7 @@ namespace Yarhl.IO
 
             lock (BaseStream.LockObj) {
                 if (!Instances.ContainsKey(BaseStream)) {
-                    if (!Instances.TryAdd(BaseStream, 1))
-                        Instances[BaseStream] += 1;
+                    Instances.TryAdd(BaseStream, 1);
                 } else {
                     Instances[BaseStream] += 1;
                 }
