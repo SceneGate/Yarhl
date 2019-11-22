@@ -564,8 +564,12 @@ namespace Yarhl.IO
 
             Disposed = true;
 
-            if (BaseStream != null && hasOwnsership) {
-                Instances[BaseStream] -= 1;
+            if (BaseStream == null || !hasOwnsership)
+                return;
+
+            Instances[BaseStream] -= 1;
+
+            lock (BaseStream.LockObj) {
                 if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
                     BaseStream.Dispose();
                     Instances.TryRemove(BaseStream, out _);
@@ -592,11 +596,13 @@ namespace Yarhl.IO
                 return;
             }
 
-            if (!Instances.ContainsKey(BaseStream)) {
-                if (!Instances.TryAdd(BaseStream, 1))
+            lock (BaseStream.LockObj) {
+                if (!Instances.ContainsKey(BaseStream)) {
+                    if (!Instances.TryAdd(BaseStream, 1))
+                        Instances[BaseStream] += 1;
+                } else {
                     Instances[BaseStream] += 1;
-            } else {
-                Instances[BaseStream] += 1;
+                }
             }
         }
     }
