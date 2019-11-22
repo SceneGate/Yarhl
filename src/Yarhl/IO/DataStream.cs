@@ -571,9 +571,9 @@ namespace Yarhl.IO
             if (BaseStream == null || !hasOwnsership)
                 return;
 
-            Instances[BaseStream] -= 1;
-
             lock (BaseStream.LockObj) {
+                Instances[BaseStream] -= 1;
+
                 if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
                     BaseStream.Dispose();
                     Instances.TryRemove(BaseStream, out _);
