@@ -188,10 +188,14 @@ namespace Yarhl.IO
                     if (!canExpand) {
                         throw new InvalidOperationException(
                             "Cannot change the size of sub-streams.");
-                    } else if (value > BaseStream.Length) {
-                        // If we can expand, it's not a substream so forget
-                        // about offset (always 0). Increase base stream too.
-                        BaseStream.SetLength(value);
+                    }
+
+                    lock (BaseStream.LockObj) {
+                        if (value > BaseStream.Length) {
+                            // If we can expand, it's not a substream so forget
+                            // about offset (always 0). Increase base stream too.
+                            BaseStream.SetLength(value);
+                        }
                     }
                 }
 
