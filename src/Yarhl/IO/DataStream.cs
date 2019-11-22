@@ -20,6 +20,7 @@
 namespace Yarhl.IO
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using Yarhl.FileFormat;
@@ -33,10 +34,11 @@ namespace Yarhl.IO
     /// </remarks>
     public class DataStream : IDisposable
     {
-        static readonly Dictionary<IStream, int> Instances = new Dictionary<IStream, int>();
+        static readonly ConcurrentDictionary<IStream, int> Instances = new ConcurrentDictionary<IStream, int>();
         readonly Stack<long> positionStack = new Stack<long>();
         readonly bool canExpand;
         readonly bool hasOwnsership;
+        readonly object lockObj;
         long position;
         long length;
 
@@ -51,6 +53,7 @@ namespace Yarhl.IO
             Offset = 0;
             length = 0;
             hasOwnsership = true;
+            lockObj = new object();
 
             IncreaseStreamCounter();
         }
@@ -72,6 +75,7 @@ namespace Yarhl.IO
             Offset = 0;
             length = stream.Length;
             hasOwnsership = true;
+            lockObj = stream.LockObj;
 
             IncreaseStreamCounter();
         }
@@ -100,6 +104,7 @@ namespace Yarhl.IO
             Offset = offset;
             this.length = length;
             hasOwnsership = transferOwnership;
+            lockObj = stream.LockObj;
 
             IncreaseStreamCounter();
         }
@@ -125,6 +130,7 @@ namespace Yarhl.IO
             Offset = stream.Offset + offset;
             this.length = length;
             hasOwnsership = stream.hasOwnsership;
+            lockObj = stream.lockObj;
 
             IncreaseStreamCounter();
         }
@@ -339,9 +345,11 @@ namespace Yarhl.IO
             if (Position >= Length)
                 throw new EndOfStreamException();
 
-            BaseStream.Position = AbsolutePosition;
-            Position++;
-            return BaseStream.ReadByte();
+            lock (lockObj) {
+                BaseStream.Position = AbsolutePosition;
+                Position++;
+                return BaseStream.ReadByte();
+            }
         }
 
         /// <summary>
@@ -367,9 +375,13 @@ namespace Yarhl.IO
             if (Position + count > Length)
                 throw new EndOfStreamException();
 
-            BaseStream.Position = AbsolutePosition;
-            int read = BaseStream.Read(buffer, index, count);
-            Position += count;
+            int read = 0;
+            lock (lockObj) {
+                BaseStream.Position = AbsolutePosition;
+                read = BaseStream.Read(buffer, index, count);
+            }
+
+            Position += read;
 
             return read;
         }
@@ -402,8 +414,10 @@ namespace Yarhl.IO
             if (Position == Length && !canExpand)
                 throw new InvalidOperationException("Cannot expand stream");
 
-            BaseStream.Position = AbsolutePosition;
-            BaseStream.WriteByte(data);
+            lock (lockObj) {
+                BaseStream.Position = AbsolutePosition;
+                BaseStream.WriteByte(data);
+            }
 
             if (Position == Length) {
                 Length++;
@@ -434,8 +448,10 @@ namespace Yarhl.IO
             if (Position + count > Length && !canExpand)
                 throw new InvalidOperationException("Cannot expand stream");
 
-            BaseStream.Position = AbsolutePosition;
-            BaseStream.Write(buffer, index, count);
+            lock (lockObj) {
+                BaseStream.Position = AbsolutePosition;
+                BaseStream.Write(buffer, index, count);
+            }
 
             if (Position + count > Length)
                 Length = Position + count;
@@ -556,7 +572,7 @@ namespace Yarhl.IO
                 Instances[BaseStream] -= 1;
                 if (freeManagedResourcesAlso && Instances[BaseStream] == 0) {
                     BaseStream.Dispose();
-                    Instances.Remove(BaseStream);
+                    Instances.TryRemove(BaseStream, out _);
                 }
             }
         }
@@ -581,7 +597,7 @@ namespace Yarhl.IO
             }
 
             if (!Instances.ContainsKey(BaseStream)) {
-                Instances.Add(BaseStream, 1);
+                Instances.TryAdd(BaseStream, 1);
             } else {
                 Instances[BaseStream] += 1;
             }

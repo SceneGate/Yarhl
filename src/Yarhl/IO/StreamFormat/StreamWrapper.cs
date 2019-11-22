@@ -34,6 +34,7 @@ namespace Yarhl.IO.StreamFormat
         public StreamWrapper(Stream stream)
         {
             BaseStream = stream;
+            LockObj = new object();
         }
 
         /// <summary>
@@ -41,6 +42,7 @@ namespace Yarhl.IO.StreamFormat
         /// </summary>
         protected StreamWrapper()
         {
+            LockObj = new object();
         }
 
         /// <summary>
@@ -49,6 +51,14 @@ namespace Yarhl.IO.StreamFormat
         public Stream BaseStream {
             get;
             protected set;
+        }
+
+        /// <summary>
+        /// Gets or sets the lock object of this stream (and all its substreams).
+        /// </summary>
+        public object LockObj {
+            get;
+            set;
         }
 
         /// <summary>
