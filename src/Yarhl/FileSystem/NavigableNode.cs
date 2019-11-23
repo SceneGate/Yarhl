@@ -116,7 +116,8 @@ namespace Yarhl.FileSystem
         /// Otherwise the node is added.</para>
         /// </remarks>
         /// <param name="node">Node to add.</param>
-        public void Add(T node)
+        /// <param name="replace"></param>
+        public void Add(T node, bool replace = true)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
@@ -136,8 +137,12 @@ namespace Yarhl.FileSystem
             if (index == -1) {
                 children.Add(node);
             } else {
-                children[index].Dispose();
-                children[index] = node;
+                if (!replace && children[index].children.Count > 0) {
+                    children[index].Add(node.children, false);
+                } else {
+                    children[index].Dispose();
+                    children[index] = node;
+                }
             }
         }
 
@@ -145,7 +150,8 @@ namespace Yarhl.FileSystem
         /// Add a list of nodes.
         /// </summary>
         /// <param name="nodes">List of nodes to add.</param>
-        public void Add(IEnumerable<T> nodes)
+        /// <param name="replace"></param>
+        public void Add(IEnumerable<T> nodes, bool replace = true)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
@@ -154,7 +160,7 @@ namespace Yarhl.FileSystem
                 throw new ArgumentNullException(nameof(nodes));
 
             foreach (T node in nodes)
-                Add(node);
+                Add(node, replace);
         }
 
         /// <summary>

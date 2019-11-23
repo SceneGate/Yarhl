@@ -466,6 +466,31 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.IsTrue(subchild1.Disposed);
         }
 
+        [Test]
+        public void MergeNodeChildren()
+        {
+            using var parent1 = new DummyNavigable("Parent1");
+            using var child1 = new DummyNavigable("Child");
+            using var subchild1 = new DummyNavigable("Subchild1");
+
+            using var parent2 = new DummyNavigable("Parent2");
+            using var child2 = new DummyNavigable("Child");
+            using var child3 = new DummyNavigable("Child2");
+            using var subchild2 = new DummyNavigable("Subchild2");
+
+            parent1.Add(child1);
+            child1.Add(subchild1);
+
+            parent2.Add(child2);
+            parent2.Add(child3);
+            child2.Add(subchild2);
+
+            parent1.Add(parent2.Children, false);
+
+            Assert.AreEqual(2, parent1.Children.Count);
+            Assert.AreEqual(2, child1.Children.Count);
+        }
+
         class DummyNavigable : NavigableNode<DummyNavigable>
         {
             public DummyNavigable(string name)
