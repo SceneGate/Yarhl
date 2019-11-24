@@ -577,16 +577,7 @@ namespace Yarhl.UnitTests.FileSystem
         {
             public int Compare(DummyNavigable x, DummyNavigable y)
             {
-                if (x == null)
-                {
-                    return y == null ? 0 : 1;
-                }
-
-                if (y == null)
-                {
-                    return -1;
-                }
-
+                // x and y cannot be null because Add methods don't allow null parameters.
                 return string.Compare(y.Name, x.Name, StringComparison.CurrentCulture);
             }
         }

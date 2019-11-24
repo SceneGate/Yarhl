@@ -248,12 +248,10 @@ namespace Yarhl.FileSystem
         {
             children.Sort(comparer);
 
-            if (!recursive)
-                return;
-
-            foreach (T node in children)
-            {
-                node.SortChildren(comparer);
+            if (recursive) {
+                foreach (T node in children) {
+                    node.SortChildren(comparer);
+                }
             }
         }
 
@@ -266,12 +264,10 @@ namespace Yarhl.FileSystem
         {
             children.Sort(comparison);
 
-            if (!recursive)
-                return;
-
-            foreach (T node in children)
-            {
-                node.SortChildren(comparison);
+            if (recursive) {
+                foreach (T node in children) {
+                    node.SortChildren(comparison);
+                }
             }
         }
 
@@ -296,16 +292,7 @@ namespace Yarhl.FileSystem
         {
             public int Compare(T x, T y)
             {
-                if (x == null)
-                {
-                    return y == null ? 0 : -1;
-                }
-
-                if (y == null)
-                {
-                    return 1;
-                }
-
+                // x and y cannot be null because Add methods don't allow null parameters.
                 return string.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
             }
         }
