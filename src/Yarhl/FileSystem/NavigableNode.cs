@@ -111,12 +111,13 @@ namespace Yarhl.FileSystem
         /// Add a node.
         /// </summary>
         /// <remarks>
-        /// <para>Updates the parent of the child node to match this instance.
-        /// If the node already contains a child with the same name it will be replaced.
-        /// Otherwise the node is added.</para>
+        /// <para>Updates the parent of the child node to match this instance.</para>
         /// </remarks>
         /// <param name="node">Node to add.</param>
-        /// <param name="replace"></param>
+        /// <param name="replace">If set to <see langword="true" /> and the node already
+        /// contains a child with the same name it will be replaced.
+        /// If set to <see langword="false" />, the node already
+        /// contains a child with the same name and it has children, it will be merged.</param>
         public void Add(T node, bool replace = true)
         {
             if (Disposed)
@@ -138,6 +139,12 @@ namespace Yarhl.FileSystem
                 children.Add(node);
             } else {
                 if (!replace && children[index].children.Count > 0) {
+                    foreach (KeyValuePair<string, dynamic> tag in node.Tags) {
+                        if (!children[index].Tags.ContainsKey(tag.Key)) {
+                            children[index].Tags.Add(tag);
+                        }
+                    }
+
                     children[index].Add(node.children, false);
                 } else {
                     children[index].Dispose();
@@ -150,7 +157,10 @@ namespace Yarhl.FileSystem
         /// Add a list of nodes.
         /// </summary>
         /// <param name="nodes">List of nodes to add.</param>
-        /// <param name="replace"></param>
+        /// <param name="replace">If set to <see langword="true" /> and the node already
+        /// contains a child with the same name it will be replaced.
+        /// If set to <see langword="false" />, the node already
+        /// contains a child with the same name and it has children, it will be merged.</param>
         public void Add(IEnumerable<T> nodes, bool replace = true)
         {
             if (Disposed)
