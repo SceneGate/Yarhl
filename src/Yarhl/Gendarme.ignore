@@ -93,3 +93,7 @@ R: Gendarme.Rules.Performance.AvoidUnneededFieldInitializationRule
 M: System.Void Yarhl.IO.DataStream::.ctor()
 M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.IStream,System.Int64,System.Int64,System.Boolean)
 M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.DataStream,System.Int64,System.Int64)
+
+R: Gendarme.Rules.Performance.AvoidUncalledPrivateCodeRule
+# False positive, it's called inside the Sort method
+M: System.Int32 Yarhl.FileSystem.NavigableNode`1/DefaultNavigableNodeComparer::Compare(T,T)
