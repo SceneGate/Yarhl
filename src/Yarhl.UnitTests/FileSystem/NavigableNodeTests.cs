@@ -539,30 +539,26 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild1"));
             Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild2"));
 
-            parent.SortChildren((x, y) =>
-            {
-                if (x == null)
-                {
-                    if (y == null)
-                    {
-                        return 0;
-                    }
-
-                    return 1;
-                }
-
-                if (y == null)
-                {
-                    return -1;
-                }
-
-                return string.Compare(y.Name, x.Name, StringComparison.CurrentCulture);
-            });
+            parent.SortChildren((x, y) => string.Compare(y.Name, x.Name, StringComparison.CurrentCulture));
 
             Assert.That(parent.Children[0].Name, Is.EqualTo("Child2"));
             Assert.That(parent.Children[1].Name, Is.EqualTo("Child1"));
             Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild2"));
             Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild1"));
+        }
+
+        [Test]
+        public void SortChildrenAfterDisposeThrowsException()
+        {
+            var node = new DummyNavigable("node");
+            using var child = new DummyNavigable("child");
+            node.Add(child);
+            node.Dispose();
+            Assert.That(() => node.SortChildren(), Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => node.SortChildren(new ReverseNodeComparer()), Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(
+                () => node.SortChildren((x, y) => string.Compare(y.Name, x.Name, StringComparison.CurrentCulture)),
+                Throws.TypeOf<ObjectDisposedException>());
         }
 
         class DummyNavigable : NavigableNode<DummyNavigable>

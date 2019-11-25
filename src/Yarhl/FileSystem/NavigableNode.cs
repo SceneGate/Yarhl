@@ -236,6 +236,9 @@ namespace Yarhl.FileSystem
         /// <param name="recursive">If set to <see langword="true" /> sorts the children nodes recursively.</param>
         public void SortChildren(bool recursive = true)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
             SortChildren(defaultComparer, recursive);
         }
 
@@ -246,6 +249,9 @@ namespace Yarhl.FileSystem
         /// <param name="recursive">If set to <see langword="true" /> sorts the children nodes recursively.</param>
         public void SortChildren(IComparer<T> comparer, bool recursive = true)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
             children.Sort(comparer);
 
             if (recursive) {
@@ -262,6 +268,9 @@ namespace Yarhl.FileSystem
         /// <param name="recursive">If set to <see langword="true" /> sorts the children nodes recursively.</param>
         public void SortChildren(Comparison<T> comparison, bool recursive = true)
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
             children.Sort(comparison);
 
             if (recursive) {
@@ -288,7 +297,7 @@ namespace Yarhl.FileSystem
             Disposed = true;
         }
 
-        private class DefaultNavigableNodeComparer : IComparer<T>
+        private sealed class DefaultNavigableNodeComparer : IComparer<T>
         {
             public int Compare(T x, T y)
             {
