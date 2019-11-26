@@ -127,6 +127,62 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.Throws<ArgumentNullException>(() => format.MoveChildrenTo(null));
         }
 
+        [Test]
+        public void MoveChildrenToNodeRemovesChildrenFromSource()
+        {
+            using NodeContainerFormat source = new NodeContainerFormat();
+            Node sourceRoot = source.Root;
+
+            using NodeContainerFormat destination = new NodeContainerFormat();
+
+            using Node child = new Node("Child");
+
+            source.Root.Add(child);
+            source.MoveChildrenTo(destination.Root);
+
+            Assert.That(sourceRoot.Children.Count, Is.Zero);
+            Assert.That(destination.Root.Children.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void MoveChildrenToNodeCanMergeContainers()
+        {
+            using Node source = new Node("source", new NodeContainerFormat());
+            using Node destination = new Node("destination", new NodeContainerFormat());
+
+            using Node folder1 = new Node("Folder1", new NodeContainerFormat());
+            using Node folder2 = new Node("Folder2", new NodeContainerFormat());
+            using Node folder3 = new Node("Folder1", new NodeContainerFormat());
+
+            using Node node1 = new Node("File1");
+            using Node node2 = new Node("File2");
+            using Node node3 = new Node("File3");
+            using Node node4 = new Node("File4");
+
+            folder1.Add(node1);
+            folder1.Add(node2);
+            folder2.Add(node3);
+            folder3.Add(node4);
+
+            destination.Add(folder1);
+            destination.Add(folder2);
+            source.Add(folder3);
+
+            Assert.That(source.Children.Count, Is.EqualTo(1));
+            Assert.That(destination.Children.Count, Is.EqualTo(2));
+            Assert.That(folder1.Children.Count, Is.EqualTo(2));
+            Assert.That(folder2.Children.Count, Is.EqualTo(1));
+            Assert.That(folder3.Children.Count, Is.EqualTo(1));
+
+            source.GetFormatAs<NodeContainerFormat>().MoveChildrenTo(destination, true);
+
+            Assert.That(source.Children.Count, Is.Zero);
+            Assert.That(destination.Children.Count, Is.EqualTo(2));
+            Assert.That(folder1.Children.Count, Is.EqualTo(3));
+            Assert.That(folder2.Children.Count, Is.EqualTo(1));
+            Assert.That(folder3.Children.Count, Is.Zero);
+        }
+
         protected override NodeContainerFormat CreateDummyFormat()
         {
             return new NodeContainerFormat();

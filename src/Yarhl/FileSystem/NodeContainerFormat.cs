@@ -20,6 +20,7 @@
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Linq;
     using Yarhl.FileFormat;
 
     /// <summary>
@@ -61,10 +62,12 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <remarks>
         /// <para>The node will handle the lifecycle of the children.
-        /// Disposing the format won't dispose the children.</para>
+        /// Disposing the format won't dispose the children.
+        /// It will replace nodes with the same name.</para>
         /// </remarks>
         /// <param name="newNode">Node that will contain the children.</param>
-        public void MoveChildrenTo(Node newNode)
+        /// <param name="mergeContainers">If set to <see langword="true" /> it will merge container nodes with the same name.</param>
+        public void MoveChildrenTo(Node newNode, bool mergeContainers = false)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NodeContainerFormat));
@@ -72,7 +75,23 @@ namespace Yarhl.FileSystem
             if (newNode == null)
                 throw new ArgumentNullException(nameof(newNode));
 
-            newNode.Add(Root.Children);
+            if (!mergeContainers || !newNode.IsContainer) {
+                newNode.Add(Root.Children);
+            } else {
+                for (int i = Root.Children.Count - 1; i >= 0; i--) {
+                    Node child = Root.Children[i];
+                    Node foundNode = newNode.Children.FirstOrDefault(node => node.Name == child.Name);
+
+                    if (foundNode != null && child.IsContainer) {
+                        child.GetFormatAs<NodeContainerFormat>().MoveChildrenTo(foundNode, true);
+                    } else {
+                        Root.Remove(child);
+                        newNode.Add(child);
+                    }
+                }
+            }
+
+            Root.RemoveChildren(false);
             Root = newNode;
             manageRoot = false;
         }

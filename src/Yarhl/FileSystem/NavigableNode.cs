@@ -111,14 +111,12 @@ namespace Yarhl.FileSystem
         /// Add a node.
         /// </summary>
         /// <remarks>
-        /// <para>Updates the parent of the child node to match this instance.</para>
+        /// <para>Updates the parent of the child node to match this instance.
+        /// If the node already contains a child with the same name it will be replaced.
+        /// Otherwise the node is added.</para>
         /// </remarks>
         /// <param name="node">Node to add.</param>
-        /// <param name="replace">If set to <see langword="true" /> and the node already
-        /// contains a child with the same name it will be replaced.
-        /// If set to <see langword="false" />, the node already
-        /// contains a child with the same name and it has children, it will be merged.</param>
-        public void Add(T node, bool replace = true)
+        public void Add(T node)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
@@ -138,18 +136,8 @@ namespace Yarhl.FileSystem
             if (index == -1) {
                 children.Add(node);
             } else {
-                if (!replace && children[index].children.Count > 0) {
-                    foreach (KeyValuePair<string, dynamic> tag in node.Tags) {
-                        if (!children[index].Tags.ContainsKey(tag.Key)) {
-                            children[index].Tags.Add(tag);
-                        }
-                    }
-
-                    children[index].Add(node.children, false);
-                } else {
-                    children[index].Dispose();
-                    children[index] = node;
-                }
+                children[index].Dispose();
+                children[index] = node;
             }
         }
 
@@ -157,11 +145,7 @@ namespace Yarhl.FileSystem
         /// Add a list of nodes.
         /// </summary>
         /// <param name="nodes">List of nodes to add.</param>
-        /// <param name="replace">If set to <see langword="true" /> and the node already
-        /// contains a child with the same name it will be replaced.
-        /// If set to <see langword="false" />, the node already
-        /// contains a child with the same name and it has children, it will be merged.</param>
-        public void Add(IEnumerable<T> nodes, bool replace = true)
+        public void Add(IEnumerable<T> nodes)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
@@ -170,7 +154,7 @@ namespace Yarhl.FileSystem
                 throw new ArgumentNullException(nameof(nodes));
 
             foreach (T node in nodes)
-                Add(node, replace);
+                Add(node);
         }
 
         /// <summary>
@@ -229,13 +213,17 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Removes and dispose all the children from the node.
         /// </summary>
-        public void RemoveChildren()
+        /// <param name="dispose">If set to <see langword="true" /> disposes the nodes before remove them.</param>
+        public void RemoveChildren(bool dispose = true)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
 
-            foreach (var child in Children)
-                child.Dispose();
+            if (dispose) {
+                foreach (T child in Children)
+                    child.Dispose();
+            }
+
             children.Clear();
         }
 
