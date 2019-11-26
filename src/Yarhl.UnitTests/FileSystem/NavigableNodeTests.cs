@@ -466,11 +466,115 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.IsTrue(subchild1.Disposed);
         }
 
+        [Test]
+        public void SortChildrenWithDefaultComparer()
+        {
+            using DummyNavigable parent = new DummyNavigable("Parent");
+            using DummyNavigable child1 = new DummyNavigable("Child2");
+            using DummyNavigable child2 = new DummyNavigable("Child1");
+            using DummyNavigable subchild1 = new DummyNavigable("Subchild2");
+            using DummyNavigable subchild2 = new DummyNavigable("Subchild1");
+
+            child1.Add(subchild1);
+            child1.Add(subchild2);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            Assert.That(parent.Children[0].Name, Is.EqualTo("Child2"));
+            Assert.That(parent.Children[1].Name, Is.EqualTo("Child1"));
+            Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild2"));
+            Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild1"));
+
+            parent.SortChildren();
+
+            Assert.That(parent.Children[0].Name, Is.EqualTo("Child1"));
+            Assert.That(parent.Children[1].Name, Is.EqualTo("Child2"));
+            Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild1"));
+            Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild2"));
+        }
+
+        [Test]
+        public void SortChildrenWithCustomComparer()
+        {
+            using DummyNavigable parent = new DummyNavigable("Parent");
+            using DummyNavigable child1 = new DummyNavigable("Child1");
+            using DummyNavigable child2 = new DummyNavigable("Child2");
+            using DummyNavigable subchild1 = new DummyNavigable("Subchild1");
+            using DummyNavigable subchild2 = new DummyNavigable("Subchild2");
+
+            child1.Add(subchild1);
+            child1.Add(subchild2);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            Assert.That(parent.Children[0].Name, Is.EqualTo("Child1"));
+            Assert.That(parent.Children[1].Name, Is.EqualTo("Child2"));
+            Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild1"));
+            Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild2"));
+
+            parent.SortChildren(new ReverseNodeComparer());
+
+            Assert.That(parent.Children[0].Name, Is.EqualTo("Child2"));
+            Assert.That(parent.Children[1].Name, Is.EqualTo("Child1"));
+            Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild2"));
+            Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild1"));
+        }
+
+        [Test]
+        public void SortChildrenWithComparison()
+        {
+            using DummyNavigable parent = new DummyNavigable("Parent");
+            using DummyNavigable child1 = new DummyNavigable("Child1");
+            using DummyNavigable child2 = new DummyNavigable("Child2");
+            using DummyNavigable subchild1 = new DummyNavigable("Subchild1");
+            using DummyNavigable subchild2 = new DummyNavigable("Subchild2");
+
+            child1.Add(subchild1);
+            child1.Add(subchild2);
+            parent.Add(child1);
+            parent.Add(child2);
+
+            Assert.That(parent.Children[0].Name, Is.EqualTo("Child1"));
+            Assert.That(parent.Children[1].Name, Is.EqualTo("Child2"));
+            Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild1"));
+            Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild2"));
+
+            parent.SortChildren((x, y) => string.Compare(y.Name, x.Name, StringComparison.CurrentCulture));
+
+            Assert.That(parent.Children[0].Name, Is.EqualTo("Child2"));
+            Assert.That(parent.Children[1].Name, Is.EqualTo("Child1"));
+            Assert.That(child1.Children[0].Name, Is.EqualTo("Subchild2"));
+            Assert.That(child1.Children[1].Name, Is.EqualTo("Subchild1"));
+        }
+
+        [Test]
+        public void SortChildrenAfterDisposeThrowsException()
+        {
+            var node = new DummyNavigable("node");
+            using var child = new DummyNavigable("child");
+            node.Add(child);
+            node.Dispose();
+            Assert.That(() => node.SortChildren(), Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => node.SortChildren(new ReverseNodeComparer()), Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(
+                () => node.SortChildren((x, y) => string.Compare(y.Name, x.Name, StringComparison.CurrentCulture)),
+                Throws.TypeOf<ObjectDisposedException>());
+        }
+
         class DummyNavigable : NavigableNode<DummyNavigable>
         {
             public DummyNavigable(string name)
                 : base(name)
             {
+            }
+        }
+
+        class ReverseNodeComparer : IComparer<DummyNavigable>
+        {
+            public int Compare(DummyNavigable x, DummyNavigable y)
+            {
+                // x and y cannot be null because Add methods don't allow null parameters.
+                return string.Compare(y.Name, x.Name, StringComparison.CurrentCulture);
             }
         }
     }

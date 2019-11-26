@@ -30,6 +30,7 @@ namespace Yarhl.FileSystem
         where T : NavigableNode<T>
     {
         readonly List<T> children;
+        readonly DefaultNavigableNodeComparer defaultComparer = new DefaultNavigableNodeComparer();
 
         /// <summary>
         /// Initializes a new instance of the
@@ -85,11 +86,7 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets a read-only list of children nodes.
         /// </summary>
-        public NavigableNodeCollection<T> Children
-        {
-            get;
-            private set;
-        }
+        public NavigableNodeCollection<T> Children { get; }
 
         /// <summary>
         /// Gets the dictionary of tags.
@@ -238,6 +235,56 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
+        /// Sorts the children nodes using the default comparer.
+        /// </summary>
+        /// <param name="recursive">If set to <see langword="true" /> sorts the children nodes recursively.</param>
+        public void SortChildren(bool recursive = true)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
+            SortChildren(defaultComparer, recursive);
+        }
+
+        /// <summary>
+        /// Sorts the children nodes using the specified comparer.
+        /// </summary>
+        /// <param name="comparer">The <see cref="System.Collections.Generic.IComparer{T}" /> implementation to use when comparing elements.</param>
+        /// <param name="recursive">If set to <see langword="true" /> sorts the children nodes recursively.</param>
+        public void SortChildren(IComparer<T> comparer, bool recursive = true)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
+            children.Sort(comparer);
+
+            if (recursive) {
+                foreach (T node in children) {
+                    node.SortChildren(comparer);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sorts the children nodes using the specified <see cref="System.Comparison{T}" />.
+        /// </summary>
+        /// <param name="comparison">The <see cref="System.Comparison{T}" /> to use when comparing elements.</param>
+        /// <param name="recursive">If set to <see langword="true" /> sorts the children nodes recursively.</param>
+        public void SortChildren(Comparison<T> comparison, bool recursive = true)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(NavigableNode<T>));
+
+            children.Sort(comparison);
+
+            if (recursive) {
+                foreach (T node in children) {
+                    node.SortChildren(comparison);
+                }
+            }
+        }
+
+        /// <summary>
         /// Releases all resource used by the
         /// <see cref="Yarhl.FileSystem.NavigableNode{T}"/> object.
         /// </summary>
@@ -252,6 +299,15 @@ namespace Yarhl.FileSystem
                 RemoveChildren();
 
             Disposed = true;
+        }
+
+        private sealed class DefaultNavigableNodeComparer : IComparer<T>
+        {
+            public int Compare(T x, T y)
+            {
+                // x and y cannot be null because Add methods don't allow null parameters.
+                return string.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
+            }
         }
     }
 }
