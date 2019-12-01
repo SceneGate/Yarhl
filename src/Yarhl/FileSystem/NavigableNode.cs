@@ -124,8 +124,8 @@ namespace Yarhl.FileSystem
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            // If the path of the node is fully inside our path, it's a parent.
-            if (Path.StartsWith(node.Path, StringComparison.Ordinal))
+            // If "this" has a parent node and the path of the node is fully inside our path, it's a parent.
+            if (Parent != null && Path.StartsWith(node.Path, StringComparison.Ordinal))
                 throw new ArgumentException("Cannot add one parent as child", nameof(node));
 
             // Update the parent of the child

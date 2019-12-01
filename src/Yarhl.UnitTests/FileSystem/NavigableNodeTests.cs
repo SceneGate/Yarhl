@@ -117,6 +117,18 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void AddNodeWithSameNameRootIsNotParent()
+        {
+            using var node1 = new DummyNavigable("Node");
+            using var node2 = new DummyNavigable("Node");
+            node1.Add(node2);
+
+            Assert.AreSame(node1, node2.Parent);
+            Assert.AreEqual(1, node1.Children.Count);
+            Assert.AreSame(node2, node1.Children[0]);
+        }
+
+        [Test]
         public void ChildrenGetsByName()
         {
             using var parentNode = new DummyNavigable("MyParent");
