@@ -21,6 +21,7 @@ namespace Yarhl.FileSystem
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Node with navigation features inside a FileSystem.
@@ -145,7 +146,7 @@ namespace Yarhl.FileSystem
         /// Add a list of nodes.
         /// </summary>
         /// <param name="nodes">List of nodes to add.</param>
-        public void Add(IList<T> nodes)
+        public void Add(IEnumerable<T> nodes)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
@@ -153,10 +154,11 @@ namespace Yarhl.FileSystem
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
 
-            // Do not use a 'foreach'. Add method modifies the nodes collection.
-            for (int i = 0; i < nodes.Count; i++)
+            // Add method modifies the nodes collection, so we need a IList and we can't use a 'foreach' loop.
+            List<T> nodesList = nodes.ToList();
+            for (int i = 0; i < nodesList.Count; i++)
             {
-                T node = nodes[i];
+                T node = nodesList[i];
                 Add(node);
             }
         }
