@@ -470,7 +470,7 @@ namespace Yarhl.UnitTests.FileSystem
             using var child = new DummyNavigable("child");
             node.Add(child);
             node.Dispose();
-            Assert.That(node.RemoveChildren, Throws.TypeOf<ObjectDisposedException>());
+            Assert.That(() => node.RemoveChildren(), Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]

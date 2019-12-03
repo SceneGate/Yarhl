@@ -219,13 +219,17 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Removes and dispose all the children from the node.
         /// </summary>
-        public void RemoveChildren()
+        /// <param name="dispose">If set to <see langword="true" /> disposes the nodes before remove them.</param>
+        public void RemoveChildren(bool dispose = true)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(NavigableNode<T>));
 
-            foreach (var child in Children)
-                child.Dispose();
+            if (dispose) {
+                foreach (T child in Children)
+                    child.Dispose();
+            }
+
             children.Clear();
         }
 
