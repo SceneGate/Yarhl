@@ -21,6 +21,7 @@ namespace Yarhl.FileSystem
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Node with navigation features inside a FileSystem.
@@ -121,9 +122,12 @@ namespace Yarhl.FileSystem
             if (node == null)
                 throw new ArgumentNullException(nameof(node));
 
-            // If the path of the node is fully inside our path, it's a parent.
-            if (Path.StartsWith(node.Path, StringComparison.Ordinal))
+            // If "this" has a parent node and the path of the node is fully inside our path, it's a parent.
+            if (this.IsDescendantOf(node))
                 throw new ArgumentException("Cannot add one parent as child", nameof(node));
+
+            // Update the children of the parent
+            node.Parent?.Remove(node);
 
             // Update the parent of the child
             node.Parent = (T)this;
@@ -150,8 +154,13 @@ namespace Yarhl.FileSystem
             if (nodes == null)
                 throw new ArgumentNullException(nameof(nodes));
 
-            foreach (T node in nodes)
+            // Add method modifies the nodes collection, so we need a IList and we can't use a 'foreach' loop.
+            List<T> nodesList = nodes.ToList();
+            for (int i = 0; i < nodesList.Count; i++)
+            {
+                T node = nodesList[i];
                 Add(node);
+            }
         }
 
         /// <summary>
@@ -299,6 +308,20 @@ namespace Yarhl.FileSystem
                 RemoveChildren();
 
             Disposed = true;
+        }
+
+        private bool IsDescendantOf(T node)
+        {
+            T current = this.Parent;
+            while (current != null)
+            {
+                if (current == node)
+                    return true;
+
+                current = current.Parent;
+            }
+
+            return false;
         }
 
         private sealed class DefaultNavigableNodeComparer : IComparer<T>

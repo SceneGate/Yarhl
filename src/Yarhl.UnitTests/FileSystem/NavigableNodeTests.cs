@@ -93,13 +93,29 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void AddChildUpdatesChildrenAndParent()
         {
-            using var parentNode = new DummyNavigable("MyParent");
-            var node = new DummyNavigable("MyChild");
-            parentNode.Add(node);
+            using var parent1 = new DummyNavigable("parent1");
+            using var parent2 = new DummyNavigable("parent2");
+            using var child1 = new DummyNavigable("child1");
+            using var child2 = new DummyNavigable("child2");
 
-            Assert.AreSame(parentNode, node.Parent);
-            Assert.AreEqual(1, parentNode.Children.Count);
-            Assert.AreSame(node, parentNode.Children[0]);
+            parent1.Add(child1);
+            parent2.Add(child2);
+
+            Assert.AreSame(parent1, child1.Parent);
+            Assert.AreSame(parent2, child2.Parent);
+            Assert.AreEqual(1, parent1.Children.Count);
+            Assert.AreEqual(1, parent2.Children.Count);
+            Assert.AreSame(child1, parent1.Children[0]);
+            Assert.AreSame(child2, parent2.Children[0]);
+
+            parent1.Add(child2);
+
+            Assert.AreSame(parent1, child1.Parent);
+            Assert.AreSame(parent1, child2.Parent);
+            Assert.AreEqual(2, parent1.Children.Count);
+            Assert.AreEqual(0, parent2.Children.Count);
+            Assert.AreSame(child1, parent1.Children[0]);
+            Assert.AreSame(child2, parent1.Children[1]);
         }
 
         [Test]
@@ -114,6 +130,35 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(() => child.Add(parent), Throws.ArgumentException);
             Assert.That(() => child.Add(grandparent), Throws.ArgumentException);
             Assert.That(() => parent.Add(grandparent), Throws.ArgumentException);
+        }
+
+        [Test]
+        public void AddNodeWithSameNameRootIsNotParent()
+        {
+            using var node1 = new DummyNavigable("Node");
+            using var node2 = new DummyNavigable("Node");
+            node1.Add(node2);
+
+            Assert.AreSame(node1, node2.Parent);
+            Assert.AreEqual(1, node1.Children.Count);
+            Assert.AreSame(node2, node1.Children[0]);
+        }
+
+        [Test]
+        public void AddNonRelatedNodesWithSimilarNames()
+        {
+            using var root1 = new DummyNavigable("data");
+            using var root2 = new DummyNavigable("data");
+            using var child1 = new DummyNavigable("node_parent");
+            using var child2 = new DummyNavigable("node");
+
+            root1.Add(child1);
+            root2.Add(child2);
+            child1.Add(child2);
+
+            Assert.AreSame(child1, child2.Parent);
+            Assert.AreEqual(1, child1.Children.Count);
+            Assert.AreSame(child2, child1.Children[0]);
         }
 
         [Test]
