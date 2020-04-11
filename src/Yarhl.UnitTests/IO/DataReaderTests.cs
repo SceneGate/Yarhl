@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -576,6 +576,160 @@ namespace Yarhl.UnitTests.IO
 
             stream.Position = 0;
             Assert.Throws<EndOfStreamException>(() => reader.ReadString());
+        }
+
+        [Test]
+        public void ReadToToken()
+        {
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x35);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("95");
+
+            Assert.AreEqual("1", text);
+            Assert.AreEqual(3, stream.Position);
+        }
+
+        [Test]
+        public void ReadToPartialToken()
+        {
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x35);
+            stream.Position = 0;
+
+            Assert.That(
+                () => reader.ReadStringToToken("5."),
+                Throws.InstanceOf<EndOfStreamException>());
+            Assert.AreEqual(3, stream.Position);
+        }
+
+        [Test]
+        public void ReadToTokenWhenEOFThrowsException()
+        {
+            Assert.That(
+                () => reader.ReadStringToToken("3"),
+                Throws.InstanceOf<EndOfStreamException>());
+        }
+
+        [Test]
+        public void ReadToTokenNullOrEmptyToken()
+        {
+            Assert.That(() => reader.ReadStringToToken(null), Throws.ArgumentNullException);
+            Assert.That(() => reader.ReadStringToToken(string.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ReadToTokenWithGarbageTrail()
+        {
+            byte[] buffer = { 0x30, 0x31, 0x00, 0x6D, 0x61, 0x74, 0x31, 0xD4 };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("\0");
+            Assert.That(text, Is.EqualTo("01"));
+            Assert.That(stream.Position, Is.EqualTo(0x03));
+        }
+
+        [Test]
+        public void ReadToTokenWithHalfEncodedTail()
+        {
+            byte[] buffer = {
+                0x30, 0x00, 0x31, 0x00, 0x61, 0x00, 0xe6, 0xbc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("\0", Encoding.Unicode);
+
+            Assert.That(text, Is.EqualTo("01a볦"));
+            Assert.That(stream.Position, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void ReadToTokenWithMultipleCodeUnitChars()
+        {
+            byte[] buffer = {
+                0x01, 0xd8, 0x37, 0xdc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("\0", Encoding.Unicode);
+
+            Assert.That(text, Is.EqualTo("\uD801\uDC37"));
+            Assert.That(stream.Position, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ReadToTokenMultipleBuffers()
+        {
+            for (int i = 0; i < 150; i++)
+                stream.WriteByte(0x30);
+
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x38);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("9");
+
+            Assert.That(text, Is.EqualTo(new string('0', 150)));
+            Assert.That(stream.Position, Is.EqualTo(151));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedBetweenBuffers()
+        {
+            // first buffer
+            for (int i = 0; i < 127; i++)
+                stream.WriteByte(0x30);
+            stream.WriteByte(0xe6);
+
+            // second buffer
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0x08);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("\x08");
+
+            Assert.That(text, Is.EqualTo(new string('0', 127) + '漢'));
+            Assert.That(stream.Position, Is.EqualTo(131));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedTokenBetweenBuffers()
+        {
+            // first buffer
+            for (int i = 0; i < 127; i++)
+                stream.WriteByte(0x30);
+            stream.WriteByte(0xe6);
+
+            // second buffer
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("漢");
+
+            Assert.That(text, Is.EqualTo(new string('0', 127)));
+            Assert.That(stream.Position, Is.EqualTo(130));
+        }
+
+        [Test]
+        public void ReadToTokenThrowsExceptionForInvalidSymbols()
+        {
+            byte[] buffer = { 0xE3, 0x81, 0x42, 0x42, 0x42, 0x00 };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            Assert.Throws<DecoderFallbackException>(() => reader.ReadStringToToken("\0"));
         }
 
         [Test]
