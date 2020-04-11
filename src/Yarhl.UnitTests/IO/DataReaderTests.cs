@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 SceneGate
+// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -469,13 +469,81 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadCharArrayThrowsDecoderExWhenExpectedLengthIsBiggerThanStream()
+        public void ReadCharArrayUtf8ThrowsExWhenExpectedLengthIsBiggerThanStream()
         {
             byte[] buffer = { 0xE3, 0x81, 0x82, 0xE3, 0x81 };
             stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            // In the case of UTF-8 is a DecoderFallback
+            Assert.Throws<DecoderFallbackException>(() => reader.ReadChars(2));
+        }
+
+        [Test]
+        public void ReadCharArrayUtf16ThrowsExWhenExpectedLengthIsBiggerThanStream()
+        {
+            byte[] buffer = { 0x01, 0xD8, 0x37 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            // In the case of UTF-16 it's an out of range
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => reader.ReadChars(2, Encoding.Unicode));
+
+            // or it may return the special unknown char U+FFFD
+            buffer = new byte[] { 0x01, 0xD8, 0x37, 0xDC };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            char[] text = null;
+            Assert.That(
+                () => text = reader.ReadChars(1, Encoding.Unicode),
+                Throws.Nothing);
+            Assert.That(text, Is.EquivalentTo(new[] { '\uFFFD' }));
+        }
+
+        [Test]
+        public void ReadCharArrayWithGarbageTrail()
+        {
+            byte[] buffer = { 0x30, 0x31, 0x00, 0x6D, 0x61, 0x74, 0x31, 0xD4 };
+            stream.Write(buffer, 0, buffer.Length);
 
             stream.Position = 0;
-            Assert.Throws<DecoderFallbackException>(() => reader.ReadChars(2));
+            char[] text = reader.ReadChars(3);
+            Assert.That(text, Is.EquivalentTo(new[] { '0', '1', '\0' }));
+            Assert.That(stream.Position, Is.EqualTo(0x03));
+        }
+
+        [Test]
+        public void ReadCharArrayWithHalfEncodedTail()
+        {
+            byte[] buffer = {
+                0x30, 0x00, 0x31, 0x00, 0x61, 0x00, 0xe6, 0xbc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            char[] text = reader.ReadChars(5, Encoding.Unicode);
+
+            Assert.That(text, Is.EquivalentTo(new[] { '0', '1', 'a', '볦', '\0' }));
+            Assert.That(stream.Position, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void ReadCharArrayWithMultipleCodeUnitChars()
+        {
+            byte[] buffer = {
+                0x01, 0xd8, 0x37, 0xdc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            char[] text = reader.ReadChars(3, Encoding.Unicode);
+
+            Assert.That(text, Is.EquivalentTo(new[] { '\uD801', '\uDC37', '\0' }));
+            Assert.That(stream.Position, Is.EqualTo(6));
         }
 
         [Test]
