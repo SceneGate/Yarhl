@@ -5,7 +5,7 @@
     <AssemblyName>Yarhl.UnitTests</AssemblyName>
     <Description>Yarhl unit tests.</Description>
 
-    <TargetFrameworks>net48;netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>net48;netcoreapp3.1</TargetFrameworks>
     <RootNamespace>Yarhl.UnitTests</RootNamespace>
     <LangVersion>8.0</LangVersion>
     <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
