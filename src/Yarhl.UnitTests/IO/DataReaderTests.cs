@@ -666,6 +666,24 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadToTokenWithCodeUnitFalsePositive()
+        {
+            // It may happen in some-encodings with variable length size
+            // that single-bytes code unit match a byte of other code units.
+            // It doesn't happen in UTF-16 since it was well-designed :D
+            byte[] buffer = {
+                0x82, 0x50, 0x41, 0x40, 0x00
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("@", Encoding.GetEncoding("shift-jis"));
+
+            Assert.That(text, Is.EqualTo("１A"));
+            Assert.That(stream.Position, Is.EqualTo(4));
+        }
+
+        [Test]
         public void ReadToTokenMultipleBuffers()
         {
             for (int i = 0; i < 150; i++)
