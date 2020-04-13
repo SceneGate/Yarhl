@@ -469,13 +469,81 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadCharArrayThrowsDecoderExWhenExpectedLengthIsBiggerThanStream()
+        public void ReadCharArrayUtf8ThrowsExWhenExpectedLengthIsBiggerThanStream()
         {
             byte[] buffer = { 0xE3, 0x81, 0x82, 0xE3, 0x81 };
             stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            // In the case of UTF-8 is a DecoderFallback
+            Assert.Throws<DecoderFallbackException>(() => reader.ReadChars(2));
+        }
+
+        [Test]
+        public void ReadCharArrayUtf16ThrowsExWhenExpectedLengthIsBiggerThanStream()
+        {
+            byte[] buffer = { 0x01, 0xD8, 0x37 };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            // In the case of UTF-16 it's an out of range
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => reader.ReadChars(2, Encoding.Unicode));
+
+            // or it may return the special unknown char U+FFFD
+            buffer = new byte[] { 0x01, 0xD8, 0x37, 0xDC };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            char[] text = null;
+            Assert.That(
+                () => text = reader.ReadChars(1, Encoding.Unicode),
+                Throws.Nothing);
+            Assert.That(text, Is.EquivalentTo(new[] { '\uFFFD' }));
+        }
+
+        [Test]
+        public void ReadCharArrayWithGarbageTrail()
+        {
+            byte[] buffer = { 0x30, 0x31, 0x00, 0x6D, 0x61, 0x74, 0x31, 0xD4 };
+            stream.Write(buffer, 0, buffer.Length);
 
             stream.Position = 0;
-            Assert.Throws<DecoderFallbackException>(() => reader.ReadChars(2));
+            char[] text = reader.ReadChars(3);
+            Assert.That(text, Is.EquivalentTo(new[] { '0', '1', '\0' }));
+            Assert.That(stream.Position, Is.EqualTo(0x03));
+        }
+
+        [Test]
+        public void ReadCharArrayWithHalfEncodedTail()
+        {
+            byte[] buffer = {
+                0x30, 0x00, 0x31, 0x00, 0x61, 0x00, 0xe6, 0xbc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            char[] text = reader.ReadChars(5, Encoding.Unicode);
+
+            Assert.That(text, Is.EquivalentTo(new[] { '0', '1', 'a', '볦', '\0' }));
+            Assert.That(stream.Position, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void ReadCharArrayWithMultipleCodeUnitChars()
+        {
+            byte[] buffer = {
+                0x01, 0xd8, 0x37, 0xdc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            char[] text = reader.ReadChars(3, Encoding.Unicode);
+
+            Assert.That(text, Is.EquivalentTo(new[] { '\uD801', '\uDC37', '\0' }));
+            Assert.That(stream.Position, Is.EqualTo(6));
         }
 
         [Test]
@@ -508,6 +576,178 @@ namespace Yarhl.UnitTests.IO
 
             stream.Position = 0;
             Assert.Throws<EndOfStreamException>(() => reader.ReadString());
+        }
+
+        [Test]
+        public void ReadToToken()
+        {
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x35);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("95");
+
+            Assert.AreEqual("1", text);
+            Assert.AreEqual(3, stream.Position);
+        }
+
+        [Test]
+        public void ReadToPartialToken()
+        {
+            stream.WriteByte(0x31);
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x35);
+            stream.Position = 0;
+
+            Assert.That(
+                () => reader.ReadStringToToken("5."),
+                Throws.InstanceOf<EndOfStreamException>());
+            Assert.AreEqual(3, stream.Position);
+        }
+
+        [Test]
+        public void ReadToTokenWhenEOFThrowsException()
+        {
+            Assert.That(
+                () => reader.ReadStringToToken("3"),
+                Throws.InstanceOf<EndOfStreamException>());
+        }
+
+        [Test]
+        public void ReadToTokenNullOrEmptyToken()
+        {
+            Assert.That(() => reader.ReadStringToToken(null), Throws.ArgumentNullException);
+            Assert.That(() => reader.ReadStringToToken(string.Empty), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void ReadToTokenWithGarbageTrail()
+        {
+            byte[] buffer = { 0x30, 0x31, 0x00, 0x6D, 0x61, 0x74, 0x31, 0xD4 };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("\0");
+            Assert.That(text, Is.EqualTo("01"));
+            Assert.That(stream.Position, Is.EqualTo(0x03));
+        }
+
+        [Test]
+        public void ReadToTokenWithHalfEncodedTail()
+        {
+            byte[] buffer = {
+                0x30, 0x00, 0x31, 0x00, 0x61, 0x00, 0xe6, 0xbc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("\0", Encoding.Unicode);
+
+            Assert.That(text, Is.EqualTo("01a볦"));
+            Assert.That(stream.Position, Is.EqualTo(10));
+        }
+
+        [Test]
+        public void ReadToTokenWithMultipleCodeUnitChars()
+        {
+            byte[] buffer = {
+                0x01, 0xd8, 0x37, 0xdc, 0x00, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("\0", Encoding.Unicode);
+
+            Assert.That(text, Is.EqualTo("\uD801\uDC37"));
+            Assert.That(stream.Position, Is.EqualTo(6));
+        }
+
+        [Test]
+        public void ReadToTokenWithCodeUnitFalsePositive()
+        {
+            // It may happen in some-encodings with variable length size
+            // that single-bytes code unit match a byte of other code units.
+            // It doesn't happen in UTF-16 since it was well-designed :D
+            byte[] buffer = {
+                0x82, 0x50, 0x41, 0x40, 0x00
+            };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            string text = reader.ReadStringToToken("@", Encoding.GetEncoding("shift-jis"));
+
+            Assert.That(text, Is.EqualTo("１A"));
+            Assert.That(stream.Position, Is.EqualTo(4));
+        }
+
+        [Test]
+        public void ReadToTokenMultipleBuffers()
+        {
+            for (int i = 0; i < 150; i++)
+                stream.WriteByte(0x30);
+
+            stream.WriteByte(0x39);
+            stream.WriteByte(0x38);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("9");
+
+            Assert.That(text, Is.EqualTo(new string('0', 150)));
+            Assert.That(stream.Position, Is.EqualTo(151));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedBetweenBuffers()
+        {
+            // first buffer
+            for (int i = 0; i < 127; i++)
+                stream.WriteByte(0x30);
+            stream.WriteByte(0xe6);
+
+            // second buffer
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0x08);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("\x08");
+
+            Assert.That(text, Is.EqualTo(new string('0', 127) + '漢'));
+            Assert.That(stream.Position, Is.EqualTo(131));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedTokenBetweenBuffers()
+        {
+            // first buffer
+            for (int i = 0; i < 127; i++)
+                stream.WriteByte(0x30);
+            stream.WriteByte(0xe6);
+
+            // second buffer
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            string text = reader.ReadStringToToken("漢");
+
+            Assert.That(text, Is.EqualTo(new string('0', 127)));
+            Assert.That(stream.Position, Is.EqualTo(130));
+        }
+
+        [Test]
+        public void ReadToTokenThrowsExceptionForInvalidSymbols()
+        {
+            byte[] buffer = { 0xE3, 0x81, 0x42, 0x42, 0x42, 0x00 };
+            stream.Write(buffer, 0, buffer.Length);
+
+            stream.Position = 0;
+            Assert.Throws<DecoderFallbackException>(() => reader.ReadStringToToken("\0"));
         }
 
         [Test]

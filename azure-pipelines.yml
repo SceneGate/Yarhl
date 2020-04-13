@@ -15,29 +15,19 @@ pool:
 trigger:
   batch: true
   branches:
-    include:
-    - master
-    - features/*
     exclude:
     - gh-pages
 
 steps:
 # Prerequisites:
 - task: UseDotNet@2
-  displayName: 'Install .NET Core 2.2 SDK for Sonar'
+  displayName: 'Install .NET Core 3.1 SDK'
   inputs:
     packageType: sdk
-    version: 2.2.x
-  condition: eq(variables['Agent.OS'], 'Windows_NT')
-
-- task: UseDotNet@2
-  displayName: 'Install .NET Core 3.0 SDK'
-  inputs:
-    packageType: sdk
-    version: 3.0.x
+    version: 3.1.x
 
 - script: |
-    SYMLINK=6_0_0
+    SYMLINK=6_8_0
     MONOPREFIX=/Library/Frameworks/Mono.framework/Versions/$SYMLINK
     echo "##vso[task.setvariable variable=DYLD_FALLBACK_LIBRARY_PATH;]$MONOPREFIX/lib:/lib:/usr/lib:$DYLD_LIBRARY_FALLBACK_PATH"
     echo "##vso[task.setvariable variable=PKG_CONFIG_PATH;]$MONOPREFIX/lib/pkgconfig:$MONOPREFIX/share/pkgconfig:$PKG_CONFIG_PATH"
@@ -56,11 +46,9 @@ steps:
   displayName: '[MacOS] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Darwin')
 
-- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows --pr-number=$Env:SYSTEM_PULLREQUEST_PULLREQUESTNUMBER --pr-base=$Env:SYSTEM_PULLREQUEST_SOURCEBRANCH --pr-branch=$Env:SYSTEM_PULLREQUEST_TARGETBRANCH --branch=$Env:BUILD_SOURCEBRANCHNAME
+- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows
   displayName: '[Windows] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
-  env:
-    SONAR_TOKEN: $(SONAR_TOKEN)
 
 # Integrate results in Azure DevOps
 - task: PublishTestResults@2
@@ -85,10 +73,9 @@ steps:
     targetPath: artifacts/
   condition: eq(variables['Agent.OS'], 'Linux')
 
-# Disable because of bugs in DocFX
-# - task: PublishPipelineArtifact@0
-#   displayName: '[Linux] Publish doc artifacts'
-#   inputs:
-#     artifactName: 'Documentation'
-#     targetPath: docs/_site/
-#   condition: eq(variables['Agent.OS'], 'Linux')
+- task: PublishPipelineArtifact@0
+  displayName: '[Linux] Publish doc artifacts'
+  inputs:
+    artifactName: 'Documentation'
+    targetPath: docs/_site/
+  condition: eq(variables['Agent.OS'], 'Linux')

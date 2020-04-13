@@ -19,18 +19,18 @@
 // SOFTWARE.
 
 // NUnit tests
-#tool nuget:?package=NUnit.ConsoleRunner&version=3.10.0
+#tool nuget:?package=NUnit.ConsoleRunner&version=3.11.1
 
 // Gendarme: decompress zip
 #addin nuget:?package=Cake.Compression&loaddependencies=true&version=0.2.4
 
 // Test coverage
-#addin nuget:?package=altcover.api&version=6.0.700
+#addin nuget:?package=altcover.api&version=6.8.761
 #tool nuget:?package=ReportGenerator&version=4.2.15
 
 // Documentation
 #addin nuget:?package=Cake.DocFx&version=0.13.1
-#tool nuget:?package=docfx.console&version=2.46.0
+#tool nuget:?package=docfx.console&version=2.51.0
 
 var target = Argument("target", "Default");
 var configuration = Argument("configuration", "Debug");
@@ -40,13 +40,8 @@ var warnAsErrorOption = warnAsError
     ? MSBuildTreatAllWarningsAs.Error
     : MSBuildTreatAllWarningsAs.Default;
 
-var pullRequestNumber = Argument("pr-number", string.Empty);
-var pullRequestBase = Argument("pr-base", string.Empty);
-var pullRequestBranch = Argument("pr-branch", string.Empty);
-var branchName = Argument("branch", string.Empty);
-
 string netVersion = "48";
-string netcoreVersion = "3.0";
+string netcoreVersion = "3.1";
 string netstandardVersion = "2.0";
 
 string solutionPath = "src/Yarhl.sln";
@@ -81,7 +76,9 @@ Task("Build")
         Configuration = configuration,
         Verbosity = DotNetCoreVerbosity.Minimal,
         MSBuildSettings = new DotNetCoreMSBuildSettings()
-            .TreatAllWarningsAs(warnAsErrorOption),
+            .TreatAllWarningsAs(warnAsErrorOption)
+            .SetConsoleLoggerSettings(new MSBuildLoggerSettings { NoSummary = true })
+            .WithProperty("GenerateFullPaths", "true"),
     });
 
     // Copy Yarhl.Media for the integration tests

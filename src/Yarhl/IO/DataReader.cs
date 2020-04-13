@@ -20,6 +20,7 @@
 namespace Yarhl.IO
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -224,8 +225,16 @@ namespace Yarhl.IO
         /// <summary>
         /// Reads a char.
         /// </summary>
+        /// <remarks>
+        /// This method read one code units. A code unit may not represent a full
+        /// grapheme. This method may return corrupted code units and may
+        /// advance a wrong number of bytes if the given number of code units to
+        /// read are not enough to represent a grapheme.
+        /// </remarks>
         /// <returns>The next char.</returns>
-        /// <param name="encoding">Optional encoding to use.</param>
+        /// <param name="encoding">
+        /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
+        /// </param>
         public char ReadChar(Encoding encoding = null)
         {
             return ReadChars(1, encoding)[0];
@@ -234,9 +243,17 @@ namespace Yarhl.IO
         /// <summary>
         /// Reads an array of chars.
         /// </summary>
-        /// <returns>The chars read.</returns>
-        /// <param name="count">The number of chars to read.</param>
-        /// <param name="encoding">Optional encoding to use.</param>
+        /// <remarks>
+        /// This method reads code units. A code unit may not represent a full
+        /// grapheme. This method may return corrupted code units and may
+        /// advance a wrong number of bytes if the given number of code units to
+        /// read are not enough to represent a grapheme.
+        /// </remarks>
+        /// <returns>The chars (code-units) read.</returns>
+        /// <param name="count">The number of chars (code-units) to read.</param>
+        /// <param name="encoding">
+        /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
+        /// </param>
         public char[] ReadChars(int count, Encoding encoding = null)
         {
             if (encoding == null)
@@ -245,24 +262,99 @@ namespace Yarhl.IO
             long startPos = Stream.Position;
             long streamLength = Stream.Length;
 
-            // Reads the maximum number of bytes possible to get that number of chars
-            int charLength = encoding.GetMaxByteCount(count);
-            if (charLength > streamLength - startPos)
-                charLength = (int)(streamLength - startPos);
+            // By cloning the encoding, it becomes non-readonly so we can
+            // change the DecoderFallback to one that won't throw exceptions
+            // if it finds non-text bytes. Yarhl issue #134
+            Encoding encodingNoException = (Encoding)encoding.Clone();
+            encodingNoException.DecoderFallback = DecoderFallback.ReplacementFallback;
 
-            byte[] buffer = ReadBytes(charLength);
-            char[] charArray = encoding.GetChars(buffer);
+            // Read as much as bytes as we can to try to decode the given number
+            // of chars.
+            int maxBytes = encoding.GetMaxByteCount(count);
+            if (maxBytes > streamLength - startPos) {
+                maxBytes = (int)(streamLength - startPos);
+            }
 
-            if (charArray.Length > count)
-                Array.Resize(ref charArray, count);
-            else if (charArray.Length < count)
+            byte[] buffer = ReadBytes(maxBytes);
+            char[] charArray = encodingNoException.GetChars(buffer);
+
+            if (charArray.Length < count) {
                 throw new EndOfStreamException();
+            }
 
-            // Adjust position
-            int actualCharLength = encoding.GetByteCount(charArray);
-            Stream.Seek(startPos + actualCharLength, SeekMode.Start);
+            // Now that we have the required chars, check how many bytes actually
+            // takes to get them and decode again with the original fallbacks
+            int exactBytes = encoding.GetByteCount(charArray, 0, count);
+            charArray = encoding.GetChars(buffer, 0, exactBytes);
+            Stream.Seek(startPos + exactBytes, SeekMode.Start);
 
             return charArray;
+        }
+
+        /// <summary>
+        /// Reads a string until a string token is found.
+        /// </summary>
+        /// <returns>The read string.</returns>
+        /// <param name="token">Token to find.</param>
+        /// <param name="encoding">
+        /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
+        /// </param>
+        public string ReadStringToToken(string token, Encoding encoding = null)
+        {
+            if (string.IsNullOrEmpty(token))
+                throw new ArgumentNullException(nameof(token));
+
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            // By cloning the encoding, it becomes non-readonly so we can
+            // change the DecoderFallback to one that won't throw exceptions
+            // if it finds non-text bytes. Yarhl issue #134
+            Encoding encodingNoException = (Encoding)encoding.Clone();
+            encodingNoException.DecoderFallback = DecoderFallback.ReplacementFallback;
+
+            long startPos = Stream.Position;
+            long streamLength = Stream.Length;
+
+            // Gather bytes from buffer to buffer into a list and try to
+            // convert to find the token. This approach is faster since we
+            // read blocks and it avoids issues with half-encoded chars.
+            const int BufferSize = 128;
+            byte[] buffer = new byte[BufferSize];
+
+            List<byte> textBuffer = new List<byte>();
+            string text = string.Empty;
+            int matchIndex = -1;
+
+            while (matchIndex == -1) {
+                if (Stream.EndOfStream) {
+                    throw new EndOfStreamException();
+                }
+
+                // Read buffer size if possible, otherwise remaining bytes
+                long currentPosition = Stream.Position;
+                int size = currentPosition + BufferSize <= streamLength ?
+                    BufferSize :
+                    (int)(streamLength - currentPosition);
+
+                int read = Stream.Read(buffer, 0, size);
+                textBuffer.AddRange(buffer.Take(read));
+
+                text = encodingNoException.GetString(textBuffer.ToArray());
+                matchIndex = text.IndexOf(token, StringComparison.Ordinal);
+            }
+
+            // Get the final string and the number exact of bytes to seek
+            int endPos = matchIndex + token.Length;
+            int exactBytes = encoding.GetByteCount(text.ToCharArray(0, endPos));
+            Stream.Seek(startPos + exactBytes, SeekMode.Start);
+
+            // Now we know the number of bytes, decode again with the original
+            // encoding so it can apply its original decoder fallback.
+            text = encoding.GetString(textBuffer.ToArray(), 0, exactBytes);
+            text = text.Substring(0, text.Length - token.Length);
+
+            return text;
         }
 
         /// <summary>
@@ -272,21 +364,7 @@ namespace Yarhl.IO
         /// <param name="encoding">Optional encoding to use.</param>
         public string ReadString(Encoding encoding = null)
         {
-            StringBuilder str = new StringBuilder();
-            if (encoding == null)
-                encoding = DefaultEncoding;
-
-            char ch;
-            do {
-                if (Stream.EndOfStream)
-                    throw new EndOfStreamException();
-
-                ch = ReadChar(encoding);
-                if (ch != '\0')
-                    str.Append(ch);
-            } while (ch != '\0');
-
-            return str.ToString();
+            return ReadStringToToken("\0", encoding);
         }
 
         /// <summary>

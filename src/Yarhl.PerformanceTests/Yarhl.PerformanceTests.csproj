@@ -6,7 +6,7 @@
     <Description>Performance tests for Yarhl.</Description>
     <IsPackable>false</IsPackable>
 
-    <TargetFrameworks>netcoreapp3.0</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <RootNamespace>Yarhl.PerformanceTests</RootNamespace>
     <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->

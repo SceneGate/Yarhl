@@ -402,6 +402,23 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadToTokenMultipleCodeUnitChars()
+        {
+            byte[] buffer = {
+                0x01, 0xd8, 0x37, 0xdc, 0x61, 0x00,
+                0xa2, 0xe5, // half encoded, missing second utf-16 code unit
+            };
+            stream.Write(buffer, 0, buffer.Length);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream, Encoding.Unicode);
+            string text = reader.ReadToToken("a");
+
+            Assert.That(text, Is.EqualTo("\uD801\uDC37"));
+            Assert.That(stream.Position, Is.EqualTo(6));
+        }
+
+        [Test]
         public void ReadToTokenHalfEncodedBetweenBuffers()
         {
             // first buffer
@@ -421,6 +438,27 @@ namespace Yarhl.UnitTests.IO
 
             Assert.That(text, Is.EqualTo(new string('0', 127) + '漢'));
             Assert.That(stream.Position, Is.EqualTo(131));
+        }
+
+        [Test]
+        public void ReadToTokenHalfEncodedTokenBetweenBuffers()
+        {
+            // first buffer
+            for (int i = 0; i < 127; i++)
+                stream.WriteByte(0x30);
+            stream.WriteByte(0xe6);
+
+            // second buffer
+            stream.WriteByte(0xbc);
+            stream.WriteByte(0xa2);
+            stream.WriteByte(0x30);
+            stream.Position = 0;
+
+            var reader = new TextReader(stream);
+            string text = reader.ReadToToken("漢");
+
+            Assert.That(text, Is.EqualTo(new string('0', 127)));
+            Assert.That(stream.Position, Is.EqualTo(130));
         }
 
         [Test]

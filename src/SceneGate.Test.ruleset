@@ -11,6 +11,9 @@
 
     <!-- No need of null checking for quick test method implementations. -->
     <Rule Id="CA1062" Action="None" />
+
+    <!-- Disposing dummy objects make the test code more complex with no benefit. -->
+    <Rule Id="CA2000" Action="None" />
   </Rules>
   <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
     <!-- Testing of different class and interface implementations. -->
