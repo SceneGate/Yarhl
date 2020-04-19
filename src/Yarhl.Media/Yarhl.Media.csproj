@@ -5,7 +5,7 @@
     <AssemblyName>Yarhl.Media</AssemblyName>
     <Description>Yarhl plugin with support of text converters.</Description>
 
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
     <RootNamespace>Yarhl.Media</RootNamespace>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>..\SceneGate.Standard.ruleset</CodeAnalysisRuleSet>

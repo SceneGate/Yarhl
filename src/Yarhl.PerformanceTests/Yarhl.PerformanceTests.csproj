@@ -6,7 +6,7 @@
     <Description>Performance tests for Yarhl.</Description>
     <IsPackable>false</IsPackable>
 
-    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>Yarhl.PerformanceTests</RootNamespace>
     <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
     <!-- Mark the project as being a test project -->
@@ -14,6 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
+    <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" Version="$(BenchmarkDotNetPackageVersion)" />
