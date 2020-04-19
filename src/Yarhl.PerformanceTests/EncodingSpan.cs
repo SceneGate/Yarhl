@@ -32,23 +32,23 @@ namespace Yarhl.PerformanceTests
         [Benchmark]
         public string EncodeDotNet()
         {
-            return Run(Encoding.ASCII);
+            ASCIIEncoding encoding = new ASCIIEncoding();
+            byte[] encoded = encoding.GetBytes(Text);
+            return encoding.GetString(encoded);
         }
 
         [Benchmark]
         public string EncodeDotNetSimplify()
         {
-            return Run(new EncodingDotNet());
+            EncodingDotNet encoding = new EncodingDotNet();
+            byte[] encoded = encoding.GetBytes(Text);
+            return encoding.GetString(encoded);
         }
 
         [Benchmark]
         public string EncodeYarhl()
         {
-            return Run(new EncodingYarhl());
-        }
-
-        private string Run(Encoding encoding)
-        {
+            EncodingYarhl encoding = new EncodingYarhl();
             byte[] encoded = encoding.GetBytes(Text);
             return encoding.GetString(encoded);
         }
@@ -63,7 +63,7 @@ namespace Yarhl.PerformanceTests
             public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
             {
                 for (int i = 0; i < charCount; i++) {
-                    bytes[byteIndex++] = (byte)chars[charIndex + i];
+                    bytes[byteIndex + i] = (byte)chars[charIndex + i];
                 }
 
                 return charCount;
@@ -77,7 +77,7 @@ namespace Yarhl.PerformanceTests
             public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
             {
                 for (int i = 0; i < byteCount; i++) {
-                    chars[charIndex++] = (char)bytes[byteIndex + i];
+                    chars[charIndex + i] = (char)bytes[byteIndex + i];
                 }
 
                 return byteCount;
@@ -95,26 +95,36 @@ namespace Yarhl.PerformanceTests
             {
             }
 
-            public override string EncodingName => throw new NotImplementedException();
+            public override string EncodingName => "ascii-yarhl";
 
-            public override bool IsSingleByte => throw new NotImplementedException();
+            public override bool IsSingleByte => true;
+
+            public override int GetByteCount(ReadOnlySpan<char> chars) => chars.Length;
+
+            public override int GetCharCount(ReadOnlySpan<byte> bytes) => bytes.Length;
 
             public override int GetMaxByteCount(int charCount) => charCount;
 
             public override int GetMaxCharCount(int byteCount) => byteCount;
 
-            protected override void Decode(ReadOnlySpan<byte> buffer, Action<char> writeFcn)
+            protected override int Decode(ReadOnlySpan<byte> buffer, Span<char> text)
             {
-                foreach (var b in buffer) {
-                    writeFcn((char)b);
+                int length = buffer.Length;
+                for (int i = 0; i < length; i++) {
+                    text[i] = (char)buffer[i];
                 }
+
+                return length;
             }
 
-            protected override void Encode(ReadOnlySpan<char> text, Action<byte> writeFcn)
+            protected override int Encode(ReadOnlySpan<char> text, Span<byte> buffer)
             {
-                foreach (var ch in text) {
-                    writeFcn((byte)ch);
+                int length = text.Length;
+                for (int i = 0; i < length; i++) {
+                    buffer[i] = (byte)text[i];
                 }
+
+                return length;
             }
         }
     }

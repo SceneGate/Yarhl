@@ -20,6 +20,7 @@
 namespace Yarhl.PerformanceTests
 {
     using BenchmarkDotNet.Running;
+    using System.Text;
 
     static class Program
     {
@@ -28,13 +29,23 @@ namespace Yarhl.PerformanceTests
             if (args.Length > 0 && args[0] == "auto") {
                 RunAuto();
             } else {
-                RunManual();
+                RunManual2();
             }
         }
 
         static void RunAuto()
         {
-            BenchmarkRunner.Run<DataStreamCompare>();
+            BenchmarkRunner.Run<EncodingSpan>();
+        }
+
+        static void RunManual2()
+        {
+            const int Iterations = 1_000;
+
+            var test = new EncodingSpan();
+            for (int i = 0; i < Iterations; i++) {
+                test.EncodeYarhl();
+            }
         }
 
         static void RunManual()

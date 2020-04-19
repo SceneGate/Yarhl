@@ -20,6 +20,7 @@
 namespace Yarhl.Media.Text.Encodings
 {
     using System;
+    using System.Collections.Generic;
     using System.Text;
 
     /// <summary>
@@ -51,14 +52,6 @@ namespace Yarhl.Media.Text.Encodings
 
         public override string WebName { get; } = string.Empty;
 
-        public override int GetByteCount(ReadOnlySpan<char> chars)
-        {
-            int numBytes = 0;
-            Encode(chars, _ => numBytes++);
-
-            return numBytes;
-        }
-
         public override int GetByteCount(string s) => GetByteCount(s.AsSpan());
 
         public override int GetByteCount(char[] chars) => GetByteCount(chars.AsSpan());
@@ -67,10 +60,7 @@ namespace Yarhl.Media.Text.Encodings
 
         public int GetBytes(ReadOnlySpan<char> chars, byte[] bytes, int byteIndex)
         {
-            int count = 0;
-            Encode(chars, b => bytes[byteIndex + count++] = b);
-
-            return count;
+            return Encode(chars, bytes.AsSpan(byteIndex));
         }
 
         public override int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes) =>
@@ -86,7 +76,7 @@ namespace Yarhl.Media.Text.Encodings
         {
             int length = GetByteCount(chars);
             byte[] buffer = new byte[length];
-            GetBytes(chars, buffer, 0);
+            Encode(chars, buffer);
 
             return buffer;
         }
@@ -95,28 +85,36 @@ namespace Yarhl.Media.Text.Encodings
 
         public override byte[] GetBytes(char[] chars) => GetBytes(chars.AsSpan());
 
-        public override byte[] GetBytes(char[] chars, int index, int count) => GetBytes(chars.AsSpan(index, count));
+        public override byte[] GetBytes(char[] chars, int index, int count) =>
+            GetBytes(chars.AsSpan(index, count));
 
         // TODO: Continue porting to Span
 
+        public string GetString(byte[] bytes)
+        {
+            var buffer = bytes.AsSpan();
+            var length = GetCharCount(buffer);
+            var chars = new char[length];
+            Decode(buffer, chars);
+            return new string(chars);
+        }
+
         public override int GetCharCount(byte[] bytes, int index, int count)
         {
-            int numChars = 0;
-            Decode(bytes.AsSpan(index, count), _ => numChars++);
-
-            return numChars;
+            return GetCharCount(bytes.AsSpan(index, count));
         }
 
         public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
         {
-            int startIndex = charIndex;
-            Decode(bytes.AsSpan(byteIndex, byteCount), ch => chars[charIndex++] = ch);
-
-            return charIndex - startIndex;
+            return Decode(bytes.AsSpan(byteIndex, byteCount), chars.AsSpan(charIndex));
         }
 
-        protected abstract void Encode(ReadOnlySpan<char> text, Action<byte> writeFcn);
+        public abstract override int GetByteCount(ReadOnlySpan<char> chars);
 
-        protected abstract void Decode(ReadOnlySpan<byte> buffer, Action<char> writeFcn);
+        public abstract override int GetCharCount(ReadOnlySpan<byte> bytes);
+
+        protected abstract int Encode(ReadOnlySpan<char> text, Span<byte> buffer);
+
+        protected abstract int Decode(ReadOnlySpan<byte> buffer, Span<char> text);
     }
 }
