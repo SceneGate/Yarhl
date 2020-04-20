@@ -20,15 +20,21 @@
 namespace Yarhl.Media.Text.Encodings
 {
     using System;
+    using System.Runtime.CompilerServices;
     using System.Text;
 
     /// <summary>
     /// A propietary text encoding based on Span types.
     /// Candidate to be included in Yarhl.Media.Text
     /// </summary>
-    public abstract class PropietarySpanEncoding : Encoding
+    public abstract class PropietarySpanEncodingWithoutCount : Encoding
     {
-        public PropietarySpanEncoding(int codePage, EncoderFallback encoderFallback, DecoderFallback decoderFallback)
+        public PropietarySpanEncodingWithoutCount(int codePage)
+            : base(codePage, EncoderFallback.ExceptionFallback, DecoderFallback.ExceptionFallback)
+        {
+        }
+
+        public PropietarySpanEncodingWithoutCount(int codePage, EncoderFallback encoderFallback, DecoderFallback decoderFallback)
             : base(codePage, encoderFallback, decoderFallback)
         {
         }
@@ -51,6 +57,8 @@ namespace Yarhl.Media.Text.Encodings
 
         public override string WebName { get; } = string.Empty;
 
+        public override int WindowsCodePage { get; } = 0;
+
         public override int GetByteCount(string s) => GetByteCount(s.AsSpan());
 
         public override int GetByteCount(char[] chars) => GetByteCount(chars.AsSpan());
@@ -61,10 +69,10 @@ namespace Yarhl.Media.Text.Encodings
             GetBytes(chars, bytes.AsSpan(byteIndex));
 
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex) =>
-            GetBytes(chars.AsSpan(charIndex, charCount), bytes, byteIndex);
+            GetBytes(chars.AsSpan(charIndex, charCount), bytes.AsSpan(byteIndex));
 
         public override int GetBytes(string s, int charIndex, int charCount, byte[] bytes, int byteIndex) =>
-            GetBytes(s.AsSpan(charIndex, charCount), bytes, byteIndex);
+            GetBytes(s.AsSpan(charIndex, charCount), bytes.AsSpan(byteIndex));
 
         public byte[] GetBytes(ReadOnlySpan<char> chars)
         {
@@ -82,15 +90,30 @@ namespace Yarhl.Media.Text.Encodings
         public override byte[] GetBytes(char[] chars, int index, int count) =>
             GetBytes(chars.AsSpan(index, count));
 
-        // TODO: Continue porting to Span
-
-        public override string GetString(byte[] bytes)
+        public char[] GetChars(ReadOnlySpan<byte> bytes)
         {
-            var length = GetCharCount(bytes.AsSpan());
-            return string.Create(length, ValueTuple.Create(this, bytes), (chars, state) =>
+            var length = GetCharCount(bytes);
+            char[] buffer = new char[length];
+            GetChars(bytes, buffer.AsSpan());
+            return buffer;
+        }
+
+        public override char[] GetChars(byte[] bytes) =>
+            GetChars(bytes.AsSpan());
+
+        public override char[] GetChars(byte[] bytes, int index, int count) =>
+            GetChars(bytes.AsSpan(index, count));
+
+        public override string GetString(byte[] bytes) =>
+            GetString(bytes, 0, bytes.Length);
+
+        public override string GetString(byte[] bytes, int index, int count)
+        {
+            var length = GetCharCount(bytes.AsSpan(index, count));
+            return string.Create(length, ValueTuple.Create(this, bytes, index, count), (chars, state) =>
             {
-                (PropietarySpanEncoding encoding, byte[] bytes) = state;
-                encoding.GetChars(bytes, chars);
+                var (encoding, bytes, index, count) = state;
+                encoding.GetChars(bytes.AsSpan(index, count), chars);
             });
         }
 
@@ -103,12 +126,70 @@ namespace Yarhl.Media.Text.Encodings
         public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) =>
             GetChars(bytes.AsSpan(byteIndex, byteCount), chars.AsSpan(charIndex));
 
-        public abstract override int GetByteCount(ReadOnlySpan<char> chars);
+        public override int GetByteCount(ReadOnlySpan<char> chars)
+        {
+            var buffer = new SpanStream<byte>(Span<byte>.Empty);
+            Encode(chars, buffer);
+            return buffer.Length;
+        }
 
-        public abstract override int GetCharCount(ReadOnlySpan<byte> bytes);
+        public override int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
+        {
+            var buffer = new SpanStream<byte>(bytes);
+            Encode(chars, buffer);
 
-        public abstract override int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes);
+            return buffer.Length;
+        }
 
-        public abstract override int GetChars(ReadOnlySpan<byte> bytes, Span<char> chars);
+        public override int GetCharCount(ReadOnlySpan<byte> bytes)
+        {
+            var buffer = new SpanStream<char>(Span<char>.Empty);
+            Decode(bytes, buffer);
+            return buffer.Length;
+        }
+
+        public override int GetChars(ReadOnlySpan<byte> bytes, Span<char> chars)
+        {
+            var stream = new SpanStream<char>(chars);
+            Decode(bytes, stream);
+
+            return stream.Length;
+        }
+
+        protected abstract void Encode(ReadOnlySpan<char> chars, SpanStream<byte> buffer);
+
+        protected abstract void Decode(ReadOnlySpan<byte> bytes, SpanStream<char> buffer);
+    }
+
+    internal sealed class Counter
+    {
+        public int Count;
+    }
+
+    public readonly ref struct SpanStream<T>
+    {
+        readonly Span<T> buffer;
+        readonly Counter position;
+        readonly bool hasBuffer;
+
+        internal SpanStream(Span<T> buffer)
+        {
+            this.buffer = buffer;
+            hasBuffer = !buffer.IsEmpty;
+            position = new Counter();
+        }
+
+        public int Length { get => position.Count; }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public void Write(T data)
+        {
+            int count = position.Count;
+            if (hasBuffer) {
+                buffer[count] = data;
+            }
+
+            position.Count = count + 1;
+        }
     }
 }

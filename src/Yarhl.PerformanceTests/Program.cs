@@ -20,7 +20,6 @@
 namespace Yarhl.PerformanceTests
 {
     using BenchmarkDotNet.Running;
-    using System.Text;
 
     static class Program
     {
@@ -29,7 +28,7 @@ namespace Yarhl.PerformanceTests
             if (args.Length > 0 && args[0] == "auto") {
                 RunAuto();
             } else {
-                RunManual2();
+                RunManual();
             }
         }
 
@@ -38,29 +37,17 @@ namespace Yarhl.PerformanceTests
             BenchmarkRunner.Run<EncodingSpan>();
         }
 
-        static void RunManual2()
-        {
-            const int Iterations = 1_000;
-
-            var test = new EncodingSpan();
-            for (int i = 0; i < Iterations; i++) {
-                test.EncodeYarhl();
-            }
-        }
-
         static void RunManual()
         {
-            const int Iterations = 1_000;
+            const int Iterations = 50;
 
-            var test1 = new DataStreamCompare();
-            test1.Length = 1024 * 1024;
-            test1.SetUp();
+            var test1 = new EncodingSpan();
+            test1.TextLength = 10 * 1024 * 1024;
+            test1.Setup();
 
             for (int i = 0; i < Iterations; i++) {
-                test1.Compare();
+                test1.SjisCustomFromYarhlEncoding2();
             }
-
-            test1.CleanUp();
         }
     }
 }
