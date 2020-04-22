@@ -13,6 +13,10 @@
     <SonarQubeTestProject>true</SonarQubeTestProject>
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="index-jis0208.txt" CopyToOutputDirectory="Always" />
+    <Content Include="japanese.txt" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
   </ItemGroup>
