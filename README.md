@@ -7,7 +7,7 @@ It provides a virtual file system, file format and format conversion features
 and plugin support. It's built in C# / .NET and works in Windows, Linux and
 Mac OS X.
 
-| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) [![NuGet Alpha](https://img.shields.io/github/v/tag/SceneGate/Yarhl?color=yellow&include_prereleases&label=nuget)](https://github.com/SceneGate/Yarhl/packages) |
+| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
 | ----- | ------ |
 | **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=master)](https://dev.azure.com/SceneGate/Yarhl/_build/latest?definitionId=1&branchName=master) ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/SceneGate/Yarhl/1?compact_message) ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/SceneGate/Yarhl/1) |
 | **Quality report** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) [![Total alerts](https://img.shields.io/lgtm/alerts/g/SceneGate/Yarhl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SceneGate/Yarhl/alerts/) |
@@ -25,7 +25,18 @@ Stable releases are available from nuget.org:
 * [Yarhl.Media](https://www.nuget.org/packages/Yarhl.Media)
 
 Alpha releases can be found in this
-[GitHub package repository](https://github.com/SceneGate/Yarhl/packages).
+[Azure DevOps package repository](https://dev.azure.com/SceneGate/Yarhl/_packaging).
+To use an alpha release, create a file `nuget.config` in the same directory of
+your solution (.sln) file with the following content:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <packageSources>
+    <add key="Yarhl-Alpha" value="https://pkgs.dev.azure.com/SceneGate/Yarhl/_packaging/preview%40Local/nuget/v3/index.json" />
+  </packageSources>
+</configuration>
+```
 
 ## Build
 
