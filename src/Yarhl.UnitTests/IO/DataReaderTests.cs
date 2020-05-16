@@ -672,7 +672,7 @@ namespace Yarhl.UnitTests.IO
             // that single-bytes code unit match a byte of other code units.
             // It doesn't happen in UTF-16 since it was well-designed :D
             byte[] buffer = {
-                0x82, 0x50, 0x41, 0x40, 0x00
+                0x82, 0x50, 0x41, 0x40, 0x00,
             };
             stream.Write(buffer, 0, buffer.Length);
 
