@@ -5,6 +5,6 @@
     "_gitContribute": {
         "apiSpecFolder": "docs/apidoc",
         "repo": "https://github.com/SceneGate/Yarhl",
-        "branch": "master"
+        "branch": "develop"
     }
 }
