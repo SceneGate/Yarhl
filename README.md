@@ -10,7 +10,7 @@ X.
 <!-- prettier-ignore -->
 | NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
 | ----- | ------ |
-| **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=develop)](https://dev.azure.com/SceneGate/Yarhl/_build/latest?definitionId=1&branchName=develop) ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/SceneGate/Yarhl/1?compact_message) ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/SceneGate/Yarhl/1) |
+| **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=develop)](https://dev.azure.com/SceneGate/Yarhl/_build?definitionId=1&_a=summary&repositoryFilter=1&branchFilter=38) ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/SceneGate/Yarhl/1?compact_message) ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/SceneGate/Yarhl/1) |
 | **Quality report** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) [![Total alerts](https://img.shields.io/lgtm/alerts/g/SceneGate/Yarhl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SceneGate/Yarhl/alerts/) |
 
 ## Documentation
