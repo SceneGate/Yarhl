@@ -16,7 +16,7 @@ X.
 ## Documentation
 
 Check our on-line API overview:
-[Mastering Yarhl](https://scenegate.github.io/Yarhl/articles/Mastering-Yarhl.html)
+[Yarhl in a nutshell](https://scenegate.github.io/Yarhl/articles/Yarhl-nutshell.html)
 and the API documentation
 [here](https://scenegate.github.io/Yarhl/api/Yarhl.html).
 
@@ -43,28 +43,10 @@ your solution (.sln) file with the following content:
 
 ## Build
 
-Since the unit tests are valited against .NET Core and .NET Framework or Mono
-both runtime must be installed on the machine.
+Since the unit tests are validated against .NET Core and .NET Framework or Mono
+both runtime must be installed on the machine. Then run:
 
-### Linux & Mac OS X
-
-Requirements:
-[_Mono_](http://www.mono-project.com/docs/getting-started/install/linux/) and
-[_.NET Core_](https://dotnet.microsoft.com/download).
-
-1. Clone the repository.
-
-2. Run `./build.sh`
-
-### Windows
-
-Requirements: _.NET Framework_ and
-[_.NET Core_](https://dotnet.microsoft.com/download).
-
-1. Clone the repository. You can use the
-   [GitHub client](https://windows.github.com/) or the
-   [command-line](https://git-scm.com/downloads).
-
-2. Run `.\build.ps1`
-
-You can also validate a Linux build using Docker with: `docker build .`
+```sh
+dotnet tool restore
+dotnet cake
+```

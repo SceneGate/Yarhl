@@ -26,6 +26,9 @@ steps:
     packageType: sdk
     version: 3.1.x
 
+- script: dotnet tool restore
+  displayName: 'Restore build tool'
+
 - script: |
     SYMLINK=6_8_0
     MONOPREFIX=/Library/Frameworks/Mono.framework/Versions/$SYMLINK
@@ -38,15 +41,15 @@ steps:
   condition: eq(variables['Agent.OS'], 'Darwin')
 
 # Run Cake
-- script: ./build.sh --verbosity=diagnostic --target=CI-Linux
+- script: dotnet cake --verbosity=diagnostic --target=CI-Linux
   displayName: '[Linux] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Linux')
 
-- script: ./build.sh --verbosity=diagnostic --target=CI-MacOS
+- script: dotnet cake --verbosity=diagnostic --target=CI-MacOS
   displayName: '[MacOS] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Darwin')
 
-- powershell: .\build.ps1 --verbosity=diagnostic --target=CI-Windows
+- powershell: dotnet cake --verbosity=diagnostic --target=CI-Windows
   displayName: '[Windows] Build, test and validate'
   condition: eq(variables['Agent.OS'], 'Windows_NT')
 
