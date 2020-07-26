@@ -1,6 +1,6 @@
 - name: Home
   href: index.md
-- name: Documentation v3
+- name: Documentation
   href: fusion/
 - name: Repository
   href: https://github.com/SceneGate/Yarhl
