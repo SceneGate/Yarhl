@@ -114,7 +114,7 @@ namespace Yarhl.IO
         /// NewLine field.
         /// </summary>
         /// <returns>If true, it will treat new lines any matching of \r\n or
-        /// \n. Otherwhise false.
+        /// \n. Otherwise false.
         /// </returns>
         public bool AutoNewLine {
             get;
