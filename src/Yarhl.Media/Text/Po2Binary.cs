@@ -95,8 +95,12 @@ namespace Yarhl.Media.Text
 
         static void WriteIfNotEmpty(TextWriter writer, string format, string content)
         {
-            if (!string.IsNullOrEmpty(content))
-                writer.WriteLine(format, content);
+            if (!string.IsNullOrEmpty(content)) {
+                var lines = content.Split('\n');
+                foreach (string line in lines) {
+                    writer.WriteLine(format, line);
+                }
+            }
         }
 
         static void WriteWrappedString(TextWriter writer, string content)

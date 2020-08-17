@@ -209,14 +209,17 @@ namespace Yarhl.Media.Text
 
         static string ReadMultiLineComment(TextReader reader, string line, string comment)
         {
-            StringBuilder builder = new StringBuilder(line);
+            StringBuilder builder = new StringBuilder(line + "\n");
             while (reader.PeekToToken(" ") == comment) {
                 // We just remove the comment token and take advantage that
                 // there is an space after it.
-                builder.Append(reader.ReadLine().Substring(comment.Length));
+                builder.Append(reader.ReadLine().Substring(comment.Length) + "\n");
             }
 
-            return builder.ToString();
+            var result = builder.ToString();
+
+            // Delete the last newline and fix white space from newline.
+            return result.Remove(result.Length - 1, 1).Replace("\n ", "\n");
         }
 
         static string ReadMultiLineContent(TextReader reader, string currentLine)
