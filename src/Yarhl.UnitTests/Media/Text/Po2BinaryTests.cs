@@ -441,12 +441,12 @@ msgstr """"
             testPo.Add(new PoEntry {
                 Original = "The Quick Brown Fox Jumps Over The Lazy Dog",
                 ExtractedComments =
-                    "TRANSLATORS: A test phrase with all letters of the English alphabet." +
-                    " Replace it with a sample text in your language, such that it is" +
-                    " representative of language's writing system.",
+                    "TRANSLATORS: A test phrase with all letters of the English alphabet.\n" +
+                    "Replace it with a sample text in your language, such that it is\n" +
+                    "representative of language's writing system.",
                 TranslatorComment =
-                    "NOTE: This is a very long comment that I am writting to test if" +
-                    " this is working properly.",
+                    "NOTE: This is a very long comment that I am writting to test if\n" +
+                    "this is working properly.",
                 Reference = "kdeui/fonts/kfontchooser.cpp:382",
             });
 
