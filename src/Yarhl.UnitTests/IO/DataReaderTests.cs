@@ -934,6 +934,16 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadByTypeThrowExceptionForNullType()
+        {
+            byte[] expected = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+            Assert.Throws<ArgumentNullException>(() => reader.ReadByType((Type)null));
+        }
+
+        [Test]
         public void ReadUsingReflection()
         {
             byte[] expected = {
