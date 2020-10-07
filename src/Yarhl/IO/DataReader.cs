@@ -407,6 +407,9 @@ namespace Yarhl.IO
         /// <param name="type">Type of the field.</param>
         public dynamic ReadByType(Type type)
         {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
             if (type == typeof(long))
                 return ReadInt64();
             if (type == typeof(ulong))
@@ -432,7 +435,7 @@ namespace Yarhl.IO
             if (type == typeof(double))
                 return ReadDouble();
 
-            return this.ReadUsingReflection(type);
+            return ReadUsingReflection(type);
         }
 
         /// <summary>

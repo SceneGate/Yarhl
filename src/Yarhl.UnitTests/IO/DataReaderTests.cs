@@ -967,7 +967,7 @@ namespace Yarhl.UnitTests.IO
 
             stream.Position = 0;
 
-            NestedObject obj = this.reader.Read<NestedObject>();
+            NestedObject obj = reader.Read<NestedObject>();
 
             Assert.AreEqual(10, obj.IntegerValue);
             Assert.AreEqual(1, obj.ComplexValue.IntegerValue);
