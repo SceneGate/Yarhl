@@ -22,7 +22,9 @@ namespace Yarhl.IO
     using System;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using Yarhl.IO.Serialization;
 
     /// <summary>
     /// Binary writer for DataStreams.
@@ -472,7 +474,8 @@ namespace Yarhl.IO
                     break;
 
                 default:
-                    throw new FormatException("Unsupported type");
+                    WriteUsingReflection(type, val);
+                    break;
             }
         }
 
@@ -570,6 +573,23 @@ namespace Yarhl.IO
             for (byte i = start; i < end; i = (byte)(i + step)) {
                 byte val = (byte)((number >> i) & 0xFF);
                 Stream.WriteByte(val);
+            }
+        }
+
+        void WriteUsingReflection(Type type, dynamic obj)
+        {
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties)
+            {
+                bool ignore = Attribute.IsDefined(property, typeof(YarhlIgnoreAttribute));
+                if (ignore)
+                {
+                    continue;
+                }
+
+                dynamic value = property.GetValue(obj);
+                WriteOfType(property.PropertyType, value);
             }
         }
     }
