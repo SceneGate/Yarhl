@@ -25,6 +25,7 @@ namespace Yarhl.UnitTests.IO
     using System.Text;
     using NUnit.Framework;
     using Yarhl.IO;
+    using Yarhl.IO.Serialization;
 
     [TestFixture]
     public class DataReaderTests
@@ -927,6 +928,71 @@ namespace Yarhl.UnitTests.IO
 
             reader.SkipPadding(1);
             Assert.AreEqual(buffer.Length, stream.Position);
+        }
+
+        [Test]
+        public void ReadWithReflection()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ComplexObject obj = reader.Read<ComplexObject>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual(2L, obj.LongValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadNestedObjectWithReflection()
+        {
+            byte[] expected = {
+                0x0A, 0x00, 0x00, 0x00,
+                0x01, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+                0x14, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            NestedObject obj = this.reader.Read<NestedObject>();
+
+            Assert.AreEqual(10, obj.IntegerValue);
+            Assert.AreEqual(1, obj.ComplexValue.IntegerValue);
+            Assert.AreEqual(2L, obj.ComplexValue.LongValue);
+            Assert.AreEqual(0, obj.ComplexValue.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.ComplexValue.AnotherIntegerValue);
+            Assert.AreEqual(20, obj.AnotherIntegerValue);
+        }
+
+        private class ComplexObject
+        {
+            public int IntegerValue { get; set; }
+
+            public long LongValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class NestedObject
+        {
+            public int IntegerValue { get; set; }
+
+            public ComplexObject ComplexValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
         }
     }
 }
