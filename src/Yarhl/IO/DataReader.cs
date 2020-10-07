@@ -432,7 +432,7 @@ namespace Yarhl.IO
             if (type == typeof(double))
                 return ReadDouble();
 
-            return ReadWithReflection(type);
+            return this.ReadUsingReflection(type);
         }
 
         /// <summary>
@@ -464,7 +464,7 @@ namespace Yarhl.IO
             }
         }
 
-        private dynamic ReadWithReflection(Type type)
+        dynamic ReadUsingReflection(Type type)
         {
             object obj = Activator.CreateInstance(type);
             PropertyInfo[] properties = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
@@ -477,7 +477,7 @@ namespace Yarhl.IO
                     continue;
                 }
 
-                dynamic value = this.ReadByType(property.PropertyType);
+                dynamic value = ReadByType(property.PropertyType);
                 property.SetValue(obj, value);
             }
 
