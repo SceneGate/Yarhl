@@ -24,7 +24,9 @@ namespace Yarhl.IO
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using Yarhl.IO.Serialization;
 
     /// <summary>
     /// Binary DataReader for DataStreams.
@@ -430,7 +432,7 @@ namespace Yarhl.IO
             if (type == typeof(double))
                 return ReadDouble();
 
-            throw new FormatException("Unsupported type");
+            return ReadWithReflection(type);
         }
 
         /// <summary>
@@ -460,6 +462,26 @@ namespace Yarhl.IO
             if (remainingBytes > 0) {
                 Stream.Seek(remainingBytes, SeekMode.Current);
             }
+        }
+
+        private dynamic ReadWithReflection(Type type)
+        {
+            object obj = Activator.CreateInstance(type);
+            PropertyInfo[] properties = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties)
+            {
+                bool ignore = Attribute.IsDefined(property, typeof(YarhlIgnoreAttribute));
+                if (ignore)
+                {
+                    continue;
+                }
+
+                dynamic value = this.ReadByType(property.PropertyType);
+                property.SetValue(obj, value);
+            }
+
+            return obj;
         }
     }
 }
