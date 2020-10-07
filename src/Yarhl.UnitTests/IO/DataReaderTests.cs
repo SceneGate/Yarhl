@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -861,6 +862,8 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        [Ignore("Decide if ReadByType throws exception")]
+        [ExcludeFromCodeCoverage]
         public void ReadByTypeThrowExceptionForUnsupportedFormat()
         {
             byte[] expected = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
@@ -974,6 +977,14 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(20, obj.AnotherIntegerValue);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
         private class ComplexObject
         {
             public int IntegerValue { get; set; }
@@ -986,6 +997,14 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
         private class NestedObject
         {
             public int IntegerValue { get; set; }
