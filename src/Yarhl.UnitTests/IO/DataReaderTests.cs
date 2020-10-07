@@ -931,7 +931,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadWithReflection()
+        public void ReadUsingReflection()
         {
             byte[] expected = {
                 0x01, 0x00, 0x00, 0x00,
@@ -951,7 +951,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadNestedObjectWithReflection()
+        public void ReadNestedObjectUsingReflection()
         {
             byte[] expected = {
                 0x0A, 0x00, 0x00, 0x00,
