@@ -429,7 +429,12 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(type));
 
             val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
+
             switch (val) {
+                case IYarhSerializable obj:
+                    WriteUsingReflection(type, obj);
+                    break;
+
                 case long l:
                     Write(l);
                     break;
@@ -474,8 +479,7 @@ namespace Yarhl.IO
                     break;
 
                 default:
-                    WriteUsingReflection(type, val);
-                    break;
+                    throw new FormatException("Unsupported type");
             }
         }
 

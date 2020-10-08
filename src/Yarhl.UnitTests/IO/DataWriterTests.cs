@@ -20,7 +20,6 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using NUnit.Framework;
@@ -1026,8 +1025,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        [Ignore("Decide if WriteOfType throws exception")]
-        [ExcludeFromCodeCoverage]
         public void WriteObjectsUnsupportedType()
         {
             using DataStream stream = new DataStream();
@@ -1290,7 +1287,7 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
-        private class ComplexObject
+        private class ComplexObject : IYarhSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1302,7 +1299,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class NestedObject
+        private class NestedObject : IYarhSerializable
         {
             public int IntegerValue { get; set; }
 

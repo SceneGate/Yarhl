@@ -410,6 +410,9 @@ namespace Yarhl.IO
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
+            if (type.GetInterface(nameof(IYarhSerializable)) != null)
+                return ReadUsingReflection(type);
+
             if (type == typeof(long))
                 return ReadInt64();
             if (type == typeof(ulong))
@@ -435,7 +438,7 @@ namespace Yarhl.IO
             if (type == typeof(double))
                 return ReadDouble();
 
-            return ReadUsingReflection(type);
+            throw new FormatException("Unsupported type");
         }
 
         /// <summary>
