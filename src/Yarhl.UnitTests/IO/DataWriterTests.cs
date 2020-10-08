@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Text;
     using NUnit.Framework;
@@ -1287,6 +1288,34 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
+        [Test]
+        public void WriteCustomObject()
+        {
+            var obj = new CustomObjectWithArray
+            {
+                ShortArray = new short[2] { 3, 4 },
+                IntegerValue = 1,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<CustomObjectWithArray>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00,
+                0x03, 0x00,
+                0x04, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
         private class ComplexObject : IYarhSerializable
         {
             public int IntegerValue { get; set; }
@@ -1306,6 +1335,31 @@ namespace Yarhl.UnitTests.IO
             public ComplexObject ComplexValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
+        }
+
+        private class CustomObjectWithArray : ICustomYarhSerializable
+        {
+            public short[] ShortArray { get; set; }
+
+            public int IntegerValue { get; set; }
+
+            [ExcludeFromCodeCoverage]
+            public void Read(DataReader reader)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void Write(DataWriter writer)
+            {
+                writer.Write(IntegerValue);
+
+                writer.Write(ShortArray.Length);
+
+                for (var i = 0; i < ShortArray.Length; i++)
+                {
+                    writer.Write(ShortArray[i]);
+                }
+            }
         }
     }
 }

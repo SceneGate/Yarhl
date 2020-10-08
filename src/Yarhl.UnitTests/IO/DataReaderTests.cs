@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -984,6 +985,27 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(20, obj.AnotherIntegerValue);
         }
 
+        [Test]
+        public void ReadCustomObject()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00,
+                0x03, 0x00,
+                0x04, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            CustomObjectWithArray obj = reader.Read<CustomObjectWithArray>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual(2, obj.ShortArray.Length);
+            Assert.AreEqual(3, obj.ShortArray[0]);
+            Assert.AreEqual(4, obj.ShortArray[1]);
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
@@ -1019,6 +1041,36 @@ namespace Yarhl.UnitTests.IO
             public ComplexObject ComplexValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        private class CustomObjectWithArray : ICustomYarhSerializable
+        {
+            public short[] ShortArray { get; set; }
+
+            public int IntegerValue { get; set; }
+
+            public void Read(DataReader reader)
+            {
+                IntegerValue = reader.ReadInt32();
+
+                int arrayLength = reader.ReadInt32();
+                ShortArray = new short[arrayLength];
+
+                for (var i = 0; i < arrayLength; i++)
+                {
+                    ShortArray[i] = reader.ReadInt16();
+                }
+            }
+
+            [ExcludeFromCodeCoverage]
+            public void Write(DataWriter writer)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }
