@@ -20,7 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -989,8 +989,7 @@ namespace Yarhl.UnitTests.IO
         public void ReadCustomObject()
         {
             byte[] expected = {
-                0x01, 0x00, 0x00, 0x00,
-                0x02, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x03, 0x00,
                 0x04, 0x00,
             };
@@ -998,12 +997,11 @@ namespace Yarhl.UnitTests.IO
 
             stream.Position = 0;
 
-            CustomObjectWithArray obj = reader.Read<CustomObjectWithArray>();
+            CustomList<short> obj = reader.Read<CustomList<short>>();
 
-            Assert.AreEqual(1, obj.IntegerValue);
-            Assert.AreEqual(2, obj.ShortArray.Length);
-            Assert.AreEqual(3, obj.ShortArray[0]);
-            Assert.AreEqual(4, obj.ShortArray[1]);
+            Assert.AreEqual(2, obj.Count);
+            Assert.AreEqual(3, obj[0]);
+            Assert.AreEqual(4, obj[1]);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -1047,29 +1045,17 @@ namespace Yarhl.UnitTests.IO
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
             Justification = "The class is instantiated by reflection")]
-        private class CustomObjectWithArray : ICustomYarhSerializable
+        private class CustomList<T> : List<T>, IYarhlCustomRead
         {
-            public short[] ShortArray { get; set; }
-
-            public int IntegerValue { get; set; }
-
             public void Read(DataReader reader)
             {
-                IntegerValue = reader.ReadInt32();
+                this.Clear();
 
-                int arrayLength = reader.ReadInt32();
-                ShortArray = new short[arrayLength];
-
-                for (var i = 0; i < arrayLength; i++)
+                long listLength = reader.ReadInt64();
+                for (var i = 0; i < listLength; i++)
                 {
-                    ShortArray[i] = reader.ReadInt16();
+                    this.Add(reader.Read<T>());
                 }
-            }
-
-            [ExcludeFromCodeCoverage]
-            public void Write(DataWriter writer)
-            {
-                throw new NotImplementedException();
             }
         }
     }

@@ -20,7 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.Diagnostics.CodeAnalysis;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using NUnit.Framework;
@@ -1291,20 +1291,15 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCustomObject()
         {
-            var obj = new CustomObjectWithArray
-            {
-                ShortArray = new short[2] { 3, 4 },
-                IntegerValue = 1,
-            };
+            var obj = new CustomList<short> { 3, 4 };
 
             using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            writer.WriteOfType<CustomObjectWithArray>(obj);
+            writer.WriteOfType<CustomList<short>>(obj);
 
             byte[] expected = {
-                0x01, 0x00, 0x00, 0x00,
-                0x02, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                 0x03, 0x00,
                 0x04, 0x00,
             };
@@ -1337,27 +1332,15 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class CustomObjectWithArray : ICustomYarhSerializable
+        private class CustomList<T> : List<T>, IYarhlCustomWrite
         {
-            public short[] ShortArray { get; set; }
-
-            public int IntegerValue { get; set; }
-
-            [ExcludeFromCodeCoverage]
-            public void Read(DataReader reader)
-            {
-                throw new NotImplementedException();
-            }
-
             public void Write(DataWriter writer)
             {
-                writer.Write(IntegerValue);
+                writer.Write((long)Count);
 
-                writer.Write(ShortArray.Length);
-
-                for (var i = 0; i < ShortArray.Length; i++)
+                for (var i = 0; i < Count; i++)
                 {
-                    writer.Write(ShortArray[i]);
+                    writer.WriteOfType<T>(this[i]);
                 }
             }
         }
