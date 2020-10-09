@@ -395,6 +395,14 @@ namespace Yarhl.IO
                     Write(str);
                     break;
 
+                case float f:
+                    Write(f);
+                    break;
+
+                case double d:
+                    Write(d);
+                    break;
+
                 default:
                     throw new FormatException("Unsupported type");
             }
