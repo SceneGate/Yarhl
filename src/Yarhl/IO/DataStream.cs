@@ -544,7 +544,7 @@ namespace Yarhl.IO
         /// Writes a defined length stream into another DataStream starting in a defined position.
         /// </summary>
         /// <param name="start">Defined starting position.</param>    
-        /// /// <param name="length">Defined length to be written.</param>
+        /// <param name="length">Defined length to be written.</param>
         /// <param name="stream">Output DataStream.</param>
         public void WriteSegmentTo(long start, long length, DataStream stream)
         {
@@ -559,7 +559,6 @@ namespace Yarhl.IO
             long currPos = Position;
             Seek(start, SeekMode.Start);
 
-            const int BufferSize = 70 * 1024;
             byte[] buffer = new byte[length];
 
             while (!EndOfStream)
@@ -569,6 +568,61 @@ namespace Yarhl.IO
             }
 
             Seek(currPos, SeekMode.Start);
+        }
+
+        /// <summary>
+        /// Writes the stream into a file starting in a defined position.
+        /// </summary>
+        /// /// <param name="start">Defined starting position.</param>
+        /// <param name="fileOut">Output file path.</param>
+        public void WriteSegmentTo(long start, string fileOut)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (string.IsNullOrEmpty(fileOut))
+                throw new ArgumentNullException(nameof(fileOut));
+
+            // Parent dir can be empty if we just specified the file name.
+            // In that case, the folder (cwd) already exists.
+            string parentDir = Path.GetDirectoryName(fileOut);
+            if (!string.IsNullOrEmpty(parentDir))
+            {
+                Directory.CreateDirectory(parentDir);
+            }
+
+            using (var stream = DataStreamFactory.FromFile(fileOut, FileOpenMode.Write))
+            {
+                WriteSegmentTo(start, stream);
+            }
+        }
+
+        /// <summary>
+        /// Writes a defined length stream into a file starting in a defined position.
+        /// </summary>
+        /// <param name="start">Defined starting position.</param>
+        /// <param name="length">Defined length to be written.</param>
+        /// <param name="fileOut">Output file path.</param>
+        public void WriteSegmentTo(long start, long length, string fileOut)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (string.IsNullOrEmpty(fileOut))
+                throw new ArgumentNullException(nameof(fileOut));
+
+            // Parent dir can be empty if we just specified the file name.
+            // In that case, the folder (cwd) already exists.
+            string parentDir = Path.GetDirectoryName(fileOut);
+            if (!string.IsNullOrEmpty(parentDir))
+            {
+                Directory.CreateDirectory(parentDir);
+            }
+
+            using (var stream = DataStreamFactory.FromFile(fileOut, FileOpenMode.Write))
+            {
+                WriteSegmentTo(start, length, stream);
+            }
         }
 
         /// <summary>
