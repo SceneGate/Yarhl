@@ -497,8 +497,7 @@ namespace Yarhl.IO
             const int BufferSize = 70 * 1024;
             byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
 
-            while (!EndOfStream)
-            {
+            while (!EndOfStream) {
                 int read = BlockRead(this, buffer);
                 stream.Write(buffer, 0, read);
             }
@@ -512,7 +511,7 @@ namespace Yarhl.IO
         /// <param name="start">Defined starting position.</param>
         /// <param name="length">Defined length to be written.</param>
         /// <param name="stream">Output DataStream.</param>
-        public void WriteSegmentTo(long start, int length, DataStream stream)
+        public void WriteSegmentTo(long start, long length, DataStream stream)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -525,10 +524,13 @@ namespace Yarhl.IO
             long currPos = Position;
             Seek(start, SeekMode.Start);
 
-            byte[] buffer = new byte[length];
+            const int BufferSize = 70 * 1024;
+            byte[] buffer = new byte[length > BufferSize ? BufferSize : length];
 
-            int read = BlockRead(this, buffer);
-            stream.Write(buffer, 0, read);
+            while (!EndOfStream) {
+                int read = BlockRead(this, buffer);
+                stream.Write(buffer, 0, read);
+            }
 
             Seek(currPos, SeekMode.Start);
         }
@@ -549,13 +551,11 @@ namespace Yarhl.IO
             // Parent dir can be empty if we just specified the file name.
             // In that case, the folder (cwd) already exists.
             string parentDir = Path.GetDirectoryName(fileOut);
-            if (!string.IsNullOrEmpty(parentDir))
-            {
+            if (!string.IsNullOrEmpty(parentDir)) {
                 Directory.CreateDirectory(parentDir);
             }
 
-            using (var stream = DataStreamFactory.FromFile(fileOut, FileOpenMode.Write))
-            {
+            using (var stream = DataStreamFactory.FromFile(fileOut, FileOpenMode.Write)) {
                 WriteSegmentTo(start, stream);
             }
         }
@@ -566,7 +566,7 @@ namespace Yarhl.IO
         /// <param name="start">Defined starting position.</param>
         /// <param name="length">Defined length to be written.</param>
         /// <param name="fileOut">Output file path.</param>
-        public void WriteSegmentTo(long start, int length, string fileOut)
+        public void WriteSegmentTo(long start, long length, string fileOut)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -577,8 +577,7 @@ namespace Yarhl.IO
             // Parent dir can be empty if we just specified the file name.
             // In that case, the folder (cwd) already exists.
             string parentDir = Path.GetDirectoryName(fileOut);
-            if (!string.IsNullOrEmpty(parentDir))
-            {
+            if (!string.IsNullOrEmpty(parentDir)) {
                 Directory.CreateDirectory(parentDir);
             }
 

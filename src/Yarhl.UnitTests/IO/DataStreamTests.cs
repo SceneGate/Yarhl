@@ -1406,6 +1406,24 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSegmentToVariableLengthChangingOffset()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(1, 2, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(0xFE, stream2.ReadByte());
+            Assert.AreEqual(0x00, stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == 2);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
         public void WriteSegmentToNullFile()
         {
             DataStream stream1 = new DataStream();
@@ -1428,7 +1446,7 @@ namespace Yarhl.UnitTests.IO
             stream1.WriteByte(0x00);
             stream1.WriteByte(0xFF);
             stream1.Dispose();
-            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, "/ex"));
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(1, 2, "/ex"));
         }
 
         [Test]
@@ -1442,7 +1460,11 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream();
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
-            stream.WriteSegmentTo(0, 2, tempFile);
+            stream.WriteByte(0x01);
+            stream.WriteByte(0x02);
+            stream.WriteByte(0x03);
+            stream.WriteByte(0x04);
+            stream.WriteSegmentTo(1, 2, tempFile);
 
             DataStream fileStream = DataStreamFactory.FromFile(tempFile, FileOpenMode.Read);
             Assert.That(() => stream.Compare(fileStream), Is.True);
@@ -1461,7 +1483,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.WriteByte(0xFF);
             Assert.Throws<ArgumentNullException>(
-                () => stream.WriteSegmentTo(0, 2, (DataStream)null));
+                () => stream.WriteSegmentTo(1, 2, (DataStream)null));
             stream.Dispose();
         }
 
