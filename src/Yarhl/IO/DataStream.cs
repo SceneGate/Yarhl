@@ -511,6 +511,36 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Writes the stream into another DataStream starting in a defined position.
+        /// </summary>
+        /// <param name="start">Defined starting position.</param>
+        /// <param name="stream">Output DataStream.</param>
+        public void WriteSegmentTo(long start, DataStream stream)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(DataStream));
+
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+            if (stream.Disposed)
+                throw new ObjectDisposedException(nameof(stream));
+
+            long currPos = Position;
+            Seek(start, SeekMode.Start);
+
+            const int BufferSize = 70 * 1024;
+            byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
+
+            while (!EndOfStream)
+            {
+                int read = BlockRead(this, buffer);
+                stream.Write(buffer, 0, read);
+            }
+
+            Seek(currPos, SeekMode.Start);
+        }
+
+        /// <summary>
         /// Compare the content of the stream with another one.
         /// </summary>
         /// <returns>The result of the comparaison.</returns>
