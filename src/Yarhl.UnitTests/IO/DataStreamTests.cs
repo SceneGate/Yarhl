@@ -1420,7 +1420,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void WriteSegmentToAfterDispose()
+        public void WriteSegmentToFileAfterDispose()
         {
             DataStream stream1 = new DataStream();
             stream1.WriteByte(0xCA);
@@ -1429,6 +1429,32 @@ namespace Yarhl.UnitTests.IO
             stream1.WriteByte(0xFF);
             stream1.Dispose();
             Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, "/ex"));
+        }
+
+        [Test]
+        public void WriteSegmentToNullStream()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0xFF);
+            Assert.Throws<ArgumentNullException>(
+                () => stream.WriteSegmentTo(0, 2, (DataStream)null));
+            stream.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToStreamAfterDispose()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            stream1.Dispose();
+            DataStream stream2 = new DataStream();
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, stream2));
         }
 
         [Test]
