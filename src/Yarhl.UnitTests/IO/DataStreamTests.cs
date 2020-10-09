@@ -1406,6 +1406,32 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSegmentToNullFile()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            Assert.Throws<ArgumentNullException>(
+                () => stream1.WriteSegmentTo(0, 2, (string)null));
+            Assert.Throws<ArgumentNullException>(() => stream1.WriteSegmentTo(0, 2, string.Empty));
+            stream1.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToAfterDispose()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            stream1.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, "/ex"));
+        }
+
+        [Test]
         public void CompareTwoEqualStreams()
         {
             DataStream stream1 = new DataStream();
