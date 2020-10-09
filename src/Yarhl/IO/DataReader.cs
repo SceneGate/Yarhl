@@ -425,6 +425,10 @@ namespace Yarhl.IO
                 return ReadChar();
             if (type == typeof(string))
                 return ReadString();
+            if (type == typeof(float))
+                return ReadSingle();
+            if (type == typeof(double))
+                return ReadDouble();
 
             throw new FormatException("Unsupported type");
         }

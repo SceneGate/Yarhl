@@ -749,7 +749,8 @@ namespace Yarhl.UnitTests.IO
             writer.WriteOfType(typeof(sbyte), 8);
             writer.WriteOfType(typeof(string), 9);
             writer.WriteOfType(typeof(char), 'a');
-            writer.WriteOfType(typeof(string), "8");
+            writer.WriteOfType(typeof(float), 11);
+            writer.WriteOfType(typeof(double), 12);
 
             byte[] expected = {
                 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -762,7 +763,8 @@ namespace Yarhl.UnitTests.IO
                 0x08,
                 0x39, 0x00,
                 0x61,
-                0x38, 0x00,
+                0x00, 0x00, 0x30, 0x41,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x40,
             };
             Assert.AreEqual(expected.Length, stream.Length);
 
@@ -788,7 +790,8 @@ namespace Yarhl.UnitTests.IO
             writer.WriteOfType<sbyte>(8);
             writer.WriteOfType<string>("9");
             writer.WriteOfType<char>('a');
-            writer.WriteOfType<string>("8");
+            writer.WriteOfType<float>(11);
+            writer.WriteOfType<double>(12);
 
             byte[] expected = {
                 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -801,7 +804,8 @@ namespace Yarhl.UnitTests.IO
                 0x08,
                 0x39, 0x00,
                 0x61,
-                0x38, 0x00,
+                0x00, 0x00, 0x30, 0x41,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x40,
             };
             Assert.AreEqual(expected.Length, stream.Length);
 

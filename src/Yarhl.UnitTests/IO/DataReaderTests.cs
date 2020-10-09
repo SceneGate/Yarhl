@@ -802,8 +802,10 @@ namespace Yarhl.UnitTests.IO
                 0x06, 0x00,
                 0x07,
                 0x08,
+                0x39, 0x00,
                 0x61,
-                0x38, 0x00,
+                0x00, 0x00, 0x30, 0x41,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x40,
             };
             stream.Write(expected, 0, expected.Length);
 
@@ -840,13 +842,21 @@ namespace Yarhl.UnitTests.IO
             Assert.IsInstanceOf<sbyte>(sbyteValue);
             Assert.AreEqual(8, sbyteValue);
 
+            dynamic stringValue = reader.ReadByType(typeof(string));
+            Assert.IsInstanceOf<string>(stringValue);
+            Assert.AreEqual("9", stringValue);
+
             dynamic charValue = reader.ReadByType(typeof(char));
             Assert.IsInstanceOf<char>(charValue);
             Assert.AreEqual('a', charValue);
 
-            dynamic stringValue = reader.ReadByType(typeof(string));
-            Assert.IsInstanceOf<string>(stringValue);
-            Assert.AreEqual("8", stringValue);
+            dynamic floatValue = reader.ReadByType(typeof(float));
+            Assert.IsInstanceOf<float>(floatValue);
+            Assert.AreEqual(11, floatValue);
+
+            dynamic doubleValue = reader.ReadByType(typeof(double));
+            Assert.IsInstanceOf<double>(doubleValue);
+            Assert.AreEqual(12, doubleValue);
         }
 
         [Test]
