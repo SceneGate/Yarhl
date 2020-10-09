@@ -1432,6 +1432,27 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSegmentToFileCreatesParentFolder()
+        {
+            string tempFile = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetRandomFileName(),
+                Path.GetRandomFileName());
+
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteSegmentTo(0, 2, tempFile);
+
+            DataStream fileStream = DataStreamFactory.FromFile(tempFile, FileOpenMode.Read);
+            Assert.That(() => stream.Compare(fileStream), Is.True);
+
+            fileStream.Dispose();
+            File.Delete(tempFile);
+            stream.Dispose();
+        }
+
+        [Test]
         public void WriteSegmentToNullStream()
         {
             DataStream stream = new DataStream();
@@ -1455,6 +1476,20 @@ namespace Yarhl.UnitTests.IO
             stream1.Dispose();
             DataStream stream2 = new DataStream();
             Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, stream2));
+        }
+
+        [Test]
+        public void WriteSegmentToDisposedStream()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, stream2));
+            stream1.Dispose();
         }
 
         [Test]
