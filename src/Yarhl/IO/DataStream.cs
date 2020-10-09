@@ -464,22 +464,7 @@ namespace Yarhl.IO
         /// <param name="fileOut">Output file path.</param>
         public void WriteTo(string fileOut)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            if (string.IsNullOrEmpty(fileOut))
-                throw new ArgumentNullException(nameof(fileOut));
-
-            // Parent dir can be empty if we just specified the file name.
-            // In that case, the folder (cwd) already exists.
-            string parentDir = Path.GetDirectoryName(fileOut);
-            if (!string.IsNullOrEmpty(parentDir)) {
-                Directory.CreateDirectory(parentDir);
-            }
-
-            using (var stream = DataStreamFactory.FromFile(fileOut, FileOpenMode.Write)) {
-                WriteTo(stream);
-            }
+            WriteSegmentTo(0, fileOut);
         }
 
         /// <summary>
@@ -488,26 +473,7 @@ namespace Yarhl.IO
         /// <param name="stream">Output DataStream.</param>
         public void WriteTo(DataStream stream)
         {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (stream.Disposed)
-                throw new ObjectDisposedException(nameof(stream));
-
-            long currPos = Position;
-            Seek(0, SeekMode.Start);
-
-            const int BufferSize = 70 * 1024;
-            byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
-
-            while (!EndOfStream) {
-                int read = BlockRead(this, buffer);
-                stream.Write(buffer, 0, read);
-            }
-
-            Seek(currPos, SeekMode.Start);
+            WriteSegmentTo(0, stream);
         }
 
         /// <summary>
