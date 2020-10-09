@@ -1406,6 +1406,27 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSegmentToVariableLengthLongerThanSOH()
+        {
+            DataStream stream1 = new DataStream();
+            byte[] data = new byte[70 * 1024 * 2];
+            Random random = new Random();
+            random.NextBytes(data);
+            for (int i = 0; i < data.Length; i++) {
+                stream1.WriteByte(data[i]);
+            }
+
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(0, data.Length - 10, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(data[0], stream2.ReadByte());
+            Assert.AreEqual(data[1], stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == data.Length - 10);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
         public void WriteSegmentToVariableLengthChangingOffset()
         {
             DataStream stream1 = new DataStream();
@@ -1464,10 +1485,12 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x02);
             stream.WriteByte(0x03);
             stream.WriteByte(0x04);
-            stream.WriteSegmentTo(1, 2, tempFile);
+            stream.WriteSegmentTo(0, 2, tempFile);
 
             DataStream fileStream = DataStreamFactory.FromFile(tempFile, FileOpenMode.Read);
-            Assert.That(() => stream.Compare(fileStream), Is.True);
+            using (var substream = new DataStream(stream, 0, 2)) {
+                Assert.That(() => substream.Compare(fileStream), Is.True);
+            }
 
             fileStream.Dispose();
             File.Delete(tempFile);

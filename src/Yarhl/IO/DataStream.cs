@@ -524,13 +524,10 @@ namespace Yarhl.IO
             long currPos = Position;
             Seek(start, SeekMode.Start);
 
-            const int BufferSize = 70 * 1024;
-            byte[] buffer = new byte[length > BufferSize ? BufferSize : length];
+            byte[] buffer = new byte[length];
 
-            while (!EndOfStream) {
-                int read = BlockRead(this, buffer);
-                stream.Write(buffer, 0, read);
-            }
+            int read = BlockRead(this, buffer);
+            stream.Write(buffer, 0, read);
 
             Seek(currPos, SeekMode.Start);
         }
