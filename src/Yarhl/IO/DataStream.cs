@@ -509,10 +509,10 @@ namespace Yarhl.IO
         /// <summary>
         /// Writes a defined length stream into another DataStream starting in a defined position.
         /// </summary>
-        /// <param name="start">Defined starting position.</param>    
+        /// <param name="start">Defined starting position.</param>
         /// <param name="length">Defined length to be written.</param>
         /// <param name="stream">Output DataStream.</param>
-        public void WriteSegmentTo(long start, long length, DataStream stream)
+        public void WriteSegmentTo(long start, int length, DataStream stream)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
@@ -527,11 +527,8 @@ namespace Yarhl.IO
 
             byte[] buffer = new byte[length];
 
-            while (!EndOfStream)
-            {
-                int read = BlockRead(this, buffer);
-                stream.Write(buffer, 0, read);
-            }
+            int read = BlockRead(this, buffer);
+            stream.Write(buffer, 0, read);
 
             Seek(currPos, SeekMode.Start);
         }
@@ -569,7 +566,7 @@ namespace Yarhl.IO
         /// <param name="start">Defined starting position.</param>
         /// <param name="length">Defined length to be written.</param>
         /// <param name="fileOut">Output file path.</param>
-        public void WriteSegmentTo(long start, long length, string fileOut)
+        public void WriteSegmentTo(long start, int length, string fileOut)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
