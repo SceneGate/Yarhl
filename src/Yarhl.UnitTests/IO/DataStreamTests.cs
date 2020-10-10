@@ -1400,6 +1400,7 @@ namespace Yarhl.UnitTests.IO
             FileStream fs = new FileStream(tempFile, FileMode.Open);
             Assert.AreEqual(0, fs.Length);
             fs.Dispose();
+            File.Delete(tempFile);
         }
 
         [Test]
