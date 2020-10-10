@@ -1388,6 +1388,22 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteToWhenLengthZero()
+        {
+            string tempFile = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetRandomFileName(),
+                Path.GetRandomFileName());
+
+            DataStream stream1 = new DataStream();
+            stream1.WriteTo(tempFile);
+            FileStream fs = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
+            Assert.AreEqual(0, fs.Length);
+            fs.Dispose();
+            File.Delete(tempFile);
+        }
+
+        [Test]
         public void WriteSegmentToVariableLength()
         {
             DataStream stream1 = new DataStream();
