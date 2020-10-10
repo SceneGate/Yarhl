@@ -495,7 +495,7 @@ namespace Yarhl.IO
             Seek(start, SeekMode.Start);
 
             const int BufferSize = 70 * 1024;
-            byte[] buffer = new byte[Length > BufferSize ? BufferSize : Length];
+            byte[] buffer = new byte[Length - start > BufferSize ? BufferSize : Length - start];
 
             while (!EndOfStream) {
                 int read = BlockRead(this, buffer);
