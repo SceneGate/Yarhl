@@ -522,12 +522,23 @@ namespace Yarhl.IO
                 throw new ObjectDisposedException(nameof(stream));
 
             long currPos = Position;
+            long endPos = start + length;
             Seek(start, SeekMode.Start);
 
-            byte[] buffer = new byte[length];
+            const int BufferSize = 70 * 1024;
+            byte[] buffer;
 
-            int read = BlockRead(this, buffer);
-            stream.Write(buffer, 0, read);
+            if (length > BufferSize) {
+                buffer = new byte[BufferSize];
+                while (Position < endPos) {
+                    int read = BlockRead(this, buffer, endPos);
+                    stream.Write(buffer, 0, read);
+                }
+            } else {
+                buffer = new byte[length];
+                int read = BlockRead(this, buffer);
+                stream.Write(buffer, 0, read);
+            }
 
             Seek(currPos, SeekMode.Start);
         }
@@ -660,6 +671,19 @@ namespace Yarhl.IO
             int read;
             if (stream.Position + buffer.Length > stream.Length) {
                 read = (int)(stream.Length - stream.Position);
+            } else {
+                read = buffer.Length;
+            }
+
+            stream.Read(buffer, 0, read);
+            return read;
+        }
+
+        private static int BlockRead(DataStream stream, byte[] buffer, long endPosition)
+        {
+            int read;
+            if (stream.Position + buffer.Length > endPosition) {
+                read = (int)(endPosition - stream.Position);
             } else {
                 read = buffer.Length;
             }
