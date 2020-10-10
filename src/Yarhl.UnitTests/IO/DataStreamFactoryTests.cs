@@ -380,6 +380,19 @@ namespace Yarhl.UnitTests.IO
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Append),
                 Throws.Exception);
+
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Read, 0, 0),
+                Throws.Exception);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Write, 0, 0),
+                Throws.Exception);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.ReadWrite, 0, 0),
+                Throws.Exception);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Append, 0, 0),
+                Throws.Exception);
         }
 
         [Test]
