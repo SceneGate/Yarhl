@@ -138,6 +138,9 @@ namespace Yarhl.IO
         {
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
+            if ((mode == FileOpenMode.Read || mode == FileOpenMode.Append) && !File.Exists(path)) {
+                throw new FileNotFoundException(nameof(path));
+            }
 
             var baseStream = new LazyFileStream(path, mode);
             return new DataStream(baseStream);

@@ -364,6 +364,25 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CreateFromPathChecksIfFileExists()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Assert.That(File.Exists(tempFile), Is.False);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Read),
+                Throws.Exception);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Write),
+                Throws.Nothing);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.ReadWrite),
+                Throws.Nothing);
+            Assert.That(
+                () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Append),
+                Throws.Exception);
+        }
+
+        [Test]
         public void CreateFromSectionPathWritesFile()
         {
             string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
