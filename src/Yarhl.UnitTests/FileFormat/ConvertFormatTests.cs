@@ -87,11 +87,8 @@ namespace Yarhl.UnitTests.FileFormat
         public void ConvertToThrowsIfConstructorFails()
         {
             using var test = new StringFormatTest { Value = "3" };
-            var ex = Assert.Throws<Exception>(() =>
+            Assert.Throws<Exception>(() =>
                 ConvertFormat.To(typeof(ushort), test));
-            Assert.AreEqual(
-                "Exception of type 'System.Exception' was thrown.",
-                ex.Message);
 
             // Just for coverage
             var converter = new FormatTestBadConstructor("2");
