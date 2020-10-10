@@ -557,7 +557,7 @@ namespace Yarhl.UnitTests.FileSystem
             File.Create(tempFile).Dispose();
 
             Node node = NodeFactory.FromDirectory(
-                string.Concat(root, "//", child),
+                string.Concat(root, Path.DirectorySeparatorChar, Path.DirectorySeparatorChar, child),
                 "*",
                 "Issue139",
                 true);
