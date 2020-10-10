@@ -1445,6 +1445,24 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteSegmentToChangingOffset()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(2, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(0x00, stream2.ReadByte());
+            Assert.AreEqual(0xFF, stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == 2);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
         public void WriteSegmentToNullFile()
         {
             DataStream stream1 = new DataStream();
