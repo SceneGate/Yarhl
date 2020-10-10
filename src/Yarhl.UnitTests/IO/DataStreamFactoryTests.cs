@@ -379,7 +379,7 @@ namespace Yarhl.UnitTests.IO
                 Throws.Nothing);
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Append),
-                Throws.Exception);
+                Throws.Nothing);
 
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Read, 0, 0),
