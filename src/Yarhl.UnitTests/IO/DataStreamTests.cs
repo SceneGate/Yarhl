@@ -1397,7 +1397,9 @@ namespace Yarhl.UnitTests.IO
 
             DataStream stream1 = new DataStream();
             stream1.WriteTo(tempFile);
-            Assert.AreEqual(0, new FileStream(tempFile, FileMode.Open).Length);
+            FileStream fs = new FileStream(tempFile, FileMode.Open);
+            Assert.AreEqual(0, fs.Length);
+            fs.Dispose();
         }
 
         [Test]
