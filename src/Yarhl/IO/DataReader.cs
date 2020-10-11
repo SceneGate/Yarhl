@@ -27,6 +27,7 @@ namespace Yarhl.IO
     using System.Reflection;
     using System.Text;
     using Yarhl.IO.Serialization;
+    using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
     /// Binary DataReader for DataStreams.
@@ -480,18 +481,26 @@ namespace Yarhl.IO
         dynamic ReadUsingReflection(Type type)
         {
             object obj = Activator.CreateInstance(type);
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo[] properties = type.GetProperties(
+                BindingFlags.DeclaredOnly |
+                BindingFlags.Public |
+                BindingFlags.Instance);
 
-            foreach (PropertyInfo property in properties)
-            {
+            foreach (PropertyInfo property in properties) {
                 bool ignore = Attribute.IsDefined(property, typeof(YarhlIgnoreAttribute));
-                if (ignore)
-                {
+                if (ignore) {
                     continue;
                 }
 
-                dynamic value = ReadByType(property.PropertyType);
-                property.SetValue(obj, value);
+                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BooleanAttribute))) {
+                    // booleans can only be read if they have the attribute.
+                    var attr = (BooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BooleanAttribute));
+                    dynamic value = ReadByType(attr.ReadAs);
+                    property.SetValue(obj, value == (dynamic)attr.TrueValue);
+                } else {
+                    dynamic value = ReadByType(property.PropertyType);
+                    property.SetValue(obj, value);
+                }
             }
 
             return obj;

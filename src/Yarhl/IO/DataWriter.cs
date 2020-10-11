@@ -25,6 +25,7 @@ namespace Yarhl.IO
     using System.Reflection;
     using System.Text;
     using Yarhl.IO.Serialization;
+    using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
     /// Binary writer for DataStreams.
@@ -586,18 +587,27 @@ namespace Yarhl.IO
 
         void WriteUsingReflection(Type type, dynamic obj)
         {
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.DeclaredOnly | BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo[] properties = type.GetProperties(
+                BindingFlags.DeclaredOnly |
+                BindingFlags.Public |
+                BindingFlags.Instance);
 
-            foreach (PropertyInfo property in properties)
-            {
+            foreach (PropertyInfo property in properties) {
                 bool ignore = Attribute.IsDefined(property, typeof(YarhlIgnoreAttribute));
-                if (ignore)
-                {
+                if (ignore) {
                     continue;
                 }
 
                 dynamic value = property.GetValue(obj);
-                WriteOfType(property.PropertyType, value);
+
+                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BooleanAttribute))) {
+                    // booleans can only be written if they have the attribute.
+                    var attr = (BooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BooleanAttribute));
+                    dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
+                    WriteOfType(attr.WriteAs, typeValue);
+                } else {
+                    WriteOfType(property.PropertyType, value);
+                }
             }
         }
     }

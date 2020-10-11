@@ -27,6 +27,7 @@ namespace Yarhl.UnitTests.IO
     using NUnit.Framework;
     using Yarhl.IO;
     using Yarhl.IO.Serialization;
+    using Yarhl.IO.Serialization.Attributes;
 
     [TestFixture]
     public class DataReaderTests
@@ -1004,6 +1005,61 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(4, obj[1]);
         }
 
+        [Test]
+        public void ReadBooleanUsingReflection()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithDefaultBooleanAttribute obj = reader.Read<ObjectWithDefaultBooleanAttribute>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual(false, obj.BooleanValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadCustomBooleanUsingReflection()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x02,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithCustomBooleanAttribute obj = reader.Read<ObjectWithCustomBooleanAttribute>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual(true, obj.BooleanValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadBooleanWithoutAttributeThrowsException()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            Assert.Throws<FormatException>(() => reader.Read<ObjectWithoutBooleanAttribute>());
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
@@ -1057,6 +1113,68 @@ namespace Yarhl.UnitTests.IO
                     this.Add(reader.Read<T>());
                 }
             }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithDefaultBooleanAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [Boolean]
+            public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithoutBooleanAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithCustomBooleanAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [Boolean(ReadAs = typeof(byte), TrueValue = (byte)2)]
+            public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
         }
     }
 }

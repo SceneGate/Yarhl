@@ -26,6 +26,7 @@ namespace Yarhl.UnitTests.IO
     using NUnit.Framework;
     using Yarhl.IO;
     using Yarhl.IO.Serialization;
+    using Yarhl.IO.Serialization.Attributes;
 
     [TestFixture]
     public class DataWriterTests
@@ -1311,6 +1312,81 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
+        [Test]
+        public void WriteBooleanUsingReflection()
+        {
+            var obj = new ObjectWithDefaultBooleanAttribute()
+            {
+                IntegerValue = 1,
+                BooleanValue = false,
+                IgnoredIntegerValue = 3,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithDefaultBooleanAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomBooleanUsingReflection()
+        {
+            var obj = new ObjectWithCustomBooleanAttribute()
+            {
+                IntegerValue = 1,
+                BooleanValue = false,
+                IgnoredIntegerValue = 5,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomBooleanAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x03,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteBooleanWithoutAttributeThrowsException()
+        {
+            var obj = new ObjectWithoutBooleanAttribute()
+            {
+                IntegerValue = 1,
+                BooleanValue = true,
+                IgnoredIntegerValue = 3,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<FormatException>(() => writer.WriteOfType<ObjectWithoutBooleanAttribute>(obj));
+        }
+
         private class ComplexObject : IYarhSerializable
         {
             public int IntegerValue { get; set; }
@@ -1343,6 +1419,44 @@ namespace Yarhl.UnitTests.IO
                     writer.WriteOfType<T>(this[i]);
                 }
             }
+        }
+
+        private class ObjectWithDefaultBooleanAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [Boolean]
+            public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithoutBooleanAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithCustomBooleanAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [Boolean(WriteAs = typeof(byte), TrueValue = (byte)2, FalseValue = (byte)3)]
+            public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
         }
     }
 }
