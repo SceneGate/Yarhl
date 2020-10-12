@@ -1030,7 +1030,7 @@ namespace Yarhl.UnitTests.IO
         {
             byte[] expected = {
                 0x01, 0x00, 0x00, 0x00,
-                0x02,
+                0x74, 0x72, 0x75, 0x65, 0x00, // "true"
                 0x03, 0x00, 0x00, 0x00,
             };
             stream.Write(expected, 0, expected.Length);
@@ -1168,7 +1168,7 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [Boolean(ReadAs = typeof(byte), TrueValue = (byte)2)]
+            [Boolean(ReadAs = typeof(string), TrueValue = "true")]
             public bool BooleanValue { get; set; }
 
             [YarhlIgnore]
