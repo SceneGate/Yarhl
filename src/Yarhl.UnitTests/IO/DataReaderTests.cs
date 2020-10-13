@@ -20,7 +20,6 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
@@ -987,25 +986,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadCustomObject()
-        {
-            byte[] expected = {
-                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x03, 0x00,
-                0x04, 0x00,
-            };
-            stream.Write(expected, 0, expected.Length);
-
-            stream.Position = 0;
-
-            CustomList<short> obj = reader.Read<CustomList<short>>();
-
-            Assert.AreEqual(2, obj.Count);
-            Assert.AreEqual(3, obj[0]);
-            Assert.AreEqual(4, obj[1]);
-        }
-
-        [Test]
         public void ReadBooleanUsingReflection()
         {
             byte[] expected = {
@@ -1095,24 +1075,6 @@ namespace Yarhl.UnitTests.IO
             public ComplexObject ComplexValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
-        }
-
-        [System.Diagnostics.CodeAnalysis.SuppressMessage(
-            "Microsoft.Performance",
-            "CA1812:Class never instantiated",
-            Justification = "The class is instantiated by reflection")]
-        private class CustomList<T> : List<T>, IYarhlCustomRead
-        {
-            public void Read(DataReader reader)
-            {
-                this.Clear();
-
-                long listLength = reader.ReadInt64();
-                for (var i = 0; i < listLength; i++)
-                {
-                    this.Add(reader.Read<T>());
-                }
-            }
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage(

@@ -411,13 +411,6 @@ namespace Yarhl.IO
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
-            if (type.GetInterface(nameof(IYarhlCustomRead)) != null)
-            {
-                var obj = (IYarhlCustomRead)Activator.CreateInstance(type);
-                obj.Read(this);
-                return obj;
-            }
-
             if (type.GetInterface(nameof(IYarhSerializable)) != null)
                 return ReadUsingReflection(type);
 

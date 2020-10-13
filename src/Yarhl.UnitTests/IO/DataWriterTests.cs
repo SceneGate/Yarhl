@@ -20,7 +20,6 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using NUnit.Framework;
@@ -1290,29 +1289,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void WriteCustomObject()
-        {
-            var obj = new CustomList<short> { 3, 4 };
-
-            using DataStream stream = new DataStream();
-            DataWriter writer = new DataWriter(stream);
-
-            writer.WriteOfType<CustomList<short>>(obj);
-
-            byte[] expected = {
-                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x03, 0x00,
-                0x04, 0x00,
-            };
-            Assert.AreEqual(expected.Length, stream.Length);
-
-            stream.Position = 0;
-            byte[] actual = new byte[expected.Length];
-            stream.Read(actual, 0, expected.Length);
-            Assert.IsTrue(expected.SequenceEqual(actual));
-        }
-
-        [Test]
         public void WriteBooleanUsingReflection()
         {
             var obj = new ObjectWithDefaultBooleanAttribute()
@@ -1406,19 +1382,6 @@ namespace Yarhl.UnitTests.IO
             public ComplexObject ComplexValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
-        }
-
-        private class CustomList<T> : List<T>, IYarhlCustomWrite
-        {
-            public void Write(DataWriter writer)
-            {
-                writer.Write((long)Count);
-
-                for (var i = 0; i < Count; i++)
-                {
-                    writer.WriteOfType<T>(this[i]);
-                }
-            }
         }
 
         private class ObjectWithDefaultBooleanAttribute : IYarhSerializable
