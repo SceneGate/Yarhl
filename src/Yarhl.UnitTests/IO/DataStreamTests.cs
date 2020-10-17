@@ -954,7 +954,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadFormAfeterDisposeThrowException()
+        public void ReadFormAfterDisposeThrowException()
         {
             DataStream stream = new DataStream();
             stream.WriteByte(0xAF);
@@ -963,6 +963,32 @@ namespace Yarhl.UnitTests.IO
             stream.Dispose();
             Assert.IsTrue(stream.Disposed);
             Assert.Throws<ObjectDisposedException>(() => stream.ReadFormat<byte>());
+        }
+
+        [Test]
+        public void SliceStream()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xBE);
+            stream.WriteByte(0xBA);
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+
+            Assert.That(
+                () => stream.Slice(2),
+                Throws.Nothing);
+            Assert.That(
+                () => stream.Slice(2, 2),
+                Throws.Nothing);
+            Assert.That(
+                () => stream.Slice(10),
+                Throws.Exception);
+            Assert.That(
+                () => stream.Slice(10, 10),
+                Throws.Exception);
+            Assert.That(
+                () => stream.Slice(2, 10),
+                Throws.Exception);
         }
 
         [Test]
