@@ -982,13 +982,13 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(2, testSlice.Offset);
             Assert.AreEqual(stream.Length - testSlice.Offset, testSlice.Length);
 
-            testSlice = stream.Slice(2, 2);
+            testSlice = stream.Slice(2, 1);
             Assert.That(
                 () => testSlice,
                 Throws.Nothing);
             Assert.AreEqual(0, testSlice.Position);
             Assert.AreEqual(2, testSlice.Offset);
-            Assert.AreEqual(2, testSlice.Length);
+            Assert.AreEqual(1, testSlice.Length);
             Assert.That(
                 () => stream.Slice(10),
                 Throws.Exception);
