@@ -1040,6 +1040,121 @@ namespace Yarhl.UnitTests.IO
             Assert.Throws<FormatException>(() => reader.Read<ObjectWithoutBooleanAttribute>());
         }
 
+        [Test]
+        public void ReadStringWithoutAttributeUsesDefaultReaderSettings()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithoutStringAttribute obj = reader.Read<ObjectWithoutStringAttribute>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual("あア", obj.StringValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadStringWithDefaultAttributeUsesDefaultReaderSettings()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithDefaultStringAttribute obj = reader.Read<ObjectWithDefaultStringAttribute>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual("あア", obj.StringValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadCustomStringWithSizeTypeUsingReflection()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0xE3, 0x81, 0x82,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithCustomStringAttributeSizeUshort obj = reader.Read<ObjectWithCustomStringAttributeSizeUshort>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual("あ", obj.StringValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(4, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadCustomFixedStringUsingReflection()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithCustomStringAttributeFixedSize obj = reader.Read<ObjectWithCustomStringAttributeFixedSize>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual("あ", obj.StringValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadCustomStringUsingReflectionWithDifferentEncoding()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x82, 0xA0, 0x83, 0x41, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithCustomStringAttributeCustomEncoding obj = reader.Read<ObjectWithCustomStringAttributeCustomEncoding>();
+
+            Assert.AreEqual(1, obj.IntegerValue);
+            Assert.AreEqual("あア", obj.StringValue);
+            Assert.AreEqual(0, obj.IgnoredIntegerValue);
+            Assert.AreEqual(3, obj.AnotherIntegerValue);
+        }
+
+        [Test]
+        public void ReadCustomStringUsingReflectionWithUnknownEncodingThrowsException()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x82, 0xA0, 0x83, 0x41, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            Assert.Throws<NotSupportedException>(() => reader.Read<ObjectWithCustomStringAttributeUnknownEncoding>());
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
@@ -1132,6 +1247,131 @@ namespace Yarhl.UnitTests.IO
 
             [Boolean(ReadAs = typeof(string), TrueValue = "true")]
             public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithDefaultStringAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithoutStringAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithCustomStringAttributeSizeUshort : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(SizeType = typeof(ushort), Terminator = "")]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithCustomStringAttributeFixedSize : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(FixedSize = 3, Terminator = "")]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithCustomStringAttributeCustomEncoding : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(CodePage = 932)]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithCustomStringAttributeUnknownEncoding : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(CodePage = 666)]
+            public string StringValue { get; set; }
 
             [YarhlIgnore]
             public int IgnoredIntegerValue { get; set; }

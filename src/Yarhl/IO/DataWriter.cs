@@ -601,6 +601,22 @@ namespace Yarhl.IO
                     var attr = (BooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BooleanAttribute));
                     dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
                     WriteOfType(attr.WriteAs, typeValue);
+                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(StringAttribute))) {
+                    var attr = (StringAttribute)Attribute.GetCustomAttribute(property, typeof(StringAttribute));
+                    Encoding encoding = null;
+                    if (attr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    }
+
+                    if (attr.SizeType == null) {
+                        if (attr.FixedSize == -1) {
+                            Write((string)value, attr.Terminator, encoding, attr.MaxSize);
+                        } else {
+                            Write((string)value, attr.FixedSize, attr.Terminator, encoding);
+                        }
+                    } else {
+                        Write((string)value, attr.SizeType, attr.Terminator, encoding, attr.MaxSize);
+                    }
                 } else {
                     WriteOfType(property.PropertyType, value);
                 }

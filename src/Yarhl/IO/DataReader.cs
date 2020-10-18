@@ -490,6 +490,25 @@ namespace Yarhl.IO
                     var attr = (BooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BooleanAttribute));
                     dynamic value = ReadByType(attr.ReadAs);
                     property.SetValue(obj, value == (dynamic)attr.TrueValue);
+                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(StringAttribute))) {
+                    var attr = (StringAttribute)Attribute.GetCustomAttribute(property, typeof(StringAttribute));
+                    Encoding encoding = null;
+                    if (attr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    }
+
+                    dynamic value;
+                    if (attr.SizeType == null) {
+                        if (attr.FixedSize == -1) {
+                            value = this.ReadString(encoding);
+                        } else {
+                            value = this.ReadString(attr.FixedSize, encoding);
+                        }
+                    } else {
+                        value = ReadString(attr.SizeType, encoding);
+                    }
+
+                    property.SetValue(obj, value);
                 } else {
                     dynamic value = ReadByType(property.PropertyType);
                     property.SetValue(obj, value);

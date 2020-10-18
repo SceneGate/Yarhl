@@ -1360,7 +1360,165 @@ namespace Yarhl.UnitTests.IO
             using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
 
-            Assert.Throws<FormatException>(() => writer.WriteOfType<ObjectWithoutBooleanAttribute>(obj));
+            Assert.Throws<FormatException>(
+                () => writer.WriteOfType<ObjectWithoutBooleanAttribute>(obj));
+        }
+
+        [Test]
+        public void WriteStringWithoutAttributeUsesDefaultWriterSettings()
+        {
+            var obj = new ObjectWithoutStringAttribute {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 3,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithoutStringAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteStringWithDefaultAttributeUsesDefaultWriterSettings()
+        {
+            var obj = new ObjectWithDefaultStringAttribute() {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 3,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithDefaultStringAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomStringWithSizeTypeUsingReflection()
+        {
+            var obj = new ObjectWithCustomStringAttributeSizeUshort() {
+                IntegerValue = 1,
+                StringValue = "あ",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomStringAttributeSizeUshort>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0xE3, 0x81, 0x82,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomFixedStringUsingReflection()
+        {
+            var obj = new ObjectWithCustomStringAttributeFixedSize() {
+                IntegerValue = 1,
+                StringValue = "あ",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomStringAttributeFixedSize>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomStringUsingReflectionWithDifferentEncoding()
+        {
+            var obj = new ObjectWithCustomStringAttributeCustomEncoding() {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomStringAttributeCustomEncoding>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x82, 0xA0, 0x83, 0x41, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void ReadCustomStringUsingReflectionWithUnknownEncodingThrowsException()
+        {
+            var obj = new ObjectWithCustomStringAttributeUnknownEncoding() {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<NotSupportedException>(
+                () => writer.WriteOfType<ObjectWithCustomStringAttributeUnknownEncoding>(obj));
         }
 
         private class ComplexObject : IYarhSerializable
@@ -1415,6 +1573,83 @@ namespace Yarhl.UnitTests.IO
 
             [Boolean(WriteAs = typeof(string), TrueValue = "true", FalseValue = "false")]
             public bool BooleanValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithDefaultStringAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithoutStringAttribute : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithCustomStringAttributeSizeUshort : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(SizeType = typeof(ushort), Terminator = "")]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithCustomStringAttributeFixedSize : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(FixedSize = 3, Terminator = "")]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithCustomStringAttributeCustomEncoding : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(CodePage = 932)]
+            public string StringValue { get; set; }
+
+            [YarhlIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithCustomStringAttributeUnknownEncoding : IYarhSerializable
+        {
+            public int IntegerValue { get; set; }
+
+            [String(CodePage = 666)]
+            public string StringValue { get; set; }
 
             [YarhlIgnore]
             public int IgnoredIntegerValue { get; set; }
