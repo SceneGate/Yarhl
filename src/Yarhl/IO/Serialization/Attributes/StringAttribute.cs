@@ -20,7 +20,6 @@
 namespace Yarhl.IO.Serialization.Attributes
 {
     using System;
-    using System.Text;
 
     /// <summary>
     /// Define how to read and write a string value.
