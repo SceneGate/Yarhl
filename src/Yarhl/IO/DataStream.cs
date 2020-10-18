@@ -649,10 +649,7 @@ namespace Yarhl.IO
             if (start < 0 || start > Length)
                 throw new ArgumentOutOfRangeException(nameof(start));
 
-            DataStream slicedStream = new DataStream();
-            WriteSegmentTo(start, slicedStream);
-
-            return slicedStream;
+            return new DataStream(this, start, Length - start);
         }
 
         /// <summary>
@@ -668,10 +665,7 @@ namespace Yarhl.IO
             if (length < 0 || start + length > Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            DataStream slicedStream = new DataStream();
-            WriteSegmentTo(start, length, slicedStream);
-
-            return slicedStream;
+            return new DataStream(this, start, length);
         }
 
         /// <summary>
