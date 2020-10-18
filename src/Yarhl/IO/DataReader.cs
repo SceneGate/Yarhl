@@ -411,7 +411,7 @@ namespace Yarhl.IO
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
-            if (type.GetInterface(nameof(IYarhSerializable)) != null)
+            if (type.GetInterface(nameof(IYarhlSerializable)) != null)
                 return ReadUsingReflection(type);
 
             if (type == typeof(long))

@@ -1521,7 +1521,7 @@ namespace Yarhl.UnitTests.IO
                 () => writer.WriteOfType<ObjectWithCustomStringAttributeUnknownEncoding>(obj));
         }
 
-        private class ComplexObject : IYarhSerializable
+        private class ComplexObject : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1533,7 +1533,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class NestedObject : IYarhSerializable
+        private class NestedObject : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1542,7 +1542,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithDefaultBooleanAttribute : IYarhSerializable
+        private class ObjectWithDefaultBooleanAttribute : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1555,7 +1555,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithoutBooleanAttribute : IYarhSerializable
+        private class ObjectWithoutBooleanAttribute : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1567,7 +1567,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithCustomBooleanAttribute : IYarhSerializable
+        private class ObjectWithCustomBooleanAttribute : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1580,7 +1580,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithDefaultStringAttribute : IYarhSerializable
+        private class ObjectWithDefaultStringAttribute : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1593,7 +1593,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithoutStringAttribute : IYarhSerializable
+        private class ObjectWithoutStringAttribute : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1605,7 +1605,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithCustomStringAttributeSizeUshort : IYarhSerializable
+        private class ObjectWithCustomStringAttributeSizeUshort : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1618,7 +1618,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithCustomStringAttributeFixedSize : IYarhSerializable
+        private class ObjectWithCustomStringAttributeFixedSize : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1631,7 +1631,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithCustomStringAttributeCustomEncoding : IYarhSerializable
+        private class ObjectWithCustomStringAttributeCustomEncoding : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 
@@ -1644,7 +1644,7 @@ namespace Yarhl.UnitTests.IO
             public int AnotherIntegerValue { get; set; }
         }
 
-        private class ObjectWithCustomStringAttributeUnknownEncoding : IYarhSerializable
+        private class ObjectWithCustomStringAttributeUnknownEncoding : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
 

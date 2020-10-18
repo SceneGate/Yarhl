@@ -432,7 +432,7 @@ namespace Yarhl.IO
             val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
 
             switch (val) {
-                case IYarhSerializable obj:
+                case IYarhlSerializable obj:
                     WriteUsingReflection(type, obj);
                     break;
 

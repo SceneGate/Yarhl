@@ -26,7 +26,7 @@ namespace Yarhl.IO.Serialization
         "Microsoft.Design",
         "CA1040:AvoidEmptyInterfaces",
         Justification = "We use the interface as a compile time marker.")]
-    public interface IYarhSerializable
+    public interface IYarhlSerializable
     {
     }
 }
