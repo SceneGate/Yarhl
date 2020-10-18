@@ -245,22 +245,7 @@ namespace Yarhl.IO
                 Encoding encoding = null,
                 int maxSize = -1)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            if (maxSize < -1)
-                throw new ArgumentOutOfRangeException(nameof(maxSize));
-
-            if (encoding == null)
-                encoding = DefaultEncoding;
-
-            if (nullTerminator && (text.Length == 0 || text[text.Length - 1] != '\0'))
-                text += "\0";
-
-            int textSize = encoding.GetByteCount(text);
-            if (maxSize != -1 && textSize > maxSize)
-                textSize = maxSize;
-
-            Write(text, textSize, nullTerminator, encoding);
+            Write(text, nullTerminator ? "\0" : null, encoding, maxSize);
         }
 
         /// <summary>
@@ -281,24 +266,7 @@ namespace Yarhl.IO
                 bool nullTerminator = true,
                 Encoding encoding = null)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-
-            if (encoding == null)
-                encoding = DefaultEncoding;
-
-            byte[] buffer = encoding.GetBytes(text);
-            Array.Resize(ref buffer, fixedSize);
-
-            // There is no problem having already the null terminator since it that
-            // case it will overwrite it.
-            if (nullTerminator) {
-                byte[] nullChar = encoding.GetBytes("\0");
-                for (int i = 0; i < nullChar.Length; i++)
-                    buffer[fixedSize - nullChar.Length + i] = nullChar[i];
-            }
-
-            Write(buffer);
+            Write(text, fixedSize, nullTerminator ? "\0" : null, encoding);
         }
 
         /// <summary>
@@ -321,6 +289,106 @@ namespace Yarhl.IO
                 Encoding encoding = null,
                 int maxSize = -1)
         {
+            Write(text, sizeType, nullTerminator ? "\0" : null, encoding, maxSize);
+        }
+
+        /// <summary>
+        /// Write a text string using a custom terminator.
+        /// </summary>
+        /// <param name="text">Text string to write.</param>
+        /// <param name="terminator">
+        /// Token to add as terminator.
+        /// <remarks>If null, then no token will be added.</remarks>
+        /// </param>
+        /// <param name="encoding">Text encoding to use.</param>
+        /// <param name="maxSize">Maximum size of the encoded string in bytes.</param>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
+        public void Write(
+                string text,
+                string terminator,
+                Encoding encoding = null,
+                int maxSize = -1)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (maxSize < -1)
+                throw new ArgumentOutOfRangeException(nameof(maxSize));
+
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.InvariantCulture))
+                text = string.Concat(text, terminator);
+
+            int textSize = encoding.GetByteCount(text);
+            if (maxSize != -1 && textSize > maxSize)
+                textSize = maxSize;
+
+            Write(text, textSize, terminator, encoding);
+        }
+
+        /// <summary>
+        /// Write a text string with a fixed size and a custom terminator.
+        /// </summary>
+        /// <param name="text">Text string to write.</param>
+        /// <param name="fixedSize">Fixed size of the encoded string in bytes.</param>
+        /// <param name="terminator">
+        /// Token to add as terminator.
+        /// <remarks>If null, then no token will be added.</remarks>
+        /// </param>
+        /// <param name="encoding">Text encoding to use.</param>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
+        public void Write(
+                string text,
+                int fixedSize,
+                string terminator,
+                Encoding encoding = null)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            byte[] buffer = encoding.GetBytes(text);
+            Array.Resize(ref buffer, fixedSize);
+
+            // There is no problem having already the terminator since in that
+            // case it will overwrite it.
+            if (!string.IsNullOrEmpty(terminator)) {
+                byte[] nullChar = encoding.GetBytes(terminator);
+                for (int i = 0; i < nullChar.Length; i++)
+                    buffer[fixedSize - nullChar.Length + i] = nullChar[i];
+            }
+
+            Write(buffer);
+        }
+
+        /// <summary>
+        /// Write a text string and its size.
+        /// </summary>
+        /// <param name="text">Text string to write.</param>
+        /// <param name="sizeType">Type of the string size to write.</param>
+        /// <param name="terminator">
+        /// Token to add as terminator.
+        /// <remarks>If null, then no token will be added.</remarks>
+        /// </param>
+        /// <param name="encoding">Text encoding to use.</param>
+        /// <param name="maxSize">Maximum size of the encoded string in bytes.</param>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
+        public void Write(
+                string text,
+                Type sizeType,
+                string terminator,
+                Encoding encoding = null,
+                int maxSize = -1)
+        {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
             if (sizeType == null)
@@ -331,15 +399,15 @@ namespace Yarhl.IO
             if (encoding == null)
                 encoding = DefaultEncoding;
 
-            if (nullTerminator && (text.Length == 0 || text[text.Length - 1] != '\0'))
-                text += "\0";
+            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.InvariantCulture))
+                text = string.Concat(text, terminator);
 
             int textSize = encoding.GetByteCount(text);
             if (maxSize != -1 && textSize > maxSize)
                 textSize = maxSize;
 
             WriteOfType(sizeType, textSize);
-            Write(text, textSize, nullTerminator, encoding);
+            Write(text, textSize, terminator, encoding);
         }
 
         /// <summary>
