@@ -974,12 +974,21 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
 
+            DataStream testSlice = stream.Slice(2);
             Assert.That(
-                () => stream.Slice(2),
+                () => testSlice,
                 Throws.Nothing);
+            Assert.AreEqual(0, testSlice.Position);
+            Assert.AreEqual(2, testSlice.Offset);
+            Assert.AreEqual(stream.Length - testSlice.Offset, testSlice.Length);
+
+            testSlice = stream.Slice(2, 2);
             Assert.That(
-                () => stream.Slice(2, 2),
+                () => testSlice,
                 Throws.Nothing);
+            Assert.AreEqual(0, testSlice.Position);
+            Assert.AreEqual(2, testSlice.Offset);
+            Assert.AreEqual(2, testSlice.Length);
             Assert.That(
                 () => stream.Slice(10),
                 Throws.Exception);
