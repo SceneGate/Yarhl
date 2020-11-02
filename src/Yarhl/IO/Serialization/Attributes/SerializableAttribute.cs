@@ -17,16 +17,15 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.IO.Serialization
+namespace Yarhl.IO.Serialization.Attributes
 {
+    using System;
+
     /// <summary>
-    /// The class allows automatic serialization.
+    /// Set to enable automatic serialization.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage(
-        "Microsoft.Design",
-        "CA1040:AvoidEmptyInterfaces",
-        Justification = "We use the interface as a compile time marker.")]
-    public interface IYarhlSerializable
+    [AttributeUsage(AttributeTargets.Class)]
+    public sealed class SerializableAttribute : Attribute
     {
     }
 }

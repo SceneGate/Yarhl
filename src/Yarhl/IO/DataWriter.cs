@@ -24,7 +24,6 @@ namespace Yarhl.IO
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using Yarhl.IO.Serialization;
     using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
@@ -431,56 +430,58 @@ namespace Yarhl.IO
 
             val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
 
-            switch (val) {
-                case IYarhlSerializable obj:
-                    WriteUsingReflection(type, obj);
-                    break;
+            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
+            if (serializable) {
+                WriteUsingReflection(type, val);
+            } else {
+                switch (val)
+                {
+                    case long l:
+                        Write(l);
+                        break;
+                    case ulong ul:
+                        Write(ul);
+                        break;
 
-                case long l:
-                    Write(l);
-                    break;
-                case ulong ul:
-                    Write(ul);
-                    break;
+                    case int i:
+                        Write(i);
+                        break;
+                    case uint ui:
+                        Write(ui);
+                        break;
 
-                case int i:
-                    Write(i);
-                    break;
-                case uint ui:
-                    Write(ui);
-                    break;
+                    case short s:
+                        Write(s);
+                        break;
+                    case ushort us:
+                        Write(us);
+                        break;
 
-                case short s:
-                    Write(s);
-                    break;
-                case ushort us:
-                    Write(us);
-                    break;
+                    case byte b:
+                        Write(b);
+                        break;
+                    case sbyte sb:
+                        Write(sb);
+                        break;
 
-                case byte b:
-                    Write(b);
-                    break;
-                case sbyte sb:
-                    Write(sb);
-                    break;
+                    case char ch:
+                        Write(ch);
+                        break;
+                    case string str:
+                        Write(str);
+                        break;
 
-                case char ch:
-                    Write(ch);
-                    break;
-                case string str:
-                    Write(str);
-                    break;
+                    case float f:
+                        Write(f);
+                        break;
 
-                case float f:
-                    Write(f);
-                    break;
+                    case double d:
+                        Write(d);
+                        break;
 
-                case double d:
-                    Write(d);
-                    break;
-
-                default:
-                    throw new FormatException("Unsupported type");
+                    default:
+                        throw new FormatException("Unsupported type");
+                }
             }
         }
 

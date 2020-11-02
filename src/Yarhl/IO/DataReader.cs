@@ -26,7 +26,6 @@ namespace Yarhl.IO
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using Yarhl.IO.Serialization;
     using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
@@ -411,7 +410,8 @@ namespace Yarhl.IO
             if (type == null)
                 throw new ArgumentNullException(nameof(type));
 
-            if (type.GetInterface(nameof(IYarhlSerializable)) != null)
+            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
+            if (serializable)
                 return ReadUsingReflection(type);
 
             if (type == typeof(long))

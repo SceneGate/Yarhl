@@ -1182,7 +1182,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ComplexObject : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ComplexObject
         {
             public int IntegerValue { get; set; }
 
@@ -1202,7 +1203,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class NestedObject : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class NestedObject
         {
             public int IntegerValue { get; set; }
 
@@ -1219,7 +1221,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithDefaultBooleanAttribute : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithDefaultBooleanAttribute
         {
             public int IntegerValue { get; set; }
 
@@ -1240,7 +1243,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithoutBooleanAttribute : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithoutBooleanAttribute
         {
             public int IntegerValue { get; set; }
 
@@ -1260,7 +1264,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithCustomBooleanAttribute : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomBooleanAttribute
         {
             public int IntegerValue { get; set; }
 
@@ -1281,7 +1286,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithDefaultStringAttribute : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithDefaultStringAttribute
         {
             public int IntegerValue { get; set; }
 
@@ -1302,7 +1308,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithoutStringAttribute : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithoutStringAttribute
         {
             public int IntegerValue { get; set; }
 
@@ -1322,7 +1329,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithCustomStringAttributeSizeUshort : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeSizeUshort
         {
             public int IntegerValue { get; set; }
 
@@ -1343,7 +1351,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithCustomStringAttributeFixedSize : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeFixedSize
         {
             public int IntegerValue { get; set; }
 
@@ -1364,7 +1373,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithCustomStringAttributeCustomEncoding : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeCustomEncoding
         {
             public int IntegerValue { get; set; }
 
@@ -1385,7 +1395,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithCustomStringAttributeUnknownEncoding : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeUnknownEncoding
         {
             public int IntegerValue { get; set; }
 
@@ -1406,7 +1417,8 @@ namespace Yarhl.UnitTests.IO
             "Sonar.CodeSmell",
             "S3459:Unassigned auto-property",
             Justification = "The properties are assigned by reflection")]
-        private class ObjectWithForcedEndianness : IYarhlSerializable
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithForcedEndianness
         {
             [BinaryForceEndianness(EndiannessMode.LittleEndian)]
             public int LittleEndianInteger { get; set; }
