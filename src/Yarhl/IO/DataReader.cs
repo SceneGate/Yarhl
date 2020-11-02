@@ -485,6 +485,13 @@ namespace Yarhl.IO
                     continue;
                 }
 
+                EndiannessMode currentEndianness = Endianness;
+                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
+                if (forceEndianness) {
+                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
+                    Endianness = attr.Mode;
+                }
+
                 if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
                     // booleans can only be read if they have the attribute.
                     var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
@@ -513,6 +520,9 @@ namespace Yarhl.IO
                     dynamic value = ReadByType(property.PropertyType);
                     property.SetValue(obj, value);
                 }
+
+                // Restore previous endianness
+                Endianness = currentEndianness;
             }
 
             return obj;
