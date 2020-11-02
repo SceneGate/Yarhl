@@ -1521,6 +1521,33 @@ namespace Yarhl.UnitTests.IO
                 () => writer.WriteOfType<ObjectWithCustomStringAttributeUnknownEncoding>(obj));
         }
 
+        [Test]
+        public void ReadObjectWithForcedEndianness()
+        {
+            ObjectWithForcedEndianness obj = new ObjectWithForcedEndianness() {
+                LittleEndianInteger = 1,
+                BigEndianInteger = 2,
+                DefaultEndianInteger = 3,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithForcedEndianness>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x02,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
         private class ComplexObject : IYarhlSerializable
         {
             public int IntegerValue { get; set; }
@@ -1655,6 +1682,17 @@ namespace Yarhl.UnitTests.IO
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
+        }
+
+        private class ObjectWithForcedEndianness : IYarhlSerializable
+        {
+            [BinaryForceEndianness(EndiannessMode.LittleEndian)]
+            public int LittleEndianInteger { get; set; }
+
+            [BinaryForceEndianness(EndiannessMode.BigEndian)]
+            public int BigEndianInteger { get; set; }
+
+            public int DefaultEndianInteger { get; set; }
         }
     }
 }

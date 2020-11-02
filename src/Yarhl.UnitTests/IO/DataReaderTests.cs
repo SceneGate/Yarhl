@@ -1155,6 +1155,25 @@ namespace Yarhl.UnitTests.IO
             Assert.Throws<NotSupportedException>(() => reader.Read<ObjectWithCustomStringAttributeUnknownEncoding>());
         }
 
+        [Test]
+        public void ReadObjectWithForcedEndianness()
+        {
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x02,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithForcedEndianness obj = reader.Read<ObjectWithForcedEndianness>();
+
+            Assert.AreEqual(1, obj.LittleEndianInteger);
+            Assert.AreEqual(2, obj.BigEndianInteger);
+            Assert.AreEqual(3, obj.DefaultEndianInteger);
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
@@ -1377,6 +1396,25 @@ namespace Yarhl.UnitTests.IO
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        private class ObjectWithForcedEndianness : IYarhlSerializable
+        {
+            [BinaryForceEndianness(EndiannessMode.LittleEndian)]
+            public int LittleEndianInteger { get; set; }
+
+            [BinaryForceEndianness(EndiannessMode.BigEndian)]
+            public int BigEndianInteger { get; set; }
+
+            public int DefaultEndianInteger { get; set; }
         }
     }
 }
