@@ -25,7 +25,7 @@ namespace Yarhl.IO.Serialization
     /// Set to ignore the property when serializing.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class YarhlIgnoreAttribute : Attribute
+    public sealed class BinaryIgnoreAttribute : Attribute
     {
     }
 }

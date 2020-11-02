@@ -25,12 +25,12 @@ namespace Yarhl.IO.Serialization.Attributes
     /// Define how to read and write a string value.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class StringAttribute : Attribute
+    public sealed class BinaryStringAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="StringAttribute"/> class.
+        /// Initializes a new instance of the <see cref="BinaryStringAttribute"/> class.
         /// </summary>
-        public StringAttribute()
+        public BinaryStringAttribute()
         {
             CodePage = -1;
             Terminator = "\0";

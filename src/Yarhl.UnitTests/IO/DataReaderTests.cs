@@ -1169,7 +1169,7 @@ namespace Yarhl.UnitTests.IO
 
             public long LongValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1204,10 +1204,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [Boolean]
+            [BinaryBoolean]
             public bool BooleanValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1227,7 +1227,7 @@ namespace Yarhl.UnitTests.IO
 
             public bool BooleanValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1245,10 +1245,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [Boolean(ReadAs = typeof(string), TrueValue = "true")]
+            [BinaryBoolean(ReadAs = typeof(string), TrueValue = "true")]
             public bool BooleanValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1266,10 +1266,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [String]
+            [BinaryString]
             public string StringValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1289,7 +1289,7 @@ namespace Yarhl.UnitTests.IO
 
             public string StringValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1307,10 +1307,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [String(SizeType = typeof(ushort), Terminator = "")]
+            [BinaryString(SizeType = typeof(ushort), Terminator = "")]
             public string StringValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1328,10 +1328,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [String(FixedSize = 3, Terminator = "")]
+            [BinaryString(FixedSize = 3, Terminator = "")]
             public string StringValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1349,10 +1349,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [String(CodePage = 932)]
+            [BinaryString(CodePage = 932)]
             public string StringValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }
@@ -1370,10 +1370,10 @@ namespace Yarhl.UnitTests.IO
         {
             public int IntegerValue { get; set; }
 
-            [String(CodePage = 666)]
+            [BinaryString(CodePage = 666)]
             public string StringValue { get; set; }
 
-            [YarhlIgnore]
+            [BinaryIgnore]
             public int IgnoredIntegerValue { get; set; }
 
             public int AnotherIntegerValue { get; set; }

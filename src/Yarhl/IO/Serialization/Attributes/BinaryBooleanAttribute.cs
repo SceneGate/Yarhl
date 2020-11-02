@@ -26,12 +26,12 @@ namespace Yarhl.IO.Serialization.Attributes
     /// <remarks>Default type is <see cref="int"/></remarks>
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class BooleanAttribute : Attribute
+    public sealed class BinaryBooleanAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BooleanAttribute"/> class.
+        /// Initializes a new instance of the <see cref="BinaryBooleanAttribute"/> class.
         /// </summary>
-        public BooleanAttribute()
+        public BinaryBooleanAttribute()
         {
             ReadAs = typeof(int);
             WriteAs = typeof(int);

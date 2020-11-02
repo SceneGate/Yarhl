@@ -480,18 +480,18 @@ namespace Yarhl.IO
                 BindingFlags.Instance);
 
             foreach (PropertyInfo property in properties) {
-                bool ignore = Attribute.IsDefined(property, typeof(YarhlIgnoreAttribute));
+                bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
                 if (ignore) {
                     continue;
                 }
 
-                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BooleanAttribute))) {
+                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
                     // booleans can only be read if they have the attribute.
-                    var attr = (BooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BooleanAttribute));
+                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
                     dynamic value = ReadByType(attr.ReadAs);
                     property.SetValue(obj, value == (dynamic)attr.TrueValue);
-                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(StringAttribute))) {
-                    var attr = (StringAttribute)Attribute.GetCustomAttribute(property, typeof(StringAttribute));
+                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
+                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
                     Encoding encoding = null;
                     if (attr.CodePage != -1) {
                         encoding = Encoding.GetEncoding(attr.CodePage);
