@@ -497,6 +497,11 @@ namespace Yarhl.IO
                     var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
                     dynamic value = ReadByType(attr.ReadAs);
                     property.SetValue(obj, value == (dynamic)attr.TrueValue);
+                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                    // enums can only be read if they have the attribute.
+                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
+                    dynamic value = ReadByType(attr.ReadAs);
+                    property.SetValue(obj, Enum.ToObject(property.PropertyType, value));
                 } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
                     var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
                     Encoding encoding = null;
@@ -506,11 +511,7 @@ namespace Yarhl.IO
 
                     dynamic value;
                     if (attr.SizeType == null) {
-                        if (attr.FixedSize == -1) {
-                            value = this.ReadString(encoding);
-                        } else {
-                            value = this.ReadString(attr.FixedSize, encoding);
-                        }
+                        value = attr.FixedSize == -1 ? this.ReadString(encoding) : this.ReadString(attr.FixedSize, encoding);
                     } else {
                         value = ReadString(attr.SizeType, encoding);
                     }

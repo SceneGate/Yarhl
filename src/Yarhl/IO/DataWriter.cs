@@ -609,6 +609,10 @@ namespace Yarhl.IO
                     var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
                     dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
                     WriteOfType(attr.WriteAs, typeValue);
+                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                    // enums can only be written if they have the attribute.
+                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
+                    WriteOfType(attr.WriteAs, value);
                 } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
                     var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
                     Encoding encoding = null;

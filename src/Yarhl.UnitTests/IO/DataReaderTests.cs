@@ -1174,6 +1174,28 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(3, obj.DefaultEndianInteger);
         }
 
+        [Test]
+        public void ReadObjectWithEnumValue()
+        {
+            byte[] expected = {
+                0x01,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithEnum obj = reader.Read<ObjectWithEnum>();
+
+            Assert.AreEqual(Enum1.Value2, obj.EnumValue);
+        }
+
+        private enum Enum1
+        {
+            Value1,
+            Value2,
+            Value3,
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
@@ -1427,6 +1449,21 @@ namespace Yarhl.UnitTests.IO
             public int BigEndianInteger { get; set; }
 
             public int DefaultEndianInteger { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithEnum
+        {
+            [BinaryEnum(ReadAs = typeof(byte))]
+            public Enum1 EnumValue { get; set; }
         }
     }
 }

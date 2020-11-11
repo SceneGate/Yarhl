@@ -1548,6 +1548,36 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
+        [Test]
+        public void ReadObjectWithEnum()
+        {
+            ObjectWithEnum obj = new ObjectWithEnum() {
+                EnumValue = Enum1.Value2,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithEnum>(obj);
+
+            byte[] expected = {
+                0x01,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        private enum Enum1
+        {
+            Value1,
+            Value2,
+            Value3,
+        }
+
         [Yarhl.IO.Serialization.Attributes.Serializable]
         private class ComplexObject
         {
@@ -1705,6 +1735,13 @@ namespace Yarhl.UnitTests.IO
             public int BigEndianInteger { get; set; }
 
             public int DefaultEndianInteger { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithEnum
+        {
+            [BinaryEnum(WriteAs = typeof(byte))]
+            public Enum1 EnumValue { get; set; }
         }
     }
 }
