@@ -22,7 +22,9 @@ namespace Yarhl.IO
     using System;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
     /// Binary writer for DataStreams.
@@ -427,52 +429,59 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(type));
 
             val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
-            switch (val) {
-                case long l:
-                    Write(l);
-                    break;
-                case ulong ul:
-                    Write(ul);
-                    break;
 
-                case int i:
-                    Write(i);
-                    break;
-                case uint ui:
-                    Write(ui);
-                    break;
+            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
+            if (serializable) {
+                WriteUsingReflection(type, val);
+            } else {
+                switch (val)
+                {
+                    case long l:
+                        Write(l);
+                        break;
+                    case ulong ul:
+                        Write(ul);
+                        break;
 
-                case short s:
-                    Write(s);
-                    break;
-                case ushort us:
-                    Write(us);
-                    break;
+                    case int i:
+                        Write(i);
+                        break;
+                    case uint ui:
+                        Write(ui);
+                        break;
 
-                case byte b:
-                    Write(b);
-                    break;
-                case sbyte sb:
-                    Write(sb);
-                    break;
+                    case short s:
+                        Write(s);
+                        break;
+                    case ushort us:
+                        Write(us);
+                        break;
 
-                case char ch:
-                    Write(ch);
-                    break;
-                case string str:
-                    Write(str);
-                    break;
+                    case byte b:
+                        Write(b);
+                        break;
+                    case sbyte sb:
+                        Write(sb);
+                        break;
 
-                case float f:
-                    Write(f);
-                    break;
+                    case char ch:
+                        Write(ch);
+                        break;
+                    case string str:
+                        Write(str);
+                        break;
 
-                case double d:
-                    Write(d);
-                    break;
+                    case float f:
+                        Write(f);
+                        break;
 
-                default:
-                    throw new FormatException("Unsupported type");
+                    case double d:
+                        Write(d);
+                        break;
+
+                    default:
+                        throw new FormatException("Unsupported type");
+                }
             }
         }
 
@@ -570,6 +579,62 @@ namespace Yarhl.IO
             for (byte i = start; i < end; i = (byte)(i + step)) {
                 byte val = (byte)((number >> i) & 0xFF);
                 Stream.WriteByte(val);
+            }
+        }
+
+        void WriteUsingReflection(Type type, dynamic obj)
+        {
+            PropertyInfo[] properties = type.GetProperties(
+                BindingFlags.DeclaredOnly |
+                BindingFlags.Public |
+                BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties) {
+                bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
+                if (ignore) {
+                    continue;
+                }
+
+                EndiannessMode currentEndianness = Endianness;
+                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
+                if (forceEndianness) {
+                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
+                    Endianness = attr.Mode;
+                }
+
+                dynamic value = property.GetValue(obj);
+
+                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
+                    // booleans can only be written if they have the attribute.
+                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
+                    dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
+                    WriteOfType(attr.WriteAs, typeValue);
+                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                    // enums can only be written if they have the attribute.
+                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
+                    WriteOfType(attr.WriteAs, value);
+                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
+                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
+                    Encoding encoding = null;
+                    if (attr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    }
+
+                    if (attr.SizeType == null) {
+                        if (attr.FixedSize == -1) {
+                            Write((string)value, attr.Terminator, encoding, attr.MaxSize);
+                        } else {
+                            Write((string)value, attr.FixedSize, attr.Terminator, encoding);
+                        }
+                    } else {
+                        Write((string)value, attr.SizeType, attr.Terminator, encoding, attr.MaxSize);
+                    }
+                } else {
+                    WriteOfType(property.PropertyType, value);
+                }
+
+                // Restore previous endianness
+                Endianness = currentEndianness;
             }
         }
     }

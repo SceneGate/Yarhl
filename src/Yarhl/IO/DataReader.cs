@@ -24,7 +24,9 @@ namespace Yarhl.IO
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
     /// Binary DataReader for DataStreams.
@@ -405,6 +407,13 @@ namespace Yarhl.IO
         /// <param name="type">Type of the field.</param>
         public dynamic ReadByType(Type type)
         {
+            if (type == null)
+                throw new ArgumentNullException(nameof(type));
+
+            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
+            if (serializable)
+                return ReadUsingReflection(type);
+
             if (type == typeof(long))
                 return ReadInt64();
             if (type == typeof(ulong))
@@ -460,6 +469,64 @@ namespace Yarhl.IO
             if (remainingBytes > 0) {
                 Stream.Seek(remainingBytes, SeekMode.Current);
             }
+        }
+
+        dynamic ReadUsingReflection(Type type)
+        {
+            object obj = Activator.CreateInstance(type);
+            PropertyInfo[] properties = type.GetProperties(
+                BindingFlags.DeclaredOnly |
+                BindingFlags.Public |
+                BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties) {
+                bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
+                if (ignore) {
+                    continue;
+                }
+
+                EndiannessMode currentEndianness = Endianness;
+                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
+                if (forceEndianness) {
+                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
+                    Endianness = attr.Mode;
+                }
+
+                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
+                    // booleans can only be read if they have the attribute.
+                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
+                    dynamic value = ReadByType(attr.ReadAs);
+                    property.SetValue(obj, value == (dynamic)attr.TrueValue);
+                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                    // enums can only be read if they have the attribute.
+                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
+                    dynamic value = ReadByType(attr.ReadAs);
+                    property.SetValue(obj, Enum.ToObject(property.PropertyType, value));
+                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
+                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
+                    Encoding encoding = null;
+                    if (attr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    }
+
+                    dynamic value;
+                    if (attr.SizeType == null) {
+                        value = attr.FixedSize == -1 ? this.ReadString(encoding) : this.ReadString(attr.FixedSize, encoding);
+                    } else {
+                        value = ReadString(attr.SizeType, encoding);
+                    }
+
+                    property.SetValue(obj, value);
+                } else {
+                    dynamic value = ReadByType(property.PropertyType);
+                    property.SetValue(obj, value);
+                }
+
+                // Restore previous endianness
+                Endianness = currentEndianness;
+            }
+
+            return obj;
         }
     }
 }
