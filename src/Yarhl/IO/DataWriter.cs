@@ -560,7 +560,7 @@ namespace Yarhl.IO
             WriteTimes(val, Stream.Position.Pad(padding) - Stream.Position);
         }
 
-        void WriteNumber(ulong number, byte numBytes)
+        void WriteNumber(ulong number, byte numBits)
         {
             byte start;
             byte end;
@@ -568,10 +568,10 @@ namespace Yarhl.IO
 
             if (Endianness == EndiannessMode.LittleEndian) {
                 start = 0;
-                end = numBytes;
+                end = numBits;
                 step = 8;
             } else {
-                start = (byte)(numBytes - 8);
+                start = (byte)(numBits - 8);
                 end = 0xF8; // When the counter var reach < 0 it overflows to 0-8=0xF8
                 step = -8;
             }
@@ -609,6 +609,9 @@ namespace Yarhl.IO
                     var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
                     dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
                     WriteOfType(attr.WriteAs, typeValue);
+                } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
+                    // write the number as int24
+                    WriteNumber((uint)value, 24);
                 } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
                     // enums can only be written if they have the attribute.
                     var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));

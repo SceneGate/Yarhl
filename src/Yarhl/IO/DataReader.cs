@@ -497,6 +497,10 @@ namespace Yarhl.IO
                     var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
                     dynamic value = ReadByType(attr.ReadAs);
                     property.SetValue(obj, value == (dynamic)attr.TrueValue);
+                } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
+                    // read the number as int24.
+                    int value = ReadInt24();
+                    property.SetValue(obj, value);
                 } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
                     // enums can only be read if they have the attribute.
                     var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
