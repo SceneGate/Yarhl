@@ -34,6 +34,13 @@ namespace Yarhl.UnitTests.IO
         DataStream stream;
         DataReader reader;
 
+        enum Enum1
+        {
+            Value1,
+            Value2,
+            Value3,
+        }
+
         [OneTimeSetUp]
         public void FixtureSetUp()
         {
@@ -1189,11 +1196,19 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(Enum1.Value2, obj.EnumValue);
         }
 
-        private enum Enum1
+        [Test]
+        public void ReadObjectWithInt24()
         {
-            Value1,
-            Value2,
-            Value3,
+            byte[] expected = {
+                0x01, 0x00, 0x00,
+            };
+            stream.Write(expected, 0, expected.Length);
+
+            stream.Position = 0;
+
+            ObjectWithInt24 obj = reader.Read<ObjectWithInt24>();
+
+            Assert.AreEqual(1, obj.Int24Value);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
@@ -1464,6 +1479,21 @@ namespace Yarhl.UnitTests.IO
         {
             [BinaryEnum(ReadAs = typeof(byte))]
             public Enum1 EnumValue { get; set; }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Microsoft.Performance",
+            "CA1812:Class never instantiated",
+            Justification = "The class is instantiated by reflection")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage(
+            "Sonar.CodeSmell",
+            "S3459:Unassigned auto-property",
+            Justification = "The properties are assigned by reflection")]
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithInt24
+        {
+            [BinaryInt24]
+            public int Int24Value { get; set; }
         }
     }
 }

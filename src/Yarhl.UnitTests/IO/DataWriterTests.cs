@@ -30,6 +30,13 @@ namespace Yarhl.UnitTests.IO
     [TestFixture]
     public class DataWriterTests
     {
+        enum Enum1
+        {
+            Value1,
+            Value2,
+            Value3,
+        }
+
         [Test]
         public void ConstructorSetProperties()
         {
@@ -1505,7 +1512,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadCustomStringUsingReflectionWithUnknownEncodingThrowsException()
+        public void WriteCustomStringUsingReflectionWithUnknownEncodingThrowsException()
         {
             var obj = new ObjectWithCustomStringAttributeUnknownEncoding() {
                 IntegerValue = 1,
@@ -1522,7 +1529,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadObjectWithForcedEndianness()
+        public void WriteObjectWithForcedEndianness()
         {
             ObjectWithForcedEndianness obj = new ObjectWithForcedEndianness() {
                 LittleEndianInteger = 1,
@@ -1549,7 +1556,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadObjectWithEnum()
+        public void WriteObjectWithEnum()
         {
             ObjectWithEnum obj = new ObjectWithEnum() {
                 EnumValue = Enum1.Value2,
@@ -1571,11 +1578,27 @@ namespace Yarhl.UnitTests.IO
             Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
-        private enum Enum1
+        [Test]
+        public void WriteObjectWithInt24()
         {
-            Value1,
-            Value2,
-            Value3,
+            ObjectWithInt24 obj = new ObjectWithInt24() {
+                Int24Value = 1,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithInt24>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
         [Yarhl.IO.Serialization.Attributes.Serializable]
@@ -1742,6 +1765,13 @@ namespace Yarhl.UnitTests.IO
         {
             [BinaryEnum(WriteAs = typeof(byte))]
             public Enum1 EnumValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithInt24
+        {
+            [BinaryInt24]
+            public int Int24Value { get; set; }
         }
     }
 }
