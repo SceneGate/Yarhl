@@ -1388,6 +1388,190 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void WriteToWhenLengthZero()
+        {
+            string tempFile = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetRandomFileName(),
+                Path.GetRandomFileName());
+
+            DataStream stream1 = new DataStream();
+            stream1.WriteTo(tempFile);
+            FileStream fs = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
+            Assert.AreEqual(0, fs.Length);
+            fs.Dispose();
+            File.Delete(tempFile);
+        }
+
+        [Test]
+        public void WriteSegmentToVariableLength()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(0, 2, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(0xCA, stream2.ReadByte());
+            Assert.AreEqual(0xFE, stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == 2);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToVariableLengthLongerThanSOH()
+        {
+            DataStream stream1 = new DataStream();
+            byte[] data = new byte[70 * 1024 * 2];
+            Random random = new Random();
+            random.NextBytes(data);
+            for (int i = 0; i < data.Length; i++) {
+                stream1.WriteByte(data[i]);
+            }
+
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(0, data.Length - 10, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(data[0], stream2.ReadByte());
+            Assert.AreEqual(data[1], stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == data.Length - 10);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToVariableLengthChangingOffset()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(1, 2, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(0xFE, stream2.ReadByte());
+            Assert.AreEqual(0x00, stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == 2);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToChangingOffset()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream1.WriteSegmentTo(2, stream2);
+            stream2.Position = 0;
+            Assert.AreEqual(0x00, stream2.ReadByte());
+            Assert.AreEqual(0xFF, stream2.ReadByte());
+            Assert.IsTrue(stream2.Length == 2);
+            stream1.Dispose();
+            stream2.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToNullFile()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            Assert.Throws<ArgumentNullException>(
+                () => stream1.WriteSegmentTo(0, 2, (string)null));
+            Assert.Throws<ArgumentNullException>(() => stream1.WriteSegmentTo(0, 2, string.Empty));
+            stream1.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToFileAfterDispose()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            stream1.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(1, 2, "/ex"));
+        }
+
+        [Test]
+        public void WriteSegmentToFileCreatesParentFolder()
+        {
+            string tempFile = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetRandomFileName(),
+                Path.GetRandomFileName());
+
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x01);
+            stream.WriteByte(0x02);
+            stream.WriteByte(0x03);
+            stream.WriteByte(0x04);
+            stream.WriteSegmentTo(0, 2, tempFile);
+
+            DataStream fileStream = DataStreamFactory.FromFile(tempFile, FileOpenMode.Read);
+            using (var substream = new DataStream(stream, 0, 2)) {
+                Assert.That(() => substream.Compare(fileStream), Is.True);
+            }
+
+            fileStream.Dispose();
+            File.Delete(tempFile);
+            stream.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToNullStream()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+            stream.WriteByte(0x00);
+            stream.WriteByte(0xFF);
+            Assert.Throws<ArgumentNullException>(
+                () => stream.WriteSegmentTo(1, 2, (DataStream)null));
+            stream.Dispose();
+        }
+
+        [Test]
+        public void WriteSegmentToStreamAfterDispose()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            stream1.Dispose();
+            DataStream stream2 = new DataStream();
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, stream2));
+        }
+
+        [Test]
+        public void WriteSegmentToDisposedStream()
+        {
+            DataStream stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = new DataStream();
+            stream2.Dispose();
+            Assert.Throws<ObjectDisposedException>(() => stream1.WriteSegmentTo(0, 2, stream2));
+            stream1.Dispose();
+        }
+
+        [Test]
         public void CompareTwoEqualStreams()
         {
             DataStream stream1 = new DataStream();

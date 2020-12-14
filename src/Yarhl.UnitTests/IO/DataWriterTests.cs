@@ -24,10 +24,19 @@ namespace Yarhl.UnitTests.IO
     using System.Text;
     using NUnit.Framework;
     using Yarhl.IO;
+    using Yarhl.IO.Serialization;
+    using Yarhl.IO.Serialization.Attributes;
 
     [TestFixture]
     public class DataWriterTests
     {
+        enum Enum1
+        {
+            Value1,
+            Value2,
+            Value3,
+        }
+
         [Test]
         public void ConstructorSetProperties()
         {
@@ -569,6 +578,10 @@ namespace Yarhl.UnitTests.IO
             Assert.Throws<ArgumentNullException>(() => writer.Write(text));
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => writer.Write(string.Empty, maxSize: -2));
+
+            Assert.Throws<ArgumentNullException>(() => writer.Write(text, "."));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => writer.Write(string.Empty, ".", maxSize: -2));
         }
 
         [Test]
@@ -647,6 +660,7 @@ namespace Yarhl.UnitTests.IO
 
             string text = null;
             Assert.Throws<ArgumentNullException>(() => writer.Write(text, 5));
+            Assert.Throws<ArgumentNullException>(() => writer.Write(text, 5, "."));
         }
 
         [Test]
@@ -731,6 +745,200 @@ namespace Yarhl.UnitTests.IO
                 () => writer.Write(string.Empty, nullType));
             Assert.Throws<ArgumentOutOfRangeException>(
                 () => writer.Write(string.Empty, typeof(short), maxSize: -2));
+
+            Assert.Throws<ArgumentNullException>(
+                () => writer.Write(nullText, typeof(short), null));
+            Assert.Throws<ArgumentNullException>(
+                () => writer.Write(string.Empty, nullType, null));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => writer.Write(string.Empty, typeof(short), null, maxSize: -2));
+        }
+
+        [Test]
+        public void WriteTextAndNoTerminator()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, null, null, -1);
+
+            Assert.AreEqual(6, stream.Length);
+            byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2 };
+            byte[] actual = new byte[6];
+            stream.Position = 0;
+            stream.Read(actual, 0, 6);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextWithEncodingAndCustomTerminator()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, "・", Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x42, 0x30, 0xA2, 0x30, 0xFB, 0x30 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextWithMaxSizeAndCustomTerminator()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, ".", maxSize: 4);
+
+            byte[] expected = { 0xE3, 0x81, 0x82, 0x2E };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextFixedSizeAltVersion()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, 10, null);
+
+            byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00, 0x00, 0x00, 0x00 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAvoidDuplicateCustomTerminator()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア.";
+            writer.Write(text, ".");
+
+            byte[] expected = { 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x2E };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextFixedSizeCustomTerminatorTruncating()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, 4, "・", Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x42, 0x30, 0xFB, 0x30 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextFixedSizeWithEncodingAndNoNullTerminatorAltVersion()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, 4, null, Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x42, 0x30, 0xA2, 0x30 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeAltVersion()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, typeof(ushort), null);
+
+            Assert.AreEqual(8, stream.Length);
+            byte[] expected = { 0x06, 0x00, 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2 };
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeWithEncodingAndCustomTerminator()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, typeof(byte), "・", Encoding.GetEncoding("utf-16"));
+
+            byte[] expected = { 0x06, 0x42, 0x30, 0xA2, 0x30, 0xFB, 0x30 };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeWithAvoidDuplicateCustomTerminators()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア.";
+            writer.Write(text, typeof(byte), ".");
+
+            byte[] expected = { 0x07, 0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x2E };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteTextAndSizeWithMaxSizeAndCustomTerminator()
+        {
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            string text = "あア";
+            writer.Write(text, typeof(int), ".", maxSize: 3);
+
+            byte[] expected = { 0x03, 0x00, 0x00, 0x00, 0xE3, 0x81, 0x2E };
+            Assert.AreEqual(expected.Length, stream.Length);
+            byte[] actual = new byte[expected.Length];
+            stream.Position = 0;
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
         }
 
         [Test]
@@ -749,7 +957,8 @@ namespace Yarhl.UnitTests.IO
             writer.WriteOfType(typeof(sbyte), 8);
             writer.WriteOfType(typeof(string), 9);
             writer.WriteOfType(typeof(char), 'a');
-            writer.WriteOfType(typeof(string), "8");
+            writer.WriteOfType(typeof(float), 11);
+            writer.WriteOfType(typeof(double), 12);
 
             byte[] expected = {
                 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -762,7 +971,8 @@ namespace Yarhl.UnitTests.IO
                 0x08,
                 0x39, 0x00,
                 0x61,
-                0x38, 0x00,
+                0x00, 0x00, 0x30, 0x41,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x40,
             };
             Assert.AreEqual(expected.Length, stream.Length);
 
@@ -788,7 +998,8 @@ namespace Yarhl.UnitTests.IO
             writer.WriteOfType<sbyte>(8);
             writer.WriteOfType<string>("9");
             writer.WriteOfType<char>('a');
-            writer.WriteOfType<string>("8");
+            writer.WriteOfType<float>(11);
+            writer.WriteOfType<double>(12);
 
             byte[] expected = {
                 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -801,7 +1012,8 @@ namespace Yarhl.UnitTests.IO
                 0x08,
                 0x39, 0x00,
                 0x61,
-                0x38, 0x00,
+                0x00, 0x00, 0x30, 0x41,
+                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x28, 0x40,
             };
             Assert.AreEqual(expected.Length, stream.Length);
 
@@ -1016,6 +1228,550 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             stream.Read(actual, 0, expected.Length);
             Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteUsingReflection()
+        {
+            var obj = new ComplexObject
+            {
+                IntegerValue = 1,
+                LongValue = 2,
+                IgnoredIntegerValue = 3,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ComplexObject>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteNestedObjectUsingReflection()
+        {
+            var obj = new NestedObject()
+            {
+                IntegerValue = 10,
+                ComplexValue = new ComplexObject
+                {
+                    IntegerValue = 1,
+                    LongValue = 2,
+                    IgnoredIntegerValue = 3,
+                    AnotherIntegerValue = 4,
+                },
+                AnotherIntegerValue = 20,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<NestedObject>(obj);
+
+            byte[] expected = {
+                0x0A, 0x00, 0x00, 0x00,
+                0x01, 0x00, 0x00, 0x00,
+                0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+                0x14, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteBooleanUsingReflection()
+        {
+            var obj = new ObjectWithDefaultBooleanAttribute()
+            {
+                IntegerValue = 1,
+                BooleanValue = false,
+                IgnoredIntegerValue = 3,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithDefaultBooleanAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomBooleanUsingReflection()
+        {
+            var obj = new ObjectWithCustomBooleanAttribute()
+            {
+                IntegerValue = 1,
+                BooleanValue = false,
+                IgnoredIntegerValue = 5,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomBooleanAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x66, 0x61, 0x6C, 0x73, 0x65, 0x00, // "false"
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteBooleanWithoutAttributeThrowsException()
+        {
+            var obj = new ObjectWithoutBooleanAttribute()
+            {
+                IntegerValue = 1,
+                BooleanValue = true,
+                IgnoredIntegerValue = 3,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<FormatException>(
+                () => writer.WriteOfType<ObjectWithoutBooleanAttribute>(obj));
+        }
+
+        [Test]
+        public void WriteStringWithoutAttributeUsesDefaultWriterSettings()
+        {
+            var obj = new ObjectWithoutStringAttribute {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 3,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithoutStringAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteStringWithDefaultAttributeUsesDefaultWriterSettings()
+        {
+            var obj = new ObjectWithDefaultStringAttribute() {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 3,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithDefaultStringAttribute>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82, 0xE3, 0x82, 0xA2, 0x00,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomStringWithSizeTypeUsingReflection()
+        {
+            var obj = new ObjectWithCustomStringAttributeSizeUshort() {
+                IntegerValue = 1,
+                StringValue = "あ",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomStringAttributeSizeUshort>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x03, 0x00, 0xE3, 0x81, 0x82,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomFixedStringUsingReflection()
+        {
+            var obj = new ObjectWithCustomStringAttributeFixedSize() {
+                IntegerValue = 1,
+                StringValue = "あ",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomStringAttributeFixedSize>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0xE3, 0x81, 0x82,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomStringUsingReflectionWithDifferentEncoding()
+        {
+            var obj = new ObjectWithCustomStringAttributeCustomEncoding() {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithCustomStringAttributeCustomEncoding>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x82, 0xA0, 0x83, 0x41, 0x00,
+                0x04, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteCustomStringUsingReflectionWithUnknownEncodingThrowsException()
+        {
+            var obj = new ObjectWithCustomStringAttributeUnknownEncoding() {
+                IntegerValue = 1,
+                StringValue = "あア",
+                IgnoredIntegerValue = 2,
+                AnotherIntegerValue = 4,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            Assert.Throws<NotSupportedException>(
+                () => writer.WriteOfType<ObjectWithCustomStringAttributeUnknownEncoding>(obj));
+        }
+
+        [Test]
+        public void WriteObjectWithForcedEndianness()
+        {
+            ObjectWithForcedEndianness obj = new ObjectWithForcedEndianness() {
+                LittleEndianInteger = 1,
+                BigEndianInteger = 2,
+                DefaultEndianInteger = 3,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithForcedEndianness>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00, 0x00,
+                0x00, 0x00, 0x00, 0x02,
+                0x03, 0x00, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteObjectWithEnum()
+        {
+            ObjectWithEnum obj = new ObjectWithEnum() {
+                EnumValue = Enum1.Value2,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithEnum>(obj);
+
+            byte[] expected = {
+                0x01,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Test]
+        public void WriteObjectWithInt24()
+        {
+            ObjectWithInt24 obj = new ObjectWithInt24() {
+                Int24Value = 1,
+            };
+
+            using DataStream stream = new DataStream();
+            DataWriter writer = new DataWriter(stream);
+
+            writer.WriteOfType<ObjectWithInt24>(obj);
+
+            byte[] expected = {
+                0x01, 0x00, 0x00,
+            };
+            Assert.AreEqual(expected.Length, stream.Length);
+
+            stream.Position = 0;
+            byte[] actual = new byte[expected.Length];
+            stream.Read(actual, 0, expected.Length);
+            Assert.IsTrue(expected.SequenceEqual(actual));
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ComplexObject
+        {
+            public int IntegerValue { get; set; }
+
+            public long LongValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class NestedObject
+        {
+            public int IntegerValue { get; set; }
+
+            public ComplexObject ComplexValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithDefaultBooleanAttribute
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryBoolean]
+            public bool BooleanValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithoutBooleanAttribute
+        {
+            public int IntegerValue { get; set; }
+
+            public bool BooleanValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomBooleanAttribute
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryBoolean(WriteAs = typeof(string), TrueValue = "true", FalseValue = "false")]
+            public bool BooleanValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithDefaultStringAttribute
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryString]
+            public string StringValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithoutStringAttribute
+        {
+            public int IntegerValue { get; set; }
+
+            public string StringValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeSizeUshort
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryString(SizeType = typeof(ushort), Terminator = "")]
+            public string StringValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeFixedSize
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryString(FixedSize = 3, Terminator = "")]
+            public string StringValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeCustomEncoding
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryString(CodePage = 932)]
+            public string StringValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithCustomStringAttributeUnknownEncoding
+        {
+            public int IntegerValue { get; set; }
+
+            [BinaryString(CodePage = 666)]
+            public string StringValue { get; set; }
+
+            [BinaryIgnore]
+            public int IgnoredIntegerValue { get; set; }
+
+            public int AnotherIntegerValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithForcedEndianness
+        {
+            [BinaryForceEndianness(EndiannessMode.LittleEndian)]
+            public int LittleEndianInteger { get; set; }
+
+            [BinaryForceEndianness(EndiannessMode.BigEndian)]
+            public int BigEndianInteger { get; set; }
+
+            public int DefaultEndianInteger { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithEnum
+        {
+            [BinaryEnum(WriteAs = typeof(byte))]
+            public Enum1 EnumValue { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithInt24
+        {
+            [BinaryInt24]
+            public int Int24Value { get; set; }
         }
     }
 }

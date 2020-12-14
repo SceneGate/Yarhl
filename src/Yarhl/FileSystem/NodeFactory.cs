@@ -208,6 +208,9 @@ namespace Yarhl.FileSystem
             var options = subDirectories ?
                 SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
+            // This sanitizes the path and remove double slashes
+            dirPath = Path.GetFullPath(dirPath);
+
             Node folder = CreateContainer(nodeName);
             folder.Tags["DirectoryInfo"] = new DirectoryInfo(dirPath);
 

@@ -22,7 +22,9 @@ namespace Yarhl.IO
     using System;
     using System.Globalization;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using Yarhl.IO.Serialization.Attributes;
 
     /// <summary>
     /// Binary writer for DataStreams.
@@ -245,22 +247,7 @@ namespace Yarhl.IO
                 Encoding encoding = null,
                 int maxSize = -1)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-            if (maxSize < -1)
-                throw new ArgumentOutOfRangeException(nameof(maxSize));
-
-            if (encoding == null)
-                encoding = DefaultEncoding;
-
-            if (nullTerminator && (text.Length == 0 || text[text.Length - 1] != '\0'))
-                text += "\0";
-
-            int textSize = encoding.GetByteCount(text);
-            if (maxSize != -1 && textSize > maxSize)
-                textSize = maxSize;
-
-            Write(text, textSize, nullTerminator, encoding);
+            Write(text, nullTerminator ? "\0" : null, encoding, maxSize);
         }
 
         /// <summary>
@@ -281,24 +268,7 @@ namespace Yarhl.IO
                 bool nullTerminator = true,
                 Encoding encoding = null)
         {
-            if (text == null)
-                throw new ArgumentNullException(nameof(text));
-
-            if (encoding == null)
-                encoding = DefaultEncoding;
-
-            byte[] buffer = encoding.GetBytes(text);
-            Array.Resize(ref buffer, fixedSize);
-
-            // There is no problem having already the null terminator since it that
-            // case it will overwrite it.
-            if (nullTerminator) {
-                byte[] nullChar = encoding.GetBytes("\0");
-                for (int i = 0; i < nullChar.Length; i++)
-                    buffer[fixedSize - nullChar.Length + i] = nullChar[i];
-            }
-
-            Write(buffer);
+            Write(text, fixedSize, nullTerminator ? "\0" : null, encoding);
         }
 
         /// <summary>
@@ -321,6 +291,106 @@ namespace Yarhl.IO
                 Encoding encoding = null,
                 int maxSize = -1)
         {
+            Write(text, sizeType, nullTerminator ? "\0" : null, encoding, maxSize);
+        }
+
+        /// <summary>
+        /// Write a text string using a custom terminator.
+        /// </summary>
+        /// <param name="text">Text string to write.</param>
+        /// <param name="terminator">
+        /// Token to add as terminator.
+        /// <remarks>If null, then no token will be added.</remarks>
+        /// </param>
+        /// <param name="encoding">Text encoding to use.</param>
+        /// <param name="maxSize">Maximum size of the encoded string in bytes.</param>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
+        public void Write(
+                string text,
+                string terminator,
+                Encoding encoding = null,
+                int maxSize = -1)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+            if (maxSize < -1)
+                throw new ArgumentOutOfRangeException(nameof(maxSize));
+
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.InvariantCulture))
+                text = string.Concat(text, terminator);
+
+            int textSize = encoding.GetByteCount(text);
+            if (maxSize != -1 && textSize > maxSize)
+                textSize = maxSize;
+
+            Write(text, textSize, terminator, encoding);
+        }
+
+        /// <summary>
+        /// Write a text string with a fixed size and a custom terminator.
+        /// </summary>
+        /// <param name="text">Text string to write.</param>
+        /// <param name="fixedSize">Fixed size of the encoded string in bytes.</param>
+        /// <param name="terminator">
+        /// Token to add as terminator.
+        /// <remarks>If null, then no token will be added.</remarks>
+        /// </param>
+        /// <param name="encoding">Text encoding to use.</param>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
+        public void Write(
+                string text,
+                int fixedSize,
+                string terminator,
+                Encoding encoding = null)
+        {
+            if (text == null)
+                throw new ArgumentNullException(nameof(text));
+
+            if (encoding == null)
+                encoding = DefaultEncoding;
+
+            byte[] buffer = encoding.GetBytes(text);
+            Array.Resize(ref buffer, fixedSize);
+
+            // There is no problem having already the terminator since in that
+            // case it will overwrite it.
+            if (!string.IsNullOrEmpty(terminator)) {
+                byte[] nullChar = encoding.GetBytes(terminator);
+                for (int i = 0; i < nullChar.Length; i++)
+                    buffer[fixedSize - nullChar.Length + i] = nullChar[i];
+            }
+
+            Write(buffer);
+        }
+
+        /// <summary>
+        /// Write a text string and its size.
+        /// </summary>
+        /// <param name="text">Text string to write.</param>
+        /// <param name="sizeType">Type of the string size to write.</param>
+        /// <param name="terminator">
+        /// Token to add as terminator.
+        /// <remarks>If null, then no token will be added.</remarks>
+        /// </param>
+        /// <param name="encoding">Text encoding to use.</param>
+        /// <param name="maxSize">Maximum size of the encoded string in bytes.</param>
+        /// <remarks>
+        /// <para>If the encoding is null, it will use the default encoding.</para>
+        /// </remarks>
+        public void Write(
+                string text,
+                Type sizeType,
+                string terminator,
+                Encoding encoding = null,
+                int maxSize = -1)
+        {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
             if (sizeType == null)
@@ -331,15 +401,15 @@ namespace Yarhl.IO
             if (encoding == null)
                 encoding = DefaultEncoding;
 
-            if (nullTerminator && (text.Length == 0 || text[text.Length - 1] != '\0'))
-                text += "\0";
+            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.InvariantCulture))
+                text = string.Concat(text, terminator);
 
             int textSize = encoding.GetByteCount(text);
             if (maxSize != -1 && textSize > maxSize)
                 textSize = maxSize;
 
             WriteOfType(sizeType, textSize);
-            Write(text, textSize, nullTerminator, encoding);
+            Write(text, textSize, terminator, encoding);
         }
 
         /// <summary>
@@ -359,44 +429,59 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(type));
 
             val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
-            switch (val) {
-                case long l:
-                    Write(l);
-                    break;
-                case ulong ul:
-                    Write(ul);
-                    break;
 
-                case int i:
-                    Write(i);
-                    break;
-                case uint ui:
-                    Write(ui);
-                    break;
+            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
+            if (serializable) {
+                WriteUsingReflection(type, val);
+            } else {
+                switch (val)
+                {
+                    case long l:
+                        Write(l);
+                        break;
+                    case ulong ul:
+                        Write(ul);
+                        break;
 
-                case short s:
-                    Write(s);
-                    break;
-                case ushort us:
-                    Write(us);
-                    break;
+                    case int i:
+                        Write(i);
+                        break;
+                    case uint ui:
+                        Write(ui);
+                        break;
 
-                case byte b:
-                    Write(b);
-                    break;
-                case sbyte sb:
-                    Write(sb);
-                    break;
+                    case short s:
+                        Write(s);
+                        break;
+                    case ushort us:
+                        Write(us);
+                        break;
 
-                case char ch:
-                    Write(ch);
-                    break;
-                case string str:
-                    Write(str);
-                    break;
+                    case byte b:
+                        Write(b);
+                        break;
+                    case sbyte sb:
+                        Write(sb);
+                        break;
 
-                default:
-                    throw new FormatException("Unsupported type");
+                    case char ch:
+                        Write(ch);
+                        break;
+                    case string str:
+                        Write(str);
+                        break;
+
+                    case float f:
+                        Write(f);
+                        break;
+
+                    case double d:
+                        Write(d);
+                        break;
+
+                    default:
+                        throw new FormatException("Unsupported type");
+                }
             }
         }
 
@@ -475,7 +560,7 @@ namespace Yarhl.IO
             WriteTimes(val, Stream.Position.Pad(padding) - Stream.Position);
         }
 
-        void WriteNumber(ulong number, byte numBytes)
+        void WriteNumber(ulong number, byte numBits)
         {
             byte start;
             byte end;
@@ -483,10 +568,10 @@ namespace Yarhl.IO
 
             if (Endianness == EndiannessMode.LittleEndian) {
                 start = 0;
-                end = numBytes;
+                end = numBits;
                 step = 8;
             } else {
-                start = (byte)(numBytes - 8);
+                start = (byte)(numBits - 8);
                 end = 0xF8; // When the counter var reach < 0 it overflows to 0-8=0xF8
                 step = -8;
             }
@@ -494,6 +579,65 @@ namespace Yarhl.IO
             for (byte i = start; i < end; i = (byte)(i + step)) {
                 byte val = (byte)((number >> i) & 0xFF);
                 Stream.WriteByte(val);
+            }
+        }
+
+        void WriteUsingReflection(Type type, dynamic obj)
+        {
+            PropertyInfo[] properties = type.GetProperties(
+                BindingFlags.DeclaredOnly |
+                BindingFlags.Public |
+                BindingFlags.Instance);
+
+            foreach (PropertyInfo property in properties) {
+                bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
+                if (ignore) {
+                    continue;
+                }
+
+                EndiannessMode currentEndianness = Endianness;
+                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
+                if (forceEndianness) {
+                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
+                    Endianness = attr.Mode;
+                }
+
+                dynamic value = property.GetValue(obj);
+
+                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
+                    // booleans can only be written if they have the attribute.
+                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
+                    dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
+                    WriteOfType(attr.WriteAs, typeValue);
+                } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
+                    // write the number as int24
+                    WriteNumber((uint)value, 24);
+                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                    // enums can only be written if they have the attribute.
+                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
+                    WriteOfType(attr.WriteAs, value);
+                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
+                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
+                    Encoding encoding = null;
+                    if (attr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    }
+
+                    if (attr.SizeType == null) {
+                        if (attr.FixedSize == -1) {
+                            Write((string)value, attr.Terminator, encoding, attr.MaxSize);
+                        } else {
+                            Write((string)value, attr.FixedSize, attr.Terminator, encoding);
+                        }
+                    } else {
+                        Write((string)value, attr.SizeType, attr.Terminator, encoding, attr.MaxSize);
+                    }
+                } else {
+                    WriteOfType(property.PropertyType, value);
+                }
+
+                // Restore previous endianness
+                Endianness = currentEndianness;
             }
         }
     }

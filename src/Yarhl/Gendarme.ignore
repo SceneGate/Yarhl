@@ -97,3 +97,5 @@ M: System.Void Yarhl.IO.DataStream::.ctor(Yarhl.IO.DataStream,System.Int64,Syste
 R: Gendarme.Rules.Performance.AvoidUncalledPrivateCodeRule
 # False positive, it's called inside the Sort method
 M: System.Int32 Yarhl.FileSystem.NavigableNode`1/DefaultNavigableNodeComparer::Compare(T,T)
+# False positive, it's called inside the WriteOfType method
+M: System.Void Yarhl.IO.DataWriter::WriteUsingReflection(System.Type,System.Object)

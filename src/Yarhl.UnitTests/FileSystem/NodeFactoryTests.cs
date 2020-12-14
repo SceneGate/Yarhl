@@ -541,5 +541,35 @@ namespace Yarhl.UnitTests.FileSystem
                 () => NodeFactory.FromSubstream("node", null, 0, 0),
                 Throws.ArgumentNullException);
         }
+
+        [Test]
+        public void CreateFromDirectoryWithDoubleSlashes()
+        {
+            // Issue #139
+            string root = Path.GetTempPath();
+            string child = Path.GetRandomFileName();
+            string tempDir = Path.Combine(root, child);
+            Directory.CreateDirectory(tempDir);
+
+            string tempFolder = Path.Combine(tempDir, "folder");
+            Assert.That(Directory.CreateDirectory(tempFolder).Exists, Is.True);
+            string tempFile = Path.Combine(tempFolder, "file.txt");
+            File.Create(tempFile).Dispose();
+
+            Node node = NodeFactory.FromDirectory(
+                string.Concat(root, Path.DirectorySeparatorChar, Path.DirectorySeparatorChar, child),
+                "*",
+                "Issue139",
+                true);
+
+            Directory.Delete(tempDir, true);
+
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.That(node.Children["folder"], Is.Not.Null);
+            Assert.AreEqual(1, node.Children["folder"].Children.Count);
+            Assert.That(node.Children["folder"].Children["file.txt"], Is.Not.Null);
+
+            node.Dispose();
+        }
     }
 }
