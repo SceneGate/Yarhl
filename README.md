@@ -43,8 +43,8 @@ your solution (.sln) file with the following content:
 
 ## Build
 
-Since the unit tests are validated against .NET Core and .NET Framework or Mono
-both runtime must be installed on the machine. Then run:
+Since the unit tests are validated against .NET 5, .NET Core and .NET Framework
+and Mono, the three runtimes must be installed on the machine. Then run:
 
 ```sh
 dotnet tool restore
