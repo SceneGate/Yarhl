@@ -50,11 +50,6 @@ namespace Yarhl.UnitTests.Media.Text.Encodings
                 new EncoderReplacementFallback("@"));
             Assert.IsInstanceOf<DecoderReplacementFallback>(encoder.DecoderFallback);
             Assert.IsInstanceOf<EncoderReplacementFallback>(encoder.EncoderFallback);
-
-            // We can't override original
-            Encoding baseEncoding = encoder;
-            Assert.IsNotInstanceOf<DecoderReplacementFallback>(baseEncoding.DecoderFallback);
-            Assert.IsNotInstanceOf<EncoderReplacementFallback>(baseEncoding.EncoderFallback);
         }
 
         [Test]
