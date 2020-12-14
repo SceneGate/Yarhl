@@ -42,7 +42,7 @@ var warnAsErrorOption = warnAsError
 
 string netFrameworkVersion = "48";
 string netFrameworkOldVersion = "461";
-string netCoreVersion = "5.0";
+string netCoreVersion = "3.1";
 string netVersion = "5.0";
 string netstandardVersion = "2.0";
 
