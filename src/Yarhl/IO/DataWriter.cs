@@ -321,7 +321,7 @@ namespace Yarhl.IO
             if (encoding == null)
                 encoding = DefaultEncoding;
 
-            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.InvariantCulture))
+            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.Ordinal))
                 text = string.Concat(text, terminator);
 
             int textSize = encoding.GetByteCount(text);
@@ -401,7 +401,7 @@ namespace Yarhl.IO
             if (encoding == null)
                 encoding = DefaultEncoding;
 
-            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.InvariantCulture))
+            if (!string.IsNullOrEmpty(terminator) && !text.EndsWith(terminator, StringComparison.Ordinal))
                 text = string.Concat(text, terminator);
 
             int textSize = encoding.GetByteCount(text);
