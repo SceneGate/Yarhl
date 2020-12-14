@@ -40,14 +40,18 @@ var warnAsErrorOption = warnAsError
     ? MSBuildTreatAllWarningsAs.Error
     : MSBuildTreatAllWarningsAs.Default;
 
-string netVersion = "48";
-string netcoreVersion = "3.1";
+string netFrameworkVersion = "48";
+string netFrameworkOldVersion = "461";
+string netCoreVersion = "5.0";
+string netVersion = "5.0";
 string netstandardVersion = "2.0";
 
 string solutionPath = "src/Yarhl.sln";
 
+string netFrameworkBinDir = $"bin/{configuration}/net{netFrameworkVersion}";
+string netFrameworkOldBinDir = $"bin/{configuration}/net{netFrameworkOldVersion}";
+string netCoreBinDir = $"bin/{configuration}/netcoreapp{netCoreVersion}";
 string netBinDir = $"bin/{configuration}/net{netVersion}";
-string netcoreBinDir = $"bin/{configuration}/netcoreapp{netcoreVersion}";
 string netstandardBinDir = $"bin/{configuration}/netstandard{netstandardVersion}";
 
 Task("Clean")
@@ -82,15 +86,25 @@ Task("Build")
     });
 
     // Copy Yarhl.Media for the integration tests
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netFrameworkBinDir}/Plugins");
+    CopyFileToDirectory(
+        $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/{netFrameworkBinDir}/Plugins");
+
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netFrameworkOldBinDir}/Plugins");
+    CopyFileToDirectory(
+        $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
+        $"src/Yarhl.IntegrationTests/{netFrameworkOldBinDir}/Plugins");
+
     EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netBinDir}/Plugins");
     CopyFileToDirectory(
         $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
         $"src/Yarhl.IntegrationTests/{netBinDir}/Plugins");
 
-    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netcoreBinDir}/Plugins");
+    EnsureDirectoryExists($"src/Yarhl.IntegrationTests/{netCoreBinDir}/Plugins");
     CopyFileToDirectory(
         $"src/Yarhl.Media/{netstandardBinDir}/Yarhl.Media.dll",
-        $"src/Yarhl.IntegrationTests/{netcoreBinDir}/Plugins");
+        $"src/Yarhl.IntegrationTests/{netCoreBinDir}/Plugins");
 });
 
 Task("Run-Unit-Tests")
@@ -105,15 +119,17 @@ Task("Run-Unit-Tests")
     }
 
     var testAssemblies = new List<FilePath> {
-        $"src/Yarhl.UnitTests/{netBinDir}/Yarhl.UnitTests.dll",
-        $"src/Yarhl.IntegrationTests/{netBinDir}/Yarhl.IntegrationTests.dll"
+        $"src/Yarhl.UnitTests/{netFrameworkBinDir}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/{netFrameworkBinDir}/Yarhl.IntegrationTests.dll",
+        $"src/Yarhl.UnitTests/{netFrameworkOldBinDir}/Yarhl.UnitTests.dll",
+        $"src/Yarhl.IntegrationTests/{netFrameworkOldBinDir}/Yarhl.IntegrationTests.dll"
     };
     NUnit3(testAssemblies, settings);
 
     // .NET Core test library
     var netcoreSettings = new DotNetCoreTestSettings {
         NoBuild = true,
-        Framework = $"netcoreapp{netcoreVersion}"
+        Framework = $"netcoreapp{netCoreVersion}"
     };
 
     if (tests != string.Empty) {
@@ -126,6 +142,23 @@ Task("Run-Unit-Tests")
     DotNetCoreTest(
         $"src/Yarhl.IntegrationTests/Yarhl.IntegrationTests.csproj",
         netcoreSettings);
+
+    // .NET 5 test library
+    var netSettings = new DotNetCoreTestSettings {
+        NoBuild = true,
+        Framework = $"net{netVersion}"
+    };
+
+    if (tests != string.Empty) {
+        netSettings.Filter = $"FullyQualifiedName~{tests}";
+    }
+
+    DotNetCoreTest(
+        $"src/Yarhl.UnitTests/Yarhl.UnitTests.csproj",
+        netSettings);
+    DotNetCoreTest(
+        $"src/Yarhl.IntegrationTests/Yarhl.IntegrationTests.csproj",
+        netSettings);
 });
 
 Task("Run-Linter-Gendarme")
@@ -197,7 +230,7 @@ Task("Run-AltCover")
 
 public void TestWithAltCover(string projectPath, string assembly, string outputXml)
 {
-    string inputDir = $"{projectPath}/{netBinDir}";
+    string inputDir = $"{projectPath}/{netFrameworkBinDir}";
     string outputDir = $"{inputDir}/__Instrumented";
     if (DirectoryExists(outputDir)) {
         DeleteDirectory(
