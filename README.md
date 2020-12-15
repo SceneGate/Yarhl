@@ -46,7 +46,7 @@ your solution (.sln) file with the following content:
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
-    <add key="Yarhl-Preview" value="https://pkgs.dev.azure.com/SceneGate/Yarhl/_packaging/preview%40Local/nuget/v3/index.json" />
+    <add key="Yarhl-Preview" value="https://pkgs.dev.azure.com/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
   </packageSources>
 </configuration>
 ```
