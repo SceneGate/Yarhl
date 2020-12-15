@@ -22,9 +22,7 @@ namespace Yarhl
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-  #if !NET461
     using System.Runtime.InteropServices;
-  #endif
     using System.Runtime.Loader;
 
     /// <summary>
@@ -39,21 +37,25 @@ namespace Yarhl
         /// <returns>The assemblies.</returns>
         public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<string> paths)
         {
-          #if NET461
-            return LoadAssembliesNetFramework(paths);
-          #else
-            string framework = RuntimeInformation.FrameworkDescription;
-            if (framework.StartsWith(".NET Core", StringComparison.Ordinal)) {
-                return LoadAssembliesNetCore(paths);
-            } else if (framework.StartsWith(".NET Framework", StringComparison.Ordinal)) {
+            if (IsNetFramework()) {
                 return LoadAssembliesNetFramework(paths);
-            } else if (framework.StartsWith("Mono", StringComparison.Ordinal)) {
-                return LoadAssembliesNetFramework(paths);
-            } else {
-                // .NET 5.0.0 or later
-                return LoadAssembliesNetCore(paths);
             }
-          #endif
+
+            return LoadAssembliesNetCore(paths);
+        }
+
+        /// <summary>
+        /// Detect if the application is running with the .NET Framework runtime.
+        /// </summary>
+        /// <returns>
+        /// A value indicating whether the current runtime is
+        /// .NET Framework or not.
+        /// </returns>
+        static bool IsNetFramework()
+        {
+            string framework = RuntimeInformation.FrameworkDescription;
+            return framework.StartsWith(".NET Framework", StringComparison.Ordinal) ||
+                framework.StartsWith("Mono", StringComparison.Ordinal);
         }
 
         /// <summary>

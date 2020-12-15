@@ -212,7 +212,7 @@ msgstr """"
         [Test]
         public void ParseExtendedHeaderEntriesd()
         {
-                        string text = @"
+            string text = @"
 msgid """"
 msgstr """"
 ""Project-Id-Version: myId\n""

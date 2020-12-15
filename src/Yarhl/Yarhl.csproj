@@ -1,36 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <AssemblyName>Yarhl</AssemblyName>
-    <Description>Library to translation projects. It provides features for implementing file formats, converters and a virtual file system.</Description>
 
-    <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
-    <RootNamespace>Yarhl</RootNamespace>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <CodeAnalysisRuleSet>..\SceneGate.Standard.ruleset</CodeAnalysisRuleSet>
+  <PropertyGroup>
+    <Description>Library to translation projects. It provides features for implementing file formats, converters and a virtual file system.</Description>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.CSharp" Version="$(MicrosoftCSharpPackageVersion)" />
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="$(RecyclableStreamsPackageVersion)" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="$(ReferenceAssembliesPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="$(SonarAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Composition" Version="$(SystemCompositionPackageVersion)" />
-    <PackageReference Include="System.Runtime.Loader" Version="$(SystemRuntimeLoaderPackageVersion)" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="$(EncodingCodePagesPackageVersion)" />
+    <None Include="../../docs/images/favicon-128.png" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" />
+    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
+    <PackageReference Include="System.Composition" />
+    <PackageReference Include="System.Runtime.Loader" />
+    <PackageReference Include="System.Text.Encoding.CodePages"/>
+  </ItemGroup>
+
 </Project>

@@ -60,7 +60,7 @@ namespace Yarhl.Media.Text
             return po;
         }
 
-                static PoEntry ReadEntry(TextReader reader)
+        static PoEntry ReadEntry(TextReader reader)
         {
             // Skip all the blank lines before the block of text
             string line = string.Empty;
