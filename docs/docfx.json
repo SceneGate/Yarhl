@@ -13,30 +13,22 @@
         "dest": "api",
         "filter": "filterConfig.yml",
         "disableGitFeatures": false,
-        "disableDefaultFilter": false,
-        "properties": {
-          "TargetFramework": "netstandard2.0"
-        }
+        "disableDefaultFilter": false
       }
     ],
     "build": {
       "content": [
         {
-          "files": [
-            "api/**.yml"
-          ]
+          "files": [ "api/**.yml", "dev/**" ]
         },
         {
-          "files": [
-            "toc.yml",
-            "index.md"
-          ]
+          "files": [ "toc.yml", "index.md" ]
         },
         {
-          "files": ["fusion/**", "articles/**"]
+          "files": [ "guides/**" ]
         },
         {
-          "files": ["README.md"],
+          "files": ["README.md", "CONTRIBUTING.md"],
           "src": "../"
         }
       ],
@@ -60,9 +52,11 @@
       "globalMetadataFiles": ["global_metadata.json"],
       "fileMetadataFiles": [],
       "template": [
-        "default"
+        "default",
+        "statictoc",
+        "default-widescreen"
       ],
-      "postProcessors": [],
+      "postProcessors": ["ExtractSearchIndex"],
       "markdownEngineName": "markdig",
       "noLangKeyword": false,
       "keepFileLink": false,

@@ -1,21 +1,23 @@
 # Contributing to Yarhl
+
 Thanks for taking the time to contribute! :sparkles:
 
-In this document you will find all the information you need to make sure
-that Yarhl continues to be the high-quality product we want to be!
+In this document you will find all the information you need to make sure that
+Yarhl continues to be the high-quality product we want to be!
 
 ## Reporting issues
 
 ### Issues
+
 When reporting a problem, be as specific as possible. Ideally, you should
 provide an small snippet of code that reproduces the issue. Try to provide also
 the following information:
 
-* OS: Linux / Windows / Mac OS
-* Runtime: .NET Framework, Mono, .NET Core
-* Version of Yarhl
-* Stacktrace if any
-* What's happening and what you expect to happen
+- OS: Linux / Windows / Mac OS
+- Runtime: .NET Framework, Mono, .NET Core, .NET 5
+- Version of Yarhl
+- Stacktrace if any
+- What's happening and what you expect to happen
 
 ### Features
 
@@ -43,7 +45,7 @@ In general, the process to create a pull request is:
 5. Make the necessary code changes in as many commits as you want. The commit
    message should follow this convention:
 
-```
+```plain
 :emoji: Short description #IssueID
 
 Long description if needed.
@@ -59,20 +61,22 @@ For a complete list of emoji description see
 
 We follow the following standard guidelines with custom changes:
 
-* [Mono Code Guidelines](https://raw.githubusercontent.com/mono/website/gh-pages/community/contributing/coding-guidelines.md).
-* [Microsoft Framework Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/)
-* [Microsoft C# Coding Convetions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions).
+- [Mono Code Guidelines](https://raw.githubusercontent.com/mono/website/gh-pages/community/contributing/coding-guidelines.md).
+- [Microsoft Framework Design Guidelines](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/)
+- [Microsoft C# Coding Convetions](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/inside-a-program/coding-conventions).
 
 As the
 [mono team says](https://www.mono-project.com/community/contributing/coding-guidelines/#performance-and-readability):
 
-* It is more important to be correct than to be fast.
-* It is more important to be maintainable than to be fast.
-* Fast code that is difficult to maintain is likely going to be looked down upon.
+- It is more important to be correct than to be fast.
+- It is more important to be maintainable than to be fast.
+- Fast code that is difficult to maintain is likely going to be looked down
+  upon.
 
-And don't miss [The Zen of Python](https://www.python.org/dev/peps/pep-0020/#id3):
+And don't miss
+[The Zen of Python](https://www.python.org/dev/peps/pep-0020/#id3):
 
-```
+```plain
 Beautiful is better than ugly.
 Explicit is better than implicit.
 Simple is better than complex.
@@ -98,38 +102,39 @@ Namespaces are one honking great idea -- let's do more of those!
 
 We focus on code-quality to make ours and others life easier. For that reason:
 
-* :heavy_check_mark: **DO** write documentation for any public type and field.
-* :heavy_check_mark: **DO** write a test for all the possible code branches of
+- :heavy_check_mark: **DO** write documentation for any public type and field.
+- :heavy_check_mark: **DO** write a test for all the possible code branches of
   your methods. Use a TDD approach.
-* :heavy_check_mark: **DO** seek for 100% test coverage.
-* :heavy_check_mark: **DO** seek for compiler warning free code.
-* :heavy_check_mark: **DO** check the code with StyleCop for style issues.
-* :heavy_check_mark: **DO** check the code with Gendarme for design issues.
-* :heavy_check_mark: **DO** review the results of SonarQube in the Pull Request.
-* :heavy_check_mark: **DO** make sure the CI pass.
+- :heavy_check_mark: **DO** seek for 100% test coverage.
+- :heavy_check_mark: **DO** seek for compiler warning free code.
+- :heavy_check_mark: **DO** check the code with StyleCop for style issues.
+- :heavy_check_mark: **DO** check the code with Gendarme for design issues.
+- :heavy_check_mark: **DO** review the results of SonarQube in the Pull Request.
+- :heavy_check_mark: **DO** make sure the CI pass.
 
 ### Style Guidelines
 
 #### Indentation
 
-* :heavy_check_mark: **DO** use **spaces** with an indentation level of 4 spaces.
-* :x: **DO NOT** use tabs.
+- :heavy_check_mark: **DO** use **spaces** with an indentation level of 4
+  spaces.
+- :x: **DO NOT** use tabs.
 
 #### New lines
 
-* :heavy_check_mark: **DO** use Unix new lines: `\n` instead of Windows style
+- :heavy_check_mark: **DO** use Unix new lines: `\n` instead of Windows style
   `\r\n`. In general, Git will handle that for you.
-* :heavy_check_mark: **DO** make sure there is an empty line at the end of the
+- :heavy_check_mark: **DO** make sure there is an empty line at the end of the
   file. This ensure the latest line ends with the new line character and adding
   new lines after it won't show that line as changed in the diff.
 
 #### Line length
 
-* :heavy_check_mark: **DO** use a limit of 80 columns. If you need to wrap,
-  move to the next line with one extra indentation level.
-* :heavy_check_mark: **DO** put all the arguments in a new line if they don't
+- :heavy_check_mark: **DO** use a limit of 80 columns. If you need to wrap, move
+  to the next line with one extra indentation level.
+- :heavy_check_mark: **DO** put all the arguments in a new line if they don't
   fit.
-* :heavy_check_mark: **DO** use local variables to make small conditions.
+- :heavy_check_mark: **DO** use local variables to make small conditions.
 
 ```csharp
 void Method(
@@ -152,16 +157,16 @@ void Method(
 
 #### Layout
 
-* :heavy_check_mark: **DO** define a type (class / struct / enum) per file.
-* :heavy_check_mark: **DO** separate methods and properties with new lines.
-* :heavy_check_mark: **DO** place the elements in this order:
-  private fields, constructors, properties, methods, nested types. Place first
-  static fields and order by visibility: public, protected, private.
+- :heavy_check_mark: **DO** define a type (class / struct / enum) per file.
+- :heavy_check_mark: **DO** separate methods and properties with new lines.
+- :heavy_check_mark: **DO** place the elements in this order: private fields,
+  constructors, properties, methods, nested types. Place first static fields and
+  order by visibility: public, protected, private.
 
 #### Spacing rules
 
-* :x: **DO NOT** leave any trailing spaces.
-* :x: **DO NOT** use space before opening parenthesis calling methods or
+- :x: **DO NOT** leave any trailing spaces.
+- :x: **DO NOT** use space before opening parenthesis calling methods or
   indexers, between the parenthesis and the arguments or between the generic
   types.
 
@@ -171,7 +176,7 @@ array [ 10 ];
 var list = new List <int> ();
 ```
 
-* :heavy_check_mark: **DO** use the following convention:
+- :heavy_check_mark: **DO** use the following convention:
 
 ```csharp
 Method(a);
@@ -179,14 +184,14 @@ array[10];
 var list = new List<int>();
 ```
 
-* :heavy_check_mark: **DO** use spaces and parenthesis for clarity in math
+- :heavy_check_mark: **DO** use spaces and parenthesis for clarity in math
   operations:
 
 ```csharp
 int b = (a + (5 * 2)) / (3 + 3);
 ```
 
-* :heavy_check_mark: **DO** indent `case` statements:
+- :heavy_check_mark: **DO** indent `case` statements:
 
 ```csharp
 switch (a) {
@@ -205,7 +210,7 @@ switch (a) {
 
 #### Brace position
 
-* :heavy_check_mark: **DO** put the opening brace on the same line for
+- :heavy_check_mark: **DO** put the opening brace on the same line for
   conditions, loops and try-catch.
 
 ```csharp
@@ -231,7 +236,7 @@ for (int i = 0; i < 2; i++) {
 }
 ```
 
-* :heavy_check_mark: **DO** use braces for one line conditions and loops. This
+- :heavy_check_mark: **DO** use braces for one line conditions and loops. This
   improves readability and avoid having changed lines just to add the brace when
   it requires extra logic. The exception is for one line conditions for argument
   checking.
@@ -242,7 +247,7 @@ if (a) {
 }
 ```
 
-* :heavy_check_mark: **DO** put the brace in a new line when defining the
+- :heavy_check_mark: **DO** put the brace in a new line when defining the
   namespace, a type or a method.
 
 ```csharp
@@ -257,10 +262,10 @@ namespace Program.Text
 }
 ```
 
-* :heavy_check_mark: **DO** put the brace in the same line for properties and
+- :heavy_check_mark: **DO** put the brace in the same line for properties and
   indexers.
 
-``` csharp
+```csharp
 public int Property {
     get {
         return value;
@@ -268,9 +273,9 @@ public int Property {
 }
 ```
 
-* :heavy_check_mark: **DO** put each brace on a new line for empty methods.
+- :heavy_check_mark: **DO** put each brace on a new line for empty methods.
 
-``` csharp
+```csharp
 void EmptyMethod()
 {
 }
@@ -278,7 +283,7 @@ void EmptyMethod()
 
 #### Multiline comments
 
-* :heavy_check_mark: **DO** use always double slash comments.
+- :heavy_check_mark: **DO** use always double slash comments.
 
 ```csharp
 // Blah
@@ -288,13 +293,13 @@ void EmptyMethod()
 
 ### Properties
 
-* :x: **DO NOT** use public variables under any circumstance.
+- :x: **DO NOT** use public variables under any circumstance.
 
-* :heavy_check_mark: **DO** use static properties for constants.
+- :heavy_check_mark: **DO** use static properties for constants.
 
-* :heavy_check_mark: **DO** put the getter and setter in a new line for
+- :heavy_check_mark: **DO** put the getter and setter in a new line for
   automatic or one line properties.
-  
+
 ```csharp
 public int Property {
     get { return value; }
@@ -309,7 +314,7 @@ public int Text {
 
 ### File headers
 
-* :heavy_check_mark: **DO** put the license in the file header with this format:
+- :heavy_check_mark: **DO** put the license in the file header with this format:
 
 ```csharp
 //
@@ -341,7 +346,7 @@ public int Text {
 
 ### Naming
 
-* :heavy_check_mark: **DO** use **always** camel casing.
+- :heavy_check_mark: **DO** use **always** camel casing.
 
 ```csharp
 void Method(string myArgument)
@@ -353,20 +358,20 @@ class MyClass
 }
 ```
 
-* :x: **DO NOT** use `m_` or `_` as prefixes for private instance members. The
+- :x: **DO NOT** use `m_` or `_` as prefixes for private instance members. The
   private visibility was created for that, really.
 
 ### Keyword `this`
 
-* :x: **DO NOT** use `this` if it's not needed.
-* :heavy_check_mark: **DO** use `this` if the method has an argument with the
+- :x: **DO NOT** use `this` if it's not needed.
+- :heavy_check_mark: **DO** use `this` if the method has an argument with the
   same name.
 
 ```csharp
 class Foo
 {
     int bar;
- 
+
     public Foo(int bar)
     {
         this.bar = bar;
@@ -386,17 +391,17 @@ class Foo
 
 ### Keyword `var`
 
-* :heavy_check_mark: **DO** use the `var` on the left-hand side of an assignment
+- :heavy_check_mark: **DO** use the `var` on the left-hand side of an assignment
   when the type name is repeated on the right hand side:
 
-``` csharp
+```csharp
 var monkeyUUID = new NSUuid(uuid);
 NSUuid something = RetrieveUUID();
 ```
 
 ### Initializing instances
 
-* :heavy_check_mark: **DO** use the C# syntax to initialize instances.
+- :heavy_check_mark: **DO** use the C# syntax to initialize instances.
 
 ```csharp
 var x = new Foo {
@@ -420,20 +425,19 @@ var dict = new Dictionary<string, int> {
 
 ### Redundant visibility
 
-* :x: **DO NOT** use the `private` keyword to indicate internal fields since
+- :x: **DO NOT** use the `private` keyword to indicate internal fields since
   it's already the default visibility.
 
 ### Usings
 
-* :heavy_check_mark: **DO** put the `using` inside the namespace.
-* :heavy_check_mark: **DO** include all the namespaces you are using.
+- :heavy_check_mark: **DO** put the `using` inside the namespace.
+- :heavy_check_mark: **DO** include all the namespaces you are using.
 
-
-* :heavy_check_mark: **DO** use the `using` statement for `IDisposable` types.
+- :heavy_check_mark: **DO** use the `using` statement for `IDisposable` types.
 
 ### Built-in types
 
-* :heavy_check_mark: **DO** use the built-in type alias instead of the class
+- :heavy_check_mark: **DO** use the built-in type alias instead of the class
   names.
 
 ```csharp
@@ -445,18 +449,17 @@ string d = int.Parse("5");
 
 #### Integers
 
-* :heavy_check_mark: **DO** try to avoid unsigned integers in public method
+- :heavy_check_mark: **DO** try to avoid unsigned integers in public method
   arguments and properties. Some .NET language doesn't support them.
 
 #### Strings
 
-* :heavy_check_mark: **DO** use the new string interpolation:
+- :heavy_check_mark: **DO** use the new string interpolation:
 
 ```csharp
 int a = 5;
 string b = $"The result is {a}";
 ```
 
-* :heavy_check_mark: **DO** use the `StringBuilder` class when creating strings
+- :heavy_check_mark: **DO** use the `StringBuilder` class when creating strings
   with many operations.
-

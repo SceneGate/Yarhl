@@ -1,40 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <OutputType>Library</OutputType>
-    <AssemblyName>Yarhl.UnitTests</AssemblyName>
-    <Description>Yarhl unit tests.</Description>
 
-    <TargetFrameworks>netcoreapp3.1;net461;net48;net5.0</TargetFrameworks>
-    <RootNamespace>Yarhl.UnitTests</RootNamespace>
-    <LangVersion>8.0</LangVersion>
-    <CodeAnalysisRuleSet>..\SceneGate.Test.ruleset</CodeAnalysisRuleSet>
-    <!-- Mark the project as being a test project -->
-    <SonarQubeTestProject>true</SonarQubeTestProject>
+  <PropertyGroup>
+    <Description>Yarhl unit tests.</Description>
+    <TargetFrameworks>netcoreapp3.1;net48;net5.0</TargetFrameworks>
+    <LangVersion>9.0</LangVersion>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="$(FxCopAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="$(NetTestSdkPackageVersion)" />
-    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="$(ReferenceAssembliesPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="NUnit" Version="$(NUnitPackageVersion)" />
-    <PackageReference Include="NUnit3TestAdapter" Version="$(NUnit3TestAdapterPackageVersion)" />
-    <PackageReference Include="SonarAnalyzer.CSharp" Version="$(SonarAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="$(StyleCopAnalyzerPackageVersion)">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
+
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="coverlet.collector" />
   </ItemGroup>
 </Project>

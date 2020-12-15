@@ -8,16 +8,19 @@ plugin support. It's built in C# / .NET and works in Windows, Linux and Mac OS
 X.
 
 <!-- prettier-ignore -->
-| NuGet | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
-| ----- | ------ |
-| **Build & Test** | [![Build Status](https://dev.azure.com/SceneGate/Yarhl/_apis/build/status/SceneGate.Yarhl?branchName=develop)](https://dev.azure.com/SceneGate/Yarhl/_build?definitionId=1&_a=summary&repositoryFilter=1&branchFilter=38) ![Azure DevOps tests](https://img.shields.io/azure-devops/tests/SceneGate/Yarhl/1?compact_message) ![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/SceneGate/Yarhl/1) |
-| **Quality report** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) [![Total alerts](https://img.shields.io/lgtm/alerts/g/SceneGate/Yarhl.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SceneGate/Yarhl/alerts/) |
+| NuGet              | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
+| ------------------ | ------ |
+| **Build & Test**   | TODO   |
+| **Quality report** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) |
 
 ## Documentation
 
+Feel free to ask any question in the
+[project Discussion site!](https://github.com/SceneGate/Yarhl/discussions).
+
 Check our on-line API overview:
 [Yarhl in a nutshell](https://scenegate.github.io/Yarhl/articles/Yarhl-nutshell.html)
-and the API documentation
+and the complete API documentation
 [here](https://scenegate.github.io/Yarhl/api/Yarhl.html).
 
 ## Install
@@ -27,26 +30,44 @@ Stable releases are available from nuget.org:
 - [Yarhl](https://www.nuget.org/packages/Yarhl)
 - [Yarhl.Media](https://www.nuget.org/packages/Yarhl.Media)
 
-Alpha releases can be found in this
+The libraries target .NET Standard 2.0. The tests (so the library) runs with the
+supported runtimes:
+
+- .NET 5.0
+- .NET Core 3.1
+- .NET Framework 4.8 or Mono (latest on CI)
+
+Preview releases can be found in this
 [Azure DevOps package repository](https://dev.azure.com/SceneGate/Yarhl/_packaging).
-To use an alpha release, create a file `nuget.config` in the same directory of
+To use a preview release, create a file `nuget.config` in the same directory of
 your solution (.sln) file with the following content:
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
-    <add key="Yarhl-Alpha" value="https://pkgs.dev.azure.com/SceneGate/Yarhl/_packaging/preview%40Local/nuget/v3/index.json" />
+    <add key="Yarhl-Preview" value="https://pkgs.dev.azure.com/SceneGate/Yarhl/_packaging/preview%40Local/nuget/v3/index.json" />
   </packageSources>
 </configuration>
 ```
 
 ## Build
 
-Since the unit tests are validated against .NET 5, .NET Core and .NET Framework
-and Mono, the three runtimes must be installed on the machine. Then run:
+The project requires to build .NET 5.0 SDK, .NET Core 3.1 runtime and .NET
+Framework 4.8 or latest Mono.
+
+To build, test and generate artifacts run:
 
 ```sh
+# Only required the first time
 dotnet tool restore
+
+# Default target is Stage-Artifacts
 dotnet cake
+```
+
+To just build and test quickly, run:
+
+```sh
+dotnet cake --target=BuildTest
 ```

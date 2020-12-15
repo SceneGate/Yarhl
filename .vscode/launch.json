@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "Cake: Run Build for release",
+            "program": "${workspaceFolder}/src/Yarhl.PerformanceTests/bin/Release/net5.0/Yarhl.PerformanceTests.dll",
+            "args": [ "auto" ],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "console": "internalConsole"
+        }
+    ]
+}
