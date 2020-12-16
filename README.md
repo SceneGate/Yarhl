@@ -38,7 +38,7 @@ supported runtimes:
 - .NET Framework 4.8 or Mono (latest on CI)
 
 Preview releases can be found in this
-[Azure DevOps package repository](https://dev.azure.com/SceneGate/Yarhl/_packaging).
+[Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
 To use a preview release, create a file `nuget.config` in the same directory of
 your solution (.sln) file with the following content:
 
@@ -46,7 +46,7 @@ your solution (.sln) file with the following content:
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
-    <add key="Yarhl-Preview" value="https://pkgs.dev.azure.com/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
+    <add key="Yarhl-Preview" value="https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
   </packageSources>
 </configuration>
 ```
