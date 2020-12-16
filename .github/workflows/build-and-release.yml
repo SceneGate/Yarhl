@@ -100,7 +100,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       # Needed only for Azure DevOps Artifacts due to its weird auth method.
-      PREVIEW_NUGET_FEED: 'https://pkgs.dev.azure.com/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json'
+      PREVIEW_NUGET_FEED: 'https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json'
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2

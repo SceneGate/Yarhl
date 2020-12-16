@@ -9,7 +9,7 @@ Task("Define-Project")
     info.AddTestProjects("Yarhl.UnitTests");
     info.AddTestProjects("Yarhl.IntegrationTests");
 
-    info.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
+    info.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
 });
 
 Task("Prepare-IntegrationTests")

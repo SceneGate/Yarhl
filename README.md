@@ -38,7 +38,7 @@ supported runtimes:
 - .NET Framework 4.8 or Mono (latest on CI)
 
 Preview releases can be found in this
-[Azure DevOps package repository](https://dev.azure.com/SceneGate/Yarhl/_packaging).
+[Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
 To use a preview release, create a file `nuget.config` in the same directory of
 your solution (.sln) file with the following content:
 
@@ -46,7 +46,7 @@ your solution (.sln) file with the following content:
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
-    <add key="Yarhl-Preview" value="https://pkgs.dev.azure.com/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
+    <add key="SceneGate-Preview" value="https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
   </packageSources>
 </configuration>
 ```
@@ -54,7 +54,11 @@ your solution (.sln) file with the following content:
 ## Build
 
 The project requires to build .NET 5.0 SDK, .NET Core 3.1 runtime and .NET
-Framework 4.8 or latest Mono.
+Framework 4.8 or latest Mono. If you open the project with VS Code and you did
+install the
+[VS Code Remote Containers](https://code.visualstudio.com/docs/remote/containers)
+extension, you can have an already pre-configured development environment with
+Docker or Podman.
 
 To build, test and generate artifacts run:
 
