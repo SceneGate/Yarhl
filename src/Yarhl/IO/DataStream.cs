@@ -259,17 +259,17 @@ namespace Yarhl.IO
                 throw new ObjectDisposedException(nameof(DataStream));
 
             switch (mode) {
-            case SeekMode.Current:
-                Position += shift;
-                break;
-            case SeekMode.Start:
-                Position = shift;
-                break;
-            case SeekMode.End:
-                Position = Length - shift;
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(mode));
+                case SeekMode.Current:
+                    Position += shift;
+                    break;
+                case SeekMode.Start:
+                    Position = shift;
+                    break;
+                case SeekMode.End:
+                    Position = Length - shift;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode));
             }
         }
 

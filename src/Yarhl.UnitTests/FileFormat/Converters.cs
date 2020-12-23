@@ -22,9 +22,9 @@ namespace Yarhl.UnitTests.FileFormat
     using System;
     using Yarhl.FileFormat;
 
-  // Disable file may only contain a single class since we aren't going
-  // to create a file per test converter.
-  #pragma warning disable SA1402, SA1649
+    // Disable file may only contain a single class since we aren't going
+    // to create a file per test converter.
+#pragma warning disable SA1402, SA1649
 
     public interface IInterface
     {
@@ -201,6 +201,6 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
-  #pragma warning restore SA1402, SA1649
+#pragma warning restore SA1402, SA1649
 
 }

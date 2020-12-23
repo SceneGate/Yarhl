@@ -1233,8 +1233,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteUsingReflection()
         {
-            var obj = new ComplexObject
-            {
+            var obj = new ComplexObject {
                 IntegerValue = 1,
                 LongValue = 2,
                 IgnoredIntegerValue = 3,
@@ -1262,11 +1261,9 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNestedObjectUsingReflection()
         {
-            var obj = new NestedObject()
-            {
+            var obj = new NestedObject() {
                 IntegerValue = 10,
-                ComplexValue = new ComplexObject
-                {
+                ComplexValue = new ComplexObject {
                     IntegerValue = 1,
                     LongValue = 2,
                     IgnoredIntegerValue = 3,
@@ -1298,8 +1295,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteBooleanUsingReflection()
         {
-            var obj = new ObjectWithDefaultBooleanAttribute()
-            {
+            var obj = new ObjectWithDefaultBooleanAttribute() {
                 IntegerValue = 1,
                 BooleanValue = false,
                 IgnoredIntegerValue = 3,
@@ -1327,8 +1323,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCustomBooleanUsingReflection()
         {
-            var obj = new ObjectWithCustomBooleanAttribute()
-            {
+            var obj = new ObjectWithCustomBooleanAttribute() {
                 IntegerValue = 1,
                 BooleanValue = false,
                 IgnoredIntegerValue = 5,
@@ -1356,8 +1351,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteBooleanWithoutAttributeThrowsException()
         {
-            var obj = new ObjectWithoutBooleanAttribute()
-            {
+            var obj = new ObjectWithoutBooleanAttribute() {
                 IntegerValue = 1,
                 BooleanValue = true,
                 IgnoredIntegerValue = 3,

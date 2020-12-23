@@ -364,9 +364,9 @@ namespace Yarhl.Media.Text.Encodings
                         .GetManifestResourceStream(path);
 
                     using (var reader = new StreamReader(stream)) {
-                      #pragma warning disable IDISP003
+#pragma warning disable IDISP003
                         stream = null;  // Avoid disposing twice
-                      #pragma warning restore IDISP003
+#pragma warning restore IDISP003
 
                         while (!reader.EndOfStream) {
                             string line = reader.ReadLine();

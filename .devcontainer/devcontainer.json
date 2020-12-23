@@ -10,7 +10,6 @@
 
     "extensions": [
         "ms-dotnettools.csharp",
-        "k--kato.docomment",
         "shardulm94.trailing-spaces",
         "cake-build.cake-vscode",
         "streetsidesoftware.code-spell-checker",
