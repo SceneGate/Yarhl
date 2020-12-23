@@ -113,13 +113,13 @@ csharp_preferred_modifier_order = public,private,protected,internal,static,exter
 
 ## C# formatting rules
 ### New line preferences
-csharp_new_line_before_open_brace = local_functions,methods,types:warning
-csharp_new_line_before_else = false:warning
-csharp_new_line_before_catch = false:warning
-csharp_new_line_before_finally = false:warning
-csharp_new_line_before_members_in_object_initializers = true:warning
-csharp_new_line_before_members_in_anonymous_types = true:warning
-csharp_new_line_between_query_expression_clauses = true:warning
+csharp_new_line_before_open_brace = local_functions,methods,types
+csharp_new_line_before_else = false
+csharp_new_line_before_catch = false
+csharp_new_line_before_finally = false
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
 
 ### Indentation preferences
 csharp_indent_case_contents = true:warning

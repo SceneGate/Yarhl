@@ -58,8 +58,7 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets the node name.
         /// </summary>
-        public string Name
-        {
+        public string Name {
             get;
             private set;
         }
@@ -156,8 +155,7 @@ namespace Yarhl.FileSystem
 
             // Add method modifies the nodes collection, so we need a IList and we can't use a 'foreach' loop.
             List<T> nodesList = nodes.ToList();
-            for (int i = 0; i < nodesList.Count; i++)
-            {
+            for (int i = 0; i < nodesList.Count; i++) {
                 T node = nodesList[i];
                 Add(node);
             }
@@ -313,8 +311,7 @@ namespace Yarhl.FileSystem
         private bool IsDescendantOf(T node)
         {
             T current = this.Parent;
-            while (current != null)
-            {
+            while (current != null) {
                 if (current == node)
                     return true;
 

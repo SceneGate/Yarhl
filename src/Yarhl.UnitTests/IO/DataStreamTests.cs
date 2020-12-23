@@ -1782,8 +1782,7 @@ namespace Yarhl.UnitTests.IO
             source.Write(data, 0, data.Length);
 
             DataStream[] streams = new DataStream[streamCount];
-            for (int i = 0; i < streamCount; i++)
-            {
+            for (int i = 0; i < streamCount; i++) {
                 streams[i] = new DataStream(source, testDataLength * i, testDataLength);
             }
 
@@ -1792,29 +1791,24 @@ namespace Yarhl.UnitTests.IO
             result.Position = 0;
 
             DataStream[] writeStreams = new DataStream[streamCount];
-            for (int i = 0; i < streamCount; i++)
-            {
+            for (int i = 0; i < streamCount; i++) {
                 writeStreams[i] = new DataStream(result, testDataLength * i, testDataLength);
             }
 
             byte[][] read = new byte[streamCount][];
-            for (int i = 0; i < streamCount; i++)
-            {
+            for (int i = 0; i < streamCount; i++) {
                 read[i] = new byte[testDataLength];
             }
 
-            Parallel.For(0, streamCount, i =>
-            {
+            Parallel.For(0, streamCount, i => {
                 streams[i].Read(read[i], 0, testDataLength);
             });
 
-            Parallel.For(0, streamCount, i =>
-            {
+            Parallel.For(0, streamCount, i => {
                 writeStreams[i].Write(read[i], 0, testDataLength);
             });
 
-            for (int i = 0; i < streamCount; i++)
-            {
+            for (int i = 0; i < streamCount; i++) {
                 Assert.That(streams[i].Compare(writeStreams[i]), Is.True);
                 streams[i].Dispose();
                 writeStreams[i].Dispose();

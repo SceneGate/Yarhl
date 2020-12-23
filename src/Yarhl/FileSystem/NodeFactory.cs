@@ -155,8 +155,7 @@ namespace Yarhl.FileSystem
             var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
-                node = new Node(nodeName, format)
-                {
+                node = new Node(nodeName, format) {
                     Tags = { ["FileInfo"] = new FileInfo(filePath) },
                 };
             } catch {

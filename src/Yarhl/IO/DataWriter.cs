@@ -434,8 +434,7 @@ namespace Yarhl.IO
             if (serializable) {
                 WriteUsingReflection(type, val);
             } else {
-                switch (val)
-                {
+                switch (val) {
                     case long l:
                         Write(l);
                         break;

@@ -75,16 +75,16 @@ namespace Yarhl.IO
         public static FileMode ToFileMode(this FileOpenMode openMode)
         {
             switch (openMode) {
-            case FileOpenMode.Read:
-                return FileMode.Open;
-            case FileOpenMode.Write:
-                return FileMode.Create;
-            case FileOpenMode.Append:
-                return FileMode.Append;
-            case FileOpenMode.ReadWrite:
-                return FileMode.OpenOrCreate;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(openMode));
+                case FileOpenMode.Read:
+                    return FileMode.Open;
+                case FileOpenMode.Write:
+                    return FileMode.Create;
+                case FileOpenMode.Append:
+                    return FileMode.Append;
+                case FileOpenMode.ReadWrite:
+                    return FileMode.OpenOrCreate;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(openMode));
             }
         }
 
@@ -96,16 +96,16 @@ namespace Yarhl.IO
         public static FileAccess ToFileAccess(this FileOpenMode openMode)
         {
             switch (openMode) {
-            case FileOpenMode.Read:
-                return FileAccess.Read;
-            case FileOpenMode.Write:
-                return FileAccess.Write;
-            case FileOpenMode.Append:
-                return FileAccess.Write;
-            case FileOpenMode.ReadWrite:
-                return FileAccess.ReadWrite;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(openMode));
+                case FileOpenMode.Read:
+                    return FileAccess.Read;
+                case FileOpenMode.Write:
+                    return FileAccess.Write;
+                case FileOpenMode.Append:
+                    return FileAccess.Write;
+                case FileOpenMode.ReadWrite:
+                    return FileAccess.ReadWrite;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(openMode));
             }
         }
     }
