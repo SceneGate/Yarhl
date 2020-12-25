@@ -216,7 +216,20 @@ namespace Yarhl.UnitTests.IO.StreamFormat
             var innerStream = new Mock<Stream>();
             var stream = new StreamWrapper(innerStream.Object);
             stream.Flush();
-            innerStream.Verify(s => s.Flush(), Times.Once);
+            Assert.That(
+                () => innerStream.Verify(s => s.Flush(), Times.Once),
+                Throws.Nothing);
+        }
+
+        [Test]
+        public void TestFlushThrowsIfDisposed()
+        {
+            var innerStream = new Mock<Stream>();
+            var stream = new StreamWrapper(innerStream.Object);
+            stream.Dispose();
+            Assert.That(
+                () => stream.Flush(),
+                Throws.InstanceOf<ObjectDisposedException>());
         }
     }
 }

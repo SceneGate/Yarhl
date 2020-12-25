@@ -97,6 +97,9 @@ namespace Yarhl.IO.StreamFormat
         /// <inheritdoc />
         public virtual void Flush()
         {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(StreamWrapper));
+
             BaseStream.Flush();
         }
 
