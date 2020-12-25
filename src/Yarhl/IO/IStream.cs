@@ -43,7 +43,7 @@ namespace Yarhl.IO
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="IStream" />
-        /// has been dispsosed.
+        /// has been disposed.
         /// </summary>
         bool Disposed { get; }
 
@@ -55,6 +55,12 @@ namespace Yarhl.IO
         /// Some streams may not implement or support changing the length.
         /// </para></remarks>
         void SetLength(long length);
+
+        /// <summary>
+        /// Clears all buffers for this stream and causes any buffered data
+        /// to be written to the underlying device.
+        /// </summary>
+        void Flush();
 
         /// <summary>
         /// Reads the next byte.

@@ -44,7 +44,7 @@ will dispose the `Stream` too.
 #### Comparison
 
 The `DataStream` class provides the
-[`Compare`](<xref:Yarhl.IO.DataStream.Compare(Yarhl.IO.DataStream)>) method to
+[`Compare`](<xref:Yarhl.IO.DataStream.Compare(System.IO.Stream)>) method to
 check if two streams are identical.
 
 #### Push and pop positions
@@ -167,7 +167,7 @@ public void LoadFile(string path)
 {
     using (var stream = DataStreamFactory.FromFile(path, FileOpenMode.Read)) {
         var reader = new DataReader(stream) {
-            DefaultEncoding = new EscapeOutRangeEnconding("ascii"),
+            DefaultEncoding = new EscapeOutRangeEncoding("ascii"),
             Endianness = EndiannessMode.BigEndian,
         };
 
@@ -296,7 +296,7 @@ contains a root folder, also known as `Node`. So let's see what a `Node` is.
 
 This is the main feature of Yarhl and the most important one, no doubt, 10/10
 Yarhl users would say so<sup>1</sup>. Yarhl has a virtual file system to handle
-your files while mantaining your computer intact, you can now delete your
+your files while maintaining your computer intact, you can now delete your
 "tests" folder and clean your desktop after-ages.
 
 <sup>1</sup> <small>None of Yarhl users wants to talk with me anymore. This may
@@ -383,7 +383,7 @@ foreach (var node in root.Children) {
 ```
 
 But if you want to iterate over the full tree of nodes, that is, including the
-children of your childrens (like `node` in the above example), you can use the
+children of your children (like `node` in the above example), you can use the
 `Navigator`.
 
 ```csharp

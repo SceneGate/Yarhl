@@ -21,6 +21,7 @@ namespace Yarhl.IO
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Text;
 
     /// <summary>
@@ -42,7 +43,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextWriter(DataStream stream)
+        public TextWriter(Stream stream)
             : this(stream, Encoding.UTF8)
         {
         }
@@ -52,7 +53,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextWriter(DataStream stream, string encoding)
+        public TextWriter(Stream stream, string encoding)
             : this(stream, Encoding.GetEncoding(encoding))
         {
         }
@@ -62,7 +63,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextWriter(DataStream stream, Encoding encoding)
+        public TextWriter(Stream stream, Encoding encoding)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -81,7 +82,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public DataStream Stream {
+        public Stream Stream {
             get;
             private set;
         }

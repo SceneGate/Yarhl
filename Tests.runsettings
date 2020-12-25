@@ -13,7 +13,7 @@
         <Configuration>
           <Format>cobertura</Format>
           <Exclude>[.*UnitTest]*,[.*IntegrationTest]*</Exclude>
-          <ExcludeByAttribute>GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute</ExcludeByAttribute>
+          <ExcludeByAttribute>GeneratedCodeAttribute,ExcludeFromCodeCoverageAttribute,ObsoleteAttribute</ExcludeByAttribute>
         </Configuration>
       </DataCollector>
     </DataCollectors>

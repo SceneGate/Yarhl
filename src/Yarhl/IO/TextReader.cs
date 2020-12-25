@@ -21,6 +21,7 @@ namespace Yarhl.IO
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
 
@@ -44,7 +45,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextReader(DataStream stream)
+        public TextReader(Stream stream)
             : this(stream, Encoding.UTF8)
         {
         }
@@ -54,7 +55,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextReader(DataStream stream, string encoding)
+        public TextReader(Stream stream, string encoding)
             : this(stream, Encoding.GetEncoding(encoding))
         {
         }
@@ -64,7 +65,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextReader(DataStream stream, Encoding encoding)
+        public TextReader(Stream stream, Encoding encoding)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
@@ -79,7 +80,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public DataStream Stream {
+        public Stream Stream {
             get;
             private set;
         }
@@ -156,7 +157,7 @@ namespace Yarhl.IO
                 throw new ArgumentNullException(nameof(token));
 
             // If starting is EOF, then return null
-            if (Stream.EndOfStream) {
+            if (Stream.Position >= Stream.Length) {
                 return null;
             }
 
@@ -176,7 +177,7 @@ namespace Yarhl.IO
             int matchIndex = -1;
 
             while (matchIndex == -1) {
-                if (Stream.EndOfStream) {
+                if (Stream.Position >= Stream.Length) {
                     break;
                 }
 
@@ -196,7 +197,7 @@ namespace Yarhl.IO
             if (matchIndex != -1) {
                 // We skip the bytes of the token too
                 string fullResult = text.Substring(0, matchIndex + token.Length);
-                Stream.Seek(startPos + Encoding.GetByteCount(fullResult), SeekMode.Start);
+                Stream.Seek(startPos + Encoding.GetByteCount(fullResult), SeekOrigin.Begin);
 
                 // Result without token
                 text = text.Substring(0, matchIndex);
@@ -245,7 +246,7 @@ namespace Yarhl.IO
         {
             long startPos = Stream.Position;
             char ch = Read();
-            Stream.Seek(startPos, SeekMode.Start);
+            Stream.Seek(startPos, SeekOrigin.Begin);
             return ch;
         }
 
@@ -258,7 +259,7 @@ namespace Yarhl.IO
         {
             long startPos = Stream.Position;
             char[] chars = Read(count);
-            Stream.Seek(startPos, SeekMode.Start);
+            Stream.Seek(startPos, SeekOrigin.Begin);
             return chars;
         }
 
@@ -271,7 +272,7 @@ namespace Yarhl.IO
         {
             long startPos = Stream.Position;
             string content = ReadToToken(token);
-            Stream.Seek(startPos, SeekMode.Start);
+            Stream.Seek(startPos, SeekOrigin.Begin);
             return content;
         }
 
@@ -283,7 +284,7 @@ namespace Yarhl.IO
         {
             long startPos = Stream.Position;
             string line = ReadLine();
-            Stream.Seek(startPos, SeekMode.Start);
+            Stream.Seek(startPos, SeekOrigin.Begin);
             return line;
         }
 
@@ -306,7 +307,7 @@ namespace Yarhl.IO
 
             // If it didn't fully match it wasn't a preamble, returns to 0
             if (!match) {
-                Stream.Seek(0, SeekMode.Start);
+                Stream.Seek(0, SeekOrigin.Begin);
             }
         }
     }
