@@ -20,6 +20,7 @@
 namespace Yarhl.IO
 {
     using System;
+    using System.IO;
 
     /// <summary>
     /// Binary format.
@@ -38,28 +39,32 @@ namespace Yarhl.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
         /// </summary>
-        /// <remarks>
-        /// <para>This format creates a substream from the provided stream.</para>
-        /// </remarks>
-        /// <param name="stream">Binary stream.</param>
-        public BinaryFormat(DataStream stream)
+        /// <param name="stream">
+        /// Stream to wrap as a format. It takes over the ownership of the stream.
+        /// You must not dispose it.
+        /// </param>
+        public BinaryFormat(Stream stream)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-            Stream = stream;
+            Stream = stream as DataStream ?? DataStreamFactory.FromStream(stream);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
         /// </summary>
         /// <remarks>
-        /// <para>This format creates a substream from the provided stream.</para>
+        /// <para>This format creates an internal <see cref="DataStream" /> from the
+        /// provided stream. It will take over the ownership of the stream
+        /// argument, you should not dispose this argument, unless you are
+        /// providing a <see cref="DataStream" /> in which case it is safe and
+        /// recommended to dispose it.</para>
         /// </remarks>
         /// <param name="stream">Binary stream.</param>
         /// <param name="offset">Offset from the DataStream start.</param>
         /// <param name="length">Length of the substream.</param>
-        public BinaryFormat(DataStream stream, long offset, long length)
+        public BinaryFormat(Stream stream, long offset, long length)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -68,7 +73,7 @@ namespace Yarhl.IO
             if (length < 0 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            Stream = new DataStream(stream, offset, length);
+            Stream = DataStreamFactory.FromStream(stream, offset, length);
         }
 
         /// <summary>

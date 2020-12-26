@@ -53,6 +53,19 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CreateFromStreamWithDataStreamReuseIStream()
+        {
+            using var stream = new MemoryStream();
+            var dataStream1 = DataStreamFactory.FromStream(stream);
+            var dataStream2 = DataStreamFactory.FromStream(dataStream1);
+
+            Assert.That(dataStream1.BaseStream, Is.SameAs(dataStream2.BaseStream));
+
+            // Especially important check for thread-safety
+            Assert.That(dataStream1.BaseStream.LockObj, Is.SameAs(dataStream2.BaseStream.LockObj));
+        }
+
+        [Test]
         public void CreateFromStreamThrowIfInvalidArgument()
         {
             Assert.That(
@@ -105,6 +118,20 @@ namespace Yarhl.UnitTests.IO
 
             dataStream.Dispose();
             Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void CreateFromSubStreamWithDataStreamReuseIStream()
+        {
+            using var stream = new MemoryStream();
+            stream.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
+            var dataStream1 = DataStreamFactory.FromStream(stream, 1, 2);
+            var dataStream2 = DataStreamFactory.FromStream(dataStream1, 1, 1);
+
+            Assert.That(dataStream1.BaseStream, Is.SameAs(dataStream2.BaseStream));
+
+            // Especially important check for thread-safety
+            Assert.That(dataStream1.BaseStream.LockObj, Is.SameAs(dataStream2.BaseStream.LockObj));
         }
 
         [Test]
@@ -166,6 +193,20 @@ namespace Yarhl.UnitTests.IO
             dataStream.Dispose();
             Assert.That(() => stream.ReadByte(), Throws.Nothing);
             stream.Dispose();
+        }
+
+        [Test]
+        public void CreateFromSubStreamKeepingOwnershipWithDataStreamReuseIStream()
+        {
+            using var stream = new MemoryStream();
+            stream.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
+            var dataStream1 = DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2);
+            var dataStream2 = DataStreamFactory.FromStreamKeepingOwnership(dataStream1, 1, 1);
+
+            Assert.That(dataStream1.BaseStream, Is.SameAs(dataStream2.BaseStream));
+
+            // Especially important check for thread-safety
+            Assert.That(dataStream1.BaseStream.LockObj, Is.SameAs(dataStream2.BaseStream.LockObj));
         }
 
         [Test]

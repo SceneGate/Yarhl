@@ -105,6 +105,13 @@ namespace Yarhl.FileSystem
         /// The offset in the source stream where the node starts.
         /// </param>
         /// <param name="length">The length of the data in the node.</param>
+        /// <remarks>
+        /// <para>This format creates an internal <see cref="DataStream" /> from the
+        /// provided stream. It will take over the ownership of the stream
+        /// argument, you should not dispose this argument, unless you are
+        /// providing a <see cref="DataStream" /> in which case it is safe and
+        /// recommended to dispose it.</para>
+        /// </remarks>
         /// <returns>The new node.</returns>
         [SuppressMessage(
             "Reliability",
@@ -112,7 +119,7 @@ namespace Yarhl.FileSystem
             Justification = "Ownserhip dispose transferred")]
         public static Node FromSubstream(
             string name,
-            DataStream source,
+            Stream source,
             long offset,
             long length)
         {

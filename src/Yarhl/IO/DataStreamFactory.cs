@@ -32,11 +32,19 @@ namespace Yarhl.IO
         /// Creates a new <see cref="DataStream"/> from a <see cref="Stream"/>.
         /// </summary>
         /// <param name="stream">The stream to use as a base.</param>
+        /// <remarks>
+        /// <p>The dispose ownership is transferred to the new DataStream.</p>
+        /// </remarks>
         /// <returns>A new <see cref="DataStream"/>.</returns>
         public static DataStream FromStream(Stream stream)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
+
+            // Required check so we lock in the same base stream lock.
+            if (stream is DataStream dataStream) {
+                return new DataStream(dataStream, 0, dataStream.Length);
+            }
 
             var baseStream = new StreamWrapper(stream);
             return new DataStream(baseStream);
@@ -67,6 +75,11 @@ namespace Yarhl.IO
             if (length < 0 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
+            // Required check so we lock in the same base stream lock.
+            if (stream is DataStream dataStream) {
+                return new DataStream(dataStream, offset, length);
+            }
+
             var baseStream = new StreamWrapper(stream);
             return new DataStream(baseStream, offset, length, true);
         }
@@ -92,6 +105,11 @@ namespace Yarhl.IO
                 throw new ArgumentOutOfRangeException(nameof(offset));
             if (length < 0 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
+
+            // Required check so we lock in the same base stream lock.
+            if (stream is DataStream dataStream) {
+                return new DataStream(dataStream, offset, length);
+            }
 
             var baseStream = new StreamWrapper(stream);
             return new DataStream(baseStream, offset, length, false);
