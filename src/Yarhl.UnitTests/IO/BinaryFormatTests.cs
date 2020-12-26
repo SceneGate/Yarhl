@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.IO;
     using NUnit.Framework;
     using Yarhl.IO;
     using Yarhl.IO.StreamFormat;
@@ -49,7 +50,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void DisposeAlsoDisposesStream()
+        public void DefaultConstructorDisposeAlsoDisposesStream()
         {
             BinaryFormat format = CreateDummyFormat();
             format.Dispose();
@@ -58,13 +59,28 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ConstructorWithStream()
+        public void ConstructorWithStreamTransferOwnership()
         {
             using DataStream stream = new DataStream();
             BinaryFormat format = new BinaryFormat(stream);
             Assert.AreSame(stream, format.Stream);
             Assert.AreSame(stream.BaseStream, format.Stream.BaseStream);
             format.Dispose();
+            Assert.That(stream.Disposed, Is.True);
+        }
+
+        [Test]
+        public void ConstructorWithStandardStreamTransferOwnership()
+        {
+            var stream = new MemoryStream();
+            var format = new BinaryFormat(stream);
+
+            Assert.That(format.Stream.BaseStream, Is.InstanceOf<StreamWrapper>());
+            var wrapper = (StreamWrapper)format.Stream.BaseStream;
+            Assert.That(wrapper.BaseStream, Is.SameAs(stream));
+
+            format.Dispose();
+            Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());
         }
 
         [Test]
@@ -76,7 +92,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ConstructorWithStreamArgs()
+        public void ConstructorWithSubstream()
         {
             DataStream stream = new DataStream();
             stream.WriteByte(0x1);
@@ -94,6 +110,38 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(3, stream.Length);
             format.Dispose();
             stream.Dispose();
+        }
+
+        [Test]
+        public void ConstructorWithSubstreamOfDataStreamDoesNotTransferOwnership()
+        {
+            DataStream stream = new DataStream();
+            stream.Write(new byte[] { 1, 2, 3 }, 0, 3);
+
+            BinaryFormat format = new BinaryFormat(stream, 1, 2);
+            Assert.AreNotSame(stream, format.Stream);
+            Assert.AreSame(stream.BaseStream, format.Stream.BaseStream);
+
+            format.Dispose();
+            Assert.That(format.Disposed, Is.True);
+            Assert.That(stream.Disposed, Is.False);
+            stream.Dispose();
+        }
+
+        [Test]
+        public void ConstructorWithStandardSubstreamTransferOwnership()
+        {
+            var stream = new MemoryStream();
+            stream.Write(new byte[] { 1, 2, 3 }, 0, 3);
+
+            BinaryFormat format = new BinaryFormat(stream, 1, 2);
+
+            Assert.That(format.Stream.BaseStream, Is.InstanceOf<StreamWrapper>());
+            var wrapper = (StreamWrapper)format.Stream.BaseStream;
+            Assert.That(wrapper.BaseStream, Is.SameAs(stream));
+
+            format.Dispose();
+            Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());
         }
 
         [Test]

@@ -517,9 +517,41 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(node, Is.Not.Null);
             Assert.That(node.Name, Is.EqualTo("node"));
             Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
-            Assert.That(node.Stream.BaseStream, Is.EqualTo(main.BaseStream));
+            Assert.That(node.Stream.BaseStream, Is.SameAs(main.BaseStream));
             Assert.That(node.Stream.Offset, Is.EqualTo(1));
             Assert.That(node.Stream.Length, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CreateFromSubstreamOfDataStreamDoesNotTransferOwnership()
+        {
+            DataStream stream = new DataStream();
+            stream.Write(new byte[] { 1, 2, 3 }, 0, 3);
+
+            Node node = NodeFactory.FromSubstream("node", stream, 1, 2);
+            Assert.AreNotSame(stream, node.Stream);
+            Assert.AreSame(stream.BaseStream, node.Stream.BaseStream);
+
+            node.Dispose();
+            Assert.That(node.Disposed, Is.True);
+            Assert.That(stream.Disposed, Is.False);
+            stream.Dispose();
+        }
+
+        [Test]
+        public void CreateFromStandardSubstreamTransferOwnership()
+        {
+            var stream = new MemoryStream();
+            stream.Write(new byte[] { 1, 2, 3 }, 0, 3);
+
+            Node node = NodeFactory.FromSubstream("node", stream, 1, 2);
+
+            Assert.That(node.Stream.BaseStream, Is.InstanceOf<StreamWrapper>());
+            var wrapper = (StreamWrapper)node.Stream.BaseStream;
+            Assert.That(wrapper.BaseStream, Is.SameAs(stream));
+
+            node.Dispose();
+            Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());
         }
 
         [Test]
