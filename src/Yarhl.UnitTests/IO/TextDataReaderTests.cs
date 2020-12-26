@@ -25,7 +25,7 @@ namespace Yarhl.UnitTests.IO
     using Yarhl.IO;
 
     [TestFixture]
-    public class TextReaderTests
+    public class TextDataReaderTests
     {
         DataStream stream;
 
@@ -44,7 +44,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void PropertyValuesWithConstructorOneArgument()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.AreSame(stream, reader.Stream);
             Assert.AreSame(Encoding.UTF8, reader.Encoding);
             Assert.AreEqual(Environment.NewLine, reader.NewLine);
@@ -54,7 +54,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void PropertyValuesWithConstructorEncoding()
         {
-            var reader = new TextReader(stream, Encoding.ASCII);
+            var reader = new TextDataReader(stream, Encoding.ASCII);
             Assert.AreSame(stream, reader.Stream);
             Assert.AreSame(Encoding.ASCII, reader.Encoding);
             Assert.AreEqual(Environment.NewLine, reader.NewLine);
@@ -64,7 +64,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void PropertyValuesWithConstructorEncodingName()
         {
-            var reader = new TextReader(stream, "utf-16");
+            var reader = new TextDataReader(stream, "utf-16");
             Assert.AreSame(stream, reader.Stream);
             Assert.AreSame(Encoding.Unicode, reader.Encoding);
             Assert.AreEqual(Environment.NewLine, reader.NewLine);
@@ -75,26 +75,26 @@ namespace Yarhl.UnitTests.IO
         public void CreateWithShiftJisEncoding()
         {
             // It will automatically register the encodings for .NET Core.
-            var reader = new TextReader(stream, "shift-jis");
+            var reader = new TextDataReader(stream, "shift-jis");
             Assert.That(reader.Encoding.CodePage, Is.EqualTo(932));
         }
 
         [Test]
         public void TestConstructorWithNullArguments()
         {
-            Assert.Throws<ArgumentNullException>(() => new TextReader(null));
+            Assert.Throws<ArgumentNullException>(() => new TextDataReader(null));
 
-            Assert.Throws<ArgumentNullException>(() => new TextReader(null, Encoding.ASCII));
-            Assert.Throws<ArgumentNullException>(() => new TextReader(stream, (Encoding)null));
+            Assert.Throws<ArgumentNullException>(() => new TextDataReader(null, Encoding.ASCII));
+            Assert.Throws<ArgumentNullException>(() => new TextDataReader(stream, (Encoding)null));
 
-            Assert.Throws<ArgumentNullException>(() => new TextReader(null, "ascii"));
-            Assert.Throws<ArgumentNullException>(() => new TextReader(stream, (string)null));
+            Assert.Throws<ArgumentNullException>(() => new TextDataReader(null, "ascii"));
+            Assert.Throws<ArgumentNullException>(() => new TextDataReader(stream, (string)null));
         }
 
         [Test]
         public void PropertyActuallyChangesValues()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             reader.NewLine = "a";
             Assert.AreEqual("a", reader.NewLine);
 
@@ -105,7 +105,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void AutoNewLineIsFalseAfterSettingNewLine()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.IsTrue(reader.AutoNewLine);
             reader.NewLine = "a";
             Assert.IsFalse(reader.AutoNewLine);
@@ -118,7 +118,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x30);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.AreEqual('a', reader.Read());
             Assert.AreEqual(1, stream.Position);
         }
@@ -130,7 +130,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             Assert.AreEqual('a', reader.Read());
             Assert.AreEqual(2, stream.Position);
         }
@@ -144,7 +144,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             Assert.AreEqual('a', reader.Read());
             Assert.AreEqual(4, stream.Position);
         }
@@ -152,7 +152,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ReadEndOfStreamThrowsException()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.Throws<System.IO.EndOfStreamException>(() => reader.Read());
         }
 
@@ -164,7 +164,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             var chars = reader.Read(2);
 
             Assert.AreEqual('1', chars[0]);
@@ -183,7 +183,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             var chars = reader.Read(2);
 
             Assert.AreEqual('1', chars[0]);
@@ -204,7 +204,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             var chars = reader.Read(2);
 
             Assert.AreEqual('1', chars[0]);
@@ -215,7 +215,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ReadArrayThrowsExceptionIfNegative()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.Throws<ArgumentOutOfRangeException>(() => reader.Read(-3));
         }
 
@@ -225,7 +225,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x31);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.Throws<System.IO.EndOfStreamException>(() => reader.Read(3));
         }
 
@@ -237,7 +237,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.ReadToToken("9");
 
             Assert.AreEqual("1", text);
@@ -251,7 +251,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x39);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = string.Empty;
             Assert.DoesNotThrow(() => text = reader.ReadToToken("5"));
 
@@ -270,7 +270,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             var text = reader.ReadToToken("9");
 
             Assert.AreEqual("1", text);
@@ -290,7 +290,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             var text = reader.ReadToToken("9");
 
             Assert.AreEqual("1", text);
@@ -305,7 +305,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.ReadToToken("5.");
 
             Assert.AreEqual("195", text);
@@ -320,7 +320,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.ReadToToken("95");
 
             Assert.AreEqual("1", text);
@@ -340,7 +340,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             string text = reader.ReadToToken("95");
 
             Assert.AreEqual("1", text);
@@ -350,14 +350,14 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ReadToTokenWhenEOFReturnsNull()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.IsNull(reader.ReadToToken("3"));
         }
 
         [Test]
         public void ReadToNullOrEmptyToken()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.That(() => reader.ReadToToken(null), Throws.ArgumentNullException);
             Assert.That(() => reader.ReadToToken(string.Empty), Throws.ArgumentNullException);
         }
@@ -372,7 +372,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x38);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.ReadToToken("5");
 
             Assert.That(text, Is.EqualTo(new string('0', 150)));
@@ -394,7 +394,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0xe5);  // half encoded
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             string text = reader.ReadToToken("a");
 
             Assert.That(text, Is.EqualTo("01"));
@@ -411,7 +411,7 @@ namespace Yarhl.UnitTests.IO
             stream.Write(buffer, 0, buffer.Length);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             string text = reader.ReadToToken("a");
 
             Assert.That(text, Is.EqualTo("\uD801\uDC37"));
@@ -433,7 +433,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x30);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.ReadToToken("\x08");
 
             Assert.That(text, Is.EqualTo(new string('0', 127) + '漢'));
@@ -454,7 +454,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x30);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.ReadToToken("漢");
 
             Assert.That(text, Is.EqualTo(new string('0', 127)));
@@ -470,7 +470,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x31);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             reader.AutoNewLine = false;
             reader.NewLine = "\n";
             var line = reader.ReadLine();
@@ -494,7 +494,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             reader.AutoNewLine = false;
             reader.NewLine = "\n";
             var line = reader.ReadLine();
@@ -518,7 +518,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             reader.AutoNewLine = false;
             reader.NewLine = "\r\n";
             var line = reader.ReadLine();
@@ -540,7 +540,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x30);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.That(reader.ReadLine(), Is.EqualTo("51"));
             Assert.AreEqual(4, stream.Position);
 
@@ -564,7 +564,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte((byte)'0');
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             reader.NewLine = "<br/>";
             reader.AutoNewLine = false;
 
@@ -582,7 +582,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x39);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             var line = string.Empty;
             Assert.DoesNotThrow(() => line = reader.ReadLine());
             Assert.AreEqual("19", line);
@@ -592,7 +592,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ReadLineWhenEOFReturnsNull()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.IsNull(reader.ReadLine());
 
             reader.AutoNewLine = false;
@@ -606,7 +606,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             var text = reader.ReadToEnd();
 
             Assert.AreEqual("15", text);
@@ -622,7 +622,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             var text = reader.ReadToEnd();
 
             Assert.AreEqual("15", text);
@@ -640,7 +640,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             var text = reader.ReadToEnd();
 
             Assert.AreEqual("15", text);
@@ -654,7 +654,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 1;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             var text = reader.ReadToEnd();
 
             Assert.AreEqual("5", text);
@@ -664,7 +664,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ReadToEndIfEmpty()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.AreEqual(string.Empty, reader.ReadToEnd());
         }
 
@@ -675,7 +675,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x42);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             char ch = reader.Peek();
 
             Assert.AreEqual('A', ch);
@@ -689,7 +689,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             Assert.AreEqual('a', reader.Peek());
             Assert.AreEqual(0, stream.Position);
         }
@@ -703,7 +703,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x00);
             stream.Position = 0;
 
-            var reader = new TextReader(stream, Encoding.Unicode);
+            var reader = new TextDataReader(stream, Encoding.Unicode);
             Assert.AreEqual('a', reader.Peek());
             Assert.AreEqual(0, stream.Position);
         }
@@ -711,7 +711,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void PeekEndOfStreamThrowsException()
         {
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             Assert.Throws<System.IO.EndOfStreamException>(() => reader.Peek());
         }
 
@@ -723,7 +723,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             var chars = reader.Peek(2);
 
             Assert.AreEqual('1', chars[0]);
@@ -739,7 +739,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x35);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             string text = reader.PeekToToken("5");
 
             Assert.AreEqual("19", text);
@@ -756,7 +756,7 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0x31);
             stream.Position = 0;
 
-            var reader = new TextReader(stream);
+            var reader = new TextDataReader(stream);
             reader.NewLine = "\r\n";
             var line = reader.PeekLine();
 

@@ -39,7 +39,7 @@ namespace Yarhl.Media.Text
                 throw new ArgumentNullException(nameof(source));
 
             BinaryFormat binary = new BinaryFormat();
-            TextWriter writer = new TextWriter(binary.Stream);
+            TextDataWriter writer = new TextDataWriter(binary.Stream);
 
             if (source.Header != null)
                 WriteHeader(source.Header, writer);
@@ -52,7 +52,7 @@ namespace Yarhl.Media.Text
             return binary;
         }
 
-        static void WriteHeader(PoHeader header, TextWriter writer)
+        static void WriteHeader(PoHeader header, TextDataWriter writer)
         {
             writer.WriteLine(@"msgid """"");
             writer.WriteLine(@"msgstr """"");
@@ -72,7 +72,7 @@ namespace Yarhl.Media.Text
                 writer.WriteLine(@"""X-{0}: {1}\n""", entry.Key, entry.Value);
         }
 
-        static void WriteEntry(PoEntry entry, TextWriter writer)
+        static void WriteEntry(PoEntry entry, TextDataWriter writer)
         {
             WriteIfNotEmpty(writer, "#  {0}", entry.TranslatorComment);
             WriteIfNotEmpty(writer, "#. {0}", entry.ExtractedComments);
@@ -93,7 +93,7 @@ namespace Yarhl.Media.Text
             WriteWrappedString(writer, entry.Translated);
         }
 
-        static void WriteIfNotEmpty(TextWriter writer, string format, string content)
+        static void WriteIfNotEmpty(TextDataWriter writer, string format, string content)
         {
             if (!string.IsNullOrEmpty(content)) {
                 var lines = content.Split('\n');
@@ -103,7 +103,7 @@ namespace Yarhl.Media.Text
             }
         }
 
-        static void WriteWrappedString(TextWriter writer, string content)
+        static void WriteWrappedString(TextDataWriter writer, string content)
         {
             int idx = 0;
             content = content.Replace("\n", "\\n");

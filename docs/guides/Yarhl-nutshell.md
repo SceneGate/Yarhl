@@ -99,28 +99,28 @@ need to write padding bytes, then
 [`WritePadding`](<xref:Yarhl.IO.DataWriter.WritePadding(System.Byte,System.Int32)>)
 will be your friend.
 
-### TextReader and TextWriter
+### TextDataReader and TextDataWriter
 
 So far, `DataReader` and `DataWriter` have been very useful when you are dealing
 with a file that contains some integer fields for size or offset, arrays of
 bytes and maybe null-terminated strings. But, what about if you need to work
 with a file that only contains text and you are interested in reading line by
-line? In that case, you need [`TextReader`](xref:Yarhl.IO.TextReader) and
-[`TextWriter`](xref:Yarhl.IO.TextWriter).
+line? In that case, you need [`TextDataReader`](xref:Yarhl.IO.TextDataReader)
+and [`TextDataWriter`](xref:Yarhl.IO.TextDataWriter).
 
 #### New lines
 
-By default, `TextWriter` uses always (Windows too) the new line `\n`. It doesn't
-use `\r\n`. The reason is that most file formats uses `\n` and in some games
-having the `\r` may crash. It's sometimes difficult to notice that. If you want
-to use any other new line string (you can even use `<br/>`), you just need to
-change the [`NewLine`](xref:Yarhl.IO.TextWriter.NewLine) property.
+By default, `TextDataWriter` uses always (Windows too) the new line `\n`. It
+doesn't use `\r\n`. The reason is that most file formats uses `\n` and in some
+games having the `\r` may crash. It's sometimes difficult to notice that. If you
+want to use any other new line string (you can even use `<br/>`), you just need
+to change the [`NewLine`](xref:Yarhl.IO.TextDataWriter.NewLine) property.
 
-In the case of the `TextReader` the behavior is different. The default value for
-the [`NewLine`](xref:Yarhl.IO.TextReader.NewLine) property depends on the OS
-(Windows: `\r\n`, Unix: `\n`). In addition, we provided with an automatic
+In the case of the `TextDataReader` the behavior is different. The default value
+for the [`NewLine`](xref:Yarhl.IO.TextDataReader.NewLine) property depends on
+the OS (Windows: `\r\n`, Unix: `\n`). In addition, we provided with an automatic
 mechanism enabled by default:
-[`AutoNewLine`](xref:Yarhl.IO.TextReader.AutoNewLine*). If it's enabled, you
+[`AutoNewLine`](xref:Yarhl.IO.TextDataReader.AutoNewLine*). If it's enabled, you
 don't need to know the line ending in advance because we will stop at `\n` and
 remove the last `\r` if present. This is also useful if a file mix both line
 endings. And remember, by setting the `NewLine` property `AutoNewLine` is
@@ -148,13 +148,14 @@ stream that confirms the encoding of the file. For instance, when using UTF-16,
 the file will begin with the bytes `0xFEFF`. It also specifies if the encoding
 is little-ending or big-endian (needed for UTF-16).
 
-Our `TextReader` will skip the BOM (_if it's present_) at the beginning of the
-file. In the case of the `TextWriter`, the behavior is defined by the property
-[`AutoPreamble`](xref:Yarhl.IO.TextWriter.AutoPreamble) which is set to `false`
-by default (again, some games may see it as unexpected bytes). When enabled, the
-first write call will also write the BOM. You can also write it manually by
-calling [`WritePreamble()`](xref:Yarhl.IO.TextWriter.WritePreamble) (but
-remember, only if you are at the beginning of the stream).
+Our `TextDataReader` will skip the BOM (_if it's present_) at the beginning of
+the file. In the case of the `TextDataWriter`, the behavior is defined by the
+property [`AutoPreamble`](xref:Yarhl.IO.TextDataWriter.AutoPreamble) which is
+set to `false` by default (again, some games may see it as unexpected bytes).
+When enabled, the first write call will also write the BOM. You can also write
+it manually by calling
+[`WritePreamble()`](xref:Yarhl.IO.TextDataWriter.WritePreamble) (but remember,
+only if you are at the beginning of the stream).
 
 I know... I talk too much... Let's continue!
 
@@ -206,7 +207,7 @@ public void SaveFile(string path)
 ```csharp
 public void LoadFile(DataStream stream)
 {
-    var reader = new TextReader(stream, Encoding.Unicode);
+    var reader = new TextDataReader(stream, Encoding.Unicode);
 
     string firstLine = reader.ReadLine();
     char[] someChars = reader.Read(4);
@@ -219,7 +220,7 @@ public void LoadFile(DataStream stream)
 
 public void SaveFile(DataStream stream)
 {
-    var writer = new TextWriter(stream) {
+    var writer = new TextDataWriter(stream) {
         AutoPreamble = true,
     };
 

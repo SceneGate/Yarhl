@@ -26,14 +26,14 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text reader for <see cref="DataStream" />.
+    /// Text reader for <see cref="Stream" />.
     /// </summary>
-    public class TextReader
+    public class TextDataReader
     {
         readonly DataReader reader;
         string newLine;
 
-        static TextReader()
+        static TextDataReader()
         {
             // Make sure that the shift-jis encoding is initialized in
             // .NET Core.
@@ -41,31 +41,31 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextReader"/> class.
+        /// Initializes a new instance of the <see cref="TextDataReader"/> class.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextReader(Stream stream)
+        public TextDataReader(Stream stream)
             : this(stream, Encoding.UTF8)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextReader"/> class.
+        /// Initializes a new instance of the <see cref="TextDataReader"/> class.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextReader(Stream stream, string encoding)
+        public TextDataReader(Stream stream, string encoding)
             : this(stream, Encoding.GetEncoding(encoding))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextReader"/> class.
+        /// Initializes a new instance of the <see cref="TextDataReader"/> class.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextReader(Stream stream, Encoding encoding)
+        public TextDataReader(Stream stream, Encoding encoding)
         {
             Stream = stream ?? throw new ArgumentNullException(nameof(stream));
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));

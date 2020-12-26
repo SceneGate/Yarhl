@@ -473,14 +473,14 @@ msgstr """"
         static void CompareText(BinaryFormat binary, string expected)
         {
             binary.Stream.Position = 0;
-            TextReader reader = new TextReader(binary.Stream);
+            TextDataReader reader = new TextDataReader(binary.Stream);
             Assert.AreEqual(expected, reader.ReadToEnd());
         }
 
         static Po ConvertStringToPo(string binary)
         {
             using BinaryFormat textFormat = new BinaryFormat();
-            new TextWriter(textFormat.Stream).Write(binary);
+            new TextDataWriter(textFormat.Stream).Write(binary);
             textFormat.Stream.Position = 0;
 
             return ConvertFormat.To<Po>(textFormat);

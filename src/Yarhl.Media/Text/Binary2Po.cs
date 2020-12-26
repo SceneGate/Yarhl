@@ -39,7 +39,7 @@ namespace Yarhl.Media.Text
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            TextReader reader = new TextReader(source.Stream);
+            TextDataReader reader = new TextDataReader(source.Stream);
             Po po = new Po();
 
             // Read the header if any
@@ -60,7 +60,7 @@ namespace Yarhl.Media.Text
             return po;
         }
 
-        static PoEntry ReadEntry(TextReader reader)
+        static PoEntry ReadEntry(TextDataReader reader)
         {
             // Skip all the blank lines before the block of text
             string line = string.Empty;
@@ -86,7 +86,7 @@ namespace Yarhl.Media.Text
             return entry;
         }
 
-        static void ParseLine(TextReader reader, PoEntry entry, string line)
+        static void ParseLine(TextDataReader reader, PoEntry entry, string line)
         {
             string[] fields = line.Split(new[] { ' ' }, 2);
             if (fields.Length != 2)
@@ -207,7 +207,7 @@ namespace Yarhl.Media.Text
             }
         }
 
-        static string ReadMultiLineComment(TextReader reader, string line, string comment)
+        static string ReadMultiLineComment(TextDataReader reader, string line, string comment)
         {
             StringBuilder builder = new StringBuilder(line + "\n");
             while (reader.PeekToToken(" ") == comment) {
@@ -222,7 +222,7 @@ namespace Yarhl.Media.Text
             return result.Remove(result.Length - 1, 1).Replace("\n ", "\n");
         }
 
-        static string ReadMultiLineContent(TextReader reader, string currentLine)
+        static string ReadMultiLineContent(TextDataReader reader, string currentLine)
         {
             StringBuilder content = new StringBuilder(ParseMultiLine(currentLine));
 
