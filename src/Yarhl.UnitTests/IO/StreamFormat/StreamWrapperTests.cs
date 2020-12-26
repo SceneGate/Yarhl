@@ -21,6 +21,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
 {
     using System;
     using System.IO;
+    using Moq;
     using NUnit.Framework;
     using Yarhl.IO.StreamFormat;
 
@@ -48,7 +49,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         }
 
         [Test]
-        public void DiposeCloseStream()
+        public void DisposeCloseStream()
         {
             var stream = new MemoryStream();
             stream.WriteByte(0xAA);
@@ -206,6 +207,28 @@ namespace Yarhl.UnitTests.IO.StreamFormat
                 Throws.InstanceOf<ObjectDisposedException>());
             Assert.That(
                 () => wrapper.Read(buffer, 0, 1),
+                Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void TestFlushCallsStreamFlush()
+        {
+            var innerStream = new Mock<Stream>();
+            var stream = new StreamWrapper(innerStream.Object);
+            stream.Flush();
+            Assert.That(
+                () => innerStream.Verify(s => s.Flush(), Times.Once),
+                Throws.Nothing);
+        }
+
+        [Test]
+        public void TestFlushThrowsIfDisposed()
+        {
+            var innerStream = new Mock<Stream>();
+            var stream = new StreamWrapper(innerStream.Object);
+            stream.Dispose();
+            Assert.That(
+                () => stream.Flush(),
                 Throws.InstanceOf<ObjectDisposedException>());
         }
     }

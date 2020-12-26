@@ -21,6 +21,7 @@ namespace Yarhl.IO
 {
     using System;
     using System.Globalization;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -46,7 +47,7 @@ namespace Yarhl.IO
         /// <para>By default the endianess is LittleEndian and
         /// the encoding is UTF-8.</para>
         /// </remarks>
-        public DataWriter(DataStream stream)
+        public DataWriter(Stream stream)
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
@@ -57,7 +58,7 @@ namespace Yarhl.IO
         /// Gets the stream.
         /// </summary>
         /// <value>The stream.</value>
-        public DataStream Stream {
+        public Stream Stream {
             get;
             private set;
         }
@@ -167,6 +168,8 @@ namespace Yarhl.IO
                 Write(BitConverter.GetBytes(val));
             else if (Endianness == EndiannessMode.BigEndian)
                 Write(BitConverter.GetBytes(val).Reverse().ToArray());
+            else
+                throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -180,6 +183,8 @@ namespace Yarhl.IO
                 Write(BitConverter.GetBytes(val));
             else if (Endianness == EndiannessMode.BigEndian)
                 Write(BitConverter.GetBytes(val).Reverse().ToArray());
+            else
+                throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -213,7 +218,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Write the specified chars using a text encoding.
         /// </summary>
-        /// <param name="chars">Chara array to write.</param>
+        /// <param name="chars">Char array to write.</param>
         /// <param name="encoding">Optional text encoding to use.</param>
         /// <remarks>
         /// <para>If the encoding is null, it will use the default encoding.</para>
@@ -537,13 +542,13 @@ namespace Yarhl.IO
                 return;
 
             // We only increase the size of the stream by writing at the end
-            Stream.Seek(0, SeekMode.End);
+            Stream.Seek(0, SeekOrigin.End);
             long times = length - Stream.Length;
             WriteTimes(val, times);
         }
 
         /// <summary>
-        /// Write the same byte to padd the stream.
+        /// Write the same byte to pad the stream.
         /// </summary>
         /// <param name="val">Value to repeat.</param>
         /// <param name="padding">Padding value.</param>
@@ -569,10 +574,12 @@ namespace Yarhl.IO
                 start = 0;
                 end = numBits;
                 step = 8;
-            } else {
+            } else if (Endianness == EndiannessMode.BigEndian) {
                 start = (byte)(numBits - 8);
                 end = 0xF8; // When the counter var reach < 0 it overflows to 0-8=0xF8
                 step = -8;
+            } else {
+                throw new NotSupportedException($"Endianness not supported: {Endianness}");
             }
 
             for (byte i = start; i < end; i = (byte)(i + step)) {

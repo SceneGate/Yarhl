@@ -48,7 +48,7 @@ namespace Yarhl.IO
         /// <para>By default the endianness is LittleEndian and
         /// the encoding is UTF-8.</para>
         /// </remarks>
-        public DataReader(DataStream stream)
+        public DataReader(Stream stream)
         {
             Stream = stream;
             Endianness = EndiannessMode.LittleEndian;
@@ -58,7 +58,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public DataStream Stream {
+        public Stream Stream {
             get;
             private set;
         }
@@ -85,7 +85,10 @@ namespace Yarhl.IO
         /// <returns>The next byte.</returns>
         public byte ReadByte()
         {
-            return Stream.ReadByte();
+            if (Stream.Position >= Stream.Length)
+                throw new EndOfStreamException();
+
+            return (byte)Stream.ReadByte();
         }
 
         /// <summary>
@@ -110,7 +113,7 @@ namespace Yarhl.IO
             if (Endianness == EndiannessMode.BigEndian)
                 return (ushort)((ReadByte() << 8) | ReadByte());
 
-            return 0xFFFF;
+            throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -133,7 +136,7 @@ namespace Yarhl.IO
             if (Endianness == EndiannessMode.BigEndian)
                 return (ReadByte() << 16) | (ReadByte() << 8) | ReadByte();
 
-            return -1;
+            throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -148,7 +151,7 @@ namespace Yarhl.IO
             if (Endianness == EndiannessMode.BigEndian)
                 return (uint)((ReadUInt16() << 16) | ReadUInt16());
 
-            return 0xFFFFFFFF;
+            throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -172,7 +175,7 @@ namespace Yarhl.IO
             if (Endianness == EndiannessMode.BigEndian)
                 return ((ulong)ReadUInt32() << 32) | ReadUInt32();
 
-            return 0xFFFFFFFFFFFFFFFF;
+            throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -195,7 +198,7 @@ namespace Yarhl.IO
             if (Endianness == EndiannessMode.BigEndian)
                 return BitConverter.ToSingle(ReadBytes(4).Reverse().ToArray(), 0);
 
-            return float.NaN;
+            throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -209,7 +212,7 @@ namespace Yarhl.IO
             if (Endianness == EndiannessMode.BigEndian)
                 return BitConverter.ToDouble(ReadBytes(8).Reverse().ToArray(), 0);
 
-            return double.NaN;
+            throw new NotSupportedException($"Endianness not supported: {Endianness}");
         }
 
         /// <summary>
@@ -219,6 +222,12 @@ namespace Yarhl.IO
         /// <param name="count">Number of bytes to read.</param>
         public byte[] ReadBytes(int count)
         {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            if (Stream.Position + count > Stream.Length)
+                throw new EndOfStreamException();
+
             byte[] buffer = new byte[count];
             Stream.Read(buffer, 0, count);
             return buffer;
@@ -288,7 +297,7 @@ namespace Yarhl.IO
             // takes to get them and decode again with the original fallbacks
             int exactBytes = encoding.GetByteCount(charArray, 0, count);
             charArray = encoding.GetChars(buffer, 0, exactBytes);
-            Stream.Seek(startPos + exactBytes, SeekMode.Start);
+            Stream.Seek(startPos + exactBytes, SeekOrigin.Begin);
 
             return charArray;
         }
@@ -329,7 +338,7 @@ namespace Yarhl.IO
             int matchIndex = -1;
 
             while (matchIndex == -1) {
-                if (Stream.EndOfStream) {
+                if (Stream.Position >= Stream.Length) {
                     throw new EndOfStreamException();
                 }
 
@@ -349,7 +358,7 @@ namespace Yarhl.IO
             // Get the final string and the number exact of bytes to seek
             int endPos = matchIndex + token.Length;
             int exactBytes = encoding.GetByteCount(text.ToCharArray(0, endPos));
-            Stream.Seek(startPos + exactBytes, SeekMode.Start);
+            Stream.Seek(startPos + exactBytes, SeekOrigin.Begin);
 
             // Now we know the number of bytes, decode again with the original
             // encoding so it can apply its original decoder fallback.
@@ -467,7 +476,7 @@ namespace Yarhl.IO
 
             long remainingBytes = Stream.Position.Pad(padding) - Stream.Position;
             if (remainingBytes > 0) {
-                Stream.Seek(remainingBytes, SeekMode.Current);
+                Stream.Seek(remainingBytes, SeekOrigin.Current);
             }
         }
 

@@ -24,7 +24,6 @@ namespace Yarhl.UnitTests.IO
     using System.Text;
     using NUnit.Framework;
     using Yarhl.IO;
-    using Yarhl.IO.Serialization;
     using Yarhl.IO.Serialization.Attributes;
 
     [TestFixture]
@@ -46,7 +45,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void EndiannesProperty()
+        public void EndiannessProperty()
         {
             using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
@@ -63,6 +62,23 @@ namespace Yarhl.UnitTests.IO
             Assert.AreSame(Encoding.UTF8, writer.DefaultEncoding);
             writer.DefaultEncoding = Encoding.GetEncoding(932);
             Assert.AreSame(Encoding.GetEncoding(932), writer.DefaultEncoding);
+        }
+
+        [Test]
+        public void WritePrimiteThrowExceptionWithInvalidEndianness()
+        {
+            using var stream = new DataStream();
+            var writer = new DataWriter(stream);
+            writer.Endianness = (EndiannessMode)0x100;
+
+            Assert.That(() => writer.Write(0xCAFE), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(-28124), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(0xCAFEBABE), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(-1683902195), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(0xCAFEBABE1234ACDC), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(-592582943872953006), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(3.14f), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => writer.Write(-3.14d), Throws.InstanceOf<NotSupportedException>());
         }
 
         [Test]

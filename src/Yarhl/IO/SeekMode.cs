@@ -19,9 +19,12 @@
 // SOFTWARE.
 namespace Yarhl.IO
 {
+    using System;
+
     /// <summary>
     /// Seek mode for DataStream.
     /// </summary>
+    [Obsolete("Use overloads with System.IO.SeekOrigin")]
     public enum SeekMode
     {
         /// <summary>

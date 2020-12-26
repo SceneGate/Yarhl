@@ -68,11 +68,11 @@ namespace Yarhl.Media.Text
                 reader.ReadLine();
 
             // If nothing to read, EOF
-            if (reader.Stream.EndOfStream)
+            if (reader.Stream.Position >= reader.Stream.Length)
                 return null;
 
             PoEntry entry = new PoEntry();
-            while (!reader.Stream.EndOfStream) {
+            while (reader.Stream.Position < reader.Stream.Length) {
                 // Get the next line
                 line = reader.ReadLine();
 
@@ -226,7 +226,7 @@ namespace Yarhl.Media.Text
         {
             StringBuilder content = new StringBuilder(ParseMultiLine(currentLine));
 
-            while (!reader.Stream.EndOfStream && reader.Peek() == '"')
+            while ((reader.Stream.Position < reader.Stream.Length) && reader.Peek() == '"')
                 content.Append(ParseMultiLine(reader.ReadLine()));
 
             return content.ToString();

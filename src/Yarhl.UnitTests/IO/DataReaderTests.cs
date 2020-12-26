@@ -67,7 +67,7 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void EndiannesProperty()
+        public void EndiannessProperty()
         {
             Assert.AreEqual(EndiannessMode.LittleEndian, reader.Endianness);
             reader.Endianness = EndiannessMode.BigEndian;
@@ -83,17 +83,51 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ReadPrimitiveThrowsExceptionWhenEof()
+        {
+            stream.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 0, 8);
+
+            stream.Position = 8;
+            Assert.That(() => reader.ReadByte(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadChar(), Throws.InstanceOf<EndOfStreamException>());
+
+            stream.Position = 7;
+            Assert.That(() => reader.ReadBytes(2), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadUInt16(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadInt16(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadInt24(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadUInt32(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadInt32(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadInt64(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadUInt64(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadInt64(), Throws.InstanceOf<EndOfStreamException>());
+            Assert.That(() => reader.ReadUInt64(), Throws.InstanceOf<EndOfStreamException>());
+        }
+
+        [Test]
+        public void ReadPrimiteThrowExceptionWithInvalidEndianness()
+        {
+            stream.Write(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 0, 8);
+            stream.Position = 0;
+            reader.Endianness = (EndiannessMode)0x100;
+
+            Assert.That(() => reader.ReadUInt16(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadInt16(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadInt24(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadUInt32(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadInt32(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadInt64(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadUInt64(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadSingle(), Throws.InstanceOf<NotSupportedException>());
+            Assert.That(() => reader.ReadDouble(), Throws.InstanceOf<NotSupportedException>());
+        }
+
+        [Test]
         public void ReadByte()
         {
             stream.WriteByte(0xAF);
             stream.Position = 0;
             Assert.AreEqual(0xAF, reader.ReadByte());
-        }
-
-        [Test]
-        public void ReadByteThrowExceptionWhenEof()
-        {
-            Assert.Throws<EndOfStreamException>(() => reader.ReadByte());
         }
 
         [Test]
@@ -124,16 +158,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadUInt16InvalidEndianness()
-        {
-            byte[] buffer = { 0xCA, 0xFE };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(0xFFFF, reader.ReadUInt16());
-        }
-
-        [Test]
         public void ReadInt16LE()
         {
             byte[] buffer = { 0x24, 0x92 };
@@ -150,16 +174,6 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             reader.Endianness = EndiannessMode.BigEndian;
             Assert.AreEqual(-28124, reader.ReadInt16());
-        }
-
-        [Test]
-        public void ReadInt16InvalidEndianness()
-        {
-            byte[] buffer = { 0x92, 0x24 };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(-1, reader.ReadInt16());
         }
 
         [Test]
@@ -182,16 +196,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadInt24InvalidEndianness()
-        {
-            byte[] buffer = { 0xCA, 0xFE, 0xAF };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(-1, reader.ReadInt24());
-        }
-
-        [Test]
         public void ReadUInt32LE()
         {
             byte[] buffer = { 0xCA, 0xFE, 0xBA, 0xBE };
@@ -208,16 +212,6 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             reader.Endianness = EndiannessMode.BigEndian;
             Assert.AreEqual(0xCAFEBABE, reader.ReadUInt32());
-        }
-
-        [Test]
-        public void ReadUInt32InvalidEndianness()
-        {
-            byte[] buffer = { 0xCA, 0xFE, 0xBA, 0xBE };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(0xFFFFFFFF, reader.ReadUInt32());
         }
 
         [Test]
@@ -240,16 +234,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadInt32InvalidEndianness()
-        {
-            byte[] buffer = { 0x9B, 0xA1, 0xB1, 0x0D };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(-1, reader.ReadInt32());
-        }
-
-        [Test]
         public void ReadUInt64LE()
         {
             byte[] buffer = { 0xDC, 0xAC, 0x34, 0x12, 0xBE, 0xBA, 0xFE, 0xCA };
@@ -269,16 +253,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadUInt64InvalidEndianness()
-        {
-            byte[] buffer = { 0xCA, 0xFE, 0xBA, 0xBE, 0x12, 0x34, 0xAC, 0xDC };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(0xFFFFFFFFFFFFFFFF, reader.ReadUInt64());
-        }
-
-        [Test]
         public void ReadInt64LE()
         {
             byte[] buffer = { 0x52, 0x55, 0x7F, 0xC2, 0xF3, 0xB8, 0xC6, 0xF7 };
@@ -295,16 +269,6 @@ namespace Yarhl.UnitTests.IO
             stream.Position = 0;
             reader.Endianness = EndiannessMode.BigEndian;
             Assert.AreEqual(-592582943872953006, reader.ReadInt64());
-        }
-
-        [Test]
-        public void ReadInt164InvalidEndianness()
-        {
-            byte[] buffer = { 0xF7, 0xC6, 0xB8, 0xF3, 0xC2, 0x7F, 0x55, 0x52 };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.AreEqual(-1, reader.ReadInt64());
         }
 
         [Test]
@@ -347,16 +311,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadSingleInvalidEndianness()
-        {
-            byte[] buffer = { 0x40, 0x48, 0xF5, 0xC3 };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.That(reader.ReadSingle(), Is.EqualTo(float.NaN));
-        }
-
-        [Test]
         public void ReadDoubleLE()
         {
             byte[] buffer = { 0x1F, 0x85, 0xEB, 0x51, 0xB8, 0x1E, 0x09, 0xC0 };
@@ -376,16 +330,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadDoubleInvalidEndianness()
-        {
-            byte[] buffer = { 0x40, 0x09, 0x1E, 0xB8, 0x51, 0xEB, 0x85, 0x1F };
-            stream.Write(buffer, 0, buffer.Length);
-            stream.Position = 0;
-            reader.Endianness = (EndiannessMode)0x100;
-            Assert.That(reader.ReadDouble, Is.EqualTo(double.NaN));
-        }
-
-        [Test]
         public void ReadByteArray()
         {
             byte[] buffer = { 0xF7, 0xC6, 0xB8, 0xF3, 0xC2, 0x7F, 0x55, 0x52 };
@@ -397,11 +341,9 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadByteArrayThrowExceptionWhenEof()
+        public void ReadByteArrayGuards()
         {
-            stream.WriteByte(0xFF);
-            stream.Position = 0;
-            Assert.Throws<EndOfStreamException>(() => reader.ReadBytes(2));
+            Assert.Throws<ArgumentOutOfRangeException>(() => reader.ReadBytes(-2));
         }
 
         [Test]

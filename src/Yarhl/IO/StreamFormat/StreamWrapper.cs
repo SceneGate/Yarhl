@@ -75,7 +75,7 @@ namespace Yarhl.IO.StreamFormat
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="IStream" />
-        /// has been dispsosed.
+        /// has been disposed.
         /// </summary>
         public bool Disposed {
             get;
@@ -94,6 +94,15 @@ namespace Yarhl.IO.StreamFormat
             BaseStream.SetLength(length);
         }
 
+        /// <inheritdoc />
+        public virtual void Flush()
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(StreamWrapper));
+
+            BaseStream.Flush();
+        }
+
         /// <summary>
         /// Reads from the stream to the buffer.
         /// </summary>
@@ -107,8 +116,9 @@ namespace Yarhl.IO.StreamFormat
                 throw new ObjectDisposedException(nameof(StreamWrapper));
 
             BaseStream.Position = Position;
-            Position += count;
-            return BaseStream.Read(buffer, index, count);
+            int read = BaseStream.Read(buffer, index, count);
+            Position += read;
+            return read;
         }
 
         /// <summary>
