@@ -25,13 +25,13 @@ namespace Yarhl.IO
     using System.Text;
 
     /// <summary>
-    /// Text writer for <see cref="DataStream" />.
+    /// Text writer for <see cref="Stream" />.
     /// </summary>
-    public class TextWriter
+    public class TextDataWriter
     {
         readonly DataWriter writer;
 
-        static TextWriter()
+        static TextDataWriter()
         {
             // Make sure that the shift-jis encoding is initialized in
             // .NET Core.
@@ -39,31 +39,31 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextWriter"/> class.
+        /// Initializes a new instance of the <see cref="TextDataWriter"/> class.
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <remarks><para>The default encoding is UTF-8.</para></remarks>
-        public TextWriter(Stream stream)
+        public TextDataWriter(Stream stream)
             : this(stream, Encoding.UTF8)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextWriter"/> class.
+        /// Initializes a new instance of the <see cref="TextDataWriter"/> class.
         /// </summary>
         /// <param name="stream">Stream to read from.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextWriter(Stream stream, string encoding)
+        public TextDataWriter(Stream stream, string encoding)
             : this(stream, Encoding.GetEncoding(encoding))
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextWriter"/> class.
+        /// Initializes a new instance of the <see cref="TextDataWriter"/> class.
         /// </summary>
         /// <param name="stream">Stream to write to.</param>
         /// <param name="encoding">Encoding to use.</param>
-        public TextWriter(Stream stream, Encoding encoding)
+        public TextDataWriter(Stream stream, Encoding encoding)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));

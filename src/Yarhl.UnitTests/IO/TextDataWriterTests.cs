@@ -25,7 +25,7 @@ namespace Yarhl.UnitTests.IO
     using Yarhl.IO;
 
     [TestFixture]
-    public class TextWriterTests
+    public class TextDataWriterTests
     {
         DataStream stream;
 
@@ -44,7 +44,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void DefaultPropertyValues()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.AreSame(stream, writer.Stream);
             Assert.AreSame(Encoding.UTF8, writer.Encoding);
             Assert.IsFalse(writer.AutoPreamble);
@@ -54,21 +54,21 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void ConstructorWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.ASCII);
+            var writer = new TextDataWriter(stream, Encoding.ASCII);
             Assert.AreSame(Encoding.ASCII, writer.Encoding);
         }
 
         [Test]
         public void ConstructorWithEncodingName()
         {
-            var writer = new TextWriter(stream, "ascii");
+            var writer = new TextDataWriter(stream, "ascii");
             Assert.AreSame(Encoding.ASCII, writer.Encoding);
         }
 
         [Test]
         public void CreateWithShiftJisEncoding()
         {
-            var writer = new TextWriter(stream, "shift-jis");
+            var writer = new TextDataWriter(stream, "shift-jis");
             Assert.That(writer.Encoding.CodePage, Is.EqualTo(932));
         }
 
@@ -76,23 +76,23 @@ namespace Yarhl.UnitTests.IO
         public void WrongArgsInConstructorThrowsException()
         {
             Assert.Throws<ArgumentNullException>(
-                () => new TextWriter(null));
+                () => new TextDataWriter(null));
 
             Assert.Throws<ArgumentNullException>(
-                () => new TextWriter(null, Encoding.ASCII));
+                () => new TextDataWriter(null, Encoding.ASCII));
             Assert.Throws<ArgumentNullException>(
-                () => new TextWriter(stream, (Encoding)null));
+                () => new TextDataWriter(stream, (Encoding)null));
 
             Assert.Throws<ArgumentNullException>(
-                () => new TextWriter(null, "ascii"));
+                () => new TextDataWriter(null, "ascii"));
             Assert.Throws<ArgumentNullException>(
-                () => new TextWriter(stream, (string)null));
+                () => new TextDataWriter(stream, (string)null));
         }
 
         [Test]
         public void PropertiesChangeValues()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.NewLine = "a";
             Assert.AreEqual("a", writer.NewLine);
 
@@ -103,20 +103,20 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.WritePreamble();
             stream.Position = 0;
             Assert.That(stream.ReadByte(), Is.EqualTo(0xFF));
             Assert.That(stream.ReadByte(), Is.EqualTo(0xFE));
 
-            writer = new TextWriter(stream, Encoding.BigEndianUnicode);
+            writer = new TextDataWriter(stream, Encoding.BigEndianUnicode);
             stream.Position = 0;
             writer.WritePreamble();
             stream.Position = 0;
             Assert.That(stream.ReadByte(), Is.EqualTo(0xFE));
             Assert.That(stream.ReadByte(), Is.EqualTo(0xFF));
 
-            writer = new TextWriter(stream, Encoding.UTF8);
+            writer = new TextDataWriter(stream, Encoding.UTF8);
             stream.Position = 0;
             writer.WritePreamble();
             stream.Position = 0;
@@ -124,7 +124,7 @@ namespace Yarhl.UnitTests.IO
             Assert.That(stream.ReadByte(), Is.EqualTo(0xBB));
             Assert.That(stream.ReadByte(), Is.EqualTo(0xBF));
 
-            writer = new TextWriter(stream, Encoding.UTF32);
+            writer = new TextDataWriter(stream, Encoding.UTF32);
             stream.Position = 0;
             writer.WritePreamble();
             stream.Position = 0;
@@ -137,7 +137,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePreambleWithEncodingWithoutItDoesNotThrow()
         {
-            var writer = new TextWriter(stream, Encoding.ASCII);
+            var writer = new TextDataWriter(stream, Encoding.ASCII);
             Assert.That(() => writer.WritePreamble(), Throws.Nothing);
             Assert.That(stream.Length, Is.EqualTo(0));
         }
@@ -145,7 +145,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WritePreambleNotStartThrowsException()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             stream.WriteByte(0x00);
 
             Assert.That(
@@ -157,7 +157,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteChar()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.Write('c');
 
@@ -169,7 +169,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.Write('c');
 
@@ -182,7 +182,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.Write('c');
             writer.Write('a');
@@ -200,7 +200,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArray()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.Write(new char[] { 'z', 'w' });
 
@@ -213,7 +213,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArrayWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.Write(new char[] { 'z', 'w' });
 
@@ -228,7 +228,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteCharArrayWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.Write(new char[] { 'z', 'w' });
             writer.Write(new char[] { 'a' });
@@ -248,14 +248,14 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullCharArrayThrowsException()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.Write((char[])null));
         }
 
         [Test]
         public void WriteString()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.Write("he");
 
@@ -268,7 +268,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.Write("he");
 
@@ -283,7 +283,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.Write("he");
             writer.Write("llo");
@@ -307,14 +307,14 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullStringThrowsException()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.Write((string)null));
         }
 
         [Test]
         public void WriteStringFormat()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.Write("a{0}", 3);
 
@@ -327,7 +327,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatEscaping()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.Write("a{{0}}", 3);
 
@@ -342,7 +342,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.Write("a{0}", 3);
 
@@ -357,7 +357,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.Write("a{0}", 3);
             writer.Write("b{0}", 0);
@@ -379,7 +379,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteNullStringFormatThrowsException()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.Write(null, "a"));
             Assert.Throws<ArgumentNullException>(() => writer.Write("a", null));
         }
@@ -387,7 +387,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithLessFormatsThrows()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<FormatException>(() => writer.Write("a{0}{1}", 3));
             Assert.Throws<FormatException>(() => writer.Write("a{1}", 3));
             Assert.Throws<FormatException>(() => writer.Write("a{0}", Array.Empty<object>()));
@@ -396,14 +396,14 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteStringFormatWithMoreArgsDoesNotThrow()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.DoesNotThrow(() => writer.Write("a{0}", 3, 4, 5));
         }
 
         [Test]
         public void WriteLineOnly()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.WriteLine();
 
@@ -415,7 +415,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineOnlyWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.WriteLine();
 
@@ -428,7 +428,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineOnlyWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.WriteLine();
             writer.WriteLine();
@@ -446,7 +446,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineOnlyWithNewLine()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.NewLine = "NL";
             writer.WriteLine();
@@ -460,7 +460,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineString()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.WriteLine("za");
 
@@ -474,7 +474,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.WriteLine("a");
 
@@ -489,7 +489,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.WriteLine("a");
             writer.WriteLine("b");
@@ -511,14 +511,14 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineNullStringThrowsException()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.WriteLine(null));
         }
 
         [Test]
         public void WriteLineStringFormat()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.WriteLine("a{0}", 3);
 
@@ -532,7 +532,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatEscaping()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             writer.AutoPreamble = false;
             writer.WriteLine("a{{0}}", 3);
 
@@ -548,7 +548,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithEncoding()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = false;
             writer.WriteLine("a{0}", 3);
 
@@ -565,7 +565,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithPreamble()
         {
-            var writer = new TextWriter(stream, Encoding.Unicode);
+            var writer = new TextDataWriter(stream, Encoding.Unicode);
             writer.AutoPreamble = true;
             writer.WriteLine("a{0}", 3);
             writer.WriteLine("b{0}", 0);
@@ -591,7 +591,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineNullStringFormatThrowsException()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<ArgumentNullException>(() => writer.WriteLine(null, "a"));
             Assert.Throws<ArgumentNullException>(() => writer.WriteLine("a", null));
         }
@@ -599,7 +599,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithLessFormatsThrows()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.Throws<FormatException>(() => writer.WriteLine("a{0}{1}", 3));
             Assert.Throws<FormatException>(() => writer.WriteLine("a{1}", 3));
             Assert.Throws<FormatException>(() => writer.WriteLine("a{0}", Array.Empty<object>()));
@@ -608,7 +608,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteLineStringFormatWithMoreArgsDoesNotThrow()
         {
-            var writer = new TextWriter(stream);
+            var writer = new TextDataWriter(stream);
             Assert.DoesNotThrow(() => writer.WriteLine("a{0}", 3, 4, 5));
         }
     }
