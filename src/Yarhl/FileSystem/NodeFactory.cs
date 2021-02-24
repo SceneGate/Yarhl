@@ -180,7 +180,8 @@ namespace Yarhl.FileSystem
         /// <returns>The container node.</returns>
         /// <param name="dirPath">Directory path.</param>
         /// <param name="filter">Filter for files in directory.</param>
-        public static Node FromDirectory(string dirPath, string filter = "*")
+        /// <param name="mode">The mode to open the files.</param>
+        public static Node FromDirectory(string dirPath, string filter = "*", FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             if (string.IsNullOrEmpty(dirPath))
                 throw new ArgumentNullException(nameof(dirPath));
@@ -189,7 +190,7 @@ namespace Yarhl.FileSystem
                 dirPath = dirPath.Remove(dirPath.Length - 1);
 
             string dirName = Path.GetFileName(dirPath);
-            return FromDirectory(dirPath, filter, dirName);
+            return FromDirectory(dirPath, filter, dirName, false, mode);
         }
 
         /// <summary>
@@ -202,6 +203,7 @@ namespace Yarhl.FileSystem
         /// <param name="subDirectories">
         /// If <see langword="true" /> it searchs recursively in subdirectories.
         /// </param>
+        /// <param name="mode">The mode to open the files.</param>
         [SuppressMessage(
             "Reliability",
             "CA2000:Dispose objects before losing scope",
@@ -210,7 +212,8 @@ namespace Yarhl.FileSystem
             string dirPath,
             string filter,
             string nodeName,
-            bool subDirectories = false)
+            bool subDirectories = false,
+            FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             var options = subDirectories ?
                 SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -224,7 +227,7 @@ namespace Yarhl.FileSystem
             foreach (string filePath in Directory.GetFiles(dirPath, filter, options)) {
                 string relParent = Path.GetDirectoryName(filePath)
                                        .Replace(dirPath, string.Empty);
-                CreateContainersForChild(folder, relParent, FromFile(filePath));
+                CreateContainersForChild(folder, relParent, FromFile(filePath, mode));
             }
 
             foreach (Node node in Navigator.IterateNodes(folder)) {
