@@ -135,13 +135,14 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>The node.</returns>
         /// <param name="filePath">File path.</param>
-        public static Node FromFile(string filePath)
+        /// <param name="mode">The mode to open the file.</param>
+        public static Node FromFile(string filePath, FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             if (string.IsNullOrEmpty(filePath))
                 throw new ArgumentNullException(nameof(filePath));
 
             string filename = Path.GetFileName(filePath);
-            return FromFile(filePath, filename);
+            return FromFile(filePath, filename, mode);
         }
 
         /// <summary>
@@ -150,15 +151,15 @@ namespace Yarhl.FileSystem
         /// <returns>The node.</returns>
         /// <param name="filePath">File path.</param>
         /// <param name="nodeName">Node name.</param>
+        /// <param name="mode">The mode to open the file.</param>
         [SuppressMessage(
             "Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "Ownserhip dispose transferred")]
-        public static Node FromFile(string filePath, string nodeName)
+        public static Node FromFile(string filePath, string nodeName, FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             // We need to catch if the node creation fails
             // for instance for null names, to dispose the stream.
-            FileOpenMode mode = FileOpenMode.ReadWrite;
             var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
