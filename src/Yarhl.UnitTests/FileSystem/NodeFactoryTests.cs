@@ -603,5 +603,37 @@ namespace Yarhl.UnitTests.FileSystem
 
             node.Dispose();
         }
+
+        [Test]
+        public void ReadFromReadonlyFile()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            File.WriteAllBytes(tempFile, new byte[] { 0xCA, 0xFE, 0x00, 0xFF });
+            File.SetAttributes(tempFile, FileAttributes.ReadOnly);
+
+            Node node = NodeFactory.FromFile(tempFile, FileOpenMode.Read);
+            byte[] buffer = new byte[4];
+            _ = node.Stream.Read(buffer, 0, 4);
+            node.Dispose();
+
+            File.SetAttributes(tempFile, FileAttributes.Normal);
+            File.Delete(tempFile);
+        }
+
+        [Test]
+        public void ReadFromReadonlyFileUsingWriteModeThrowsException()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            File.WriteAllBytes(tempFile, new byte[] { 0xCA, 0xFE, 0x00, 0xFF });
+            File.SetAttributes(tempFile, FileAttributes.ReadOnly);
+
+            Node node = NodeFactory.FromFile(tempFile, FileOpenMode.ReadWrite);
+            byte[] buffer = new byte[4];
+            Assert.Throws<UnauthorizedAccessException>(() => _ = node.Stream.Read(buffer, 0, 4));
+            node.Dispose();
+
+            File.SetAttributes(tempFile, FileAttributes.Normal);
+            File.Delete(tempFile);
+        }
     }
 }
