@@ -135,13 +135,14 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>The node.</returns>
         /// <param name="filePath">File path.</param>
-        public static Node FromFile(string filePath)
+        /// <param name="mode">The mode to open the file.</param>
+        public static Node FromFile(string filePath, FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             if (string.IsNullOrEmpty(filePath))
                 throw new ArgumentNullException(nameof(filePath));
 
             string filename = Path.GetFileName(filePath);
-            return FromFile(filePath, filename);
+            return FromFile(filePath, filename, mode);
         }
 
         /// <summary>
@@ -150,15 +151,15 @@ namespace Yarhl.FileSystem
         /// <returns>The node.</returns>
         /// <param name="filePath">File path.</param>
         /// <param name="nodeName">Node name.</param>
+        /// <param name="mode">The mode to open the file.</param>
         [SuppressMessage(
             "Reliability",
             "CA2000:Dispose objects before losing scope",
             Justification = "Ownserhip dispose transferred")]
-        public static Node FromFile(string filePath, string nodeName)
+        public static Node FromFile(string filePath, string nodeName, FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             // We need to catch if the node creation fails
             // for instance for null names, to dispose the stream.
-            FileOpenMode mode = FileOpenMode.ReadWrite;
             var format = new BinaryFormat(DataStreamFactory.FromFile(filePath, mode));
             Node node;
             try {
@@ -179,7 +180,8 @@ namespace Yarhl.FileSystem
         /// <returns>The container node.</returns>
         /// <param name="dirPath">Directory path.</param>
         /// <param name="filter">Filter for files in directory.</param>
-        public static Node FromDirectory(string dirPath, string filter = "*")
+        /// <param name="mode">The mode to open the files.</param>
+        public static Node FromDirectory(string dirPath, string filter = "*", FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             if (string.IsNullOrEmpty(dirPath))
                 throw new ArgumentNullException(nameof(dirPath));
@@ -188,7 +190,7 @@ namespace Yarhl.FileSystem
                 dirPath = dirPath.Remove(dirPath.Length - 1);
 
             string dirName = Path.GetFileName(dirPath);
-            return FromDirectory(dirPath, filter, dirName);
+            return FromDirectory(dirPath, filter, dirName, false, mode);
         }
 
         /// <summary>
@@ -201,6 +203,7 @@ namespace Yarhl.FileSystem
         /// <param name="subDirectories">
         /// If <see langword="true" /> it searchs recursively in subdirectories.
         /// </param>
+        /// <param name="mode">The mode to open the files.</param>
         [SuppressMessage(
             "Reliability",
             "CA2000:Dispose objects before losing scope",
@@ -209,7 +212,8 @@ namespace Yarhl.FileSystem
             string dirPath,
             string filter,
             string nodeName,
-            bool subDirectories = false)
+            bool subDirectories = false,
+            FileOpenMode mode = FileOpenMode.ReadWrite)
         {
             var options = subDirectories ?
                 SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
@@ -223,7 +227,7 @@ namespace Yarhl.FileSystem
             foreach (string filePath in Directory.GetFiles(dirPath, filter, options)) {
                 string relParent = Path.GetDirectoryName(filePath)
                                        .Replace(dirPath, string.Empty);
-                CreateContainersForChild(folder, relParent, FromFile(filePath));
+                CreateContainersForChild(folder, relParent, FromFile(filePath, mode));
             }
 
             foreach (Node node in Navigator.IterateNodes(folder)) {
