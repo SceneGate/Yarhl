@@ -276,6 +276,12 @@ namespace Yarhl.FileSystem
             bool subDirectories = false,
             FileOpenMode mode = FileOpenMode.ReadWrite)
         {
+            if (string.IsNullOrEmpty(dirPath))
+                throw new ArgumentNullException(nameof(dirPath));
+
+            if (string.IsNullOrEmpty(nodeName))
+                throw new ArgumentNullException(nameof(nodeName));
+
             SearchOption options = subDirectories ?
                 SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 

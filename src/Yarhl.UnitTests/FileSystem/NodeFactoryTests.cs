@@ -647,6 +647,23 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(
                 () => NodeFactory.FromDirectory(string.Empty, _ => true),
                 Throws.ArgumentNullException);
+            Assert.That(
+                () => NodeFactory.FromDirectory(null, _ => true, "name"),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => NodeFactory.FromDirectory(string.Empty, _ => true, "name"),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFromDirectoryAdvancedFilterAndEmptyName()
+        {
+            Assert.That(
+                () => NodeFactory.FromDirectory("dir", _ => true, null),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => NodeFactory.FromDirectory("dir", _ => true, string.Empty),
+                Throws.ArgumentNullException);
         }
 
         [Test]
