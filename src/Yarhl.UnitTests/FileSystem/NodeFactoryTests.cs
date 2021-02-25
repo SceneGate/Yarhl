@@ -22,6 +22,7 @@ namespace Yarhl.UnitTests.FileSystem
     using System;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using NUnit.Framework;
     using Yarhl.FileSystem;
     using Yarhl.IO;
@@ -310,7 +311,7 @@ namespace Yarhl.UnitTests.FileSystem
             Directory.CreateDirectory(tempDir);
 
             Assert.Throws<ArgumentNullException>(() =>
-                NodeFactory.FromDirectory(tempDir, null));
+                NodeFactory.FromDirectory(tempDir, "*", null));
 
             Directory.Delete(tempDir, true);
         }
@@ -634,6 +635,97 @@ namespace Yarhl.UnitTests.FileSystem
 
             File.SetAttributes(tempFile, FileAttributes.Normal);
             File.Delete(tempFile);
+        }
+
+        // Advanced filter
+        [Test]
+        public void CreateFromDirectoryAdvancedFilterAndEmptyPath()
+        {
+            Assert.That(
+                () => NodeFactory.FromDirectory(null, _ => true),
+                Throws.ArgumentNullException);
+            Assert.That(
+                () => NodeFactory.FromDirectory(string.Empty, _ => true),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFromDirectoryAdvancedFilterWithFinalSlash()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, Path.GetRandomFileName());
+            File.Create(tempFile1).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir + Path.DirectorySeparatorChar, _ => true);
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.IsTrue(node.IsContainer);
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+
+            node.Dispose();
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
+        public void CreateFromDirectoryWithFilesAndAdvancedFilter()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, "file1.bin");
+            File.Create(tempFile1).Dispose();
+            string tempFile2 = Path.Combine(tempDir, "arch2.bin");
+            File.Create(tempFile2).Dispose();
+            string tempFile3 = Path.Combine(tempDir, "file3.txt");
+            File.Create(tempFile3).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir, x => Regex.IsMatch(x, @"file\d\.(txt|bin)$"));
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile3)));
+            node.Dispose();
+
+            node = NodeFactory.FromDirectory(tempDir, x => x.EndsWith(".bin"));
+            Assert.AreEqual(Path.GetFileName(tempDir), node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile2)));
+
+            node.Dispose();
+            Directory.Delete(tempDir, true);
+        }
+
+        [Test]
+        public void CreateFromDirectoryWithFilesAndNameAndAdvancedFilter()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            string tempFile1 = Path.Combine(tempDir, "file1.bin");
+            File.Create(tempFile1).Dispose();
+            string tempFile2 = Path.Combine(tempDir, "arch2.bin");
+            File.Create(tempFile2).Dispose();
+            string tempFile3 = Path.Combine(tempDir, "file3.txt");
+            File.Create(tempFile3).Dispose();
+
+            Node node = NodeFactory.FromDirectory(tempDir, x => Regex.IsMatch(x, @"file\d\.(txt|bin)$"), "MyDir");
+            Assert.AreEqual("MyDir", node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile3)));
+            node.Dispose();
+
+            node = NodeFactory.FromDirectory(tempDir, x => x.EndsWith(".bin"), "MyDir");
+            Assert.AreEqual("MyDir", node.Name);
+            Assert.AreEqual(2, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile2)));
+
+            node.Dispose();
+            Directory.Delete(tempDir, true);
         }
     }
 }
