@@ -20,6 +20,7 @@
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using Yarhl.IO;
@@ -215,16 +216,83 @@ namespace Yarhl.FileSystem
             bool subDirectories = false,
             FileOpenMode mode = FileOpenMode.ReadWrite)
         {
-            var options = subDirectories ?
+            if (string.IsNullOrEmpty(dirPath))
+                throw new ArgumentNullException(nameof(dirPath));
+
+            if (string.IsNullOrEmpty(filter))
+                throw new ArgumentNullException(nameof(filter));
+
+            if (string.IsNullOrEmpty(nodeName))
+                throw new ArgumentNullException(nameof(nodeName));
+
+            SearchOption options = subDirectories ?
                 SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
 
             // This sanitizes the path and remove double slashes
             dirPath = Path.GetFullPath(dirPath);
 
+            string[] fileList = Directory.GetFiles(dirPath, filter, options);
+            return FromFileList(dirPath, nodeName, fileList, mode);
+        }
+
+        /// <summary>
+        /// Creates a Node containing all the files from the directory.
+        /// </summary>
+        /// <returns>The container node.</returns>
+        /// <param name="dirPath">Directory path.</param>
+        /// <param name="filter">Filter for files in directory.</param>
+        /// <param name="mode">The mode to open the files.</param>
+        public static Node FromDirectory(string dirPath, Func<string, bool> filter, FileOpenMode mode = FileOpenMode.ReadWrite)
+        {
+            if (string.IsNullOrEmpty(dirPath))
+                throw new ArgumentNullException(nameof(dirPath));
+
+            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar)
+                dirPath = dirPath.Remove(dirPath.Length - 1);
+
+            string dirName = Path.GetFileName(dirPath);
+            return FromDirectory(dirPath, filter, dirName, false, mode);
+        }
+
+        /// <summary>
+        /// Creates a Node containing all the files from the directory.
+        /// </summary>
+        /// <returns>The container node.</returns>
+        /// <param name="dirPath">Directory path.</param>
+        /// <param name="filter">Filter for files in directory.</param>
+        /// <param name="nodeName">Node name.</param>
+        /// <param name="subDirectories">
+        /// If <see langword="true" /> it searchs recursively in subdirectories.
+        /// </param>
+        /// <param name="mode">The mode to open the files.</param>
+        [SuppressMessage(
+            "Reliability",
+            "CA2000:Dispose objects before losing scope",
+            Justification = "Ownserhip dispose transferred")]
+        public static Node FromDirectory(
+            string dirPath,
+            Func<string, bool> filter,
+            string nodeName,
+            bool subDirectories = false,
+            FileOpenMode mode = FileOpenMode.ReadWrite)
+        {
+            SearchOption options = subDirectories ?
+                SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            // This sanitizes the path and remove double slashes
+            dirPath = Path.GetFullPath(dirPath);
+
+            string[] allFiles = Directory.GetFiles(dirPath, "*", options);
+            string[] fileList = Array.FindAll(allFiles, x => filter(x));
+            return FromFileList(dirPath, nodeName, fileList, mode);
+        }
+
+        private static Node FromFileList(string dirPath, string nodeName, IEnumerable<string> fileList, FileOpenMode mode = FileOpenMode.ReadWrite)
+        {
             Node folder = CreateContainer(nodeName);
             folder.Tags["DirectoryInfo"] = new DirectoryInfo(dirPath);
 
-            foreach (string filePath in Directory.GetFiles(dirPath, filter, options)) {
+            foreach (string filePath in fileList) {
                 string relParent = Path.GetDirectoryName(filePath)
                                        .Replace(dirPath, string.Empty);
                 CreateContainersForChild(folder, relParent, FromFile(filePath, mode));
