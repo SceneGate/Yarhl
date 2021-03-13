@@ -187,8 +187,12 @@ namespace Yarhl.FileSystem
             if (string.IsNullOrEmpty(dirPath))
                 throw new ArgumentNullException(nameof(dirPath));
 
-            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar)
+            // This sanitizes the path and remove double slashes
+            dirPath = Path.GetFullPath(dirPath);
+
+            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
                 dirPath = dirPath.Remove(dirPath.Length - 1);
+            }
 
             string dirName = Path.GetFileName(dirPath);
             return FromDirectory(dirPath, filter, dirName, false, mode);
@@ -250,6 +254,9 @@ namespace Yarhl.FileSystem
             if (filter == null)
                 throw new ArgumentNullException(nameof(filter));
 
+            // This sanitizes the path and remove double slashes
+            dirPath = Path.GetFullPath(dirPath);
+
             if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
                 dirPath = dirPath.Remove(dirPath.Length - 1);
             }
@@ -294,6 +301,10 @@ namespace Yarhl.FileSystem
 
             // This sanitizes the path and remove double slashes
             dirPath = Path.GetFullPath(dirPath);
+
+            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
+                dirPath = dirPath.Remove(dirPath.Length - 1);
+            }
 
             string[] allFiles = Directory.GetFiles(dirPath, "*", options);
             string[] fileList = Array.FindAll(allFiles, x => filter(x));
