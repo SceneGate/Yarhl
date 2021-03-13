@@ -247,8 +247,12 @@ namespace Yarhl.FileSystem
             if (string.IsNullOrEmpty(dirPath))
                 throw new ArgumentNullException(nameof(dirPath));
 
-            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar)
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+
+            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
                 dirPath = dirPath.Remove(dirPath.Length - 1);
+            }
 
             string dirName = Path.GetFileName(dirPath);
             return FromDirectory(dirPath, filter, dirName, false, mode);
@@ -278,6 +282,9 @@ namespace Yarhl.FileSystem
         {
             if (string.IsNullOrEmpty(dirPath))
                 throw new ArgumentNullException(nameof(dirPath));
+
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
 
             if (string.IsNullOrEmpty(nodeName))
                 throw new ArgumentNullException(nameof(nodeName));
