@@ -302,6 +302,29 @@ namespace Yarhl.UnitTests.FileSystem
         public void CreateFromNullDirectory()
         {
             Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(null));
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(string.Empty));
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(null, "*", "name"));
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(string.Empty, "*", "name"));
+        }
+
+        [Test]
+        public void CreateFromDirectoryAndNullFilter()
+        {
+            string tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(tempDir, (string)null));
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(tempDir, string.Empty));
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(tempDir, (string)null, "name"));
+
+            Assert.Throws<ArgumentNullException>(() => NodeFactory.FromDirectory(tempDir, string.Empty, "name"));
+
+            Directory.Delete(tempDir, true);
         }
 
         [Test]
@@ -656,6 +679,18 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CreateFromDirectoryAdvancedFilterAndEmptyFilter()
+        {
+            Assert.That(
+                () => NodeFactory.FromDirectory("dir", (Func<string, bool>)null),
+                Throws.ArgumentNullException);
+
+            Assert.That(
+                () => NodeFactory.FromDirectory("dir", (Func<string, bool>)null, "name"),
+                Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void CreateFromDirectoryAdvancedFilterAndEmptyName()
         {
             Assert.That(
@@ -680,8 +715,15 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.IsTrue(node.IsContainer);
             Assert.AreEqual(1, node.Children.Count);
             Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
-
             node.Dispose();
+
+            node = NodeFactory.FromDirectory(tempDir + Path.DirectorySeparatorChar, _ => true, "name");
+            Assert.AreEqual("name", node.Name);
+            Assert.IsTrue(node.IsContainer);
+            Assert.AreEqual(1, node.Children.Count);
+            Assert.IsTrue(node.Children.Any(n => n.Name == Path.GetFileName(tempFile1)));
+            node.Dispose();
+
             Directory.Delete(tempDir, true);
         }
 
