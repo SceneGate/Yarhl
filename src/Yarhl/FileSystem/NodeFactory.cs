@@ -323,8 +323,9 @@ namespace Yarhl.FileSystem
             }
 
             foreach (Node node in Navigator.IterateNodes(folder)) {
-                if (!node.IsContainer || node.Tags.ContainsKey("DirectoryInfo"))
+                if (!node.IsContainer || node.Tags.ContainsKey("DirectoryInfo")) {
                     continue;
+                }
 
                 int rootPathLength = $"{NodeSystem.PathSeparator}{nodeName}".Length;
                 string nodePath = Path.GetFullPath(string.Concat(dirPath, node.Path.Substring(rootPathLength)));
