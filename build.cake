@@ -1,4 +1,4 @@
-#load "nuget:?package=PleOps.Cake&version=0.4.0"
+#load "nuget:?package=PleOps.Cake&version=0.4.1"
 
 Task("Define-Project")
     .Description("Fill specific project information")
