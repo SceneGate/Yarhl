@@ -81,5 +81,34 @@ namespace Yarhl.UnitTests.Media.Text
             entry.Translated = "translated";
             Assert.That(entry.Text, Is.EqualTo(entry.Translated));
         }
+
+        [Test]
+        public void Clone()
+        {
+            PoEntry entry = new PoEntry {
+                Original = "test0",
+                Translated = "test1",
+                Context = "test2",
+                TranslatorComment = "test3",
+                ExtractedComments = "test4",
+                Reference = "test5",
+                Flags = "test6",
+                PreviousContext = "test7",
+                PreviousOriginal = "test8",
+            };
+
+            PoEntry clone = (PoEntry)entry.Clone();
+
+            Assert.AreNotSame(entry, clone);
+            Assert.AreEqual("test0", clone.Original);
+            Assert.AreEqual("test1", clone.Translated);
+            Assert.AreEqual("test2", clone.Context);
+            Assert.AreEqual("test3", clone.TranslatorComment);
+            Assert.AreEqual("test4", clone.ExtractedComments);
+            Assert.AreEqual("test5", clone.Reference);
+            Assert.AreEqual("test6", clone.Flags);
+            Assert.AreEqual("test7", clone.PreviousContext);
+            Assert.AreEqual("test8", clone.PreviousOriginal);
+        }
     }
 }

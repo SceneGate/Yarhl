@@ -667,6 +667,36 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.DoesNotThrow(node.Dispose);
         }
 
+        [Test]
+        public void NotCloneableFormatThrowsException()
+        {
+            using Node node = new Node("test", new StringFormatTest("3"));
+            Assert.Throws<InvalidOperationException>(() => _ = node.Clone());
+        }
+
+        [Test]
+        public void CloneNodeHasTags()
+        {
+            using Node node = NodeFactory.FromMemory("test");
+            node.Tags["TestTag"] = 23;
+
+            using Node clone = (Node)node.Clone();
+
+            Assert.AreNotSame(node, clone);
+            Assert.AreEqual(1, clone.Tags.Count);
+            Assert.AreEqual(23, clone.Tags["TestTag"]);
+        }
+
+        [Test]
+        public void CloneNullFormatNode()
+        {
+            using Node node = new Node("test");
+            using Node clone = (Node)node.Clone();
+
+            Assert.AreNotSame(node, clone);
+            Assert.IsNull(clone.Format);
+        }
+
         [PartNotDiscoverable]
         public class PrivateConverter :
             IConverter<StringFormatTest, IntFormatTest>,

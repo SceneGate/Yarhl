@@ -183,6 +183,31 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(folder3.Children.Count, Is.Zero);
         }
 
+        [Test]
+        public void Clone()
+        {
+            using NodeContainerFormat format = new NodeContainerFormat();
+
+            using Node child1 = NodeFactory.CreateContainer("child1");
+            using Node child2 = new Node("child2");
+            using Node grandchild = new Node("grandchild");
+
+            format.Root.Add(child1);
+            format.Root.Add(child2);
+            child1.Add(grandchild);
+
+            using NodeContainerFormat clone = (NodeContainerFormat)format.Clone();
+
+            Node child1Clone = clone.Root.Children["child1"];
+            Node child2Clone = clone.Root.Children["child2"];
+            Node grandchildClone = child1Clone.Children["grandchild"];
+
+            Assert.AreNotSame(format, clone);
+            Assert.AreNotSame(child1, child1Clone);
+            Assert.AreNotSame(child2, child2Clone);
+            Assert.AreNotSame(grandchild, grandchildClone);
+        }
+
         protected override NodeContainerFormat CreateDummyFormat()
         {
             return new NodeContainerFormat();
