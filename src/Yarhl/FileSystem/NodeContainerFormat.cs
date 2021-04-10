@@ -26,7 +26,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
-    public class NodeContainerFormat : IFormat, IDisposable
+    public class NodeContainerFormat : IFormat, IDisposable, ICloneable
     {
         bool manageRoot;
 
@@ -94,6 +94,21 @@ namespace Yarhl.FileSystem
             Root.RemoveChildren(false);
             Root = newNode;
             manageRoot = false;
+        }
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            var newFormat = new NodeContainerFormat();
+
+            // Just copy the first generation children.
+            // The rest will be copied recursively if necessary.
+            foreach (Node node in Root.Children) {
+                var newNode = (Node)node.Clone();
+                newFormat.Root.Add(newNode);
+            }
+
+            return newFormat;
         }
 
         /// <summary>

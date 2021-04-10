@@ -25,7 +25,7 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Header for PO translation format.
     /// </summary>
-    public class PoHeader
+    public class PoHeader : ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PoHeader"/> class.
@@ -121,5 +121,18 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <value>The dictionary for the metadata.</value>
         public IDictionary<string, string> Extensions { get; private set; }
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            PoHeader clone = (PoHeader)this.MemberwiseClone();
+            clone.Extensions = new Dictionary<string, string>();
+            foreach (KeyValuePair<string, string> extension in Extensions)
+            {
+                clone.Extensions[extension.Key] = extension.Value;
+            }
+
+            return clone;
+        }
     }
 }

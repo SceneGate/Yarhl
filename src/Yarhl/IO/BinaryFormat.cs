@@ -25,7 +25,7 @@ namespace Yarhl.IO
     /// <summary>
     /// Binary format.
     /// </summary>
-    public class BinaryFormat : IBinary, IDisposable
+    public class BinaryFormat : IBinary, IDisposable, ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
@@ -92,6 +92,9 @@ namespace Yarhl.IO
             get;
             private set;
         }
+
+        /// <inheritdoc />
+        public object Clone() => new BinaryFormat(DataStreamFactory.FromStream(Stream, 0, Stream.Length));
 
         /// <summary>
         /// Releases all resource used by the <see cref="BinaryFormat"/> object.

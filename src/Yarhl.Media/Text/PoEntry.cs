@@ -19,10 +19,12 @@
 // SOFTWARE.
 namespace Yarhl.Media.Text
 {
+    using System;
+
     /// <summary>
     /// Entry in PO formats. Represents a translation unit.
     /// </summary>
-    public class PoEntry
+    public class PoEntry : ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PoEntry"/> class.
@@ -115,5 +117,8 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <value>The previous original content.</value>
         public string PreviousOriginal { get; set; }
+
+        /// <inheritdoc />
+        public object Clone() => this.MemberwiseClone();
     }
 }

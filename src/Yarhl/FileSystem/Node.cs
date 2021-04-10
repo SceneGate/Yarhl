@@ -20,13 +20,14 @@
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Collections.Generic;
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavigableNode<Node>
+    public class Node : NavigableNode<Node>, ICloneable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
@@ -273,6 +274,27 @@ namespace Yarhl.FileSystem
 
             ChangeFormat(converter.Convert((TSrc)Format));
             return this;
+        }
+
+        /// <inheritdoc />
+        public object Clone()
+        {
+            if (Format != null && !(Format is ICloneable)) {
+                throw new InvalidOperationException("Format does not implement ICloneable interface.");
+            }
+
+            IFormat newFormat = null;
+            if (Format != null) {
+                newFormat = (IFormat)(Format as ICloneable).Clone();
+            }
+
+            var newNode = new Node(this.Name, newFormat);
+            foreach (KeyValuePair<string, dynamic> tag in Tags)
+            {
+                newNode.Tags[tag.Key] = tag.Value;
+            }
+
+            return newNode;
         }
 
         /// <summary>
