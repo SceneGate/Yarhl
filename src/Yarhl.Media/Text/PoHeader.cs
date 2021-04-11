@@ -25,7 +25,7 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Header for PO translation format.
     /// </summary>
-    public class PoHeader : ICloneable
+    public class PoHeader
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PoHeader"/> class.
@@ -48,6 +48,30 @@ namespace Yarhl.Media.Text
             ReportMsgidBugsTo = reporter;
             Language = lang;
             CreationDate = DateTime.Now.ToShortDateString();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PoHeader"/> class.
+        /// </summary>
+        /// <param name="header">The header to copy.</param>
+        public PoHeader(PoHeader header)
+            : this()
+        {
+            if (header == null)
+                throw new ArgumentNullException(nameof(header));
+
+            ProjectIdVersion = header.ProjectIdVersion;
+            ReportMsgidBugsTo = header.ReportMsgidBugsTo;
+            Language = header.Language;
+            CreationDate = header.CreationDate;
+            RevisionDate = header.RevisionDate;
+            LastTranslator = header.LastTranslator;
+            LanguageTeam = header.LanguageTeam;
+            PluralForms = header.PluralForms;
+            foreach (KeyValuePair<string, string> extension in header.Extensions)
+            {
+                Extensions[extension.Key] = extension.Value;
+            }
         }
 
         /// <summary>
@@ -121,18 +145,5 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <value>The dictionary for the metadata.</value>
         public IDictionary<string, string> Extensions { get; private set; }
-
-        /// <inheritdoc />
-        public object Clone()
-        {
-            PoHeader clone = (PoHeader)this.MemberwiseClone();
-            clone.Extensions = new Dictionary<string, string>();
-            foreach (KeyValuePair<string, string> extension in Extensions)
-            {
-                clone.Extensions[extension.Key] = extension.Value;
-            }
-
-            return clone;
-        }
     }
 }

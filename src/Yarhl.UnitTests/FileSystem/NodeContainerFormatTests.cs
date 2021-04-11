@@ -196,7 +196,7 @@ namespace Yarhl.UnitTests.FileSystem
             format.Root.Add(child2);
             child1.Add(grandchild);
 
-            using NodeContainerFormat clone = (NodeContainerFormat)format.Clone();
+            using NodeContainerFormat clone = (NodeContainerFormat)format.DeepClone();
 
             Node child1Clone = clone.Root.Children["child1"];
             Node child2Clone = clone.Root.Children["child2"];

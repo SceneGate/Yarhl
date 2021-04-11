@@ -76,6 +76,12 @@ namespace Yarhl.UnitTests.Media.Text
         }
 
         [Test]
+        public void CloneNullThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _ = new PoHeader(null));
+        }
+
+        [Test]
         public void Clone()
         {
             var header = new PoHeader("myID", "yo", "us") {
@@ -90,7 +96,7 @@ namespace Yarhl.UnitTests.Media.Text
             };
             header.Extensions["X-MyExt"] = "the value";
 
-            PoHeader clone = (PoHeader)header.Clone();
+            PoHeader clone = new PoHeader(header);
             Assert.AreNotSame(header, clone);
             Assert.AreEqual("test1", clone.ProjectIdVersion);
             Assert.AreEqual("test2", clone.ReportMsgidBugsTo);

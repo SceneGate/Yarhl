@@ -27,7 +27,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavigableNode<Node>, ICloneable
+    public class Node : NavigableNode<Node>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
@@ -47,6 +47,32 @@ namespace Yarhl.FileSystem
             : this(name)
         {
             ChangeFormat(initialFormat);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Node"/> class.
+        /// </summary>
+        /// <param name="node">The original node.</param>
+        /// <remarks><para>It makes a copy of the original node.
+        /// The original format is deep copied. See <see cref="ICloneableFormat"/> for details.</para></remarks>
+        public Node(Node node)
+            : this(node != null ? node.Name : string.Empty)
+        {
+            if (node!.Format != null && !(node.Format is ICloneableFormat))
+                throw new InvalidOperationException("Format does not implement ICloneableFormat interface.");
+
+            ICloneableFormat newFormat = null;
+            if (node.Format != null) {
+                var oldFormat = node.Format as ICloneableFormat;
+                newFormat = (ICloneableFormat)oldFormat!.DeepClone();
+            }
+
+            ChangeFormat(newFormat);
+
+            foreach (KeyValuePair<string, dynamic> tag in node.Tags)
+            {
+                Tags[tag.Key] = tag.Value;
+            }
         }
 
         /// <summary>
@@ -274,27 +300,6 @@ namespace Yarhl.FileSystem
 
             ChangeFormat(converter.Convert((TSrc)Format));
             return this;
-        }
-
-        /// <inheritdoc />
-        public object Clone()
-        {
-            if (Format != null && !(Format is ICloneable)) {
-                throw new InvalidOperationException("Format does not implement ICloneable interface.");
-            }
-
-            IFormat newFormat = null;
-            if (Format != null) {
-                newFormat = (IFormat)(Format as ICloneable).Clone();
-            }
-
-            var newNode = new Node(this.Name, newFormat);
-            foreach (KeyValuePair<string, dynamic> tag in Tags)
-            {
-                newNode.Tags[tag.Key] = tag.Value;
-            }
-
-            return newNode;
         }
 
         /// <summary>

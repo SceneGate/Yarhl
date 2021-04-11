@@ -668,10 +668,16 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CloneNullNodeThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _ = new Node((Node)null));
+        }
+
+        [Test]
         public void NotCloneableFormatThrowsException()
         {
             using Node node = new Node("test", new StringFormatTest("3"));
-            Assert.Throws<InvalidOperationException>(() => _ = node.Clone());
+            Assert.Throws<InvalidOperationException>(() => _ = new Node(node));
         }
 
         [Test]
@@ -680,7 +686,7 @@ namespace Yarhl.UnitTests.FileSystem
             using Node node = NodeFactory.FromMemory("test");
             node.Tags["TestTag"] = 23;
 
-            using Node clone = (Node)node.Clone();
+            using Node clone = new Node(node);
 
             Assert.AreNotSame(node, clone);
             Assert.AreEqual(1, clone.Tags.Count);
@@ -691,7 +697,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void CloneNullFormatNode()
         {
             using Node node = new Node("test");
-            using Node clone = (Node)node.Clone();
+            using Node clone = new Node(node);
 
             Assert.AreNotSame(node, clone);
             Assert.IsNull(clone.Format);

@@ -187,7 +187,7 @@ namespace Yarhl.UnitTests.IO
             using DataStream stream = DataStreamFactory.FromArray(data, 0, data.Length);
             using BinaryFormat format = new BinaryFormat(stream);
 
-            using BinaryFormat clone = (BinaryFormat)format.Clone();
+            using BinaryFormat clone = (BinaryFormat)format.DeepClone();
 
             Assert.AreNotSame(format, clone);
             Assert.IsTrue(format.Stream.Compare(clone.Stream));

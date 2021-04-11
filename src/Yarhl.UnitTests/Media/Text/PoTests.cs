@@ -233,7 +233,7 @@ namespace Yarhl.UnitTests.Media.Text
             po.Add(new PoEntry("t1"));
             po.Add(new PoEntry("t2"));
 
-            var clone = (Po)po.Clone();
+            var clone = (Po)po.DeepClone();
 
             Assert.AreNotSame(po, clone);
             Assert.AreEqual(2, clone.Entries.Count);

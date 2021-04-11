@@ -19,6 +19,7 @@
 // SOFTWARE.
 namespace Yarhl.UnitTests.Media.Text
 {
+    using System;
     using NUnit.Framework;
     using Yarhl.Media.Text;
 
@@ -83,6 +84,12 @@ namespace Yarhl.UnitTests.Media.Text
         }
 
         [Test]
+        public void CloneNullThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _ = new PoEntry((PoEntry)null));
+        }
+
+        [Test]
         public void Clone()
         {
             PoEntry entry = new PoEntry {
@@ -97,7 +104,7 @@ namespace Yarhl.UnitTests.Media.Text
                 PreviousOriginal = "test8",
             };
 
-            PoEntry clone = (PoEntry)entry.Clone();
+            PoEntry clone = new PoEntry(entry);
 
             Assert.AreNotSame(entry, clone);
             Assert.AreEqual("test0", clone.Original);
