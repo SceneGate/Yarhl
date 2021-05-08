@@ -94,7 +94,12 @@ namespace Yarhl.IO
             private set;
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Makes a copy of the format stream <strong>into memory</strong>
+        /// and returns a new <see cref="BinaryFormat"/> object.
+        /// </summary>
+        /// <remarks><para>The stream is copied into memory, so it is limited to 2GB size.</para></remarks>
+        /// <returns>The cloned <see cref="BinaryFormat"/>.</returns>
         public virtual object DeepClone()
         {
             DataStream newStream = DataStreamFactory.FromMemory();

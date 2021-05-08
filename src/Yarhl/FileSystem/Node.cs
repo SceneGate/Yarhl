@@ -54,7 +54,11 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="node">The original node.</param>
         /// <remarks><para>It makes a copy of the original node.
-        /// The original format is deep copied. See <see cref="ICloneableFormat"/> for details.</para></remarks>
+        /// The original format is deep copied. See <see cref="ICloneableFormat"/> for details.</para>
+        /// </remarks>
+        /// <remarks><para>If the node has children, it must be a <see cref="NodeContainerFormat"/> to clone them.
+        /// In other case, the format must implement <see cref="ICloneableFormat"/> and clone the children explicitly.
+        /// </para></remarks>
         public Node(Node node)
             : this(node != null ? node.Name : string.Empty)
         {
