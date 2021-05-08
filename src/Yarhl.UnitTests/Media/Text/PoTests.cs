@@ -225,6 +225,20 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.That(() => po.FindEntry(string.Empty), Throws.ArgumentNullException);
         }
 
+        [Test]
+        public void Clone()
+        {
+            var header = new PoHeader("id", "reporter", "lang");
+            var po = new Po(header);
+            po.Add(new PoEntry("t1"));
+            po.Add(new PoEntry("t2"));
+
+            var clone = (Po)po.DeepClone();
+
+            Assert.AreNotSame(po, clone);
+            Assert.AreEqual(2, clone.Entries.Count);
+        }
+
         protected override Po CreateDummyFormat()
         {
             return new Po();

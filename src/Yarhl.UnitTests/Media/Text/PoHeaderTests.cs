@@ -74,5 +74,39 @@ namespace Yarhl.UnitTests.Media.Text
             Assert.AreEqual("test8", header.PluralForms);
             Assert.That(header.Extensions["X-MyExt"], Is.EqualTo("the value"));
         }
+
+        [Test]
+        public void CloneNullThrowsException()
+        {
+            Assert.Throws<ArgumentNullException>(() => _ = new PoHeader(null));
+        }
+
+        [Test]
+        public void Clone()
+        {
+            var header = new PoHeader("myID", "yo", "us") {
+                ProjectIdVersion = "test1",
+                ReportMsgidBugsTo = "test2",
+                CreationDate = "test3",
+                RevisionDate = "test4",
+                LastTranslator = "test5",
+                LanguageTeam = "test6",
+                Language = "test7",
+                PluralForms = "test8",
+            };
+            header.Extensions["X-MyExt"] = "the value";
+
+            PoHeader clone = new PoHeader(header);
+            Assert.AreNotSame(header, clone);
+            Assert.AreEqual("test1", clone.ProjectIdVersion);
+            Assert.AreEqual("test2", clone.ReportMsgidBugsTo);
+            Assert.AreEqual("test3", clone.CreationDate);
+            Assert.AreEqual("test4", clone.RevisionDate);
+            Assert.AreEqual("test5", clone.LastTranslator);
+            Assert.AreEqual("test6", clone.LanguageTeam);
+            Assert.AreEqual("test7", clone.Language);
+            Assert.AreEqual("test8", clone.PluralForms);
+            Assert.That(clone.Extensions["X-MyExt"], Is.EqualTo("the value"));
+        }
     }
 }

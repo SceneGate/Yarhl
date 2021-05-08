@@ -21,11 +21,12 @@ namespace Yarhl.IO
 {
     using System;
     using System.IO;
+    using Yarhl.FileFormat;
 
     /// <summary>
     /// Binary format.
     /// </summary>
-    public class BinaryFormat : IBinary, IDisposable
+    public class BinaryFormat : IBinary, IDisposable, ICloneableFormat
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
@@ -91,6 +92,20 @@ namespace Yarhl.IO
         public bool Disposed {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Makes a copy of the format stream <strong>into memory</strong>
+        /// and returns a new <see cref="BinaryFormat"/> object.
+        /// </summary>
+        /// <remarks><para>The stream is copied into memory, so it is limited to 2GB size.</para></remarks>
+        /// <returns>The cloned <see cref="BinaryFormat"/>.</returns>
+        public virtual object DeepClone()
+        {
+            DataStream newStream = DataStreamFactory.FromMemory();
+            Stream.WriteTo(newStream);
+
+            return new BinaryFormat(newStream);
         }
 
         /// <summary>

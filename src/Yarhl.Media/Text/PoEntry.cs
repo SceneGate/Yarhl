@@ -19,6 +19,8 @@
 // SOFTWARE.
 namespace Yarhl.Media.Text
 {
+    using System;
+
     /// <summary>
     /// Entry in PO formats. Represents a translation unit.
     /// </summary>
@@ -41,6 +43,26 @@ namespace Yarhl.Media.Text
         {
             Original = original;
             Translated = string.Empty;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PoEntry"/> class.
+        /// </summary>
+        /// <param name="entry">The entry to copy.</param>
+        public PoEntry(PoEntry entry)
+        {
+            if (entry == null)
+                throw new ArgumentNullException(nameof(entry));
+
+            Original = entry.Original;
+            Translated = entry.Translated;
+            Context = entry.Context;
+            TranslatorComment = entry.TranslatorComment;
+            ExtractedComments = entry.ExtractedComments;
+            Reference = entry.Reference;
+            Flags = entry.Flags;
+            PreviousContext = entry.PreviousContext;
+            PreviousOriginal = entry.PreviousOriginal;
         }
 
         /// <summary>

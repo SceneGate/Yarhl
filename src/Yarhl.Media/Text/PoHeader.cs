@@ -51,6 +51,30 @@ namespace Yarhl.Media.Text
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="PoHeader"/> class.
+        /// </summary>
+        /// <param name="header">The header to copy.</param>
+        public PoHeader(PoHeader header)
+            : this()
+        {
+            if (header == null)
+                throw new ArgumentNullException(nameof(header));
+
+            ProjectIdVersion = header.ProjectIdVersion;
+            ReportMsgidBugsTo = header.ReportMsgidBugsTo;
+            Language = header.Language;
+            CreationDate = header.CreationDate;
+            RevisionDate = header.RevisionDate;
+            LastTranslator = header.LastTranslator;
+            LanguageTeam = header.LanguageTeam;
+            PluralForms = header.PluralForms;
+            foreach (KeyValuePair<string, string> extension in header.Extensions)
+            {
+                Extensions[extension.Key] = extension.Value;
+            }
+        }
+
+        /// <summary>
         /// Gets the type of the content and encoding.
         /// </summary>
         /// <value>The type of the content.</value>

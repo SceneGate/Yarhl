@@ -27,7 +27,7 @@ namespace Yarhl.Media.Text
     /// <summary>
     /// Portable Object format for translations.
     /// </summary>
-    public class Po : IFormat
+    public class Po : ICloneableFormat
     {
         readonly IList<PoEntry> entries;
         readonly ReadOnlyCollection<PoEntry> readonlyEntries;
@@ -132,6 +132,22 @@ namespace Yarhl.Media.Text
 
             string key = GetKey(original, context);
             return searchEntries.ContainsKey(key) ? searchEntries[key] : null;
+        }
+
+        /// <inheritdoc />
+        public virtual object DeepClone()
+        {
+            Po clone = new Po();
+            if (header != null) {
+                clone.header = new PoHeader(header);
+            }
+
+            foreach (PoEntry entry in entries)
+            {
+                clone.Add(new PoEntry(entry));
+            }
+
+            return clone;
         }
 
         static string GetKey(PoEntry entry)
