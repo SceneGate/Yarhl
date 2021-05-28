@@ -93,7 +93,7 @@ namespace Yarhl.IO.StreamFormat
         /// Reads the next byte.
         /// </summary>
         /// <returns>The next byte.</returns>
-        public override byte ReadByte()
+        public override int ReadByte()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(LazyFileStream));

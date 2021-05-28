@@ -66,7 +66,7 @@ namespace Yarhl.IO
         /// Reads the next byte.
         /// </summary>
         /// <returns>The next byte.</returns>
-        byte ReadByte();
+        int ReadByte();
 
         /// <summary>
         /// Reads from the stream to the buffer.

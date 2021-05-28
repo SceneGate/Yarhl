@@ -25,7 +25,7 @@ namespace Yarhl.IO.StreamFormat
     /// <summary>
     /// Wrapper over .NET streams.
     /// </summary>
-    public class StreamWrapper : IStream
+    public class StreamWrapper : Stream
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamWrapper" /> class.
@@ -63,7 +63,7 @@ namespace Yarhl.IO.StreamFormat
         /// <summary>
         /// Gets or sets the position from the start of this stream.
         /// </summary>
-        public long Position {
+        public override long Position {
             get;
             set;
         }
@@ -71,7 +71,7 @@ namespace Yarhl.IO.StreamFormat
         /// <summary>
         /// Gets the length of this stream.
         /// </summary>
-        public virtual long Length => BaseStream.Length;
+        public override long Length => BaseStream.Length;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="IStream" />
@@ -82,11 +82,17 @@ namespace Yarhl.IO.StreamFormat
             private set;
         }
 
+        public override bool CanRead => true;
+
+        public override bool CanSeek => true;
+
+        public override bool CanWrite => true;
+
         /// <summary>
         /// Sets the length of the stream.
         /// </summary>
         /// <param name="length">The new length of the stream.</param>
-        public virtual void SetLength(long length)
+        public override void SetLength(long length)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(StreamWrapper));
@@ -95,7 +101,7 @@ namespace Yarhl.IO.StreamFormat
         }
 
         /// <inheritdoc />
-        public virtual void Flush()
+        public override void Flush()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(StreamWrapper));
@@ -110,7 +116,7 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="buffer">Buffer to copy data.</param>
         /// <param name="index">Index to start copying in buffer.</param>
         /// <param name="count">Number of bytes to read.</param>
-        public virtual int Read(byte[] buffer, int index, int count)
+        public override int Read(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(StreamWrapper));
@@ -125,14 +131,18 @@ namespace Yarhl.IO.StreamFormat
         /// Reads the next byte.
         /// </summary>
         /// <returns>The next byte.</returns>
-        public virtual byte ReadByte()
+        public override int ReadByte()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(StreamWrapper));
 
-            BaseStream.Position = Position;
-            Position++;
-            return (byte)BaseStream.ReadByte();
+            long position = Position;
+            if (BaseStream.Position != position) {
+                BaseStream.Position = position;
+            }
+
+            Position = position + 1;
+            return BaseStream.ReadByte();
         }
 
         /// <summary>
@@ -141,7 +151,7 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="buffer">Buffer to write.</param>
         /// <param name="index">Index in the buffer.</param>
         /// <param name="count">Bytes to write.</param>
-        public virtual void Write(byte[] buffer, int index, int count)
+        public override void Write(byte[] buffer, int index, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(StreamWrapper));
@@ -155,7 +165,7 @@ namespace Yarhl.IO.StreamFormat
         /// Writes a byte.
         /// </summary>
         /// <param name="data">Byte value.</param>
-        public virtual void WriteByte(byte data)
+        public override void WriteByte(byte data)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(StreamWrapper));
@@ -166,21 +176,12 @@ namespace Yarhl.IO.StreamFormat
         }
 
         /// <summary>
-        /// Releases all resource used by the <see cref="StreamWrapper"/> object.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
         /// Releases all resource used by the <see cref="StreamWrapper"/>
         /// object.
         /// </summary>
         /// <param name="freeManaged">If set to
         /// <see langword="true" /> free managed resources also.</param>
-        protected virtual void Dispose(bool freeManaged)
+        protected override void Dispose(bool freeManaged)
         {
             if (Disposed) {
                 return;
@@ -191,5 +192,7 @@ namespace Yarhl.IO.StreamFormat
                 BaseStream?.Dispose();
             }
         }
+
+        public override long Seek(long offset, SeekOrigin origin) => throw new NotImplementedException();
     }
 }

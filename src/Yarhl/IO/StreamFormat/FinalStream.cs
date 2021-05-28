@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 SceneGate
+// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,40 +17,23 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.PerformanceTests
+namespace Yarhl.IO.StreamFormat
 {
-    using BenchmarkDotNet.Running;
+    using System;
+    using System.IO;
 
-    static class Program
+    /// <summary>
+    /// FinalStream.
+    /// </summary>
+    public sealed class FinalStream : StreamWrapper
     {
-        static void Main(string[] args)
+        /// <summary>
+        /// Initializes a new instance of the
+        /// <see cref="FinalStream"/> class.
+        /// </summary>
+        public FinalStream(Stream stream)
+            : base(stream)
         {
-            if (args.Length > 0 && args[0] == "auto") {
-                RunAuto();
-            } else {
-                RunManual();
-            }
-        }
-
-        static void RunAuto()
-        {
-            BenchmarkRunner.Run<DataStreamReadWriteTests>();
-            // BenchmarkRunner.Run<DataStreamCompare>();
-        }
-
-        static void RunManual()
-        {
-            const int Iterations = 1_000;
-
-            var test1 = new DataStreamCompare();
-            test1.Length = 1024 * 1024;
-            test1.SetUp();
-
-            for (int i = 0; i < Iterations; i++) {
-                test1.Compare();
-            }
-
-            test1.CleanUp();
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Yarhl.IO
                 return new DataStream(dataStream, 0, dataStream.Length);
             }
 
-            var baseStream = new StreamWrapper(stream);
+            var baseStream = new FinalStream(stream);
             return new DataStream(baseStream);
         }
 

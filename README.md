@@ -8,7 +8,7 @@ plugin support. It's built in C# / .NET and works in Windows, Linux and Mac OS
 X.
 
 <!-- prettier-ignore -->
-| NuGet              | [![Nuget](https://img.shields.io/nuget/v/Yarhl.svg)](https://www.nuget.org/packages/Yarhl) |
+| NuGet              | [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl)](https://www.nuget.org/packages/Yarhl) [![Yarhl.Media](https://img.shields.io/nuget/v/Yarhl?label=Yarhl.Media)](https://www.nuget.org/packages/Yarhl.Media) |
 | ------------------ | ------ |
 | **Build & Test**   | ![Build and release](https://github.com/SceneGate/Yarhl/workflows/Build%20and%20release/badge.svg?branch=develop) |
 | **Quality report** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) |
