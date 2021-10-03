@@ -470,6 +470,25 @@ msgstr """"
             Assert.AreEqual(testPo.Entries[0].Reference, newPo.Entries[0].Reference);
         }
 
+        [Test]
+        public void StreamNotAtOrigin()
+        {
+            var header = new PoHeader("testId", "reporter", "es");
+            var po = new Po(header);
+            var entry = new PoEntry("Test") { Translated = "Prueba" };
+            po.Add(entry);
+
+            BinaryFormat poBinary = ConvertFormat.To<BinaryFormat>(po);
+
+            Assert.AreNotEqual(0, poBinary.Stream.Position);
+
+            Po result = ConvertFormat.To<Po>(poBinary);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(1, result.Entries.Count);
+            Assert.AreEqual(po.Entries[0].Original, result.Entries[0].Original);
+        }
+
         static void CompareText(BinaryFormat binary, string expected)
         {
             binary.Stream.Position = 0;
