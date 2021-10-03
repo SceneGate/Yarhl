@@ -39,6 +39,8 @@ namespace Yarhl.Media.Text
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
+            source.Stream.Position = 0;
+
             TextDataReader reader = new TextDataReader(source.Stream);
             Po po = new Po();
 
