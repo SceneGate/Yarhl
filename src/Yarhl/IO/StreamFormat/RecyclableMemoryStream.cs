@@ -41,15 +41,15 @@ namespace Yarhl.IO.StreamFormat
         /// <summary>
         /// Sets the length of the stream.
         /// </summary>
-        /// <param name="length">The new length of the stream.</param>
-        public override void SetLength(long length)
+        /// <param name="value">The new length of the stream.</param>
+        public override void SetLength(long value)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(RecyclableMemoryStream));
 
             long oldLength = Length;
-            int additionalLength = (int)(length - oldLength);
-            base.SetLength(length);
+            int additionalLength = (int)(value - oldLength);
+            base.SetLength(value);
 
             // Since we are reusing buffers from a pool, it's not guarantee
             // that requesting more space will return a clean buffer.
@@ -57,8 +57,8 @@ namespace Yarhl.IO.StreamFormat
                 ClearBuffer(oldLength, additionalLength);
             }
 
-            if (Position > length) {
-                Position = length;
+            if (Position > value) {
+                Position = value;
             }
         }
 

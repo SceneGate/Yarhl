@@ -24,6 +24,7 @@ namespace Yarhl.IO
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
+    using System.Linq;
     using Yarhl.FileFormat;
     using Yarhl.IO.StreamFormat;
 
@@ -31,17 +32,27 @@ namespace Yarhl.IO
     /// Virtual <see cref="Stream" /> with substream capabilities and read/write
     /// abstraction layer.
     /// </summary>
+    /// <remarks>
+    /// The type is thread-safe at the level of the substream. For instance, it
+    /// is safe to use several DataStream over the same base stream in parallel.
+    /// The type is not thread-safe for its method. For instance, it is NOT safe
+    /// to use the same DataStream in different threads at the same time.
+    /// </remarks>
     [SuppressMessage(
         "",
         "S3881",
         Justification = "Historical reasons: https://docs.microsoft.com/en-us/dotnet/api/system.io.stream.dispose")]
     public class DataStream : Stream
     {
-        static readonly ConcurrentDictionary<IStream, int> Instances = new ConcurrentDictionary<IStream, int>();
+        static readonly ConcurrentDictionary<Stream, StreamInfo> Instances = new ConcurrentDictionary<Stream, StreamInfo>();
         readonly Stack<long> positionStack = new Stack<long>();
         readonly bool canExpand;
         readonly bool hasOwnsership;
+        readonly StreamInfo streamInfo;
 
+        bool disposed;
+        Stream baseStream;
+        long offset;
         long position;
         long length;
 
@@ -50,14 +61,8 @@ namespace Yarhl.IO
         /// A new stream is created in memory.
         /// </summary>
         public DataStream()
+            : this(new RecyclableMemoryStream())
         {
-            BaseStream = new RecyclableMemoryStream();
-            canExpand = true;
-            Offset = 0;
-            length = 0;
-            hasOwnsership = true;
-
-            IncreaseStreamCounter();
         }
 
         /// <summary>
@@ -67,18 +72,25 @@ namespace Yarhl.IO
         /// <p>The dispose ownership is transferred to this stream.</p>
         /// </remarks>
         /// <param name="stream">Base stream.</param>
-        public DataStream(IStream stream)
+        public DataStream(Stream stream)
+            : this(stream, 0, stream?.Length ?? -1, true)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-
-            BaseStream = stream;
             canExpand = true;
-            Offset = 0;
-            length = stream.Length;
-            hasOwnsership = true;
+        }
 
-            IncreaseStreamCounter();
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DataStream" /> class
+        /// from a substream transferring the ownership of the life-cycle. In the
+        /// case the stream is another <see cref="DataStream" /> the ownership
+        /// is inherited.
+        /// </summary>
+        /// <param name="stream">Base stream.</param>
+        /// <param name="offset">Offset from the base stream.</param>
+        /// <param name="length">Length of this substream.</param>
+        [SuppressMessage("", "S1125: remove unnecessary boolean", Justification = "Readability")]
+        public DataStream(Stream stream, long offset, long length)
+            : this(stream, offset, length, (stream is DataStream dataStream) ? dataStream.hasOwnsership : true)
+        {
         }
 
         /// <summary>
@@ -91,7 +103,7 @@ namespace Yarhl.IO
         /// Transfer the ownsership of the stream argument to this class so
         /// it can dispose it.
         /// </param>
-        public DataStream(IStream stream, long offset, long length, bool transferOwnership)
+        public DataStream(Stream stream, long offset, long length, bool transferOwnership)
         {
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
@@ -100,59 +112,48 @@ namespace Yarhl.IO
             if (length < 0 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            BaseStream = stream;
-            canExpand = false;
-            Offset = offset;
             this.length = length;
+            canExpand = false;
             hasOwnsership = transferOwnership;
 
-            IncreaseStreamCounter();
-        }
+            if (stream is DataStream dataStream) {
+                ParentDataStream = dataStream;
+                BaseStream = dataStream.BaseStream;
+                Offset = dataStream.Offset + offset;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataStream"/> class.
-        /// </summary>
-        /// <param name="stream">Base stream.</param>
-        /// <param name="offset">Offset from the DataStream start.</param>
-        /// <param name="length">Length of this substream.</param>
-        public DataStream(DataStream stream, long offset, long length)
-        {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (offset < 0 || offset > stream.Length)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < 0 || offset + length > stream.Length)
-                throw new ArgumentOutOfRangeException(nameof(length));
+                if (transferOwnership && !dataStream.hasOwnsership) {
+                    throw new ArgumentException(
+                        "Cannot transfer ownership from another datastream that doesn't have ownership",
+                        nameof(transferOwnership));
+                }
+            } else {
+                ParentDataStream = null;
+                BaseStream = stream;
+                Offset = offset;
+            }
 
-            ParentDataStream = stream;
-            BaseStream = stream.BaseStream;
-            canExpand = false;
-            Offset = stream.Offset + offset;
-            this.length = length;
-            hasOwnsership = stream.hasOwnsership;
-
-            IncreaseStreamCounter();
+            streamInfo = GetOrCreateStreamInfo();
         }
 
         /// <summary>
         /// Gets the number of streams in use.
         /// </summary>
-        public static int ActiveStreams => Instances.Count;
+        public static int ActiveStreams => Instances.Values.Count(i => i.NumInstances > 0);
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="DataStream"/> is disposed.
         /// </summary>
         public bool Disposed {
-            get;
-            private set;
+            get => disposed;
+            private set => disposed = value;
         }
 
         /// <summary>
         /// Gets the offset from the BaseStream.
         /// </summary>
         public long Offset {
-            get;
-            private set;
+            get => offset;
+            private set => offset = value;
         }
 
         /// <summary>
@@ -190,9 +191,9 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the base stream.
         /// </summary>
-        public IStream BaseStream {
-            get;
-            private set;
+        public Stream BaseStream {
+            get => baseStream;
+            private set => baseStream = value;
         }
 
         /// <summary>
@@ -231,6 +232,13 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Gets the internal stream information for testing pourpose only.
+        /// </summary>
+        internal StreamInfo InternalInfo {
+            get => streamInfo;
+        }
+
+        /// <summary>
         /// Sets the length of the current stream.
         /// </summary>
         /// <param name="value">The new length value.</param>
@@ -247,7 +255,7 @@ namespace Yarhl.IO
                         "Cannot change the size of sub-streams.");
                 }
 
-                lock (BaseStream.LockObj) {
+                lock (streamInfo.LockObj) {
                     if (value > BaseStream.Length) {
                         // If we can expand, it's not a substream so forget
                         // about offset (always 0). Increase base stream too.
@@ -427,16 +435,16 @@ namespace Yarhl.IO
         /// <returns>The unsigned byte cast to an Int32, or -1 if at the end of the stream.</returns>
         public override int ReadByte()
         {
-            if (Disposed)
+            if (disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
 
-            if (Position >= Length)
+            if (position >= length)
                 return -1;
 
-            lock (BaseStream.LockObj) {
-                BaseStream.Position = AbsolutePosition;
-                Position++;
-                return BaseStream.ReadByte();
+            lock (streamInfo.LockObj) {
+                baseStream.Position = AbsolutePosition;
+                position++;
+                return baseStream.ReadByte();
             }
         }
 
@@ -456,26 +464,27 @@ namespace Yarhl.IO
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
-
-            if (count == 0)
-                return 0;
-
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
             if (offset + count > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
-            if (Position + count > Length) {
-                count = (int)(Length - Position);
+            if (count == 0)
+                return 0;
+
+            long pos = Position;
+            long len = Length;
+            if (pos + count > len) {
+                count = (int)(len - pos);
             }
 
             int read = 0;
-            lock (BaseStream.LockObj) {
+            lock (streamInfo.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 read = BaseStream.Read(buffer, offset, count);
             }
 
-            Position += read;
+            position = pos + read;
             return read;
         }
 
@@ -507,7 +516,7 @@ namespace Yarhl.IO
             if (Position == Length && !canExpand)
                 throw new InvalidOperationException("Cannot expand stream");
 
-            lock (BaseStream.LockObj) {
+            lock (streamInfo.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 BaseStream.WriteByte(value);
             }
@@ -529,28 +538,29 @@ namespace Yarhl.IO
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(DataStream));
-
-            if (count == 0)
-                return;
-
             if (buffer == null)
                 throw new ArgumentNullException(nameof(buffer));
             if (offset + count > buffer.Length)
                 throw new ArgumentOutOfRangeException(nameof(offset));
 
-            if (Position + count > Length && !canExpand)
+            long pos = Position;
+            long len = Length;
+            if (pos + count > len && !canExpand)
                 throw new InvalidOperationException("Cannot expand stream");
 
-            lock (BaseStream.LockObj) {
+            if (count == 0)
+                return;
+
+            lock (streamInfo.LockObj) {
                 BaseStream.Position = AbsolutePosition;
                 BaseStream.Write(buffer, offset, count);
             }
 
-            if (Position + count > Length) {
-                SetLength(Position + count);
+            if (pos + count > len) {
+                SetLength(pos + count);
             }
 
-            Position += count;
+            position = pos + count;
         }
 
         /// <summary>
@@ -769,17 +779,23 @@ namespace Yarhl.IO
 
             Disposed = true;
 
-            if (BaseStream == null || !hasOwnsership)
+            // We have only managed resources, so if it's a finalizer call stop.
+            if (!disposing) {
                 return;
-
-            lock (BaseStream.LockObj) {
-                Instances[BaseStream] -= 1;
-
-                if (disposing && Instances[BaseStream] == 0) {
-                    BaseStream.Dispose();
-                    Instances.TryRemove(BaseStream, out _);
-                }
             }
+
+            // if we don't have the ownership no need to decrease counter or dispose
+            if (!hasOwnsership) {
+                return;
+            }
+
+            streamInfo.DecreaseInstancesAndRun(
+                info => {
+                    if (info.NumInstances == 0) {
+                        BaseStream.Dispose();
+                        Instances.TryRemove(BaseStream, out _);
+                    }
+                });
         }
 
         private static int BlockRead(Stream stream, byte[] buffer, long endPosition)
@@ -795,17 +811,72 @@ namespace Yarhl.IO
             return read;
         }
 
-        private void IncreaseStreamCounter()
+        private StreamInfo GetOrCreateStreamInfo()
         {
-            if (!hasOwnsership) {
-                return;
+            StreamInfo info = Instances.GetOrAdd(BaseStream, new StreamInfo());
+
+            // If we have ownership, we increase the counter so we take into
+            // account for disposing. We create always the entry for the lock.
+            if (hasOwnsership) {
+                info.IncreaseInstances();
             }
 
-            lock (BaseStream.LockObj) {
-                if (!Instances.ContainsKey(BaseStream)) {
-                    Instances.TryAdd(BaseStream, 1);
-                } else {
-                    Instances[BaseStream] += 1;
+            return info;
+        }
+
+        /// <summary>
+        /// Information of the stream for the DataStream class.
+        /// </summary>
+        internal sealed class StreamInfo
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref=" StreamInfo"/> class.
+            /// </summary>
+            public StreamInfo()
+            {
+                LockObj = new object();
+                NumInstances = 0;
+            }
+
+            /// <summary>
+            /// Gets the number of DataStream instances for the base stream.
+            /// </summary>
+            public int NumInstances { get; private set; }
+
+            /// <summary>
+            /// Gets the lock object for the base stream operations.
+            /// </summary>
+            public object LockObj { get; }
+
+            /// <summary>
+            /// Increase the number of instances using the base stream.
+            /// </summary>
+            public void IncreaseInstances()
+            {
+                lock (LockObj) {
+                    NumInstances++;
+                }
+            }
+
+            /// <summary>
+            /// Decrease the number of instances using the base stream.
+            /// </summary>
+            public void DecreaseInstances()
+            {
+                lock (LockObj) {
+                    NumInstances--;
+                }
+            }
+
+            /// <summary>
+            /// Decrease the number of instances and run the action.
+            /// </summary>
+            /// <param name="action">The action to run.</param>
+            public void DecreaseInstancesAndRun(Action<StreamInfo> action)
+            {
+                lock (LockObj) {
+                    DecreaseInstances();
+                    action(this);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 SceneGate
+// Copyright (c) 2021 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,37 +19,24 @@
 // SOFTWARE.
 namespace Yarhl.PerformanceTests
 {
-    using BenchmarkDotNet.Running;
-
-    static class Program
+    /// <summary>
+    /// The type of stream to test.
+    /// </summary>
+    public enum StreamType
     {
-        static void Main(string[] args)
-        {
-            if (args.Length > 0 && args[0] == "auto") {
-                RunAuto();
-            } else {
-                RunManual();
-            }
-        }
+        /// <summary>
+        /// A stream in memory (array).
+        /// </summary>
+        MemoryStream,
 
-        static void RunAuto()
-        {
-            BenchmarkRunner.Run<DataStreamReadWriteTests>();
-        }
+        /// <summary>
+        /// A recyclable stream object.
+        /// </summary>
+        RecyclableStream,
 
-        static void RunManual()
-        {
-            const int Iterations = 1_000;
-
-            var test1 = new DataStreamCompare();
-            test1.Length = 1024 * 1024;
-            test1.SetUp();
-
-            for (int i = 0; i < Iterations; i++) {
-                test1.Compare();
-            }
-
-            test1.CleanUp();
-        }
+        /// <summary>
+        /// A stream from a file.
+        /// </summary>
+        FileStream,
     }
 }

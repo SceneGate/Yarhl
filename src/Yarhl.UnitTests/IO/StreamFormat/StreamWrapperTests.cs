@@ -32,7 +32,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void ConstructorSetProperties()
         {
             var stream = new MemoryStream();
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
             Assert.That(wrapper.BaseStream, Is.SameAs(stream));
         }
 
@@ -41,7 +41,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         {
             var stream = new MemoryStream();
             stream.WriteByte(0x11);
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
             Assert.That(wrapper.Length, Is.EqualTo(1));
 
             stream.WriteByte(0xAA);
@@ -53,7 +53,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         {
             var stream = new MemoryStream();
             stream.WriteByte(0xAA);
-            var wrapper = new StreamWrapper(stream);
+            var wrapper = new StreamWrapperImpl(stream);
 
             wrapper.Dispose();
 
@@ -64,7 +64,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void DisposeTwiceDoesNotThrowException()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            var wrapper = new StreamWrapperImpl(stream);
 
             wrapper.Dispose();
             Assert.DoesNotThrow(wrapper.Dispose);
@@ -74,7 +74,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void DisposeChangesDisposed()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            var wrapper = new StreamWrapperImpl(stream);
             Assert.IsFalse(wrapper.Disposed);
             wrapper.Dispose();
             Assert.IsTrue(wrapper.Disposed);
@@ -84,7 +84,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void SetLengthChangesStreamLength()
         {
             var stream = new MemoryStream();
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
             Assert.That(wrapper.Length, Is.EqualTo(0));
             Assert.That(stream.Length, Is.EqualTo(0));
 
@@ -98,12 +98,13 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void ReadByteReadsAndAdvance()
         {
             var stream = new MemoryStream();
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
             stream.WriteByte(0x11);
             stream.WriteByte(0x12);
             stream.WriteByte(0x13);
-            Assert.That(wrapper.Position, Is.EqualTo(0));
+            Assert.That(wrapper.Position, Is.EqualTo(3));
 
+            stream.Position = 0;
             Assert.That(wrapper.ReadByte(), Is.EqualTo(0x11));
             Assert.That(wrapper.Position, Is.EqualTo(1));
 
@@ -116,15 +117,16 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void ReadArrayReadsAndAdvance()
         {
             var stream = new MemoryStream();
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
             stream.WriteByte(0x11);
             stream.WriteByte(0x12);
             stream.WriteByte(0x13);
             stream.WriteByte(0x14);
-            Assert.That(wrapper.Position, Is.EqualTo(0));
+            Assert.That(wrapper.Position, Is.EqualTo(4));
 
             byte[] buffer = new byte[10];
             buffer[2] = 0xCA;
+            wrapper.Position = 0;
             wrapper.Read(buffer, 0, 2);
             Assert.That(buffer[0], Is.EqualTo(0x11));
             Assert.That(buffer[1], Is.EqualTo(0x12));
@@ -142,7 +144,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void WriteByteWritesAndAdvance()
         {
             var stream = new MemoryStream();
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
 
             wrapper.WriteByte(0x11);
             Assert.That(wrapper.Position, Is.EqualTo(1));
@@ -165,7 +167,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void WriteArrayWritesAndAdvance()
         {
             var stream = new MemoryStream();
-            using var wrapper = new StreamWrapper(stream);
+            using var wrapper = new StreamWrapperImpl(stream);
 
             byte[] buffer = new byte[] { 0x11, 0x12, 0x13, 0xFF, 0x14 };
             wrapper.Write(buffer, 0, 2);
@@ -189,7 +191,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void PublicMethodThrowAfterDispose()
         {
             var stream = new MemoryStream();
-            var wrapper = new StreamWrapper(stream);
+            var wrapper = new StreamWrapperImpl(stream);
             wrapper.Dispose();
 
             byte[] buffer = new byte[1];
@@ -214,7 +216,7 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void TestFlushCallsStreamFlush()
         {
             var innerStream = new Mock<Stream>();
-            var stream = new StreamWrapper(innerStream.Object);
+            using var stream = new StreamWrapperImpl(innerStream.Object);
             stream.Flush();
             Assert.That(
                 () => innerStream.Verify(s => s.Flush(), Times.Once),
@@ -225,11 +227,19 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         public void TestFlushThrowsIfDisposed()
         {
             var innerStream = new Mock<Stream>();
-            var stream = new StreamWrapper(innerStream.Object);
+            var stream = new StreamWrapperImpl(innerStream.Object);
             stream.Dispose();
             Assert.That(
                 () => stream.Flush(),
                 Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        private sealed class StreamWrapperImpl : StreamWrapper
+        {
+            public StreamWrapperImpl(Stream stream)
+                : base(stream)
+            {
+            }
         }
     }
 }

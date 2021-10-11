@@ -75,9 +75,7 @@ namespace Yarhl.UnitTests.IO
             var stream = new MemoryStream();
             var format = new BinaryFormat(stream);
 
-            Assert.That(format.Stream.BaseStream, Is.InstanceOf<StreamWrapper>());
-            var wrapper = (StreamWrapper)format.Stream.BaseStream;
-            Assert.That(wrapper.BaseStream, Is.SameAs(stream));
+            Assert.That(format.Stream.BaseStream, Is.SameAs(stream));
 
             format.Dispose();
             Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());
@@ -136,9 +134,7 @@ namespace Yarhl.UnitTests.IO
 
             BinaryFormat format = new BinaryFormat(stream, 1, 2);
 
-            Assert.That(format.Stream.BaseStream, Is.InstanceOf<StreamWrapper>());
-            var wrapper = (StreamWrapper)format.Stream.BaseStream;
-            Assert.That(wrapper.BaseStream, Is.SameAs(stream));
+            Assert.That(format.Stream.BaseStream, Is.SameAs(stream));
 
             format.Dispose();
             Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());

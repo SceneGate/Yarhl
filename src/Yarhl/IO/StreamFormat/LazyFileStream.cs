@@ -32,6 +32,7 @@ namespace Yarhl.IO.StreamFormat
         readonly long initialLength;
 
         bool isInitialized;
+        long initialPosition;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazyFileStream"/> class.
@@ -44,9 +45,23 @@ namespace Yarhl.IO.StreamFormat
             this.mode = mode;
 
             // Before the stream is initialized, we can get the
-            // length so we can report it wihthout opening the file.
+            // length so we can report it without opening the file.
             var info = new FileInfo(path);
             initialLength = info.Exists ? info.Length : 0;
+        }
+
+        /// <inheritdoc/>
+        public override long Position
+        {
+            get => BaseStream?.Position ?? 0;
+            set
+            {
+                if (BaseStream is null) {
+                    initialPosition = value;
+                } else {
+                    BaseStream.Position = value;
+                }
+            }
         }
 
         /// <summary>
@@ -57,8 +72,8 @@ namespace Yarhl.IO.StreamFormat
         /// <summary>
         /// Sets the length of the stream.
         /// </summary>
-        /// <param name="length">The new length of the stream.</param>
-        public override void SetLength(long length)
+        /// <param name="value">The new length of the stream.</param>
+        public override void SetLength(long value)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(LazyFileStream));
@@ -67,7 +82,7 @@ namespace Yarhl.IO.StreamFormat
                 Initialize();
             }
 
-            base.SetLength(length);
+            base.SetLength(value);
         }
 
         /// <summary>
@@ -75,9 +90,9 @@ namespace Yarhl.IO.StreamFormat
         /// </summary>
         /// <returns>The number of bytes read.</returns>
         /// <param name="buffer">Buffer to copy data.</param>
-        /// <param name="index">Index to start copying in buffer.</param>
+        /// <param name="offset">Index to start copying in buffer.</param>
         /// <param name="count">Number of bytes to read.</param>
-        public override int Read(byte[] buffer, int index, int count)
+        public override int Read(byte[] buffer, int offset, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(LazyFileStream));
@@ -86,14 +101,14 @@ namespace Yarhl.IO.StreamFormat
                 Initialize();
             }
 
-            return base.Read(buffer, index, count);
+            return base.Read(buffer, offset, count);
         }
 
         /// <summary>
         /// Reads the next byte.
         /// </summary>
         /// <returns>The next byte.</returns>
-        public override byte ReadByte()
+        public override int ReadByte()
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(LazyFileStream));
@@ -109,9 +124,9 @@ namespace Yarhl.IO.StreamFormat
         /// Writes the a portion of the buffer to the stream.
         /// </summary>
         /// <param name="buffer">Buffer to write.</param>
-        /// <param name="index">Index in the buffer.</param>
+        /// <param name="offset">Index in the buffer.</param>
         /// <param name="count">Bytes to write.</param>
-        public override void Write(byte[] buffer, int index, int count)
+        public override void Write(byte[] buffer, int offset, int count)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(LazyFileStream));
@@ -120,14 +135,14 @@ namespace Yarhl.IO.StreamFormat
                 Initialize();
             }
 
-            base.Write(buffer, index, count);
+            base.Write(buffer, offset, count);
         }
 
         /// <summary>
         /// Writes a byte.
         /// </summary>
-        /// <param name="data">Byte value.</param>
-        public override void WriteByte(byte data)
+        /// <param name="value">Byte value.</param>
+        public override void WriteByte(byte value)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(LazyFileStream));
@@ -136,13 +151,14 @@ namespace Yarhl.IO.StreamFormat
                 Initialize();
             }
 
-            base.WriteByte(data);
+            base.WriteByte(value);
         }
 
         void Initialize()
         {
             isInitialized = true;
             BaseStream = new FileStream(path, mode.ToFileMode(), mode.ToFileAccess());
+            BaseStream.Position = initialPosition;
         }
     }
 }
