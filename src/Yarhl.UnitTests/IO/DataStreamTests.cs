@@ -32,7 +32,7 @@ namespace Yarhl.UnitTests.IO
     [TestFixture]
     public class DataStreamTests
     {
-        IStream baseStream;
+        Stream baseStream;
 
         [SetUp]
         public void SetUp()
@@ -65,7 +65,7 @@ namespace Yarhl.UnitTests.IO
         public void ConstructorFromStreamAndOffsetThrowsIfInvalid()
         {
             Assert.Throws<ArgumentNullException>(() =>
-                new DataStream((IStream)null, 0, 0, false));
+                new DataStream((Stream)null, 0, 0, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, -1, 4, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -74,6 +74,47 @@ namespace Yarhl.UnitTests.IO
                 new DataStream(baseStream, 0, -1, false));
             Assert.Throws<ArgumentOutOfRangeException>(() =>
                 new DataStream(baseStream, 0, 100, false));
+
+            var noOwnershipStream = new DataStream(baseStream, 0, 0, false);
+            Assert.Throws<ArgumentException>(() =>
+                new DataStream(noOwnershipStream, 0, 0, true));
+        }
+
+        [Test]
+        public void ConstructorFromStreamAndOffsetNoOwnershipArgInitializes()
+        {
+            baseStream.WriteByte(0xCA);
+            baseStream.WriteByte(0xFE);
+
+            using DataStream stream = new DataStream(baseStream, 0x1, 0x1);
+            Assert.AreSame(baseStream, stream.BaseStream);
+            Assert.AreEqual(0x1, stream.Offset);
+            Assert.AreEqual(0x1, stream.Length);
+            Assert.AreEqual(0x0, stream.Position);
+            Assert.IsNull(stream.ParentDataStream);
+            Assert.That(stream.InternalInfo.NumInstances, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void ConstructorFromStreamAndOffsetNoOwnershipArgThrowsIfInvalid()
+        {
+            Assert.Throws<ArgumentNullException>(() =>
+                new DataStream((Stream)null, 0, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, -1, 4));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 1, 0));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 0, -1));
+            Assert.Throws<ArgumentOutOfRangeException>(() =>
+                new DataStream(baseStream, 0, 100));
+        }
+
+        [Test]
+        public void ConstructorFromStreamAndOffsetNoOwnershipArgInheritOwnership()
+        {
+            using var noOwnershipStream = new DataStream(baseStream, 0, 0, false);
+            Assert.That(() => new DataStream(noOwnershipStream, 0, 0), Throws.Nothing);
         }
 
         [Test]
@@ -95,7 +136,7 @@ namespace Yarhl.UnitTests.IO
         public void ConstructorStreamThrowsIfNull()
         {
             Assert.That(
-                () => new DataStream((IStream)null),
+                () => new DataStream((Stream)null),
                 Throws.ArgumentNullException);
         }
 
@@ -245,20 +286,18 @@ namespace Yarhl.UnitTests.IO
             DataStream stream2 = new DataStream(baseStream);
 
             stream1.Dispose();
-            Assert.IsFalse(baseStream.Disposed);
             Assert.DoesNotThrow(() => baseStream.ReadByte());
 
             stream2.Dispose();
-            Assert.IsTrue(baseStream.Disposed);
             Assert.Throws<ObjectDisposedException>(() => baseStream.ReadByte());
         }
 
         [Test]
         public void DisposeCloseCorrectStream()
         {
-            using IStream baseStream1 = new RecyclableMemoryStream();
+            using var baseStream1 = new RecyclableMemoryStream();
             baseStream1.WriteByte(0xCA);
-            using IStream baseStream2 = new RecyclableMemoryStream();
+            using var baseStream2 = new RecyclableMemoryStream();
             baseStream2.WriteByte(0xCA);
 
             DataStream stream1 = new DataStream(baseStream1);
@@ -391,18 +430,18 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CanExpandStream()
         {
-            IStream parentStream = new RecyclableMemoryStream();
+            using var parentStream = new RecyclableMemoryStream();
 
-            DataStream childStream = new DataStream(parentStream);
+            using DataStream childStream = new DataStream(parentStream);
             Assert.That(() => childStream.WriteByte(0x01), Throws.Nothing);
 
-            DataStream childStream2 = new DataStream(parentStream);
+            using DataStream childStream2 = new DataStream(parentStream);
             byte[] data = new byte[] { 0x02, 0x02 };
             Assert.That(
                 () => childStream2.Write(data, 0, data.Length),
                 Throws.Nothing);
 
-            DataStream childStream3 = new DataStream(parentStream);
+            using DataStream childStream3 = new DataStream(parentStream);
             parentStream.Position = 2;
             parentStream.WriteByte(0x03);
             Assert.That(
@@ -414,33 +453,28 @@ namespace Yarhl.UnitTests.IO
             Assert.That(
                 () => childStream3.SetLength(1),
                 Throws.Nothing);
-
-            childStream.Dispose();
-            childStream2.Dispose();
-            childStream3.Dispose();
-            parentStream.Dispose();
         }
 
         [Test]
         public void CannotExpandSubStream()
         {
-            IStream parentStream = new RecyclableMemoryStream();
+            using var parentStream = new RecyclableMemoryStream();
             parentStream.WriteByte(0x00);
             parentStream.WriteByte(0x00);
 
-            DataStream childStream = new DataStream(parentStream, 1, 1, false);
+            using DataStream childStream = new DataStream(parentStream, 1, 1, false);
             childStream.WriteByte(0x01);
             Assert.That(
                 () => childStream.WriteByte(0x01),
                 Throws.InvalidOperationException);
 
-            DataStream childStream2 = new DataStream(parentStream, 0, 2, false);
+            using DataStream childStream2 = new DataStream(parentStream, 0, 2, false);
             byte[] data = new byte[] { 0x02, 0x02, 0x02 };
             Assert.That(
                 () => childStream2.Write(data, 0, data.Length),
                 Throws.InvalidOperationException);
 
-            DataStream childStream3 = new DataStream(parentStream, 0, 1, false);
+            using DataStream childStream3 = new DataStream(parentStream, 0, 1, false);
             Assert.That(
                 () => childStream3.SetLength(2),
                 Throws.InvalidOperationException);
@@ -450,11 +484,6 @@ namespace Yarhl.UnitTests.IO
             Assert.That(
                 () => childStream3.SetLength(1),
                 Throws.InvalidOperationException);
-
-            childStream.Dispose();
-            childStream2.Dispose();
-            childStream3.Dispose();
-            parentStream.Dispose();
         }
 
         [Test]
@@ -916,11 +945,13 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2, false);
+            using DataStream stream = new DataStream(baseStream, 0, 2, false);
             byte[] buffer = new byte[2];
-            Assert.DoesNotThrow(() => stream.Read(buffer, 10, 0));
-            Assert.AreEqual(0, stream.Read(buffer, 10, 0));
-            stream.Dispose();
+            Assert.That(() => stream.Read(buffer, 10, 0), Throws.InstanceOf<ArgumentOutOfRangeException>());
+
+            Assert.That(() => stream.Read(null, 0, 0), Throws.InstanceOf<ArgumentNullException>());
+            stream.Read(buffer, 0, 0);
+            Assert.AreEqual(0, stream.Position);
         }
 
         [Test]
@@ -928,10 +959,9 @@ namespace Yarhl.UnitTests.IO
         {
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
-            DataStream stream = new DataStream(baseStream, 0, 2, false);
-            Assert.DoesNotThrow(() => stream.Read(null, 0, 0));
+            using DataStream stream = new DataStream(baseStream, 0, 2, false);
+            Assert.That(() => stream.Read(null, 0, 0), Throws.ArgumentNullException);
             Assert.Throws<ArgumentNullException>(() => stream.Read(null, 0, 1));
-            stream.Dispose();
         }
 
         [Test]
@@ -1090,18 +1120,17 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void WriteBufferWithZeroBytes()
         {
-            DataStream stream = new DataStream();
+            using DataStream stream = new DataStream();
             byte[] buffer = { 0xCA };
-            Assert.DoesNotThrow(() => stream.Write(null, 0, 0));
+            Assert.That(() => stream.Write(null, 0, 0), Throws.ArgumentNullException);
             Assert.AreEqual(0, stream.Position);
             Assert.AreEqual(0, stream.Length);
-            Assert.DoesNotThrow(() => stream.Write(buffer, 10, 0));
+            Assert.That(() => stream.Write(buffer, 10, 0), Throws.InstanceOf<ArgumentOutOfRangeException>());
             Assert.AreEqual(0, stream.Position);
             Assert.AreEqual(0, stream.Length);
             stream.Write(buffer, 0, 0);
             Assert.AreEqual(0, stream.Position);
             Assert.AreEqual(0, stream.Length);
-            stream.Dispose();
         }
 
         [Test]
@@ -1865,11 +1894,9 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void TestFlushCallsStreamFlush()
         {
-            var innerStream = new Mock<IStream>();
-            var streamLock = new object();
-            innerStream.Setup(s => s.LockObj).Returns(streamLock);
+            var innerStream = new Mock<Stream>();
 
-            var stream = new DataStream(innerStream.Object);
+            using var stream = new DataStream(innerStream.Object);
             stream.Flush();
             innerStream.Verify(s => s.Flush(), Times.Once);
         }

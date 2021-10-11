@@ -41,13 +41,7 @@ namespace Yarhl.IO
             if (stream == null)
                 throw new ArgumentNullException(nameof(stream));
 
-            // Required check so we lock in the same base stream lock.
-            if (stream is DataStream dataStream) {
-                return new DataStream(dataStream, 0, dataStream.Length);
-            }
-
-            var baseStream = new FinalStream(stream);
-            return new DataStream(baseStream);
+            return new DataStream(stream);
         }
 
         /// <summary>
@@ -75,13 +69,7 @@ namespace Yarhl.IO
             if (length < 0 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            // Required check so we lock in the same base stream lock.
-            if (stream is DataStream dataStream) {
-                return new DataStream(dataStream, offset, length);
-            }
-
-            var baseStream = new StreamWrapper(stream);
-            return new DataStream(baseStream, offset, length, true);
+            return new DataStream(stream, offset, length, true);
         }
 
         /// <summary>
@@ -106,13 +94,7 @@ namespace Yarhl.IO
             if (length < 0 || offset + length > stream.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            // Required check so we lock in the same base stream lock.
-            if (stream is DataStream dataStream) {
-                return new DataStream(dataStream, offset, length);
-            }
-
-            var baseStream = new StreamWrapper(stream);
-            return new DataStream(baseStream, offset, length, false);
+            return new DataStream(stream, offset, length, false);
         }
 
         /// <summary>
@@ -142,7 +124,7 @@ namespace Yarhl.IO
             if (length < 0 || offset + length > data.Length)
                 throw new ArgumentOutOfRangeException(nameof(length));
 
-            var baseStream = new StreamWrapper(new MemoryStream(data, 0, data.Length));
+            var baseStream = new MemoryStream(data, 0, data.Length);
             return new DataStream(baseStream, offset, length, true);
         }
 

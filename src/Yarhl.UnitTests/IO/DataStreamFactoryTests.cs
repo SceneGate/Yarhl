@@ -32,14 +32,9 @@ namespace Yarhl.UnitTests.IO
         public void CreateFromStreamUseStream()
         {
             var stream = new MemoryStream();
-            var dataStream = DataStreamFactory.FromStream(stream);
+            using var dataStream = DataStreamFactory.FromStream(stream);
 
-            Assert.That(dataStream.BaseStream, Is.AssignableFrom<StreamWrapper>());
-            Assert.That(
-                ((StreamWrapper)dataStream.BaseStream).BaseStream,
-                Is.SameAs(stream));
-
-            stream.Dispose();
+            Assert.That(dataStream.BaseStream, Is.SameAs(stream));
         }
 
         [Test]
@@ -53,16 +48,16 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void CreateFromStreamWithDataStreamReuseIStream()
+        public void CreateFromStreamWithDataStreamReuseBaseStream()
         {
             using var stream = new MemoryStream();
-            var dataStream1 = DataStreamFactory.FromStream(stream);
-            var dataStream2 = DataStreamFactory.FromStream(dataStream1);
+            using var dataStream1 = DataStreamFactory.FromStream(stream);
+            using var dataStream2 = DataStreamFactory.FromStream(dataStream1);
 
             Assert.That(dataStream1.BaseStream, Is.SameAs(dataStream2.BaseStream));
 
             // Especially important check for thread-safety
-            Assert.That(dataStream1.BaseStream.LockObj, Is.SameAs(dataStream2.BaseStream.LockObj));
+            Assert.That(dataStream1.InternalInfo.LockObj, Is.SameAs(dataStream2.InternalInfo.LockObj));
         }
 
         [Test]
@@ -80,17 +75,12 @@ namespace Yarhl.UnitTests.IO
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
             stream.WriteByte(0xBE);
-            var dataStream = DataStreamFactory.FromStream(stream, 1, 2);
+            using var dataStream = DataStreamFactory.FromStream(stream, 1, 2);
 
-            Assert.That(dataStream.BaseStream, Is.AssignableFrom<StreamWrapper>());
-            Assert.That(
-                ((StreamWrapper)dataStream.BaseStream).BaseStream,
-                Is.SameAs(stream));
+            Assert.That(dataStream.BaseStream, Is.SameAs(stream));
             Assert.That(dataStream.Position, Is.EqualTo(0));
             Assert.That(dataStream.Offset, Is.EqualTo(1));
             Assert.That(dataStream.Length, Is.EqualTo(2));
-
-            stream.Dispose();
         }
 
         [Test]
@@ -121,17 +111,17 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void CreateFromSubStreamWithDataStreamReuseIStream()
+        public void CreateFromSubStreamWithDataStreamReuseBaseStream()
         {
             using var stream = new MemoryStream();
             stream.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
-            var dataStream1 = DataStreamFactory.FromStream(stream, 1, 2);
-            var dataStream2 = DataStreamFactory.FromStream(dataStream1, 1, 1);
+            using var dataStream1 = DataStreamFactory.FromStream(stream, 1, 2);
+            using var dataStream2 = DataStreamFactory.FromStream(dataStream1, 1, 1);
 
             Assert.That(dataStream1.BaseStream, Is.SameAs(dataStream2.BaseStream));
 
             // Especially important check for thread-safety
-            Assert.That(dataStream1.BaseStream.LockObj, Is.SameAs(dataStream2.BaseStream.LockObj));
+            Assert.That(dataStream1.InternalInfo.LockObj, Is.SameAs(dataStream2.InternalInfo.LockObj));
         }
 
         [Test]
@@ -163,21 +153,16 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CreateFromSubStreamKeepingOwnershipUseStream()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             stream.WriteByte(0xCA);
             stream.WriteByte(0xFE);
             stream.WriteByte(0xBE);
-            var dataStream = DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2);
+            using var dataStream = DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2);
 
-            Assert.That(dataStream.BaseStream, Is.AssignableFrom<StreamWrapper>());
-            Assert.That(
-                ((StreamWrapper)dataStream.BaseStream).BaseStream,
-                Is.SameAs(stream));
+            Assert.That(dataStream.BaseStream, Is.SameAs(stream));
             Assert.That(dataStream.Position, Is.EqualTo(0));
             Assert.That(dataStream.Offset, Is.EqualTo(1));
             Assert.That(dataStream.Length, Is.EqualTo(2));
-
-            stream.Dispose();
         }
 
         [Test]
@@ -196,17 +181,17 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void CreateFromSubStreamKeepingOwnershipWithDataStreamReuseIStream()
+        public void CreateFromSubStreamKeepingOwnershipWithDataStreamReuseBaseStream()
         {
             using var stream = new MemoryStream();
             stream.Write(new byte[] { 1, 2, 3, 4 }, 0, 4);
-            var dataStream1 = DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2);
-            var dataStream2 = DataStreamFactory.FromStreamKeepingOwnership(dataStream1, 1, 1);
+            using var dataStream1 = DataStreamFactory.FromStreamKeepingOwnership(stream, 1, 2);
+            using var dataStream2 = DataStreamFactory.FromStreamKeepingOwnership(dataStream1, 1, 1);
 
             Assert.That(dataStream1.BaseStream, Is.SameAs(dataStream2.BaseStream));
 
             // Especially important check for thread-safety
-            Assert.That(dataStream1.BaseStream.LockObj, Is.SameAs(dataStream2.BaseStream.LockObj));
+            Assert.That(dataStream1.InternalInfo.LockObj, Is.SameAs(dataStream2.InternalInfo.LockObj));
         }
 
         [Test]

@@ -570,9 +570,7 @@ namespace Yarhl.UnitTests.FileSystem
 
             Node node = NodeFactory.FromSubstream("node", stream, 1, 2);
 
-            Assert.That(node.Stream.BaseStream, Is.InstanceOf<StreamWrapper>());
-            var wrapper = (StreamWrapper)node.Stream.BaseStream;
-            Assert.That(wrapper.BaseStream, Is.SameAs(stream));
+            Assert.That(node.Stream.BaseStream, Is.SameAs(stream));
 
             node.Dispose();
             Assert.That(() => stream.ReadByte(), Throws.InstanceOf<ObjectDisposedException>());

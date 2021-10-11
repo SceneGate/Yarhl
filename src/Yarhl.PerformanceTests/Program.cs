@@ -35,7 +35,6 @@ namespace Yarhl.PerformanceTests
         static void RunAuto()
         {
             BenchmarkRunner.Run<DataStreamReadWriteTests>();
-            // BenchmarkRunner.Run<DataStreamCompare>();
         }
 
         static void RunManual()

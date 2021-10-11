@@ -97,11 +97,4 @@ namespace Yarhl.PerformanceTests
             return -1;
         }
     }
-
-    public enum StreamType
-    {
-        MemoryStream,
-        RecyclableStream,
-        FileStream,
-    }
 }
