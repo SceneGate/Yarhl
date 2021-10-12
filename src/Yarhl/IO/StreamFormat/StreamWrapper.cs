@@ -74,16 +74,16 @@ namespace Yarhl.IO.StreamFormat
         }
 
         /// <inheritdoc/>
-        public override bool CanRead => true;
+        public override bool CanRead => BaseStream?.CanRead ?? true;
 
         /// <inheritdoc/>
-        public override bool CanSeek => true;
+        public override bool CanSeek => BaseStream?.CanSeek ?? true;
 
         /// <inheritdoc/>
-        public override bool CanWrite => true;
+        public override bool CanWrite => BaseStream?.CanWrite ?? true;
 
         /// <inheritdoc/>
-        public override bool CanTimeout => false;
+        public override bool CanTimeout => BaseStream?.CanTimeout ?? false;
 
         /// <summary>
         /// Sets the length of the stream.
