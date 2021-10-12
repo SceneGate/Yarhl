@@ -780,12 +780,8 @@ namespace Yarhl.IO
             Disposed = true;
 
             // We have only managed resources, so if it's a finalizer call stop.
-            if (!disposing) {
-                return;
-            }
-
-            // if we don't have the ownership no need to decrease counter or dispose
-            if (!hasOwnsership) {
+            // If we don't have the ownership no need to decrease counter or dispose
+            if (!disposing || !hasOwnsership) {
                 return;
             }
 

@@ -56,10 +56,6 @@ namespace Yarhl.IO.StreamFormat
             if (additionalLength > 0) {
                 ClearBuffer(oldLength, additionalLength);
             }
-
-            if (Position > value) {
-                Position = value;
-            }
         }
 
         static RecyclableMemoryStreamManager CreateManager()

@@ -73,17 +73,25 @@ namespace Yarhl.IO.StreamFormat
             private set;
         }
 
-        /// <inheritdoc/>
-        public override bool CanRead => true;
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports reading.
+        /// </summary>
+        public override bool CanRead => BaseStream?.CanRead ?? true;
 
-        /// <inheritdoc/>
-        public override bool CanSeek => true;
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports seeking.
+        /// </summary>
+        public override bool CanSeek => BaseStream?.CanSeek ?? true;
 
-        /// <inheritdoc/>
-        public override bool CanWrite => true;
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports writing.
+        /// </summary>
+        public override bool CanWrite => BaseStream?.CanWrite ?? true;
 
-        /// <inheritdoc/>
-        public override bool CanTimeout => false;
+        /// <summary>
+        /// Gets a value indicating whether the current stream supports timeouts.
+        /// </summary>
+        public override bool CanTimeout => BaseStream?.CanTimeout ?? false;
 
         /// <summary>
         /// Sets the length of the stream.
@@ -97,7 +105,10 @@ namespace Yarhl.IO.StreamFormat
             BaseStream.SetLength(value);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Clears all buffers for this stream and causes any buffered data
+        /// to be written to the underlying device.
+        /// </summary>
         public override void Flush()
         {
             if (Disposed)
@@ -159,7 +170,12 @@ namespace Yarhl.IO.StreamFormat
             BaseStream.WriteByte(value);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Move the position of the stream.
+        /// </summary>
+        /// <param name="offset">Distance to move position.</param>
+        /// <param name="origin">Mode to move position.</param>
+        /// <returns>The new position of the stream.</returns>
         public override long Seek(long offset, SeekOrigin origin)
         {
             if (Disposed)

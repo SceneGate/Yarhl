@@ -37,6 +37,27 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         }
 
         [Test]
+        public void FeaturePropertiesDefaults()
+        {
+            using var wrapper = new StreamWrapperImpl();
+            Assert.That(wrapper.CanRead, Is.True);
+            Assert.That(wrapper.CanWrite, Is.True);
+            Assert.That(wrapper.CanSeek, Is.True);
+            Assert.That(wrapper.CanTimeout, Is.False);
+        }
+
+        [Test]
+        public void FeaturePropertiesFromBaseStream()
+        {
+            var stream = new MemoryStream(new byte[2], writable: false);
+            using var wrapper = new StreamWrapperImpl(stream);
+            Assert.That(wrapper.CanRead, Is.True);
+            Assert.That(wrapper.CanWrite, Is.False);
+            Assert.That(wrapper.CanSeek, Is.True);
+            Assert.That(wrapper.CanTimeout, Is.False);
+        }
+
+        [Test]
         public void LengthGetterIsSyncWithStream()
         {
             var stream = new MemoryStream();
@@ -210,6 +231,27 @@ namespace Yarhl.UnitTests.IO.StreamFormat
             Assert.That(
                 () => wrapper.Read(buffer, 0, 1),
                 Throws.InstanceOf<ObjectDisposedException>());
+            Assert.That(
+                () => wrapper.Seek(1, SeekOrigin.Begin),
+                Throws.InstanceOf<ObjectDisposedException>());
+        }
+
+        [Test]
+        public void SeekChangesPosition()
+        {
+            using var wrapper = new StreamWrapperImpl(new MemoryStream());
+            wrapper.WriteByte(0xCA);
+            wrapper.WriteByte(0xFE);
+            Assert.That(wrapper.Position, Is.EqualTo(2));
+
+            wrapper.Seek(0, SeekOrigin.Begin);
+            Assert.That(wrapper.Position, Is.EqualTo(0));
+
+            wrapper.Seek(0, SeekOrigin.End);
+            Assert.That(wrapper.Position, Is.EqualTo(2));
+
+            wrapper.Seek(-1, SeekOrigin.Current);
+            Assert.That(wrapper.Position, Is.EqualTo(1));
         }
 
         [Test]
@@ -236,6 +278,10 @@ namespace Yarhl.UnitTests.IO.StreamFormat
 
         private sealed class StreamWrapperImpl : StreamWrapper
         {
+            public StreamWrapperImpl()
+            {
+            }
+
             public StreamWrapperImpl(Stream stream)
                 : base(stream)
             {
