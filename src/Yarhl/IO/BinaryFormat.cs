@@ -59,8 +59,8 @@ namespace Yarhl.IO
         /// <para>This format creates an internal <see cref="DataStream" /> from the
         /// provided stream. It will take over the ownership of the stream
         /// argument, you should not dispose this argument, unless you are
-        /// providing a <see cref="DataStream" /> in which case it is safe and
-        /// recommended to dispose it.</para>
+        /// providing a <see cref="DataStream" /> that we won't take over in case
+        /// you want to create more substreams.</para>
         /// </remarks>
         /// <param name="stream">Binary stream.</param>
         /// <param name="offset">Offset from the DataStream start.</param>
