@@ -1884,6 +1884,18 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CannotTimeOutButDoesNotThrowException()
+        {
+            // Important to prevent exceptions in reflection UI controls
+            using var stream = new DataStream();
+            Assert.That(stream.CanTimeout, Is.False);
+            Assert.That(stream.ReadTimeout, Is.EqualTo(-1));
+            Assert.That(stream.WriteTimeout, Is.EqualTo(-1));
+            Assert.That(() => stream.ReadTimeout = 300, Throws.InstanceOf<InvalidOperationException>());
+            Assert.That(() => stream.WriteTimeout = 300, Throws.InstanceOf<InvalidOperationException>());
+        }
+
+        [Test]
         public void TestStreamFlushGuards()
         {
             var stream = new DataStream();

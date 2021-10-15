@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using NUnit.Framework;
@@ -42,6 +43,29 @@ namespace Yarhl.UnitTests.IO
             using DataStream stream = new DataStream();
             DataWriter writer = new DataWriter(stream);
             Assert.AreSame(stream, writer.Stream);
+        }
+
+        [Test]
+        public void ConstructorGuards()
+        {
+            Assert.That(() => new DataWriter(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void EntityDoesNotOwnStream()
+        {
+            using var dataStream = new DataStream();
+            using var commonStream = new MemoryStream();
+            int initialCount = DataStream.ActiveStreams;
+
+            var myWriter = new DataWriter(dataStream);
+            Assert.That(myWriter.Stream, Is.SameAs(dataStream));
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(initialCount));
+
+            myWriter = new DataWriter(commonStream);
+            Assert.That(myWriter.Stream.BaseStream, Is.SameAs(commonStream));
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(initialCount));
+            Assert.That(myWriter.Stream.InternalInfo.NumInstances, Is.EqualTo(0));
         }
 
         [Test]

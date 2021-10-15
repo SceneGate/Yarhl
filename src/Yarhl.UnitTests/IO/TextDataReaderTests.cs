@@ -20,6 +20,7 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.IO;
     using System.Text;
     using NUnit.Framework;
     using Yarhl.IO;
@@ -89,6 +90,23 @@ namespace Yarhl.UnitTests.IO
 
             Assert.Throws<ArgumentNullException>(() => new TextDataReader(null, "ascii"));
             Assert.Throws<ArgumentNullException>(() => new TextDataReader(stream, (string)null));
+        }
+
+        [Test]
+        public void EntityDoesNotOwnStream()
+        {
+            using var dataStream = new DataStream();
+            using var commonStream = new MemoryStream();
+            int initialCount = DataStream.ActiveStreams;
+
+            var myReader = new TextDataReader(dataStream);
+            Assert.That(myReader.Stream, Is.SameAs(dataStream));
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(initialCount));
+
+            myReader = new TextDataReader(commonStream);
+            Assert.That(myReader.Stream.BaseStream, Is.SameAs(commonStream));
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(initialCount));
+            Assert.That(myReader.Stream.InternalInfo.NumInstances, Is.EqualTo(0));
         }
 
         [Test]

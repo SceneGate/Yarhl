@@ -67,6 +67,29 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ConstructorGuards()
+        {
+            Assert.That(() => new DataReader(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void EntityDoesNotOwnStream()
+        {
+            using var dataStream = new DataStream();
+            using var commonStream = new MemoryStream();
+            int initialCount = DataStream.ActiveStreams;
+
+            var myReader = new DataReader(dataStream);
+            Assert.That(myReader.Stream, Is.SameAs(dataStream));
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(initialCount));
+
+            myReader = new DataReader(commonStream);
+            Assert.That(myReader.Stream.BaseStream, Is.SameAs(commonStream));
+            Assert.That(DataStream.ActiveStreams, Is.EqualTo(initialCount));
+            Assert.That(myReader.Stream.InternalInfo.NumInstances, Is.EqualTo(0));
+        }
+
+        [Test]
         public void EndiannessProperty()
         {
             Assert.AreEqual(EndiannessMode.LittleEndian, reader.Endianness);

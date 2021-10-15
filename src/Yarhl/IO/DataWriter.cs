@@ -49,7 +49,10 @@ namespace Yarhl.IO
         /// </remarks>
         public DataWriter(Stream stream)
         {
-            Stream = stream;
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
+            Stream = stream as DataStream ?? new DataStream(stream, 0, stream.Length, false);
             Endianness = EndiannessMode.LittleEndian;
             DefaultEncoding = Encoding.UTF8;
         }
@@ -58,7 +61,7 @@ namespace Yarhl.IO
         /// Gets the stream.
         /// </summary>
         /// <value>The stream.</value>
-        public Stream Stream {
+        public DataStream Stream {
             get;
             private set;
         }
