@@ -70,7 +70,7 @@ namespace Yarhl.IO
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
 
-            Stream = stream;
+            Stream = stream as DataStream ?? new DataStream(stream, 0, stream.Length, false);
             Encoding = encoding;
             NewLine = "\n";
             AutoPreamble = false;
@@ -82,7 +82,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public Stream Stream {
+        public DataStream Stream {
             get;
             private set;
         }

@@ -232,6 +232,27 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Gets a value indicating whether the current stream support timeouts.
+        /// </summary>
+        public override bool CanTimeout => false;
+
+        /// <summary>
+        /// Gets or sets an invalid value as read time is not supported.
+        /// </summary>
+        public override int ReadTimeout {
+            get => -1;
+            set => throw new InvalidOperationException("Read timeout is not supported");
+        }
+
+        /// <summary>
+        /// Gets or sets an invalid value as write time is not supported.
+        /// </summary>
+        public override int WriteTimeout {
+            get => -1;
+            set => throw new InvalidOperationException("Write timeout is not supported");
+        }
+
+        /// <summary>
         /// Gets the internal stream information for testing pourpose only.
         /// </summary>
         internal StreamInfo InternalInfo {

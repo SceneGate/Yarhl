@@ -67,7 +67,10 @@ namespace Yarhl.IO
         /// <param name="encoding">Encoding to use.</param>
         public TextDataReader(Stream stream, Encoding encoding)
         {
-            Stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
+            Stream = stream as DataStream ?? new DataStream(stream, 0, stream.Length, false);
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
             NewLine = Environment.NewLine;
             AutoNewLine = true;
@@ -80,7 +83,7 @@ namespace Yarhl.IO
         /// <summary>
         /// Gets the stream.
         /// </summary>
-        public Stream Stream {
+        public DataStream Stream {
             get;
             private set;
         }
