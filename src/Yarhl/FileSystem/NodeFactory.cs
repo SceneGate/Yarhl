@@ -98,6 +98,65 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
+        /// Creates a Node with a binary format containing the array.
+        /// </summary>
+        /// <param name="name">The name of the node.</param>
+        /// <param name="data">The data for the binary format.</param>
+        /// <returns>The new node.</returns>
+        /// <exception cref="ArgumentNullException">The name is null or empty, the data is null.</exception>
+        public static Node FromArray(string name, byte[] data)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
+            var format = new BinaryFormat(DataStreamFactory.FromArray(data));
+            return new Node(name, format);
+        }
+
+        /// <summary>
+        /// Creates a Node with a binary format containing a part of the array.
+        /// </summary>
+        /// <param name="name">The name of the node.</param>
+        /// <param name="data">The data for the binary format.</param>
+        /// <param name="offset">The offset to start the data of the node.</param>
+        /// <param name="length">The number of bytes for the node's data.</param>
+        /// <returns>The new node.</returns>
+        /// <exception cref="ArgumentNullException">The name is null or empty, the data is null.</exception>
+        public static Node FromArray(string name, byte[] data, int offset, int length)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
+            var format = new BinaryFormat(DataStreamFactory.FromArray(data, offset, length));
+            return new Node(name, format);
+        }
+
+        /// <summary>
+        /// Creates a Node from a stream.
+        /// </summary>
+        /// <param name="name">The name of the node.</param>
+        /// <param name="stream">The binary stream.</param>
+        /// <remarks>
+        /// <para>It will take over the ownership of the stream
+        /// argument, you should not dispose this stream argument.</para>
+        /// </remarks>
+        /// <returns>The new node.</returns>
+        public static Node FromStream(string name, Stream stream)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            if (stream is null)
+                throw new ArgumentNullException(nameof(stream));
+
+            var binary = new BinaryFormat(stream);
+            return new Node(name, binary);
+        }
+
+        /// <summary>
         /// Creates a Node from a part of a stream.
         /// </summary>
         /// <param name="name">The name of the node.</param>
@@ -110,8 +169,8 @@ namespace Yarhl.FileSystem
         /// <para>This format creates an internal <see cref="DataStream" /> from the
         /// provided stream. It will take over the ownership of the stream
         /// argument, you should not dispose this argument, unless you are
-        /// providing a <see cref="DataStream" /> in which case it is safe and
-        /// recommended to dispose it.</para>
+        /// providing a <see cref="DataStream" /> that we won't take over in case
+        /// you want to create more substreams.</para>
         /// </remarks>
         /// <returns>The new node.</returns>
         [SuppressMessage(

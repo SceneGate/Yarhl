@@ -530,6 +530,73 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void CreateFromArray()
+        {
+            byte[] data = new byte[] { 1, 2 };
+            using var node = NodeFactory.FromArray("node", data);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Name, Is.EqualTo("node"));
+            Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
+            Assert.That(node.Stream.Length, Is.EqualTo(2));
+            Assert.That(node.Stream.ReadByte(), Is.EqualTo(1));
+        }
+
+        [Test]
+        public void CreateFromArrayGuards()
+        {
+            byte[] data = new byte[1];
+            Assert.That(() => NodeFactory.FromArray(null, data), Throws.ArgumentNullException);
+            Assert.That(() => NodeFactory.FromArray(string.Empty, data), Throws.ArgumentNullException);
+            Assert.That(() => NodeFactory.FromArray("node", null), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFromSubArray()
+        {
+            byte[] data = new byte[] { 1, 2, 3 };
+            using var node = NodeFactory.FromArray("node", data, 1, 1);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Name, Is.EqualTo("node"));
+            Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
+            Assert.That(node.Stream.Position, Is.EqualTo(0));
+            Assert.That(node.Stream.Length, Is.EqualTo(1));
+            Assert.That(node.Stream.ReadByte(), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void CreateFromSubArrayGuards()
+        {
+            byte[] data = new byte[3];
+            Assert.That(() => NodeFactory.FromArray(null, data, 1, 2), Throws.ArgumentNullException);
+            Assert.That(() => NodeFactory.FromArray(string.Empty, data, 1, 2), Throws.ArgumentNullException);
+            Assert.That(() => NodeFactory.FromArray("node", data, -1, 2), Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(() => NodeFactory.FromArray("node", data, 3, 2), Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(() => NodeFactory.FromArray("node", data, 1, 4), Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(() => NodeFactory.FromArray("node", data, 1, -1), Throws.InstanceOf<ArgumentOutOfRangeException>());
+            Assert.That(() => NodeFactory.FromArray("node", null, 0, 0), Throws.ArgumentNullException);
+        }
+
+        [Test]
+        public void CreateFromStream()
+        {
+            using var stream = new DataStream();
+            using var node = NodeFactory.FromStream("node", stream);
+            Assert.That(node, Is.Not.Null);
+            Assert.That(node.Name, Is.EqualTo("node"));
+            Assert.That(node.Format, Is.TypeOf<BinaryFormat>());
+            Assert.That(node.Stream.BaseStream, Is.SameAs(stream.BaseStream));
+        }
+
+        [Test]
+        public void CreateFromStreamGuards()
+        {
+            using var stream = new DataStream();
+            Assert.That(() => NodeFactory.FromStream(null, stream), Throws.ArgumentNullException);
+            Assert.That(() => NodeFactory.FromStream(string.Empty, stream), Throws.ArgumentNullException);
+            Assert.That(() => NodeFactory.FromStream("node", null), Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void CreateFromSubstream()
         {
             using DataStream main = new DataStream();

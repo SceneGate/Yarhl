@@ -111,6 +111,19 @@ namespace Yarhl.IO
         /// Creates a new <see cref="DataStream"/> from an array of data.
         /// </summary>
         /// <param name="data">The array of data to use in the stream.</param>
+        /// <returns>A new <see cref="DataStream"/>.</returns>
+        public static DataStream FromArray(byte[] data)
+        {
+            if (data is null)
+                throw new ArgumentNullException(nameof(data));
+
+            return FromArray(data, 0, data.Length);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="DataStream"/> from an array of data.
+        /// </summary>
+        /// <param name="data">The array of data to use in the stream.</param>
         /// <param name="offset">Offset in the array of data.</param>
         /// <param name="length">Length of the new stream.</param>
         /// <returns>A new <see cref="DataStream"/>.</returns>

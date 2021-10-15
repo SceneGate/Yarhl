@@ -239,6 +239,23 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CreateFromArray()
+        {
+            byte[] data = new byte[] { 0x01, 0x02 };
+            using var stream = DataStreamFactory.FromArray(data);
+            Assert.That(stream.Position, Is.EqualTo(0));
+            Assert.That(stream.Length, Is.EqualTo(2));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0x01));
+            Assert.That(stream.ReadByte(), Is.EqualTo(0x02));
+        }
+
+        [Test]
+        public void CreateFromArrayGuards()
+        {
+            Assert.That(() => DataStreamFactory.FromArray(null), Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void CreateFromArrayReadsArray()
         {
             byte[] data = new byte[] { 0x01, 0x2, 0x3 };
