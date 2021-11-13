@@ -1,11 +1,7 @@
 {
-    "name": "Dev (Ubuntu - .NET 5, 3.1 and Mono)",
+    "name": "Dev (Ubuntu - .NET 6, 3.1 and Mono)",
     "build": {
         "dockerfile": "Dockerfile",
-    },
-
-    "settings": {
-        "terminal.integrated.shell.linux": "/bin/bash"
     },
 
     "extensions": [
