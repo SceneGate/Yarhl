@@ -1,12 +1,30 @@
-- name: Guides
+- name: ✨ Getting started
   items:
-    - name: Yarhl in a nutshell
-      href: Yarhl-nutshell.md
-
-    - name: Cookbook
-      href: Cookbook.md
-
-- name: Contributing
+    - name: Introduction
+    - name: Create your first converter tool
+    - name: Create your first file format converter
+- name: ♻ File formats
+  items:
+    - name: Framework architecture
+    - name: Format converters
+    - name: Plugins
+- name: 📁 Virtual file system
+  items:
+    - name: Navigate the nodes
+    - name: Create a node hierarchy
+- name: 🧮 Binary formats
+  items:
+    - name: Binary format and DataStream
+    - name: Data/Binary readers
+    - name: Text readers
+    - name: Binary serializer / deserializer
+    - name: Advanced DataStreams
+- name: 📝 Text formats
+  items:
+    - name: PO translation format
+    - name: Encodings
+    - name: Replacing tables
+- name: ⌨ Contribute
   items:
     - name: Guidelines
       href: Contributing.md
