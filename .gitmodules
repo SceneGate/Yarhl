@@ -1,0 +1,3 @@
+[submodule "docs/templates/material"]
+	path = docs/templates/material
+	url = https://github.com/ovasquez/docfx-material.git

@@ -54,7 +54,8 @@
       "template": [
         "default",
         "statictoc",
-        "default-widescreen"
+        "templates/material/material",
+        "templates/widescreen"
       ],
       "postProcessors": ["ExtractSearchIndex"],
       "markdownEngineName": "markdig",
