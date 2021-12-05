@@ -33,8 +33,7 @@ Stable releases are available from nuget.org:
 The libraries target .NET Standard 2.0. The tests (so the library) runs with the
 supported runtimes:
 
-- .NET 5.0
-- .NET Core 3.1
+- .NET 6.0
 - .NET Framework 4.8 or Mono (latest on CI)
 
 Preview releases can be found in this
@@ -53,9 +52,8 @@ your solution (.sln) file with the following content:
 
 ## Build
 
-The project requires to build .NET 5.0 SDK, .NET Core 3.1 runtime and .NET
-Framework 4.8 or latest Mono. If you open the project with VS Code and you did
-install the
+The project requires to build .NET 6.0 SDK and .NET Framework 4.8 or latest
+Mono. If you open the project with VS Code and you did install the
 [VS Code Remote Containers](https://code.visualstudio.com/docs/remote/containers)
 extension, you can have an already pre-configured development environment with
 Docker or Podman.

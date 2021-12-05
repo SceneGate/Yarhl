@@ -14,7 +14,7 @@ provide an small snippet of code that reproduces the issue. Try to provide also
 the following information:
 
 - OS: Linux / Windows / Mac OS
-- Runtime: .NET Framework, Mono, .NET Core, .NET 5
+- Runtime: .NET Framework, Mono, .NET 6
 - Version of Yarhl
 - Stacktrace if any
 - What's happening and what you expect to happen
