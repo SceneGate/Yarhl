@@ -1,5 +1,5 @@
 {
-    "name": "Dev (Ubuntu - .NET 6, 3.1 and Mono)",
+    "name": "Dev (.NET 6 and Mono)",
     "build": {
         "dockerfile": "Dockerfile",
     },
@@ -18,7 +18,7 @@
 
     "remoteUser": "vscode",
 
-    // Required for Podman (Docker alternative)
+    // PODMAN ONLY. You may need to remove this line for Docker.
     // SELinux issues: https://github.com/containers/podman/issues/3683
     "runArgs": [ "--security-opt", "label=disable", "--userns=keep-id" ],
 

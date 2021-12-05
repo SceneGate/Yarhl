@@ -5,6 +5,7 @@
         <Copyright>Copyright (C) 2019 SceneGate</Copyright>
 
         <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <NoWarn>NETSDK1179</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup>
@@ -13,6 +14,7 @@
         <RepositoryUrl>https://github.com/SceneGate/Yarhl</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
         <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
     <!-- Deterministic and source link -->
