@@ -103,7 +103,7 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="charIndex">Index in the char array.</param>
         /// <param name="charCount">Number of chars to convert.</param>
         /// <param name="bytes">Output byte array.</param>
-        /// <param name="byteIndex">Indes in the byte array.</param>
+        /// <param name="byteIndex">Index in the byte array.</param>
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
         {
             if (chars == null)
@@ -358,15 +358,13 @@ namespace Yarhl.Media.Text.Encodings
             {
                 Table table = new Table();
 
-                Stream stream = null;
+                Stream? stream = null;
                 try {
                     stream = Assembly.GetExecutingAssembly()
                         .GetManifestResourceStream(path);
 
                     using (var reader = new StreamReader(stream)) {
-#pragma warning disable IDISP003
                         stream = null;  // Avoid disposing twice
-#pragma warning restore IDISP003
 
                         while (!reader.EndOfStream) {
                             string line = reader.ReadLine();

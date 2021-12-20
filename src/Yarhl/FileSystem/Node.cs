@@ -65,7 +65,7 @@ namespace Yarhl.FileSystem
             if (node!.Format != null && !(node.Format is ICloneableFormat))
                 throw new InvalidOperationException("Format does not implement ICloneableFormat interface.");
 
-            ICloneableFormat newFormat = null;
+            ICloneableFormat? newFormat = null;
             if (node.Format != null) {
                 var oldFormat = node.Format as ICloneableFormat;
                 newFormat = (ICloneableFormat)oldFormat!.DeepClone();
@@ -83,7 +83,7 @@ namespace Yarhl.FileSystem
         /// Gets the current format of the node.
         /// </summary>
         /// <value>The current format.</value>
-        public IFormat Format {
+        public IFormat? Format {
             get;
             private set;
         }
@@ -94,7 +94,7 @@ namespace Yarhl.FileSystem
         /// <value>
         /// DataStream if the format is IBinary, null otherwise.
         /// </value>
-        public DataStream Stream {
+        public DataStream? Stream {
             get { return GetFormatAs<IBinary>()?.Stream; }
         }
 
@@ -114,7 +114,7 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <returns>The format casted to the type or null if not possible.</returns>
         /// <typeparam name="T">The format type.</typeparam>
-        public T GetFormatAs<T>()
+        public T? GetFormatAs<T>()
             where T : class, IFormat
         {
             if (Disposed)
@@ -139,7 +139,7 @@ namespace Yarhl.FileSystem
         /// If <see langword="true" /> the method will dispose the previous
         /// format.
         /// </param>
-        public void ChangeFormat(IFormat newFormat, bool disposePreviousFormat = true)
+        public void ChangeFormat(IFormat? newFormat, bool disposePreviousFormat = true)
         {
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
@@ -324,7 +324,7 @@ namespace Yarhl.FileSystem
         void AddContainerChildren()
         {
             RemoveChildren();
-            GetFormatAs<NodeContainerFormat>().MoveChildrenTo(this);
+            GetFormatAs<NodeContainerFormat>()?.MoveChildrenTo(this);
         }
 
         void CastAndChangeFormat(object newFormat)

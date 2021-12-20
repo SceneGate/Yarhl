@@ -30,21 +30,22 @@ namespace Yarhl.UnitTests.Media.Text
         public void DefaultValues()
         {
             var header = new PoHeader();
-            Assert.IsNull(header.ProjectIdVersion);
-            Assert.IsNull(header.ReportMsgidBugsTo);
+            Assert.That(header.ProjectIdVersion, Is.Empty);
+            Assert.That(header.ReportMsgidBugsTo, Is.Empty);
+            Assert.That(header.Language, Is.Empty);
 
             header = new PoHeader("myID", "yo", "es");
             Assert.AreEqual("myID", header.ProjectIdVersion);
             Assert.AreEqual("yo", header.ReportMsgidBugsTo);
             Assert.AreEqual(DateTime.Now.ToShortDateString(), header.CreationDate);
-            Assert.AreEqual(null, header.RevisionDate);
-            Assert.AreEqual(null, header.LastTranslator);
-            Assert.AreEqual(null, header.LanguageTeam);
+            Assert.That(header.RevisionDate, Is.Empty);
+            Assert.That(header.LastTranslator, Is.Empty);
+            Assert.That(header.LanguageTeam, Is.Empty);
             Assert.AreEqual("es", header.Language);
             Assert.AreEqual("1.0", PoHeader.MimeVersion);
             Assert.AreEqual("text/plain; charset=UTF-8", PoHeader.ContentType);
             Assert.AreEqual("8bit", PoHeader.ContentTransferEncoding);
-            Assert.AreEqual(null, header.PluralForms);
+            Assert.That(header.PluralForms, Is.Empty);
             Assert.IsNotNull(header.Extensions);
             Assert.IsEmpty(header.Extensions);
         }

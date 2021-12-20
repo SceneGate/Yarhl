@@ -1091,6 +1091,7 @@ namespace Yarhl.UnitTests.IO
             string nullValue = null;
             Assert.Throws<ArgumentNullException>(() => writer.WriteOfType(nullType, 1));
             Assert.Throws<ArgumentNullException>(() => writer.WriteOfType(typeof(string), nullValue));
+            Assert.Throws<ArgumentNullException>(() => writer.WriteOfType<string>(nullValue));
         }
 
         [Test]

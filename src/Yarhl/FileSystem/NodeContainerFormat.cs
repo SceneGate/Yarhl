@@ -83,7 +83,7 @@ namespace Yarhl.FileSystem
                     Node foundNode = newNode.Children.FirstOrDefault(node => node.Name == child.Name);
 
                     if (foundNode != null && child.IsContainer) {
-                        child.GetFormatAs<NodeContainerFormat>().MoveChildrenTo(foundNode, true);
+                        child.GetFormatAs<NodeContainerFormat>()?.MoveChildrenTo(foundNode, true);
                     } else {
                         Root.Remove(child);
                         newNode.Add(child);

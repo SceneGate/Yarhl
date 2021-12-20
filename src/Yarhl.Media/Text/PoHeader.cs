@@ -32,6 +32,14 @@ namespace Yarhl.Media.Text
         /// </summary>
         public PoHeader()
         {
+            ProjectIdVersion = string.Empty;
+            ReportMsgidBugsTo = string.Empty;
+            Language = string.Empty;
+            CreationDate = DateTime.Now.ToShortDateString();
+            RevisionDate = string.Empty;
+            LastTranslator = string.Empty;
+            LanguageTeam = string.Empty;
+            PluralForms = string.Empty;
             Extensions = new Dictionary<string, string>();
         }
 
@@ -47,7 +55,6 @@ namespace Yarhl.Media.Text
             ProjectIdVersion = id;
             ReportMsgidBugsTo = reporter;
             Language = lang;
-            CreationDate = DateTime.Now.ToShortDateString();
         }
 
         /// <summary>

@@ -254,7 +254,8 @@ msgstr ""translated""
             var newPo = ConvertStringToPo(text);
 
             CompareText(ConvertFormat.To<BinaryFormat>(testPo), text);
-            Assert.IsNull(newPo.Header);
+            Assert.That(newPo.Header, Is.Not.Null);
+            Assert.That(newPo.Header.ProjectIdVersion, Is.Empty);
             Assert.AreEqual(2, newPo.Entries.Count);
         }
 

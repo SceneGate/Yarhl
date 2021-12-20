@@ -27,6 +27,17 @@ namespace Yarhl.FileFormat
     public class FormatMetadata : IExportMetadata
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="FormatMetadata" /> class.
+        /// </summary>
+        public FormatMetadata()
+        {
+            // MEF should always set these properties, so they won't be null.
+            // We set some initial values to ensure later they are not set to null.
+            Name = "<invalid>";
+            Type = typeof(FormatMetadata);
+        }
+
+        /// <summary>
         /// Gets or sets the type full name. Shortcut of Type.FullName.
         /// </summary>
         /// <value>The full name of the type.</value>
