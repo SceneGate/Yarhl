@@ -31,13 +31,6 @@ namespace Yarhl.IO.StreamFormat
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamWrapper" /> class.
         /// </summary>
-        protected StreamWrapper()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StreamWrapper" /> class.
-        /// </summary>
         /// <param name="stream">The stream to wrap.</param>
         protected StreamWrapper(Stream stream)
         {

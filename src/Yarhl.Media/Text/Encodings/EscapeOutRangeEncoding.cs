@@ -107,7 +107,7 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="charIndex">Index in the char array.</param>
         /// <param name="charCount">Number of chars to convert.</param>
         /// <param name="bytes">Output byte array.</param>
-        /// <param name="byteIndex">Indes in the byte array.</param>
+        /// <param name="byteIndex">Index in the byte array.</param>
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
         {
             if (chars == null)
@@ -206,7 +206,7 @@ namespace Yarhl.Media.Text.Encodings
             return true;
         }
 
-        static string UnescapeText(string text, ICollection<byte> symbols = null)
+        static string UnescapeText(string text, ICollection<byte>? symbols = null)
         {
             StringBuilder transformed = new StringBuilder(text);
             StringComparison culture = StringComparison.Ordinal;
@@ -265,7 +265,7 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         internal sealed class EscapeOutRangeDecoderFallbackBuffer : DecoderFallbackBuffer
         {
-            string replacement;
+            string replacement = string.Empty;
             int currentPos;
 
             /// <summary>

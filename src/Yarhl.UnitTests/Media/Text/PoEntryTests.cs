@@ -30,18 +30,18 @@ namespace Yarhl.UnitTests.Media.Text
         public void DefaultValues()
         {
             PoEntry entry = new PoEntry();
-            Assert.AreEqual(string.Empty, entry.Original);
-            Assert.AreEqual(string.Empty, entry.Translated);
-            Assert.IsNull(entry.Context);
-            Assert.IsNull(entry.TranslatorComment);
-            Assert.IsNull(entry.ExtractedComments);
-            Assert.IsNull(entry.Reference);
-            Assert.IsNull(entry.Flags);
-            Assert.IsNull(entry.PreviousContext);
-            Assert.IsNull(entry.PreviousOriginal);
+            Assert.That(entry.Original, Is.Empty);
+            Assert.That(entry.Translated, Is.Empty);
+            Assert.That(entry.Context, Is.Empty);
+            Assert.That(entry.TranslatorComment, Is.Empty);
+            Assert.That(entry.ExtractedComments, Is.Empty);
+            Assert.That(entry.Reference, Is.Empty);
+            Assert.That(entry.Flags, Is.Empty);
+            Assert.That(entry.PreviousContext, Is.Empty);
+            Assert.That(entry.PreviousOriginal, Is.Empty);
 
             entry = new PoEntry("original");
-            Assert.AreEqual("original", entry.Original);
+            Assert.That(entry.Original, Is.EqualTo("original"));
         }
 
         [Test]

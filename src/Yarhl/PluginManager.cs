@@ -48,16 +48,16 @@ namespace Yarhl
         };
 
         static readonly object LockObj = new object();
-        static PluginManager singleInstance;
+        static PluginManager? singleInstance;
 
-        CompositionHost container;
+        readonly CompositionHost container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginManager"/> class.
         /// </summary>
         PluginManager()
         {
-            InitializeContainer();
+            container = InitializeContainer();
         }
 
         /// <summary>
@@ -220,7 +220,7 @@ namespace Yarhl
                 .LoadAssemblies();
         }
 
-        void InitializeContainer()
+        static CompositionHost InitializeContainer()
         {
             var conventions = new ConventionBuilder();
             DefineFormatConventions(conventions);
@@ -247,7 +247,7 @@ namespace Yarhl
                 containerConfig.WithAssemblies(LoadAssemblies(pluginFiles));
             }
 
-            container = containerConfig.CreateContainer();
+            return containerConfig.CreateContainer();
         }
     }
 }

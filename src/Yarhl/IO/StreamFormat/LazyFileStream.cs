@@ -40,6 +40,7 @@ namespace Yarhl.IO.StreamFormat
         /// <param name="path">Path to the file.</param>
         /// <param name="mode">Mode to open the file.</param>
         public LazyFileStream(string path, FileOpenMode mode)
+            : base(null!)
         {
             this.path = path;
             this.mode = mode;

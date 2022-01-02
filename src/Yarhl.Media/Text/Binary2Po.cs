@@ -45,7 +45,7 @@ namespace Yarhl.Media.Text
             Po po = new Po();
 
             // Read the header if any
-            PoEntry entry = ReadEntry(reader);
+            PoEntry? entry = ReadEntry(reader);
             if (entry == null)
                 return po;
 
@@ -62,15 +62,15 @@ namespace Yarhl.Media.Text
             return po;
         }
 
-        static PoEntry ReadEntry(TextDataReader reader)
+        static PoEntry? ReadEntry(TextDataReader reader)
         {
             // Skip all the blank lines before the block of text
             string line = string.Empty;
-            while (reader.PeekLine()?.Trim().Length == 0)
+            while (!reader.Stream.EndOfStream && reader.PeekLine().Trim().Length == 0)
                 reader.ReadLine();
 
             // If nothing to read, EOF
-            if (reader.Stream.Position >= reader.Stream.Length)
+            if (reader.Stream.EndOfStream)
                 return null;
 
             PoEntry entry = new PoEntry();

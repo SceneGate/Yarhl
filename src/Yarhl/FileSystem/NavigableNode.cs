@@ -78,7 +78,10 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Gets the parent node.
         /// </summary>
-        public T Parent {
+        /// <returns>
+        /// The reference to the parent node or null if it doesn't have any parent.
+        /// </returns>
+        public T? Parent {
             get;
             private set;
         }
@@ -310,7 +313,7 @@ namespace Yarhl.FileSystem
 
         private bool IsDescendantOf(T node)
         {
-            T current = this.Parent;
+            T? current = this.Parent;
             while (current != null) {
                 if (current == node)
                     return true;

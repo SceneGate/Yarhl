@@ -31,8 +31,12 @@ namespace Yarhl.Media.Text
         /// <summary>
         /// Convert the specified PO into a Binary stream.
         /// </summary>
-        /// <returns>The converted stream.</returns>
         /// <param name="source">Source PO.</param>
+        /// <returns>The converted stream.</returns>
+        /// <remarks>
+        /// It writes the header only if <see cref="PoHeader.ProjectIdVersion"/>
+        /// is not empty.
+        /// </remarks>
         public BinaryFormat Convert(Po source)
         {
             if (source == null)
@@ -41,7 +45,7 @@ namespace Yarhl.Media.Text
             BinaryFormat binary = new BinaryFormat();
             TextDataWriter writer = new TextDataWriter(binary.Stream);
 
-            if (source.Header != null)
+            if (!string.IsNullOrEmpty(source.Header.ProjectIdVersion))
                 WriteHeader(source.Header, writer);
 
             foreach (var entry in source.Entries) {
