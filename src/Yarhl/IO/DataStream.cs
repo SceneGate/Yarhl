@@ -348,7 +348,7 @@ namespace Yarhl.IO
                     Position = offset;
                     break;
                 case SeekOrigin.End:
-                    Position = Length - offset;
+                    Position = Length + offset;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(origin));
