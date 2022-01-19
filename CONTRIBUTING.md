@@ -5,51 +5,52 @@ Thanks for taking the time to contribute! :sparkles:
 In this document you will find all the information you need to make sure that
 Yarhl continues to be the high-quality product we want to be!
 
-## Reporting issues
+## Reporting features and issues
 
 ### Issues
 
 When reporting a problem, be as specific as possible. Ideally, you should
-provide an small snippet of code that reproduces the issue. Try to provide also
-the following information:
-
-- OS: Linux / Windows / Mac OS
-- Runtime: version of .NET
-- Version of Yarhl
-- Stacktrace if any
-- What's happening and what you expect to happen
+provide an small snippet of code that reproduces the issue. Please fill the
+default template so we can have all the required information to address the
+issue.
 
 ### Features
 
+Features are requested and handled as GitHub _issues_.
+
 If you want to ask for a new feature, first make sure it hasn't been reported
 yet by using the search box in the issue tab. Make sure that the feature aligns
-with the direction of the project. **Do not ask for tools for games or
-translations**. This is an abstract library for all kind of converter programs.
+with the direction of the project.
+
+**Do not ask for tools for games or translations**. This is an abstract library
+for all kind of converter programs.
 
 ## Pull Request
 
-Before starting a pull request, create an issue requesting the feature you would
-like to see and implement. If you are fixing a bug, create also an issue to be
-able to track the problem. State that you would like to work on that. The team
-will reply to the issue as soon as possible, discussing the proposal if needed.
-This guarantee that later on the Pull Request we don't reject the proposal
-without having a discussion first and we don't waste time.
+Before starting a pull request, create an issue
+[requesting the feature](#features) you would like to see and implement. If you
+are fixing a bug, create also an issue to be able to track the problem.
+
+In the issue/feature request specify that that you would like to work on that.
+The team will reply as soon as possible to discuss the proposal. This guarantee
+that in any later Pull Request we don't reject the proposal without having a
+discussion first and we don't waste your lovely time.
 
 In general, the process to create a pull request is:
 
 1. Create an issue describing the bug or feature and state you would like to
    work on that.
 2. The team will cheer you and/or discuss with you the issue.
-3. Fork the project.
+3. Fork the project (if not done already).
 4. Clone your forked project and create a git branch.
 5. Make the necessary code changes in as many commits as you want. The commit
    message should follow this convention:
 
-```plain
-:emoji: Short description #IssueID
+   ```plain
+   :emoji: Short description #IssueID
 
-Long description if needed.
-```
+   Long description if needed.
+   ```
 
 6. Create a pull request. After reviewing your changes and making any new
    commits if needed, the team will approve and merge it.
@@ -58,6 +59,9 @@ For a complete list of emoji description see
 [this repository](https://github.com/slashsBin/styleguide-git-commit-message#suggested-emojis).
 
 ## Code Guidelines
+
+The project includes a `.editorconfig` file that ensures the code style is
+consistent. It should be supported in any common IDE.
 
 We follow the following standard guidelines with custom changes:
 
@@ -105,12 +109,9 @@ We focus on code-quality to make ours and others life easier. For that reason:
 - :heavy_check_mark: **DO** write documentation for any public type and field.
 - :heavy_check_mark: **DO** write a test for all the possible code branches of
   your methods. Use a TDD approach.
-- :heavy_check_mark: **DO** seek for 100% test coverage.
+- :heavy_check_mark: **DO** seek for test coverage.
 - :heavy_check_mark: **DO** seek for compiler warning free code.
-- :heavy_check_mark: **DO** check the code with StyleCop for style issues.
-- :heavy_check_mark: **DO** check the code with Gendarme for design issues.
-- :heavy_check_mark: **DO** review the results of SonarQube in the Pull Request.
-- :heavy_check_mark: **DO** make sure the CI pass.
+- :heavy_check_mark: **DO** make sure the CI build pass.
 
 ### Style Guidelines
 
@@ -130,8 +131,9 @@ We focus on code-quality to make ours and others life easier. For that reason:
 
 #### Line length
 
-- :heavy_check_mark: **DO** use a limit of 80 columns. If you need to wrap, move
-  to the next line with one extra indentation level.
+- :heavy_check_mark: **DO** use a limit of 120 characters per line (recommended
+  80). If you need to wrap, move to the next line with one extra indentation
+  level.
 - :heavy_check_mark: **DO** put all the arguments in a new line if they don't
   fit.
 - :heavy_check_mark: **DO** use local variables to make small conditions.
@@ -157,7 +159,8 @@ void Method(
 
 #### Layout
 
-- :heavy_check_mark: **DO** define a type (class / struct / enum) per file.
+- :heavy_check_mark: **DO** define each type (class / struct / enum / record) in
+  a different file.
 - :heavy_check_mark: **DO** separate methods and properties with new lines.
 - :heavy_check_mark: **DO** place the elements in this order: private fields,
   constructors, properties, methods, nested types. Place first static fields and
@@ -169,13 +172,6 @@ void Method(
 - :x: **DO NOT** use space before opening parenthesis calling methods or
   indexers, between the parenthesis and the arguments or between the generic
   types.
-
-```csharp
-Method ( a );
-array [ 10 ];
-var list = new List <int> ();
-```
-
 - :heavy_check_mark: **DO** use the following convention:
 
 ```csharp
@@ -242,7 +238,12 @@ for (int i = 0; i < 2; i++) {
   checking.
 
 ```csharp
-if (a) {
+if (a is null)
+    throw new ArgumentNullException(nameof(a));
+if (b is null)
+    throw new ArgumentNullException(nameof(b));
+
+if (a.Color == Colors.Blue) {
     Code();
 }
 ```
@@ -277,6 +278,11 @@ public int Property {
 
 ```csharp
 void EmptyMethod()
+{
+}
+
+MyConstructor(int a)
+    : base(a)
 {
 }
 ```
@@ -317,31 +323,25 @@ public int Text {
 - :heavy_check_mark: **DO** put the license in the file header with this format:
 
 ```csharp
-//
-// <FileName>.cs
-//
-// Author:
-//       <AuthorName> <email@example.com>
-//
-// Copyright (c) <Year> <AuthorName>
-//
+// Copyright (c) <year> <author or team>
+
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
+
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+
 // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 // IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 // FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 // AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
 ```
 
 ### Naming
@@ -351,7 +351,7 @@ public int Text {
 ```csharp
 void Method(string myArgument)
 
-class MyClass
+public class MyClass
 {
     string myString;
     int veryImportantValue;
@@ -368,7 +368,7 @@ class MyClass
   same name.
 
 ```csharp
-class Foo
+public class Foo
 {
     int bar;
 
@@ -423,15 +423,7 @@ var dict = new Dictionary<string, int> {
 };
 ```
 
-### Redundant visibility
-
-- :x: **DO NOT** use the `private` keyword to indicate internal fields since
-  it's already the default visibility.
-
 ### Usings
-
-- :heavy_check_mark: **DO** put the `using` inside the namespace.
-- :heavy_check_mark: **DO** include all the namespaces you are using.
 
 - :heavy_check_mark: **DO** use the `using` statement for `IDisposable` types.
 
