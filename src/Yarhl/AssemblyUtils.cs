@@ -26,83 +26,22 @@ namespace Yarhl
     using System.Runtime.Loader;
 
     /// <summary>
-    /// Utilities to work with Assemblies in different frameworks.
+    /// Utilities to work with Assemblies.
     /// </summary>
     static class AssemblyUtils
     {
         /// <summary>
-        /// Load assemblies in different .NET implementations.
+        /// Load assemblies.
         /// </summary>
         /// <param name="paths">List of assemblies to load.</param>
         /// <returns>The assemblies.</returns>
         public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<string> paths)
-        {
-            if (IsNetFramework()) {
-                return LoadAssembliesNetFramework(paths);
-            }
-
-            return LoadAssembliesNetCore(paths);
-        }
-
-        /// <summary>
-        /// Detect if the application is running with the .NET Framework runtime.
-        /// </summary>
-        /// <returns>
-        /// A value indicating whether the current runtime is
-        /// .NET Framework or not.
-        /// </returns>
-        static bool IsNetFramework()
-        {
-            string framework = RuntimeInformation.FrameworkDescription;
-            return framework.StartsWith(".NET Framework", StringComparison.Ordinal) ||
-                framework.StartsWith("Mono", StringComparison.Ordinal);
-        }
-
-        /// <summary>
-        /// Load assemblies from .NET Core.
-        /// </summary>
-        /// <remarks>
-        /// <para>In .NET Core for some bugs / features we can't use the method
-        /// Assembly.LoadFile because two identical types can return false in
-        /// an equality. For that reason we need to load the assemblies with
-        /// the AssemblyLoadContext which is only available in .NET Core.</para>
-        /// </remarks>
-        /// <param name="paths">List of assemblies paths.</param>
-        /// <returns>The load assemblies.</returns>
-        static IEnumerable<Assembly> LoadAssembliesNetCore(
-            IEnumerable<string> paths)
         {
             List<Assembly> assemblies = new List<Assembly>();
             foreach (string path in paths) {
                 try {
                     Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
                     assemblies.Add(assembly);
-                } catch (BadImageFormatException) {
-                    // Bad IL. Skip.
-                }
-            }
-
-            return assemblies;
-        }
-
-        /// <summary>
-        /// Load assemblies from .NET Framework.
-        /// </summary>
-        /// <param name="paths">List of assemblies paths.</param>
-        /// <returns>The load assemblies.</returns>
-        static IEnumerable<Assembly> LoadAssembliesNetFramework(
-            IEnumerable<string> paths)
-        {
-            List<Assembly> assemblies = new List<Assembly>();
-            foreach (string path in paths) {
-                try {
-                    // We try to avoid the non-recommended load from file methods.
-                    // Instead we get the full assembly name.
-                    // In the future we could realize assembly validations with
-                    // public keys, name or version.
-                    AssemblyName libName = AssemblyName.GetAssemblyName(path);
-                    Assembly library = Assembly.Load(libName);
-                    assemblies.Add(library);
                 } catch (BadImageFormatException) {
                     // Bad IL. Skip.
                 }

@@ -18,7 +18,7 @@ Task("Prepare-IntegrationTests")
     .Does<BuildInfo>(info =>
 {
     // Copy a good and bad plugin to test the assembly load logic
-    string pluginPath = $"src/Yarhl.Media/bin/{info.Configuration}/netstandard2.0/Yarhl.Media.dll";
+    string pluginPath = $"src/Yarhl.Media/bin/{info.Configuration}/net6.0/Yarhl.Media.dll";
     string badPluginPath = info.SolutionFile; // this isn't a DLL for sure :D
 
     string outputBasePath = $"src/Yarhl.IntegrationTests/bin/{info.Configuration}";

@@ -34,8 +34,7 @@ namespace Yarhl.IO
     {
         static DataWriter()
         {
-            // Make sure that the shift-jis encoding is initialized in
-            // .NET Core.
+            // Make sure that the shift-jis encoding is initialized.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 

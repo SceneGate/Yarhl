@@ -75,7 +75,7 @@ namespace Yarhl.UnitTests.IO
         [Test]
         public void CreateWithShiftJisEncoding()
         {
-            // It will automatically register the encodings for .NET Core.
+            // It will automatically register the encodings.
             var reader = new TextDataReader(stream, "shift-jis");
             Assert.That(reader.Encoding.CodePage, Is.EqualTo(932));
         }
