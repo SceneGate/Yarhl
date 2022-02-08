@@ -37,16 +37,6 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         }
 
         [Test]
-        public void FeaturePropertiesDefaults()
-        {
-            using var wrapper = new StreamWrapperImpl();
-            Assert.That(wrapper.CanRead, Is.True);
-            Assert.That(wrapper.CanWrite, Is.True);
-            Assert.That(wrapper.CanSeek, Is.True);
-            Assert.That(wrapper.CanTimeout, Is.False);
-        }
-
-        [Test]
         public void FeaturePropertiesFromBaseStream()
         {
             var stream = new MemoryStream(new byte[2], writable: false);
@@ -278,10 +268,6 @@ namespace Yarhl.UnitTests.IO.StreamFormat
 
         private sealed class StreamWrapperImpl : StreamWrapper
         {
-            public StreamWrapperImpl()
-            {
-            }
-
             public StreamWrapperImpl(Stream stream)
                 : base(stream)
             {

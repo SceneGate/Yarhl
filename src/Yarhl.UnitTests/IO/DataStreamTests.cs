@@ -618,6 +618,9 @@ namespace Yarhl.UnitTests.IO
             DataStream stream = new DataStream(baseStream, 0, 2, false);
             stream.Seek(0, SeekOrigin.End);
             Assert.AreEqual(2, stream.Position);
+            Assert.Throws<ArgumentOutOfRangeException>(() => stream.Seek(1, SeekOrigin.End));
+            stream.Seek(-2, SeekOrigin.End);
+            Assert.AreEqual(0, stream.Position);
             stream.Dispose();
         }
 
@@ -918,7 +921,7 @@ namespace Yarhl.UnitTests.IO
             baseStream.WriteByte(0xCA);
             baseStream.WriteByte(0xFE);
             DataStream stream = new DataStream(baseStream, 0, 2, false);
-            stream.Seek(1, SeekOrigin.End);
+            stream.Seek(-1, SeekOrigin.End);
             byte[] buffer = new byte[2];
             Assert.DoesNotThrow(() => stream.Read(buffer, 0, 2));
             Assert.AreEqual(2, stream.Position);

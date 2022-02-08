@@ -49,9 +49,9 @@ namespace Yarhl.IO
         readonly bool canExpand;
         readonly bool hasOwnsership;
         readonly StreamInfo streamInfo;
+        readonly Stream baseStream;
 
         bool disposed;
-        Stream baseStream;
         long offset;
         long position;
         long length;
@@ -118,7 +118,7 @@ namespace Yarhl.IO
 
             if (stream is DataStream dataStream) {
                 ParentDataStream = dataStream;
-                BaseStream = dataStream.BaseStream;
+                baseStream = dataStream.BaseStream;
                 Offset = dataStream.Offset + offset;
 
                 if (transferOwnership && !dataStream.hasOwnsership) {
@@ -128,7 +128,7 @@ namespace Yarhl.IO
                 }
             } else {
                 ParentDataStream = null;
-                BaseStream = stream;
+                baseStream = stream;
                 Offset = offset;
             }
 
@@ -183,7 +183,7 @@ namespace Yarhl.IO
         /// Gets the parent DataStream only if this stream was initialized from
         /// a DataStream.
         /// </summary>
-        public DataStream ParentDataStream {
+        public DataStream? ParentDataStream {
             get;
             private set;
         }
@@ -193,7 +193,6 @@ namespace Yarhl.IO
         /// </summary>
         public Stream BaseStream {
             get => baseStream;
-            private set => baseStream = value;
         }
 
         /// <summary>
@@ -349,7 +348,7 @@ namespace Yarhl.IO
                     Position = offset;
                     break;
                 case SeekOrigin.End:
-                    Position = Length - offset;
+                    Position = Length + offset;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(origin));

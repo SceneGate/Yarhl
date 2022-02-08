@@ -248,7 +248,7 @@ namespace Yarhl.IO
         /// <param name="encoding">
         /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
         /// </param>
-        public char ReadChar(Encoding encoding = null)
+        public char ReadChar(Encoding? encoding = null)
         {
             return ReadChars(1, encoding)[0];
         }
@@ -267,7 +267,7 @@ namespace Yarhl.IO
         /// <param name="encoding">
         /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
         /// </param>
-        public char[] ReadChars(int count, Encoding encoding = null)
+        public char[] ReadChars(int count, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -312,7 +312,7 @@ namespace Yarhl.IO
         /// <param name="encoding">
         /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
         /// </param>
-        public string ReadStringToToken(string token, Encoding encoding = null)
+        public string ReadStringToToken(string token, Encoding? encoding = null)
         {
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
@@ -375,7 +375,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadString(Encoding encoding = null)
+        public string ReadString(Encoding? encoding = null)
         {
             return ReadStringToToken("\0", encoding);
         }
@@ -386,7 +386,7 @@ namespace Yarhl.IO
         /// <returns>The string.</returns>
         /// <param name="bytesCount">Size of the string in bytes.</param>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadString(int bytesCount, Encoding encoding = null)
+        public string ReadString(int bytesCount, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -401,7 +401,7 @@ namespace Yarhl.IO
         /// <returns>The string.</returns>
         /// <param name="sizeType">Type of the size field.</param>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadString(Type sizeType, Encoding encoding = null)
+        public string ReadString(Type sizeType, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -519,7 +519,7 @@ namespace Yarhl.IO
                     property.SetValue(obj, Enum.ToObject(property.PropertyType, value));
                 } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
                     var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
-                    Encoding encoding = null;
+                    Encoding? encoding = null;
                     if (attr.CodePage != -1) {
                         encoding = Encoding.GetEncoding(attr.CodePage);
                     }

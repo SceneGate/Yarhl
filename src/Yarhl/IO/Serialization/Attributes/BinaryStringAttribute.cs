@@ -78,7 +78,7 @@ namespace Yarhl.IO.Serialization.Attributes
         /// Gets or sets the size value type.
         /// <remarks>Set to null if string doesn't have the length serialized.</remarks>
         /// </summary>
-        public Type SizeType {
+        public Type? SizeType {
             get;
             set;
         }

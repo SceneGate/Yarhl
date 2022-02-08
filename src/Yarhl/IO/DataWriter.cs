@@ -209,7 +209,7 @@ namespace Yarhl.IO
         /// <remarks>
         /// <para>If the encoding is null, it will use the default encoding.</para>
         /// </remarks>
-        public void Write(char ch, Encoding encoding = null)
+        public void Write(char ch, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -225,7 +225,7 @@ namespace Yarhl.IO
         /// <remarks>
         /// <para>If the encoding is null, it will use the default encoding.</para>
         /// </remarks>
-        public void Write(char[] chars, Encoding encoding = null)
+        public void Write(char[] chars, Encoding? encoding = null)
         {
             if (chars == null)
                 throw new ArgumentNullException(nameof(chars));
@@ -251,7 +251,7 @@ namespace Yarhl.IO
         public void Write(
                 string text,
                 bool nullTerminator = true,
-                Encoding encoding = null,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             Write(text, nullTerminator ? "\0" : null, encoding, maxSize);
@@ -273,7 +273,7 @@ namespace Yarhl.IO
                 string text,
                 int fixedSize,
                 bool nullTerminator = true,
-                Encoding encoding = null)
+                Encoding? encoding = null)
         {
             Write(text, fixedSize, nullTerminator ? "\0" : null, encoding);
         }
@@ -295,7 +295,7 @@ namespace Yarhl.IO
                 string text,
                 Type sizeType,
                 bool nullTerminator = false,
-                Encoding encoding = null,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             Write(text, sizeType, nullTerminator ? "\0" : null, encoding, maxSize);
@@ -316,8 +316,8 @@ namespace Yarhl.IO
         /// </remarks>
         public void Write(
                 string text,
-                string terminator,
-                Encoding encoding = null,
+                string? terminator,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             if (text == null)
@@ -354,8 +354,8 @@ namespace Yarhl.IO
         public void Write(
                 string text,
                 int fixedSize,
-                string terminator,
-                Encoding encoding = null)
+                string? terminator,
+                Encoding? encoding = null)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -394,8 +394,8 @@ namespace Yarhl.IO
         public void Write(
                 string text,
                 Type sizeType,
-                string terminator,
-                Encoding encoding = null,
+                string? terminator,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             if (text == null)
@@ -498,6 +498,9 @@ namespace Yarhl.IO
         /// <typeparam name="T">The type of the value.</typeparam>
         public void WriteOfType<T>(T val)
         {
+            if (val == null)
+                throw new ArgumentNullException(nameof(val));
+
             WriteOfType(typeof(T), val);
         }
 
@@ -626,7 +629,7 @@ namespace Yarhl.IO
                     WriteOfType(attr.WriteAs, value);
                 } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
                     var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
-                    Encoding encoding = null;
+                    Encoding? encoding = null;
                     if (attr.CodePage != -1) {
                         encoding = Encoding.GetEncoding(attr.CodePage);
                     }

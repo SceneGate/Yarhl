@@ -13,4 +13,12 @@
         "editor.formatOnType": true
     },
     "prettier.proseWrap": "always",
+    "cSpell.words": [
+        "Conv",
+        "cref",
+        "Dependee",
+        "finalizer",
+        "msgctxt",
+        "Msgid"
+    ],
 }

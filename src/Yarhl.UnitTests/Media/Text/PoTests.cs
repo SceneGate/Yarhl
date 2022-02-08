@@ -31,7 +31,7 @@ namespace Yarhl.UnitTests.Media.Text
         public void DefaultValues()
         {
             var po = new Po();
-            Assert.IsNull(po.Header);
+            Assert.That(po.Header, Is.Not.Null);
             Assert.IsEmpty(po.Entries);
         }
 
@@ -57,27 +57,6 @@ namespace Yarhl.UnitTests.Media.Text
         {
             var po = CreateDummyFormat();
             Assert.That(() => po.Header = null, Throws.Nothing);
-        }
-
-        [Test]
-        public void SetHeaderWithMissingFieldsThrowsException()
-        {
-            var po = CreateDummyFormat();
-            var header = new PoHeader();
-
-            var exception = Throws.InstanceOf<FormatException>()
-                .With.Message.EqualTo("ProjectIdVersion is empty");
-            Assert.That(() => po.Header = header, exception);
-
-            header.ProjectIdVersion = "id";
-            exception = Throws.InstanceOf<FormatException>()
-                .With.Message.EqualTo("ReportMsgidBugsTo is empty");
-            Assert.That(() => po.Header = header, exception);
-
-            header.ReportMsgidBugsTo = "yo";
-            exception = Throws.InstanceOf<FormatException>()
-                .With.Message.EqualTo("Language is empty");
-            Assert.That(() => po.Header = header, exception);
         }
 
         [Test]

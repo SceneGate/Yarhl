@@ -27,13 +27,26 @@ namespace Yarhl.FileFormat
     public class ConverterMetadata : IExportMetadata
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ConverterMetadata" /> class.
+        /// </summary>
+        public ConverterMetadata()
+        {
+            // MEF should always set these properties, so they won't be null.
+            // We set some initial values to ensure later they are not set to null.
+            Name = "<invalid>";
+            Type = typeof(ConverterMetadata);
+            InternalSources = Type.EmptyTypes;
+            InternalDestinations = Type.EmptyTypes;
+        }
+
+        /// <summary>
         /// Gets or sets the full name of the type. Shortcut of Type.FullName.
         /// </summary>
         /// <value>The full name of the type.</value>
         public string Name { get; set; }
 
         /// <summary>
-        /// Gets or sets the type of class implemeting the converter.
+        /// Gets or sets the type of class implementing the converter.
         /// </summary>
         /// <value>Type of the converter.</value>
         public Type Type { get; set; }
@@ -58,12 +71,8 @@ namespace Yarhl.FileFormat
         /// <returns>List of source types that can convert from.</returns>
         public Type[] GetSources()
         {
-            if (!(InternalSources is Type[] sourceList)) {
-                if (InternalSources != null) {
-                    sourceList = new[] { (Type)InternalSources };
-                } else {
-                    sourceList = Type.EmptyTypes;
-                }
+            if (InternalSources is not Type[] sourceList) {
+                sourceList = new[] { (Type)InternalSources };
             }
 
             return sourceList;
@@ -75,12 +84,8 @@ namespace Yarhl.FileFormat
         /// <returns>Destination types it can convert to.</returns>
         public Type[] GetDestinations()
         {
-            if (!(InternalDestinations is Type[] destList)) {
-                if (InternalDestinations != null) {
-                    destList = new[] { (Type)InternalDestinations };
-                } else {
-                    destList = Type.EmptyTypes;
-                }
+            if (InternalDestinations is not Type[] destList) {
+                destList = new[] { (Type)InternalDestinations };
             }
 
             return destList;
@@ -124,11 +129,11 @@ namespace Yarhl.FileFormat
                 throw new ArgumentNullException(nameof(dest));
 
             Type[] sources = GetSources();
-            Type[] dests = GetDestinations();
+            Type[] destinations = GetDestinations();
 
             for (int i = 0; i < sources.Length; i++) {
                 bool matchSource = sources[i].IsAssignableFrom(source);
-                bool matchDest = dest.IsAssignableFrom(dests[i]);
+                bool matchDest = dest.IsAssignableFrom(destinations[i]);
                 if (matchSource && matchDest) {
                     return true;
                 }

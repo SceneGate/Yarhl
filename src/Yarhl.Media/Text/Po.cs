@@ -32,13 +32,13 @@ namespace Yarhl.Media.Text
         readonly IList<PoEntry> entries;
         readonly ReadOnlyCollection<PoEntry> readonlyEntries;
         readonly IDictionary<string, PoEntry> searchEntries;
-        PoHeader header;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Po"/> class.
         /// </summary>
         public Po()
         {
+            Header = new PoHeader();
             entries = new List<PoEntry>();
             readonlyEntries = new ReadOnlyCollection<PoEntry>(entries);
             searchEntries = new Dictionary<string, PoEntry>();
@@ -59,24 +59,8 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <value>The header.</value>
         public PoHeader Header {
-            get {
-                return header;
-            }
-
-            set {
-                if (value == null) {
-                    header = null;
-                } else {
-                    if (string.IsNullOrEmpty(value.ProjectIdVersion))
-                        throw new FormatException(nameof(value.ProjectIdVersion) + " is empty");
-                    if (string.IsNullOrEmpty(value.ReportMsgidBugsTo))
-                        throw new FormatException(nameof(value.ReportMsgidBugsTo) + " is empty");
-                    if (string.IsNullOrEmpty(value.Language))
-                        throw new FormatException(nameof(value.Language) + " is empty");
-
-                    header = value;
-                }
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -125,7 +109,7 @@ namespace Yarhl.Media.Text
         /// <param name="original">Original text from the entry.</param>
         /// <param name="context">Context text from the entry.</param>
         /// <returns>The found entry or null if not found.</returns>
-        public PoEntry FindEntry(string original, string context = null)
+        public PoEntry? FindEntry(string original, string? context = null)
         {
             if (string.IsNullOrEmpty(original))
                 throw new ArgumentNullException(nameof(original));
@@ -137,10 +121,8 @@ namespace Yarhl.Media.Text
         /// <inheritdoc />
         public virtual object DeepClone()
         {
-            Po clone = new Po();
-            if (header != null) {
-                clone.header = new PoHeader(header);
-            }
+            var clonedHeader = new PoHeader(Header);
+            Po clone = new Po(clonedHeader);
 
             foreach (PoEntry entry in entries)
             {
@@ -155,7 +137,7 @@ namespace Yarhl.Media.Text
             return GetKey(entry.Original, entry.Context);
         }
 
-        static string GetKey(string original, string context)
+        static string GetKey(string original, string? context)
         {
             return original + "||" + (context ?? string.Empty);
         }
@@ -168,7 +150,7 @@ namespace Yarhl.Media.Text
                         "different translations.");
             }
 
-            if (newEntry.Reference != null)
+            if (!string.IsNullOrEmpty(newEntry.Reference))
                 current.Reference += "," + newEntry.Reference;
         }
     }

@@ -33,6 +33,13 @@ namespace Yarhl.Media.Text
         {
             Original = string.Empty;
             Translated = string.Empty;
+            Context = string.Empty;
+            TranslatorComment = string.Empty;
+            ExtractedComments = string.Empty;
+            Reference = string.Empty;
+            Flags = string.Empty;
+            PreviousContext = string.Empty;
+            PreviousOriginal = string.Empty;
         }
 
         /// <summary>
@@ -40,6 +47,7 @@ namespace Yarhl.Media.Text
         /// </summary>
         /// <param name="original">Original text to translate.</param>
         public PoEntry(string original)
+            : this()
         {
             Original = original;
             Translated = string.Empty;
@@ -69,7 +77,7 @@ namespace Yarhl.Media.Text
         /// Gets or sets the original content to translate.
         /// </summary>
         /// <remarks>
-        /// <para>Entris with the same original content will be merged.</para>
+        /// <para>Entries with the same original content will be merged.</para>
         /// </remarks>
         /// <value>The original content.</value>
         public string Original { get; set; }

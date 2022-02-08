@@ -366,10 +366,12 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadToTokenWhenEOFReturnsNull()
+        public void ReadToTokenWhenEOFThrows()
         {
             var reader = new TextDataReader(stream);
-            Assert.IsNull(reader.ReadToToken("3"));
+            Assert.That(
+                () => reader.ReadToToken("3"),
+                Throws.InstanceOf<EndOfStreamException>());
         }
 
         [Test]
@@ -608,13 +610,17 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadLineWhenEOFReturnsNull()
+        public void ReadLineWhenEOFThrowsException()
         {
             var reader = new TextDataReader(stream);
-            Assert.IsNull(reader.ReadLine());
+            Assert.That(
+                () => reader.ReadLine(),
+                Throws.InstanceOf<EndOfStreamException>());
 
             reader.AutoNewLine = false;
-            Assert.IsNull(reader.ReadLine());
+            Assert.That(
+                () => reader.ReadLine(),
+                Throws.InstanceOf<EndOfStreamException>());
         }
 
         [Test]
