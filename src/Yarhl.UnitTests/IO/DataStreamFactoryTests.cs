@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,9 @@
 namespace Yarhl.UnitTests.IO
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
+    using System.Runtime.InteropServices;
     using NUnit.Framework;
     using Yarhl.IO;
     using Yarhl.IO.StreamFormat;
@@ -413,7 +415,7 @@ namespace Yarhl.UnitTests.IO
             Assert.That(File.Exists(tempFile), Is.False);
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Read),
-                Throws.Exception);
+                Throws.InstanceOf<FileNotFoundException>());
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Write),
                 Throws.Nothing);
@@ -426,16 +428,16 @@ namespace Yarhl.UnitTests.IO
 
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Read, 0, 0),
-                Throws.Exception);
+                Throws.InstanceOf<FileNotFoundException>());
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Write, 0, 0),
-                Throws.Exception);
+                Throws.Nothing);
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.ReadWrite, 0, 0),
-                Throws.Exception);
+                Throws.Nothing);
             Assert.That(
                 () => DataStreamFactory.FromFile(tempFile, FileOpenMode.Append, 0, 0),
-                Throws.Exception);
+                Throws.Nothing);
         }
 
         [Test]
@@ -564,6 +566,70 @@ namespace Yarhl.UnitTests.IO
                     DataStreamFactory.FromFile(tempFile, FileOpenMode.Read, 1, 2));
             } finally {
                 File.Delete(tempFile);
+            }
+        }
+
+        [Test]
+        public void CreateFromSymlinkPathRedirectsToTarget()
+        {
+            string originalFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string symlinkFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Assert.That(File.Exists(originalFile), Is.False);
+            Assert.That(File.Exists(symlinkFile), Is.False);
+
+            try {
+                File.WriteAllBytes(originalFile, new byte[] { 0xCA, 0xFE, 0xBA, 0xBE });
+                Assert.That(File.Exists(originalFile), Is.True);
+
+                CreateSymlinkFile(originalFile, symlinkFile);
+                Assert.That(File.Exists(symlinkFile), Is.True);
+
+                using var symlinkStream = DataStreamFactory.FromFile(symlinkFile, FileOpenMode.Read);
+                Assert.That(symlinkStream.Length, Is.EqualTo(4));
+                Assert.That(symlinkStream.ReadByte(), Is.EqualTo(0xCA));
+            } finally {
+                File.Delete(symlinkFile);
+                File.Delete(originalFile);
+            }
+        }
+
+        [Test]
+        public void CreateFromSymlinkSectionPathRedirectsToTarget()
+        {
+            string originalFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            string symlinkFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Console.WriteLine(originalFile);
+            Assert.That(File.Exists(originalFile), Is.False);
+            Assert.That(File.Exists(symlinkFile), Is.False);
+
+            try {
+                File.WriteAllBytes(originalFile, new byte[] { 0xCA, 0xFE, 0xBA, 0xBE });
+                Assert.That(File.Exists(originalFile), Is.True);
+
+                CreateSymlinkFile(originalFile, symlinkFile);
+                Assert.That(File.Exists(symlinkFile), Is.True);
+
+                using var symlinkStream = DataStreamFactory.FromFile(symlinkFile, FileOpenMode.Read, 2, 2);
+                Assert.That(symlinkStream.Length, Is.EqualTo(2));
+                Assert.That(symlinkStream.ReadByte(), Is.EqualTo(0xBA));
+            } finally {
+                File.Delete(symlinkFile);
+                File.Delete(originalFile);
+            }
+        }
+
+        private void CreateSymlinkFile(string originalFile, string symlinkFile)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                using var p = Process.Start("cmd.exe", $"/C mklink {symlinkFile} {originalFile}");
+                p.WaitForExit();
+                Assert.That(p.ExitCode, Is.EqualTo(0));
+            } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                using var p = Process.Start("ln", $"-s {originalFile} {symlinkFile}");
+                p.WaitForExit();
+                Assert.That(p.ExitCode, Is.EqualTo(0));
+            } else {
+                Assert.Inconclusive("Unknown how to create symlinks for this platform");
             }
         }
     }

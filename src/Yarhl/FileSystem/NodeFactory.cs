@@ -212,6 +212,10 @@ namespace Yarhl.FileSystem
         /// <param name="filePath">File path.</param>
         /// <param name="nodeName">Node name.</param>
         /// <param name="mode">The mode to open the file.</param>
+        /// <remarks>
+        /// <para>Add the tag "FileInfo" with the file info status at the time it's created.</para>
+        /// <para>In the case of Windows Symlinks, it will be the status of the link file, not the target.</para>
+        /// </remarks>
         [SuppressMessage(
             "Reliability",
             "CA2000:Dispose objects before losing scope",
