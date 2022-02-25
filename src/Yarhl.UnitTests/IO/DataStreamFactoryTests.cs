@@ -622,8 +622,8 @@ namespace Yarhl.UnitTests.IO
         {
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
                 using var p = Process.Start("cmd.exe", $"/C mklink {symlinkFile} {originalFile}");
-                Assert.That(p.ExitCode, Is.EqualTo(0));
                 p.WaitForExit();
+                Assert.That(p.ExitCode, Is.EqualTo(0));
             } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
                 using var p = Process.Start("ln", $"-s {originalFile} {symlinkFile}");
                 p.WaitForExit();
