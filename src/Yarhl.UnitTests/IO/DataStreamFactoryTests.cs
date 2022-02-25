@@ -579,16 +579,10 @@ namespace Yarhl.UnitTests.IO
 
             try {
                 File.WriteAllBytes(originalFile, new byte[] { 0xCA, 0xFE, 0xBA, 0xBE });
+                Assert.That(File.Exists(originalFile), Is.True);
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                    using var p = Process.Start("cmd.exe", $"/C mklink {symlinkFile} {originalFile}");
-                    p.WaitForExit();
-                } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
-                    using var p = Process.Start("ln", $"-s {symlinkFile} {originalFile}");
-                    p.WaitForExit();
-                } else {
-                    Assert.Inconclusive("Unknown how to create symlinks for this platform");
-                }
+                CreateSymlinkFile(originalFile, symlinkFile);
+                Assert.That(File.Exists(symlinkFile), Is.True);
 
                 using var symlinkStream = DataStreamFactory.FromFile(symlinkFile, FileOpenMode.Read);
                 Assert.That(symlinkStream.Length, Is.EqualTo(4));
@@ -604,21 +598,16 @@ namespace Yarhl.UnitTests.IO
         {
             string originalFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             string symlinkFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Console.WriteLine(originalFile);
             Assert.That(File.Exists(originalFile), Is.False);
             Assert.That(File.Exists(symlinkFile), Is.False);
 
             try {
                 File.WriteAllBytes(originalFile, new byte[] { 0xCA, 0xFE, 0xBA, 0xBE });
+                Assert.That(File.Exists(originalFile), Is.True);
 
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
-                    using var p = Process.Start("cmd.exe", $"/C mklink {symlinkFile} {originalFile}");
-                    p.WaitForExit();
-                } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
-                    using var p = Process.Start("ln", $"-s {symlinkFile} {originalFile}");
-                    p.WaitForExit();
-                } else {
-                    Assert.Inconclusive("Unknown how to create symlinks for this platform");
-                }
+                CreateSymlinkFile(originalFile, symlinkFile);
+                Assert.That(File.Exists(symlinkFile), Is.True);
 
                 using var symlinkStream = DataStreamFactory.FromFile(symlinkFile, FileOpenMode.Read, 2, 2);
                 Assert.That(symlinkStream.Length, Is.EqualTo(2));
@@ -626,6 +615,21 @@ namespace Yarhl.UnitTests.IO
             } finally {
                 File.Delete(symlinkFile);
                 File.Delete(originalFile);
+            }
+        }
+
+        private void CreateSymlinkFile(string originalFile, string symlinkFile)
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
+                using var p = Process.Start("cmd.exe", $"/C mklink {symlinkFile} {originalFile}");
+                Assert.That(p.ExitCode, Is.EqualTo(0));
+                p.WaitForExit();
+            } else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)) {
+                using var p = Process.Start("ln", $"-s {originalFile} {symlinkFile}");
+                p.WaitForExit();
+                Assert.That(p.ExitCode, Is.EqualTo(0));
+            } else {
+                Assert.Inconclusive("Unknown how to create symlinks for this platform");
             }
         }
     }
