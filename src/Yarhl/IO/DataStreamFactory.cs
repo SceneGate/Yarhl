@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -152,7 +152,7 @@ namespace Yarhl.IO
             if (string.IsNullOrEmpty(path))
                 throw new ArgumentNullException(nameof(path));
             if (mode == FileOpenMode.Read && !File.Exists(path)) {
-                throw new FileNotFoundException(nameof(path));
+                throw new FileNotFoundException("File to read does not exist", path);
             }
 
             var baseStream = new LazyFileStream(path, mode);
@@ -175,7 +175,19 @@ namespace Yarhl.IO
                 throw new FileNotFoundException(nameof(path));
             }
 
-            long fileSize = new FileInfo(path).Length;
+            var info = new FileInfo(path);
+            long fileSize;
+
+            // If it's a windows symlink, get the length by opening the stream.
+            // Otherwise we would need P/Invoke calls.
+            // .NET does the redirection of the symlink in FileStream automatically.
+            if (info.Exists && info.Attributes.HasFlag(FileAttributes.ReparsePoint)) {
+                using var tempStream = new FileStream(path, FileMode.Open);
+                fileSize = tempStream.Length;
+            } else {
+                fileSize = info.Exists ? info.Length : 0;
+            }
+
             if (offset < 0 || offset > fileSize)
                 throw new ArgumentOutOfRangeException(nameof(offset));
             if (length < 0 || offset + length > fileSize)

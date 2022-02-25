@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -47,8 +47,16 @@ namespace Yarhl.IO.StreamFormat
 
             // Before the stream is initialized, we can get the
             // length so we can report it without opening the file.
+            // If it's a windows symlink, get the length by opening the stream.
+            // Otherwise we would need P/Invoke calls.
+            // .NET does the redirection of the symlink in FileStream automatically.
             var info = new FileInfo(path);
-            initialLength = info.Exists ? info.Length : 0;
+            if (info.Exists && info.Attributes.HasFlag(FileAttributes.ReparsePoint)) {
+                using var tempStream = new FileStream(path, FileMode.Open);
+                initialLength = tempStream.Length;
+            } else {
+                initialLength = info.Exists ? info.Length : 0;
+            }
         }
 
         /// <inheritdoc/>
