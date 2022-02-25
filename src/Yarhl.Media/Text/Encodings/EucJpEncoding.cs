@@ -32,10 +32,10 @@ namespace Yarhl.Media.Text.Encodings
     public sealed class EucJpEncoding : Encoding
     {
         static readonly Table TableJis212 =
-            Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0212.txt");
+            Table.FromResource($"{typeof(EucJpEncoding).Namespace}.index-jis0212.txt");
 
         static readonly Table TableJis208 =
-            Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0208.txt");
+            Table.FromResource($"{typeof(EucJpEncoding).Namespace}.index-jis0208.txt");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EucJpEncoding"/> class.
@@ -362,11 +362,12 @@ namespace Yarhl.Media.Text.Encodings
 
                 Stream? stream = null;
                 try {
+                    // Cannot be null as this is a private call with known files
+                    // If the files are not included in the build, tests will fail.
+                    #pragma warning disable SA1009 // False positive due to nullable
                     stream = Assembly.GetExecutingAssembly()
-                        .GetManifestResourceStream(path);
-                    if (stream is null) {
-                        throw new InvalidOperationException($"Resource does not exist: {path}");
-                    }
+                        .GetManifestResourceStream(path)!;
+                    #pragma warning restore SA1009
 
                     using (var reader = new StreamReader(stream)) {
                         stream = null;  // Avoid disposing twice

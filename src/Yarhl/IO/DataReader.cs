@@ -485,12 +485,12 @@ namespace Yarhl.IO
 
         dynamic ReadUsingReflection(Type type)
         {
-            object? obj = Activator.CreateInstance(type);
-
-            // Return null for Nullable<T>
-            if (obj is null) {
-                throw new InvalidOperationException("Nullable types are not supported");
-            }
+            // It returns null for Nullable<T>, but as that is a class and
+            // it won't have the serializable attribute, it will throw an
+            // unsupported exception before. So this can't be null at this point.
+            #pragma warning disable SA1009 // False positive
+            object obj = Activator.CreateInstance(type)!;
+            #pragma warning restore SA1009
 
             PropertyInfo[] properties = type.GetProperties(
                 BindingFlags.DeclaredOnly |

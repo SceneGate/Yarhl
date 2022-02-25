@@ -25,7 +25,6 @@ namespace Yarhl.UnitTests.IO
     using System.Text;
     using NUnit.Framework;
     using Yarhl.IO;
-    using Yarhl.IO.Serialization;
     using Yarhl.IO.Serialization.Attributes;
 
     [TestFixture]
@@ -1176,6 +1175,17 @@ namespace Yarhl.UnitTests.IO
             Assert.AreEqual(1, obj.Int24Value);
         }
 
+        [Test]
+        public void ReflectionReadingDoesNotSupportNullable()
+        {
+            stream.Write(new byte[4], 0, 4);
+            stream.Position = 0;
+
+            Assert.That(
+                () => reader.Read<ObjectWithNullable>(),
+                Throws.InstanceOf<FormatException>());
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage(
             "Microsoft.Performance",
             "CA1812:Class never instantiated",
@@ -1459,6 +1469,12 @@ namespace Yarhl.UnitTests.IO
         {
             [BinaryInt24]
             public int Int24Value { get; set; }
+        }
+
+        [Yarhl.IO.Serialization.Attributes.Serializable]
+        private class ObjectWithNullable
+        {
+            public int? NullValue { get; set; }
         }
     }
 }
