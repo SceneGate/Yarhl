@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -521,12 +521,13 @@ namespace Yarhl.IO
                 buffer[i] = val;
 
             int written = 0;
-            int bytesToWrite = 0;
+            int bytesToWrite;
             do {
-                if (written + BufferSize > times)
+                if (written + BufferSize > times) {
                     bytesToWrite = (int)(times - written);
-                else
+                } else {
                     bytesToWrite = BufferSize;
+                }
 
                 written += bytesToWrite;
                 Stream.Write(buffer, 0, bytesToWrite);
@@ -547,7 +548,7 @@ namespace Yarhl.IO
                 return;
 
             // We only increase the size of the stream by writing at the end
-            Stream.Seek(0, SeekOrigin.End);
+            _ = Stream.Seek(0, SeekOrigin.End);
             long times = length - Stream.Length;
             WriteTimes(val, times);
         }
@@ -607,41 +608,37 @@ namespace Yarhl.IO
                 }
 
                 EndiannessMode currentEndianness = Endianness;
-                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
-                if (forceEndianness) {
-                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
-                    Endianness = attr.Mode;
+                var endiannessAttr = property.GetCustomAttribute<BinaryForceEndiannessAttribute>();
+                if (endiannessAttr is not null) {
+                    Endianness = endiannessAttr.Mode;
                 }
 
                 dynamic value = property.GetValue(obj);
 
-                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
+                if (property.PropertyType == typeof(bool) && property.GetCustomAttribute<BinaryBooleanAttribute>() is { } boolAttr) {
                     // booleans can only be written if they have the attribute.
-                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
-                    dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
-                    WriteOfType(attr.WriteAs, typeValue);
+                    dynamic typeValue = value ? boolAttr.TrueValue : boolAttr.FalseValue;
+                    WriteOfType(boolAttr.WriteAs, typeValue);
                 } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
                     // write the number as int24
                     WriteNumber((uint)value, 24);
-                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                } else if (property.PropertyType.IsEnum && property.GetCustomAttribute<BinaryEnumAttribute>() is { } enumAttr) {
                     // enums can only be written if they have the attribute.
-                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
-                    WriteOfType(attr.WriteAs, value);
-                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
-                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
+                    WriteOfType(enumAttr.WriteAs, value);
+                } else if (property.PropertyType == typeof(string) && property.GetCustomAttribute<BinaryStringAttribute>() is { } stringAttr) {
                     Encoding? encoding = null;
-                    if (attr.CodePage != -1) {
-                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    if (stringAttr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(stringAttr.CodePage);
                     }
 
-                    if (attr.SizeType == null) {
-                        if (attr.FixedSize == -1) {
-                            Write((string)value, attr.Terminator, encoding, attr.MaxSize);
+                    if (stringAttr.SizeType is null) {
+                        if (stringAttr.FixedSize == -1) {
+                            Write((string)value, stringAttr.Terminator, encoding, stringAttr.MaxSize);
                         } else {
-                            Write((string)value, attr.FixedSize, attr.Terminator, encoding);
+                            Write((string)value, stringAttr.FixedSize, stringAttr.Terminator, encoding);
                         }
                     } else {
-                        Write((string)value, attr.SizeType, attr.Terminator, encoding, attr.MaxSize);
+                        Write((string)value, stringAttr.SizeType, stringAttr.Terminator, encoding, stringAttr.MaxSize);
                     }
                 } else {
                     WriteOfType(property.PropertyType, value);

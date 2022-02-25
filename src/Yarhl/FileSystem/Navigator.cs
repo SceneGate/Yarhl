@@ -65,7 +65,7 @@ namespace Yarhl.FileSystem
                 new[] { NodeSystem.PathSeparator },
                 StringSplitOptions.RemoveEmptyEntries);
 
-            T currentNode = rootNode;
+            T? currentNode = rootNode;
             foreach (string segment in paths) {
                 currentNode = currentNode.Children[segment];
                 if (currentNode == null) {

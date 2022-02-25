@@ -62,7 +62,7 @@ namespace Yarhl.FileSystem
         public Node(Node node)
             : this(node != null ? node.Name : string.Empty)
         {
-            if (node!.Format != null && !(node.Format is ICloneableFormat))
+            if (node!.Format != null && node.Format is not ICloneableFormat)
                 throw new InvalidOperationException("Format does not implement ICloneableFormat interface.");
 
             ICloneableFormat? newFormat = null;
@@ -94,9 +94,7 @@ namespace Yarhl.FileSystem
         /// <value>
         /// DataStream if the format is IBinary, null otherwise.
         /// </value>
-        public DataStream? Stream {
-            get { return GetFormatAs<IBinary>()?.Stream; }
-        }
+        public DataStream? Stream => GetFormatAs<IBinary>()?.Stream;
 
         /// <summary>
         /// Gets a value indicating whether the format is a container of nodes.
@@ -105,9 +103,7 @@ namespace Yarhl.FileSystem
         /// <see langword="true"/> if the format is a container; otherwise,
         /// <see langword="false"/>.
         /// </value>
-        public bool IsContainer {
-            get { return Format is NodeContainerFormat; }
-        }
+        public bool IsContainer => Format is NodeContainerFormat;
 
         /// <summary>
         /// Gets the format as the specified type.
@@ -250,7 +246,7 @@ namespace Yarhl.FileSystem
                     "Cannot transform a node without format");
             }
 
-            var result = ConvertFormat.With<TConv, TParam>(param, Format);
+            object result = ConvertFormat.With<TConv, TParam>(param, Format);
             CastAndChangeFormat(result);
 
             return this;

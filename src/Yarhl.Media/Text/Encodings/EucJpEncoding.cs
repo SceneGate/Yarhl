@@ -231,7 +231,7 @@ namespace Yarhl.Media.Text.Encodings
             // 1
             while (stream.Position < stream.Length) {
                 byte[] buffer = new byte[4];
-                stream.Read(buffer, 0, 4);
+                _ = stream.Read(buffer, 0, 4);
                 int codePoint = BitConverter.ToInt32(buffer, 0);
 
                 // 6
@@ -272,13 +272,15 @@ namespace Yarhl.Media.Text.Encodings
         {
             var fallback = EncoderFallback.CreateFallbackBuffer();
             string ch = char.ConvertFromUtf32(codePoint);
-            if (ch.Length == 1)
-                fallback.Fallback(ch[0], 0);
-            else
-                fallback.Fallback(ch[0], ch[1], 0);
+            if (ch.Length == 1) {
+                _ = fallback.Fallback(ch[0], 0);
+            } else {
+                _ = fallback.Fallback(ch[0], ch[1], 0);
+            }
 
-            while (fallback.Remaining > 0)
+            while (fallback.Remaining > 0) {
                 encodedByte(stream, (byte)fallback.GetNextChar());
+            }
         }
 
         /// <summary>
@@ -362,12 +364,15 @@ namespace Yarhl.Media.Text.Encodings
                 try {
                     stream = Assembly.GetExecutingAssembly()
                         .GetManifestResourceStream(path);
+                    if (stream is null) {
+                        throw new InvalidOperationException($"Resource does not exist: {path}");
+                    }
 
                     using (var reader = new StreamReader(stream)) {
                         stream = null;  // Avoid disposing twice
 
                         while (!reader.EndOfStream) {
-                            string line = reader.ReadLine();
+                            string? line = reader.ReadLine();
                             if (string.IsNullOrWhiteSpace(line))
                                 continue;
                             if (line[0] == '#')
@@ -378,7 +383,7 @@ namespace Yarhl.Media.Text.Encodings
                             string indexText = fields[0].TrimStart(' ');
                             int index = System.Convert.ToInt32(indexText, 10);
 
-                            string codeText = fields[1].Substring(2);
+                            string codeText = fields[1][2..];
                             int codePoint = System.Convert.ToInt32(codeText, 16);
 
                             table.Index2CodePoint[index] = codePoint;
