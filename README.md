@@ -30,11 +30,7 @@ Stable releases are available from nuget.org:
 - [Yarhl](https://www.nuget.org/packages/Yarhl)
 - [Yarhl.Media](https://www.nuget.org/packages/Yarhl.Media)
 
-The libraries target .NET Standard 2.0. The tests (so the library) runs with the
-supported runtimes:
-
-- .NET 6.0
-- .NET Framework 4.8 or Mono (latest on CI)
+The libraries only support the latest version of .NET and its LTS (.NET 6).
 
 Preview releases can be found in this
 [Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).

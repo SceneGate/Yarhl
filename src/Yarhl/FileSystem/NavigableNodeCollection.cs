@@ -46,8 +46,6 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <param name="name">Node name.</param>
         /// <returns>The node with the same name or null if not found.</returns>
-        public T this[string name] {
-            get { return this.FirstOrDefault((node) => node.Name == name); }
-        }
+        public T? this[string name] => this.FirstOrDefault(node => node?.Name == name);
     }
 }

@@ -61,7 +61,7 @@ several positions.
   position and move.
 - [`PopPosition`](xref:Yarhl.IO.DataStream.PopPosition): restore the last saved
   position.
-- [`RunInPosition`](<xref:Yarhl.IO.DataStream.RunInPosition(System.Action,System.Int64,Yarhl.IO.SeekMode)>):
+- [`RunInPosition`](<xref:Yarhl.IO.DataStream.RunInPosition(System.Action,System.Int64,System.IO.SeekOrigin)>):
   push, run the lambda expression and pop again.
 
 #### Read and Write

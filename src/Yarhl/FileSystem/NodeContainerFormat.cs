@@ -80,12 +80,12 @@ namespace Yarhl.FileSystem
             } else {
                 for (int i = Root.Children.Count - 1; i >= 0; i--) {
                     Node child = Root.Children[i];
-                    Node foundNode = newNode.Children.FirstOrDefault(node => node.Name == child.Name);
+                    Node? foundNode = newNode.Children.FirstOrDefault(node => node.Name == child.Name);
 
                     if (foundNode != null && child.Format is NodeContainerFormat childFormat) {
                         childFormat.MoveChildrenTo(foundNode, true);
                     } else {
-                        Root.Remove(child);
+                        _ = Root.Remove(child);
                         newNode.Add(child);
                     }
                 }

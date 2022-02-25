@@ -3,8 +3,7 @@
 
   <PropertyGroup>
     <Description>Yarhl plugin with support of text converters.</Description>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <LangVersion>10.0</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
