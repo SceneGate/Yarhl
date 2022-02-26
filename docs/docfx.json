@@ -4,8 +4,8 @@
         "src": [
           {
             "files": [
-              "Yarhl/Yarhl.csproj",
-              "Yarhl.Media/Yarhl.Media.csproj"
+              "Yarhl/bin/**/Yarhl.dll",
+              "Yarhl.Media/bin/**/Yarhl.Media.dll"
             ],
             "src": "../src"
           }

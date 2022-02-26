@@ -35,8 +35,7 @@ namespace Yarhl.IO
 
         static TextDataReader()
         {
-            // Make sure that the shift-jis encoding is initialized in
-            // .NET Core.
+            // Make sure that the shift-jis encoding is initialized.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
@@ -72,7 +71,7 @@ namespace Yarhl.IO
 
             Stream = stream as DataStream ?? new DataStream(stream, 0, stream.Length, false);
             Encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
-            NewLine = Environment.NewLine;
+            newLine = Environment.NewLine;
             AutoNewLine = true;
 
             reader = new DataReader(stream) {
@@ -152,16 +151,19 @@ namespace Yarhl.IO
         /// <summary>
         /// Reads a string until a string / token is found.
         /// </summary>
-        /// <returns>The read string.</returns>
         /// <param name="token">Token to find.</param>
+        /// <returns>The read string or null.</returns>
+        /// <exception cref="EndOfStreamException">
+        /// If the stream position is at the end.
+        /// </exception>
         public string ReadToToken(string token)
         {
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
 
-            // If starting is EOF, then return null
+            // If starting is EOF, then throw exception.
             if (Stream.Position >= Stream.Length) {
-                return null;
+                throw new EndOfStreamException();
             }
 
             SkipPreamble();

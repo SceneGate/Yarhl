@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -96,9 +96,9 @@ namespace Yarhl.Media.Text
         /// true if the specified object is equal to the current object;
         /// otherwise, false.
         /// </returns>
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is ReplacerEntry otherEntry)) {
+            if (obj is not ReplacerEntry otherEntry) {
                 return false;
             }
 

@@ -41,7 +41,7 @@ namespace Yarhl.FileSystem
         /// considered to be a full path. Otherwise, it would be a relative
         /// path starting with the node in the argument.</para>
         /// </remarks>
-        public static T SearchNode<T>(T rootNode, string path)
+        public static T? SearchNode<T>(T rootNode, string path)
             where T : NavigableNode<T>
         {
             if (rootNode == null)
@@ -65,7 +65,7 @@ namespace Yarhl.FileSystem
                 new[] { NodeSystem.PathSeparator },
                 StringSplitOptions.RemoveEmptyEntries);
 
-            T currentNode = rootNode;
+            T? currentNode = rootNode;
             foreach (string segment in paths) {
                 currentNode = currentNode.Children[segment];
                 if (currentNode == null) {

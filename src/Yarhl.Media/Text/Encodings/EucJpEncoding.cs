@@ -32,10 +32,10 @@ namespace Yarhl.Media.Text.Encodings
     public sealed class EucJpEncoding : Encoding
     {
         static readonly Table TableJis212 =
-            Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0212.txt");
+            Table.FromResource($"{typeof(EucJpEncoding).Namespace}.index-jis0212.txt");
 
         static readonly Table TableJis208 =
-            Table.FromResource("Yarhl.Media.Text.Encodings.index-jis0208.txt");
+            Table.FromResource($"{typeof(EucJpEncoding).Namespace}.index-jis0208.txt");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EucJpEncoding"/> class.
@@ -103,7 +103,7 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="charIndex">Index in the char array.</param>
         /// <param name="charCount">Number of chars to convert.</param>
         /// <param name="bytes">Output byte array.</param>
-        /// <param name="byteIndex">Indes in the byte array.</param>
+        /// <param name="byteIndex">Index in the byte array.</param>
         public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
         {
             if (chars == null)
@@ -231,7 +231,7 @@ namespace Yarhl.Media.Text.Encodings
             // 1
             while (stream.Position < stream.Length) {
                 byte[] buffer = new byte[4];
-                stream.Read(buffer, 0, 4);
+                _ = stream.Read(buffer, 0, 4);
                 int codePoint = BitConverter.ToInt32(buffer, 0);
 
                 // 6
@@ -272,13 +272,15 @@ namespace Yarhl.Media.Text.Encodings
         {
             var fallback = EncoderFallback.CreateFallbackBuffer();
             string ch = char.ConvertFromUtf32(codePoint);
-            if (ch.Length == 1)
-                fallback.Fallback(ch[0], 0);
-            else
-                fallback.Fallback(ch[0], ch[1], 0);
+            if (ch.Length == 1) {
+                _ = fallback.Fallback(ch[0], 0);
+            } else {
+                _ = fallback.Fallback(ch[0], ch[1], 0);
+            }
 
-            while (fallback.Remaining > 0)
+            while (fallback.Remaining > 0) {
                 encodedByte(stream, (byte)fallback.GetNextChar());
+            }
         }
 
         /// <summary>
@@ -358,18 +360,20 @@ namespace Yarhl.Media.Text.Encodings
             {
                 Table table = new Table();
 
-                Stream stream = null;
+                Stream? stream = null;
                 try {
+                    // Cannot be null as this is a private call with known files
+                    // If the files are not included in the build, tests will fail.
+                    #pragma warning disable SA1009 // False positive due to nullable
                     stream = Assembly.GetExecutingAssembly()
-                        .GetManifestResourceStream(path);
+                        .GetManifestResourceStream(path)!;
+                    #pragma warning restore SA1009
 
                     using (var reader = new StreamReader(stream)) {
-#pragma warning disable IDISP003
                         stream = null;  // Avoid disposing twice
-#pragma warning restore IDISP003
 
                         while (!reader.EndOfStream) {
-                            string line = reader.ReadLine();
+                            string? line = reader.ReadLine();
                             if (string.IsNullOrWhiteSpace(line))
                                 continue;
                             if (line[0] == '#')
@@ -380,7 +384,7 @@ namespace Yarhl.Media.Text.Encodings
                             string indexText = fields[0].TrimStart(' ');
                             int index = System.Convert.ToInt32(indexText, 10);
 
-                            string codeText = fields[1].Substring(2);
+                            string codeText = fields[1][2..];
                             int codePoint = System.Convert.ToInt32(codeText, 16);
 
                             table.Index2CodePoint[index] = codePoint;

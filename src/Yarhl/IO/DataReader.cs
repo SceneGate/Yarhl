@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,8 +35,7 @@ namespace Yarhl.IO
     {
         static DataReader()
         {
-            // Make sure that the shift-jis encoding is initialized in
-            // .NET Core.
+            // Make sure that the shift-jis encoding is initialized.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
@@ -232,7 +231,7 @@ namespace Yarhl.IO
                 throw new EndOfStreamException();
 
             byte[] buffer = new byte[count];
-            Stream.Read(buffer, 0, count);
+            _ = Stream.Read(buffer, 0, count);
             return buffer;
         }
 
@@ -249,7 +248,7 @@ namespace Yarhl.IO
         /// <param name="encoding">
         /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
         /// </param>
-        public char ReadChar(Encoding encoding = null)
+        public char ReadChar(Encoding? encoding = null)
         {
             return ReadChars(1, encoding)[0];
         }
@@ -268,7 +267,7 @@ namespace Yarhl.IO
         /// <param name="encoding">
         /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
         /// </param>
-        public char[] ReadChars(int count, Encoding encoding = null)
+        public char[] ReadChars(int count, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -300,7 +299,7 @@ namespace Yarhl.IO
             // takes to get them and decode again with the original fallbacks
             int exactBytes = encoding.GetByteCount(charArray, 0, count);
             charArray = encoding.GetChars(buffer, 0, exactBytes);
-            Stream.Seek(startPos + exactBytes, SeekOrigin.Begin);
+            _ = Stream.Seek(startPos + exactBytes, SeekOrigin.Begin);
 
             return charArray;
         }
@@ -313,7 +312,7 @@ namespace Yarhl.IO
         /// <param name="encoding">
         /// Encoding to use or <c>null</c> to use <see cref="DefaultEncoding" />.
         /// </param>
-        public string ReadStringToToken(string token, Encoding encoding = null)
+        public string ReadStringToToken(string token, Encoding? encoding = null)
         {
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
@@ -361,12 +360,12 @@ namespace Yarhl.IO
             // Get the final string and the number exact of bytes to seek
             int endPos = matchIndex + token.Length;
             int exactBytes = encoding.GetByteCount(text.ToCharArray(0, endPos));
-            Stream.Seek(startPos + exactBytes, SeekOrigin.Begin);
+            _ = Stream.Seek(startPos + exactBytes, SeekOrigin.Begin);
 
             // Now we know the number of bytes, decode again with the original
             // encoding so it can apply its original decoder fallback.
             text = encoding.GetString(textBuffer.ToArray(), 0, exactBytes);
-            text = text.Substring(0, text.Length - token.Length);
+            text = text[..^token.Length];
 
             return text;
         }
@@ -376,7 +375,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <returns>The string.</returns>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadString(Encoding encoding = null)
+        public string ReadString(Encoding? encoding = null)
         {
             return ReadStringToToken("\0", encoding);
         }
@@ -387,7 +386,7 @@ namespace Yarhl.IO
         /// <returns>The string.</returns>
         /// <param name="bytesCount">Size of the string in bytes.</param>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadString(int bytesCount, Encoding encoding = null)
+        public string ReadString(int bytesCount, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -402,7 +401,7 @@ namespace Yarhl.IO
         /// <returns>The string.</returns>
         /// <param name="sizeType">Type of the size field.</param>
         /// <param name="encoding">Optional encoding to use.</param>
-        public string ReadString(Type sizeType, Encoding encoding = null)
+        public string ReadString(Type sizeType, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -416,6 +415,7 @@ namespace Yarhl.IO
         /// Reads a field by type.
         /// </summary>
         /// <returns>The field.</returns>
+        /// <remarks>Nullable types are not supported.</remarks>
         /// <param name="type">Type of the field.</param>
         public dynamic ReadByType(Type type)
         {
@@ -479,13 +479,19 @@ namespace Yarhl.IO
 
             long remainingBytes = Stream.Position.Pad(padding) - Stream.Position;
             if (remainingBytes > 0) {
-                Stream.Seek(remainingBytes, SeekOrigin.Current);
+                _ = Stream.Seek(remainingBytes, SeekOrigin.Current);
             }
         }
 
         dynamic ReadUsingReflection(Type type)
         {
-            object obj = Activator.CreateInstance(type);
+            // It returns null for Nullable<T>, but as that is a class and
+            // it won't have the serializable attribute, it will throw an
+            // unsupported exception before. So this can't be null at this point.
+            #pragma warning disable SA1009 // False positive
+            object obj = Activator.CreateInstance(type)!;
+            #pragma warning restore SA1009
+
             PropertyInfo[] properties = type.GetProperties(
                 BindingFlags.DeclaredOnly |
                 BindingFlags.Public |
@@ -500,14 +506,14 @@ namespace Yarhl.IO
                 EndiannessMode currentEndianness = Endianness;
                 bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
                 if (forceEndianness) {
-                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
-                    Endianness = attr.Mode;
+                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute)) as BinaryForceEndiannessAttribute;
+                    Endianness = attr!.Mode;
                 }
 
                 if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
                     // booleans can only be read if they have the attribute.
-                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
-                    dynamic value = ReadByType(attr.ReadAs);
+                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute)) as BinaryBooleanAttribute;
+                    dynamic value = ReadByType(attr!.ReadAs);
                     property.SetValue(obj, value == (dynamic)attr.TrueValue);
                 } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
                     // read the number as int24.
@@ -515,13 +521,13 @@ namespace Yarhl.IO
                     property.SetValue(obj, value);
                 } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
                     // enums can only be read if they have the attribute.
-                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
-                    dynamic value = ReadByType(attr.ReadAs);
+                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute)) as BinaryEnumAttribute;
+                    dynamic value = ReadByType(attr!.ReadAs);
                     property.SetValue(obj, Enum.ToObject(property.PropertyType, value));
                 } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
-                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
-                    Encoding encoding = null;
-                    if (attr.CodePage != -1) {
+                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute)) as BinaryStringAttribute;
+                    Encoding? encoding = null;
+                    if (attr!.CodePage != -1) {
                         encoding = Encoding.GetEncoding(attr.CodePage);
                     }
 

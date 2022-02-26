@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,7 @@ namespace Yarhl.IO
     {
         static DataWriter()
         {
-            // Make sure that the shift-jis encoding is initialized in
-            // .NET Core.
+            // Make sure that the shift-jis encoding is initialized.
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
@@ -210,7 +209,7 @@ namespace Yarhl.IO
         /// <remarks>
         /// <para>If the encoding is null, it will use the default encoding.</para>
         /// </remarks>
-        public void Write(char ch, Encoding encoding = null)
+        public void Write(char ch, Encoding? encoding = null)
         {
             if (encoding == null)
                 encoding = DefaultEncoding;
@@ -226,7 +225,7 @@ namespace Yarhl.IO
         /// <remarks>
         /// <para>If the encoding is null, it will use the default encoding.</para>
         /// </remarks>
-        public void Write(char[] chars, Encoding encoding = null)
+        public void Write(char[] chars, Encoding? encoding = null)
         {
             if (chars == null)
                 throw new ArgumentNullException(nameof(chars));
@@ -252,7 +251,7 @@ namespace Yarhl.IO
         public void Write(
                 string text,
                 bool nullTerminator = true,
-                Encoding encoding = null,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             Write(text, nullTerminator ? "\0" : null, encoding, maxSize);
@@ -274,7 +273,7 @@ namespace Yarhl.IO
                 string text,
                 int fixedSize,
                 bool nullTerminator = true,
-                Encoding encoding = null)
+                Encoding? encoding = null)
         {
             Write(text, fixedSize, nullTerminator ? "\0" : null, encoding);
         }
@@ -296,7 +295,7 @@ namespace Yarhl.IO
                 string text,
                 Type sizeType,
                 bool nullTerminator = false,
-                Encoding encoding = null,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             Write(text, sizeType, nullTerminator ? "\0" : null, encoding, maxSize);
@@ -317,8 +316,8 @@ namespace Yarhl.IO
         /// </remarks>
         public void Write(
                 string text,
-                string terminator,
-                Encoding encoding = null,
+                string? terminator,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             if (text == null)
@@ -355,8 +354,8 @@ namespace Yarhl.IO
         public void Write(
                 string text,
                 int fixedSize,
-                string terminator,
-                Encoding encoding = null)
+                string? terminator,
+                Encoding? encoding = null)
         {
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
@@ -395,8 +394,8 @@ namespace Yarhl.IO
         public void Write(
                 string text,
                 Type sizeType,
-                string terminator,
-                Encoding encoding = null,
+                string? terminator,
+                Encoding? encoding = null,
                 int maxSize = -1)
         {
             if (text == null)
@@ -499,6 +498,9 @@ namespace Yarhl.IO
         /// <typeparam name="T">The type of the value.</typeparam>
         public void WriteOfType<T>(T val)
         {
+            if (val == null)
+                throw new ArgumentNullException(nameof(val));
+
             WriteOfType(typeof(T), val);
         }
 
@@ -519,12 +521,13 @@ namespace Yarhl.IO
                 buffer[i] = val;
 
             int written = 0;
-            int bytesToWrite = 0;
+            int bytesToWrite;
             do {
-                if (written + BufferSize > times)
+                if (written + BufferSize > times) {
                     bytesToWrite = (int)(times - written);
-                else
+                } else {
                     bytesToWrite = BufferSize;
+                }
 
                 written += bytesToWrite;
                 Stream.Write(buffer, 0, bytesToWrite);
@@ -545,7 +548,7 @@ namespace Yarhl.IO
                 return;
 
             // We only increase the size of the stream by writing at the end
-            Stream.Seek(0, SeekOrigin.End);
+            _ = Stream.Seek(0, SeekOrigin.End);
             long times = length - Stream.Length;
             WriteTimes(val, times);
         }
@@ -605,41 +608,37 @@ namespace Yarhl.IO
                 }
 
                 EndiannessMode currentEndianness = Endianness;
-                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
-                if (forceEndianness) {
-                    var attr = (BinaryForceEndiannessAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute));
-                    Endianness = attr.Mode;
+                var endiannessAttr = property.GetCustomAttribute<BinaryForceEndiannessAttribute>();
+                if (endiannessAttr is not null) {
+                    Endianness = endiannessAttr.Mode;
                 }
 
                 dynamic value = property.GetValue(obj);
 
-                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
+                if (property.PropertyType == typeof(bool) && property.GetCustomAttribute<BinaryBooleanAttribute>() is { } boolAttr) {
                     // booleans can only be written if they have the attribute.
-                    var attr = (BinaryBooleanAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute));
-                    dynamic typeValue = value ? attr.TrueValue : attr.FalseValue;
-                    WriteOfType(attr.WriteAs, typeValue);
+                    dynamic typeValue = value ? boolAttr.TrueValue : boolAttr.FalseValue;
+                    WriteOfType(boolAttr.WriteAs, typeValue);
                 } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
                     // write the number as int24
                     WriteNumber((uint)value, 24);
-                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
+                } else if (property.PropertyType.IsEnum && property.GetCustomAttribute<BinaryEnumAttribute>() is { } enumAttr) {
                     // enums can only be written if they have the attribute.
-                    var attr = (BinaryEnumAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute));
-                    WriteOfType(attr.WriteAs, value);
-                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
-                    var attr = (BinaryStringAttribute)Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute));
-                    Encoding encoding = null;
-                    if (attr.CodePage != -1) {
-                        encoding = Encoding.GetEncoding(attr.CodePage);
+                    WriteOfType(enumAttr.WriteAs, value);
+                } else if (property.PropertyType == typeof(string) && property.GetCustomAttribute<BinaryStringAttribute>() is { } stringAttr) {
+                    Encoding? encoding = null;
+                    if (stringAttr.CodePage != -1) {
+                        encoding = Encoding.GetEncoding(stringAttr.CodePage);
                     }
 
-                    if (attr.SizeType == null) {
-                        if (attr.FixedSize == -1) {
-                            Write((string)value, attr.Terminator, encoding, attr.MaxSize);
+                    if (stringAttr.SizeType is null) {
+                        if (stringAttr.FixedSize == -1) {
+                            Write((string)value, stringAttr.Terminator, encoding, stringAttr.MaxSize);
                         } else {
-                            Write((string)value, attr.FixedSize, attr.Terminator, encoding);
+                            Write((string)value, stringAttr.FixedSize, stringAttr.Terminator, encoding);
                         }
                     } else {
-                        Write((string)value, attr.SizeType, attr.Terminator, encoding, attr.MaxSize);
+                        Write((string)value, stringAttr.SizeType, stringAttr.Terminator, encoding, stringAttr.MaxSize);
                     }
                 } else {
                     WriteOfType(property.PropertyType, value);

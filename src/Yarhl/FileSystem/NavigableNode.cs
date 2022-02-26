@@ -60,7 +60,6 @@ namespace Yarhl.FileSystem
         /// </summary>
         public string Name {
             get;
-            private set;
         }
 
         /// <summary>
@@ -69,16 +68,15 @@ namespace Yarhl.FileSystem
         /// <remarks>
         /// <para>It includes the names of all the parent nodes and this node.</para>
         /// </remarks>
-        public string Path {
-            get {
-                return (Parent?.Path ?? string.Empty) + NodeSystem.PathSeparator + Name;
-            }
-        }
+        public string Path => (Parent?.Path ?? string.Empty) + NodeSystem.PathSeparator + Name;
 
         /// <summary>
         /// Gets the parent node.
         /// </summary>
-        public T Parent {
+        /// <returns>
+        /// The reference to the parent node or null if it doesn't have any parent.
+        /// </returns>
+        public T? Parent {
             get;
             private set;
         }
@@ -93,7 +91,6 @@ namespace Yarhl.FileSystem
         /// </summary>
         public IDictionary<string, dynamic> Tags {
             get;
-            private set;
         }
 
         /// <summary>
@@ -126,7 +123,7 @@ namespace Yarhl.FileSystem
                 throw new ArgumentException("Cannot add one parent as child", nameof(node));
 
             // Update the children of the parent
-            node.Parent?.Remove(node);
+            _ = node.Parent?.Remove(node);
 
             // Update the parent of the child
             node.Parent = (T)this;
@@ -310,7 +307,7 @@ namespace Yarhl.FileSystem
 
         private bool IsDescendantOf(T node)
         {
-            T current = this.Parent;
+            T? current = this.Parent;
             while (current != null) {
                 if (current == node)
                     return true;
@@ -323,10 +320,10 @@ namespace Yarhl.FileSystem
 
         private sealed class DefaultNavigableNodeComparer : IComparer<T>
         {
-            public int Compare(T x, T y)
+            public int Compare(T? x, T? y)
             {
                 // x and y cannot be null because Add methods don't allow null parameters.
-                return string.Compare(x.Name, y.Name, StringComparison.CurrentCulture);
+                return string.Compare(x!.Name, y!.Name, StringComparison.CurrentCulture);
             }
         }
     }

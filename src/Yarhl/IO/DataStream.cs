@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,9 +49,9 @@ namespace Yarhl.IO
         readonly bool canExpand;
         readonly bool hasOwnsership;
         readonly StreamInfo streamInfo;
+        readonly Stream baseStream;
 
         bool disposed;
-        Stream baseStream;
         long offset;
         long position;
         long length;
@@ -89,7 +89,7 @@ namespace Yarhl.IO
         /// <param name="length">Length of this substream.</param>
         [SuppressMessage("", "S1125: remove unnecessary boolean", Justification = "Readability")]
         public DataStream(Stream stream, long offset, long length)
-            : this(stream, offset, length, (stream is DataStream dataStream) ? dataStream.hasOwnsership : true)
+            : this(stream, offset, length, (stream is not DataStream dataStream) || dataStream.hasOwnsership)
         {
         }
 
@@ -118,7 +118,7 @@ namespace Yarhl.IO
 
             if (stream is DataStream dataStream) {
                 ParentDataStream = dataStream;
-                BaseStream = dataStream.BaseStream;
+                baseStream = dataStream.BaseStream;
                 Offset = dataStream.Offset + offset;
 
                 if (transferOwnership && !dataStream.hasOwnsership) {
@@ -128,7 +128,7 @@ namespace Yarhl.IO
                 }
             } else {
                 ParentDataStream = null;
-                BaseStream = stream;
+                baseStream = stream;
                 Offset = offset;
             }
 
@@ -183,7 +183,7 @@ namespace Yarhl.IO
         /// Gets the parent DataStream only if this stream was initialized from
         /// a DataStream.
         /// </summary>
-        public DataStream ParentDataStream {
+        public DataStream? ParentDataStream {
             get;
             private set;
         }
@@ -193,7 +193,6 @@ namespace Yarhl.IO
         /// </summary>
         public Stream BaseStream {
             get => baseStream;
-            private set => baseStream = value;
         }
 
         /// <summary>
@@ -316,13 +315,13 @@ namespace Yarhl.IO
 
             switch (mode) {
                 case SeekMode.Current:
-                    Seek(shift, SeekOrigin.Current);
+                    _ = Seek(shift, SeekOrigin.Current);
                     break;
                 case SeekMode.Start:
-                    Seek(shift, SeekOrigin.Begin);
+                    _ = Seek(shift, SeekOrigin.Begin);
                     break;
                 case SeekMode.End:
-                    Seek(shift, SeekOrigin.End);
+                    _ = Seek(shift, SeekOrigin.End);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode));
@@ -349,7 +348,7 @@ namespace Yarhl.IO
                     Position = offset;
                     break;
                 case SeekOrigin.End:
-                    Position = Length - offset;
+                    Position = Length + offset;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(origin));
@@ -384,7 +383,7 @@ namespace Yarhl.IO
                 throw new ObjectDisposedException(nameof(DataStream));
 
             positionStack.Push(Position);
-            Seek(shift, mode);
+            _ = Seek(shift, mode);
         }
 
         /// <summary>
@@ -686,9 +685,9 @@ namespace Yarhl.IO
 
             // Parent dir can be empty if we just specified the file name.
             // In that case, the folder (cwd) already exists.
-            string parentDir = Path.GetDirectoryName(fileOut);
+            string? parentDir = Path.GetDirectoryName(fileOut);
             if (!string.IsNullOrEmpty(parentDir)) {
-                Directory.CreateDirectory(parentDir);
+                _ = Directory.CreateDirectory(parentDir);
             }
 
             // We use FileStream so it creates a file even when the length is zero
@@ -757,8 +756,8 @@ namespace Yarhl.IO
 
             long startPosition = Position;
             long otherStreamStartPosition = otherStream.Position;
-            Seek(0, SeekOrigin.Begin);
-            otherStream.Seek(0, SeekOrigin.Begin);
+            _ = Seek(0, SeekOrigin.Begin);
+            _ = otherStream.Seek(0, SeekOrigin.Begin);
 
             if (Length != otherStream.Length) {
                 return false;
@@ -772,7 +771,7 @@ namespace Yarhl.IO
             while (!EndOfStream && result) {
                 // As we have checked the length before, we assume we read the same
                 int loopLength = Read(buffer1, 0, buffer1.Length);
-                otherStream.Read(buffer2, 0, buffer2.Length);
+                _ = otherStream.Read(buffer2, 0, buffer2.Length);
 
                 for (int i = 0; i < loopLength && result; i++) {
                     if (buffer1[i] != buffer2[i]) {
@@ -781,8 +780,8 @@ namespace Yarhl.IO
                 }
             }
 
-            Seek(startPosition, SeekOrigin.Begin);
-            otherStream.Seek(otherStreamStartPosition, SeekOrigin.Begin);
+            _ = Seek(startPosition, SeekOrigin.Begin);
+            _ = otherStream.Seek(otherStreamStartPosition, SeekOrigin.Begin);
 
             return result;
         }
@@ -810,7 +809,7 @@ namespace Yarhl.IO
                 info => {
                     if (info.NumInstances == 0) {
                         BaseStream.Dispose();
-                        Instances.TryRemove(BaseStream, out _);
+                        _ = Instances.TryRemove(BaseStream, out _);
                     }
                 });
         }
@@ -824,7 +823,7 @@ namespace Yarhl.IO
                 read = buffer.Length;
             }
 
-            stream.Read(buffer, 0, read);
+            _ = stream.Read(buffer, 0, read);
             return read;
         }
 

@@ -71,8 +71,8 @@ namespace Yarhl.FileSystem
 
             Node currentNode = root;
             foreach (string name in parentNames) {
-                Node subParent = currentNode.Children[name];
-                if (subParent == null) {
+                Node? subParent = currentNode.Children[name];
+                if (subParent is null) {
                     subParent = CreateContainer(name);
                     currentNode.Add(subParent);
                 }
@@ -212,6 +212,10 @@ namespace Yarhl.FileSystem
         /// <param name="filePath">File path.</param>
         /// <param name="nodeName">Node name.</param>
         /// <param name="mode">The mode to open the file.</param>
+        /// <remarks>
+        /// <para>Add the tag "FileInfo" with the file info status at the time it's created.</para>
+        /// <para>In the case of Windows Symlinks, it will be the status of the link file, not the target.</para>
+        /// </remarks>
         [SuppressMessage(
             "Reliability",
             "CA2000:Dispose objects before losing scope",
@@ -249,7 +253,7 @@ namespace Yarhl.FileSystem
             // This sanitizes the path and remove double slashes
             dirPath = Path.GetFullPath(dirPath);
 
-            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
+            if (dirPath[^1] == Path.DirectorySeparatorChar) {
                 dirPath = dirPath.Remove(dirPath.Length - 1);
             }
 
@@ -316,7 +320,7 @@ namespace Yarhl.FileSystem
             // This sanitizes the path and remove double slashes
             dirPath = Path.GetFullPath(dirPath);
 
-            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
+            if (dirPath[^1] == Path.DirectorySeparatorChar) {
                 dirPath = dirPath.Remove(dirPath.Length - 1);
             }
 
@@ -361,7 +365,7 @@ namespace Yarhl.FileSystem
             // This sanitizes the path and remove double slashes
             dirPath = Path.GetFullPath(dirPath);
 
-            if (dirPath[dirPath.Length - 1] == Path.DirectorySeparatorChar) {
+            if (dirPath[^1] == Path.DirectorySeparatorChar) {
                 dirPath = dirPath.Remove(dirPath.Length - 1);
             }
 
@@ -376,8 +380,8 @@ namespace Yarhl.FileSystem
             folder.Tags["DirectoryInfo"] = new DirectoryInfo(dirPath);
 
             foreach (string filePath in fileList) {
-                string relParent = Path.GetDirectoryName(filePath)
-                                       .Replace(dirPath, string.Empty);
+                string relParent = Path.GetDirectoryName(filePath)?
+                                       .Replace(dirPath, string.Empty) ?? string.Empty;
                 CreateContainersForChild(folder, relParent, FromFile(filePath, mode));
             }
 
@@ -387,7 +391,7 @@ namespace Yarhl.FileSystem
                 }
 
                 int rootPathLength = $"{NodeSystem.PathSeparator}{nodeName}".Length;
-                string nodePath = Path.GetFullPath(string.Concat(dirPath, node.Path.Substring(rootPathLength)));
+                string nodePath = Path.GetFullPath(string.Concat(dirPath, node.Path[rootPathLength..]));
                 node.Tags["DirectoryInfo"] = new DirectoryInfo(nodePath);
             }
 
