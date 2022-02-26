@@ -48,7 +48,7 @@ namespace Yarhl.PerformanceTests.Encodings
         [GlobalSetup]
         public void Setup()
         {
-            string fullText = File.ReadAllText("japanese.txt");
+            string fullText = File.ReadAllText(Path.Combine("Encodings", "japanese.txt"));
             if (TextLength <= fullText.Length) {
                 text = fullText[..TextLength];
             } else {
@@ -93,7 +93,7 @@ namespace Yarhl.PerformanceTests.Encodings
             baseCodeToUnicode = new Dictionary<int, int>();
             baseUnicodeToCode = new Dictionary<int, int>();
 
-            using var stream = DataStreamFactory.FromFile("index-jis0208.txt", FileOpenMode.Read);
+            using var stream = DataStreamFactory.FromFile(Path.Combine("Encodings", "index-jis0208.txt"), FileOpenMode.Read);
             var reader = new TextDataReader(stream);
 
             while (!stream.EndOfStream) {
