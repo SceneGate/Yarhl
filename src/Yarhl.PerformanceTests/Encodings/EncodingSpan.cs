@@ -335,7 +335,7 @@ namespace Yarhl.PerformanceTests.Encodings
                         bool inRange1 = current is >= 0x40 and <= 0x7E;
                         bool inRange2 = current is >= 0x80 and <= 0xFC;
                         if (!inRange1 && !inRange2) {
-                            throw new FormatException();
+                            DecodeUnknownBytes(buffer, i, current);
                         }
 
                         int pointer = ((lead - leadOffset) * 188) + current - offset;
@@ -343,7 +343,7 @@ namespace Yarhl.PerformanceTests.Encodings
                             codePoint = 0xE000 - 8836 + pointer;
                         } else {
                             if (!codeToUnicode.TryGetValue(pointer, out codePoint)) {
-                                throw new FormatException();
+                                DecodeUnknownBytes(buffer, i, current);
                             }
                         }
 
@@ -369,11 +369,11 @@ namespace Yarhl.PerformanceTests.Encodings
 
                 // 1.
                 if (lead != 0x00) {
-                    throw new FormatException();
+                    DecodeUnknownBytes(buffer, count - 2, lead);
                 }
             }
 
-            protected override void Encode(ReadOnlySpan<char> chars, SpanStream<byte> buffer)
+            protected override void Encode(ReadOnlySpan<char> chars, SpanStream<byte> buffer, bool isFallbackText = false)
             {
                 int count = chars.Length;
                 for (int i = 0; i < count; i++) {
@@ -393,7 +393,7 @@ namespace Yarhl.PerformanceTests.Encodings
                         }
 
                         if (!unicodeToCode.TryGetValue(codePoint, out int code)) {
-                            throw new FormatException();
+                            EncodeUnknownChar(buffer, codePoint, i, isFallbackText);
                         }
 
                         int lead = code / 188;

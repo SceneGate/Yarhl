@@ -27,7 +27,7 @@ namespace Yarhl.Media.Text.Encodings
     /// </summary>
     public abstract class SimpleSpanEncoding : Encoding
     {
-                /// <summary>
+        /// <summary>
         /// Initializes a new instance of the <see cref="SimpleSpanEncoding" /> class.
         /// </summary>
         /// <param name="codePage">The code page of the encoding.</param>
@@ -231,7 +231,8 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         /// <param name="chars">The characters to encode.</param>
         /// <param name="buffer">The output byte stream.</param>
-        protected abstract void Encode(ReadOnlySpan<char> chars, SpanStream<byte> buffer);
+        /// <param name="isFallbackText">Value indicating if the unknown char comes from fallback text already.</param>
+        protected abstract void Encode(ReadOnlySpan<char> chars, SpanStream<byte> buffer, bool isFallbackText = false);
 
         /// <summary>
         /// Decodes the bytes into a char stream.
@@ -239,5 +240,66 @@ namespace Yarhl.Media.Text.Encodings
         /// <param name="bytes">The bytes to decode.</param>
         /// <param name="buffer">The output char stream.</param>
         protected abstract void Decode(ReadOnlySpan<byte> bytes, SpanStream<char> buffer);
+
+        /// <summary>
+        /// Reports an invalid code-point for this encoding and encode the fallback text.
+        /// </summary>
+        /// <param name="buffer">The current output byte buffer to encode the fallback text.</param>
+        /// <param name="codePoint">The UTF-32 code-point that cannot be encoded.</param>
+        /// <param name="index">The index where the code-point was found in the buffer.</param>
+        /// <param name="isFallbackText">Value indicating if the unknown char comes from fallback text already.</param>
+        /// <exception cref="FormatException">Thrown when the fallback text cannot be encoded.</exception>
+        protected void EncodeUnknownChar(SpanStream<byte> buffer, int codePoint, int index, bool isFallbackText)
+        {
+            // Prevent infinite loops reporting encoding errors of the error text
+            if (isFallbackText)
+            {
+                throw new FormatException(
+                    "Cannot encode the character given by the encoder fallback buffer");
+            }
+
+            EncoderFallbackBuffer fallbackBuffer = EncoderFallback.CreateFallbackBuffer();
+
+            // Report the code-point that we cannot encoding as a UTF-16 character
+            // The fallback may find an alternative character to encode,
+            // replace with an error char like '?' or throw an exception.
+            string ch = char.ConvertFromUtf32(codePoint);
+            bool encodeFallbackBuffer = (ch.Length == 1)
+                ? fallbackBuffer.Fallback(ch[0], index)
+                : fallbackBuffer.Fallback(ch[0], ch[1], index);
+
+            // If provided, encoding the new character from the fallback buffer.
+            if (encodeFallbackBuffer)
+            {
+                var bufferString = new StringBuilder();
+                while (fallbackBuffer.Remaining > 0)
+                {
+                    _ = bufferString.Append(fallbackBuffer.GetNextChar());
+                }
+
+                // We can't use the GetChunk API since we need the full string in one call.
+                ReadOnlySpan<char> errorText = bufferString.ToString().AsSpan();
+
+                Encode(errorText, buffer);
+            }
+        }
+
+        /// <summary>
+        /// Reports invalid encoded bytes and write the fallback text to the stream depending on the fallback strategy.
+        /// </summary>
+        /// <param name="buffer">The output chars buffer to write the fallback text.</param>
+        /// <param name="index">The index where the invalid data was found.</param>
+        /// <param name="bytesUnknown">The invalid unknown bytes found.</param>
+        protected void DecodeUnknownBytes(SpanStream<char> buffer, int index, params byte[] bytesUnknown)
+        {
+            // Report that we cannot decode these bytes
+            DecoderFallbackBuffer fallbackBuffer = DecoderFallback.CreateFallbackBuffer();
+            bool writeFallbackChars = fallbackBuffer.Fallback(bytesUnknown, index);
+
+            // We got text to write as replacement for the wrong data.
+            while (writeFallbackChars && fallbackBuffer.Remaining > 0) {
+                buffer.Write(fallbackBuffer.GetNextChar());
+            }
+        }
     }
 }
