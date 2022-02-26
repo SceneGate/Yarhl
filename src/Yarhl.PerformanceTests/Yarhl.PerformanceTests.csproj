@@ -8,14 +8,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="index-jis0208.txt" CopyToOutputDirectory="Always" />
-    <Content Include="japanese.txt" CopyToOutputDirectory="Always" />
+    <Content Include="Encodings\index-jis0208.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Encodings\japanese.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
 
     <PackageReference Include="BenchmarkDotNet" />
+    <PackageReference Include="System.CommandLine" />
   </ItemGroup>
 
 </Project>

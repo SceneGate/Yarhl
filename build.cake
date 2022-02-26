@@ -4,7 +4,7 @@ Task("Define-Project")
     .Description("Fill specific project information")
     .Does<BuildInfo>(info =>
 {
-    info.CoverageTarget = 90; // can't be 100 due to platform-specific code paths
+    info.CoverageTarget = 99; // can't be 100 due to platform-specific code paths
 
     info.AddLibraryProjects("Yarhl");
     info.AddLibraryProjects("Yarhl.Media");
