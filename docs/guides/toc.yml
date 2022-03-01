@@ -1,8 +1,9 @@
 - name: ✨ Getting started
   items:
     - name: Introduction
-    - name: Create your first converter tool
+      href: getting-started/introduction.md
     - name: Create your first file format converter
+    - name: Create your first converter tool
 - name: ♻ File formats
   items:
     - name: Framework architecture

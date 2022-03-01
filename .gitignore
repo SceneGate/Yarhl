@@ -17,3 +17,6 @@ docs/api/
 
 # Benchmarks
 BenchmarkDotNet.Artifacts/
+
+# Example outputs
+src/Yarhl.Examples/outputs/

@@ -35,7 +35,8 @@
       "resource": [
         {
           "files": ["images/**"]
-        }
+        },
+        { "files": [ "Yarhl.Examples/**.csx" ], "src": "../src" }
       ],
       "overwrite": [
         {

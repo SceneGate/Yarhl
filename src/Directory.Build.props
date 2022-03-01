@@ -13,7 +13,7 @@
         <PackageProjectUrl>https://scenegate.github.io/Yarhl/</PackageProjectUrl>
         <RepositoryUrl>https://github.com/SceneGate/Yarhl</RepositoryUrl>
         <PackageIcon>icon.png</PackageIcon>
-        <PackageTags>translation;localization;romhacking;fan-translation</PackageTags>
+        <PackageTags>binary;encoding;text;translation;localization;reverse-engineering</PackageTags>
         <PackageReadmeFile>README.md</PackageReadmeFile>
     </PropertyGroup>
 
