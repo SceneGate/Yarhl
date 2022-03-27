@@ -19,7 +19,7 @@ Feel free to ask any question in the
 [project Discussion site!](https://github.com/SceneGate/Yarhl/discussions).
 
 Check our on-line API overview:
-[Yarhl in a nutshell](https://scenegate.github.io/Yarhl/articles/Yarhl-nutshell.html)
+[Yarhl in a nutshell](https://scenegate.github.io/Yarhl/guides/Yarhl-nutshell.html)
 and the complete API documentation
 [here](https://scenegate.github.io/Yarhl/api/Yarhl.html).
 
