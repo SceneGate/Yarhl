@@ -14,6 +14,9 @@
         <PackageVersion Include="BenchmarkDotNet" Version="0.13.1" />
         <PackageVersion Include="Moq" Version="4.16.1" />
 
+        <PackageVersion Include="SceneGate.Ekona" Version="0.1.0-preview.15" />
+        <PackageVersion Include="LayTea" Version="0.1.0-preview.87" />
+
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 
         <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />

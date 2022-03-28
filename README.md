@@ -1,12 +1,10 @@
 # Yarhl: Yarhl, A format ResearcH Library ![awesomeness](https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp)
 
-_Formats implementation just for fun._
-
 ![Yarhl Logo](https://raw.githubusercontent.com/SceneGate/Yarhl/develop/docs/images/logo.png)
 
-> **Yarhl** is a set of libraries to **implement and convert file formats**. It
-> provides a virtual file system, format conversion APIs, full feature binary IO
-> and plugin support to support common formats. It's built in **C# / .NET** and
+> **Yarhl** is framework to **implement and convert file formats**. It provides
+> a virtual file system, format conversion APIs, full featured binary IO and
+> plugin support to support common formats. It's built in **C# / .NET** and
 > works in Windows, Linux and Mac OS X.
 
 <!-- prettier-ignore -->
