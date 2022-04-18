@@ -20,6 +20,7 @@
 namespace Yarhl.IO
 {
     using System;
+    using System.Buffers;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
@@ -720,20 +721,23 @@ namespace Yarhl.IO
 
             PushToPosition(start);
 
-            const int BufferSize = 70 * 1024;
-            byte[] buffer;
+            const int MaxBufferSize = 70 * 1024;
+            int bufferSize = (length > MaxBufferSize) ? MaxBufferSize : (int)length;
+            byte[] buffer = ArrayPool<byte>.Shared.Rent(bufferSize);
 
-            if (length > BufferSize) {
-                buffer = new byte[BufferSize];
-                long endPos = start + length;
-                while (Position < endPos) {
-                    int read = BlockRead(this, buffer, endPos);
+            try {
+                if (length > buffer.Length) {
+                    long endPos = start + length;
+                    while (Position < endPos) {
+                        int read = BlockRead(this, buffer, endPos);
+                        stream.Write(buffer, 0, read);
+                    }
+                } else {
+                    int read = Read(buffer, 0, (int)length);
                     stream.Write(buffer, 0, read);
                 }
-            } else {
-                buffer = new byte[length];
-                int read = Read(buffer, 0, buffer.Length);
-                stream.Write(buffer, 0, read);
+            } finally {
+                ArrayPool<byte>.Shared.Return(buffer);
             }
 
             PopPosition();
