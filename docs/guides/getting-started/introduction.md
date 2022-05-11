@@ -1,7 +1,7 @@
 # _Yarhl, A format ResearcH Library_
 
-_Yarhl_ is a .NET framework that provides APIs and guidelines to implement
-custom file formats. It provides...
+_Yarhl_ is a set of .NET libraries that provide APIs and guidelines to implement
+custom file formats. It empowers you with...
 
 - ... APIs to easily **convert** between custom formats.
 - ... **guidelines** to implement and test custom format converters.
@@ -11,9 +11,8 @@ custom file formats. It provides...
 
 ## Usage
 
-The project provides the following .NET libraries as NuGet packages (via
-nuget.org). The libraries only support the latest .NET LTS version: **.NET
-6.0**.
+The project has the following .NET libraries (NuGet packages via nuget.org). The
+libraries only support the latest .NET LTS version: **.NET 6.0**.
 
 - [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl&logo=nuget)](https://www.nuget.org/packages/Yarhl)
   - `Yarhl`: plugin manager to find formats and converters.
