@@ -9,7 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
-    <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
+    <ProjectReference Include="..\Yarhl.Media.Text\Yarhl.Media.Text.csproj" />
 
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
