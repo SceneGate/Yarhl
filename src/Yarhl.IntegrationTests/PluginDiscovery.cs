@@ -34,9 +34,9 @@ namespace Yarhl.IntegrationTests
             string pluginDir = Path.Combine(programDir, PluginManager.PluginDirectory);
             Assert.IsTrue(Directory.Exists(pluginDir));
 
-            Assert.IsTrue(File.Exists(Path.Combine(pluginDir, "Yarhl.Media.dll")));
+            Assert.IsTrue(File.Exists(Path.Combine(pluginDir, "Yarhl.Media.Text.dll")));
 
-            Assert.IsFalse(File.Exists(Path.Combine(programDir, "Yarhl.Media.dll")));
+            Assert.IsFalse(File.Exists(Path.Combine(programDir, "Yarhl.Media.Text.dll")));
         }
 
         [Test]

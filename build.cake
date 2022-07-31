@@ -7,7 +7,7 @@ Task("Define-Project")
     info.CoverageTarget = 99; // can't be 100 due to platform-specific code paths
 
     info.AddLibraryProjects("Yarhl");
-    info.AddLibraryProjects("Yarhl.Media");
+    info.AddLibraryProjects("Yarhl.Media.Text");
     info.AddTestProjects("Yarhl.UnitTests");
     info.AddTestProjects("Yarhl.IntegrationTests");
 
@@ -20,7 +20,7 @@ Task("Prepare-IntegrationTests")
     .Does<BuildInfo>(info =>
 {
     // Copy a good and bad plugin to test the assembly load logic
-    string pluginPath = $"src/Yarhl.Media/bin/{info.Configuration}/net6.0/Yarhl.Media.dll";
+    string pluginPath = $"src/Yarhl.Media.Text/bin/{info.Configuration}/net6.0/Yarhl.Media.Text.dll";
     string badPluginPath = info.SolutionFile; // this isn't a DLL for sure :D
 
     string outputBasePath = $"src/Yarhl.IntegrationTests/bin/{info.Configuration}";
@@ -29,7 +29,7 @@ Task("Prepare-IntegrationTests")
     foreach (string framework in GetTargetFrameworks(testProjectPath)) {
         string pluginDir = $"{outputBasePath}/{framework}/Plugins";
         CreateDirectory(pluginDir);
-        CopyFile(pluginPath, $"{pluginDir}/Yarhl.Media.dll");
+        CopyFile(pluginPath, $"{pluginDir}/Yarhl.Media.Text.dll");
         CopyFile(badPluginPath, $"{pluginDir}/MyBadPlugin.dll");
     }
 });

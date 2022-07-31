@@ -566,7 +566,7 @@ times the format of our node until it's the one we want.
 
 ```csharp
 var node = NodeFactory.FromFile(path);
-node.TransformTo<MenuSentences>;
+node.TransformTo<MenuSentences>();
 
 // Now node.Format is MenuSentences
 ```

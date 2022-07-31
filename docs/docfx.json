@@ -5,7 +5,7 @@
           {
             "files": [
               "Yarhl/bin/**/Yarhl.dll",
-              "Yarhl.Media/bin/**/Yarhl.Media.dll"
+              "Yarhl.Media.Text/bin/**/Yarhl.Media.Text.dll"
             ],
             "src": "../src"
           }
