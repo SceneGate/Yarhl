@@ -13,7 +13,8 @@
         "esbenp.prettier-vscode",
         "yzhang.markdown-all-in-one",
         "davidanson.vscode-markdownlint",
-        "eamodio.gitlens"
+        "eamodio.gitlens",
+        "GitHub.vscode-pull-request-github"
     ],
 
     "remoteUser": "vscode",

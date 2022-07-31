@@ -11,7 +11,7 @@ on:
     tags: [ "v*" ]
 
 env:
-  NET_SDK: '6.0.200'
+  NET_SDK: '6.0.302'
 
 jobs:
   build_main:
