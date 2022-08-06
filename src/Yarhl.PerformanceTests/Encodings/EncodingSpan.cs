@@ -34,7 +34,9 @@ namespace Yarhl.PerformanceTests.Encodings
     {
         private static Dictionary<int, int> baseCodeToUnicode;
         private static Dictionary<int, int> baseUnicodeToCode;
+        private Encoding encoding;
         private string text;
+        private byte[] encodedText;
 
         static EncodingSpan()
         {
@@ -44,6 +46,9 @@ namespace Yarhl.PerformanceTests.Encodings
 
         [Params(280, 5 * 1024 * 1024)]
         public int TextLength { get; set; }
+
+        [ParamsAllValues]
+        public EncodingKind Kind { get; set; }
 
         [GlobalSetup]
         public void Setup()
@@ -62,31 +67,39 @@ namespace Yarhl.PerformanceTests.Encodings
                         }
                     });
             }
+
+            encodedText = Encoding.GetEncoding("shift-jis").GetBytes(text);
+
+            encoding = Kind switch {
+                EncodingKind.DotNet => Encoding.GetEncoding("shift-jis"),
+                EncodingKind.Manual => new CustomSjisEncoding(baseCodeToUnicode, baseUnicodeToCode),
+                EncodingKind.Yarhl => new CustomSjisYarhlEncoding(baseCodeToUnicode, baseUnicodeToCode),
+                _ => throw new NotImplementedException(),
+            };
         }
 
         [Benchmark]
-        public string Sjis()
-        {
-            var encoding = Encoding.GetEncoding("shift-jis");
-            byte[] encoded = encoding.GetBytes(text);
-            return encoding.GetString(encoded);
-        }
+        public int CountChars() => encoding.GetCharCount(encodedText);
 
-        [Benchmark(Baseline = true)]
-        public string SjisCustomEncoding()
+        [Benchmark]
+        public int CountBytes() => encoding.GetByteCount(text);
+
+        [Benchmark]
+        public int Encode()
         {
-            var encoding = new CustomSjisEncoding(baseCodeToUnicode, baseUnicodeToCode);
-            byte[] encoded = encoding.GetBytes(text);
-            return encoding.GetString(encoded);
+            byte[] buffer = new byte[encodedText.Length];
+            return encoding.GetBytes(text, 0, text.Length, buffer, 0);
         }
 
         [Benchmark]
-        public string SjisCustomYarhlEncoding()
+        public int Decode()
         {
-            var encoding = new CustomSjisYarhlEncoding(baseCodeToUnicode, baseUnicodeToCode);
-            byte[] encoded = encoding.GetBytes(text);
-            return encoding.GetString(encoded);
+            char[] buffer = new char[text.Length];
+            return encoding.GetChars(encodedText, 0, encodedText.Length, buffer, 0);
         }
+
+        [Benchmark]
+        public string DecodeString() => encoding.GetString(encodedText);
 
         private static void LoadTable()
         {
@@ -405,6 +418,13 @@ namespace Yarhl.PerformanceTests.Encodings
                     }
                 }
             }
+        }
+
+        public enum EncodingKind
+        {
+            DotNet,
+            Manual,
+            Yarhl,
         }
     }
 }
