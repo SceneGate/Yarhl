@@ -21,6 +21,7 @@ namespace Yarhl.PerformanceTests.Encodings
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -420,6 +421,7 @@ namespace Yarhl.PerformanceTests.Encodings
             }
         }
 
+        [SuppressMessage("", "SA1201", Justification = "Internal test enumeration")]
         public enum EncodingKind
         {
             DotNet,

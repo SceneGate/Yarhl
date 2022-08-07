@@ -42,7 +42,7 @@ public readonly ref struct SpanStream<T>
         this.buffer = buffer;
         hasBuffer = !buffer.IsEmpty;
 
-        // Position must be a reference type otherwise everytime we pass this
+        // Position must be a reference type otherwise every time we pass this
         // instance in a method we will lose the last position back.
         position = new Counter();
     }

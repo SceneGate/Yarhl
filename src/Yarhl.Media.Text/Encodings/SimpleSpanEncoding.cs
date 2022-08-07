@@ -106,17 +106,51 @@ namespace Yarhl.Media.Text.Encodings
         /// </summary>
         public override string WebName => string.Empty;
 
-        /// <inheritdoc/>
-        public override int GetByteCount(string s) => GetByteCount(s.AsSpan());
+        /// <summary>
+        /// Calculates the number of bytes produced by encoding the characters
+        /// in the specified string.
+        /// </summary>
+        /// <param name="s">The string containing the set of characters to encode.</param>
+        /// <returns>The number of bytes produced by encoding the specified characters.</returns>
+        public override int GetByteCount(string s)
+        {
+            ArgumentNullException.ThrowIfNull(s);
+            return GetByteCount(s.AsSpan());
+        }
 
-        /// <inheritdoc/>
-        public override int GetByteCount(char[] chars) => GetByteCount(chars.AsSpan());
+        /// <summary>
+        /// Calculates the number of bytes produced by encoding all the
+        /// characters in the specified character array.
+        /// </summary>
+        /// <param name="chars">The character array containing the characters to encode.</param>
+        /// <returns>The number of bytes produced by encoding all the characters
+        /// in the specified character array.</returns>
+        public override int GetByteCount(char[] chars)
+        {
+            ArgumentNullException.ThrowIfNull(chars);
+            return GetByteCount(chars.AsSpan());
+        }
 
-        /// <inheritdoc/>
-        public override int GetByteCount(char[] chars, int index, int count) =>
-            GetByteCount(chars.AsSpan(index, count));
+        /// <summary>
+        /// Calculates the number of bytes produced by encoding a set of
+        /// characters from the specified character array.
+        /// </summary>
+        /// <param name="chars">The character array containing the set of characters to encode.</param>
+        /// <param name="index">The index of the first character to encode.</param>
+        /// <param name="count">The number of characters to encode.</param>
+        /// <returns>The number of bytes produced by encoding the specified characters.</returns>
+        public override int GetByteCount(char[] chars, int index, int count)
+        {
+            ArgumentNullException.ThrowIfNull(chars);
+            return GetByteCount(chars.AsSpan(index, count));
+        }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Calculates the number of bytes produced by encoding the characters
+        /// in the specified character span.
+        /// </summary>
+        /// <param name="chars">The span of characters to encode.</param>
+        /// <returns>The number of bytes produced by encoding the specified character span.</returns>
         public override int GetByteCount(ReadOnlySpan<char> chars)
         {
             var buffer = new SpanStream<byte>(Span<byte>.Empty);

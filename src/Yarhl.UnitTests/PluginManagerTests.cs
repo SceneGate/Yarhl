@@ -21,6 +21,7 @@ namespace Yarhl.UnitTests
 {
     using System;
     using System.Composition;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
@@ -34,6 +35,7 @@ namespace Yarhl.UnitTests
         {
         }
 
+        [SuppressMessage("", "S2326", Justification = "Test class")]
         public interface IGenericExport<T>
         {
         }
