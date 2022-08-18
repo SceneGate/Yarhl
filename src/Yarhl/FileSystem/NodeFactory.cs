@@ -298,6 +298,10 @@ namespace Yarhl.FileSystem
             // This sanitizes the path and remove double slashes
             dirPath = Path.GetFullPath(dirPath);
 
+            if (dirPath[^1] == Path.DirectorySeparatorChar) {
+                dirPath = dirPath.Remove(dirPath.Length - 1);
+            }
+
             string[] fileList = Directory.GetFiles(dirPath, filter, options);
             return FromFileList(dirPath, nodeName, fileList, mode);
         }
