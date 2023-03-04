@@ -1,10 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve
-title: ''
-labels: ''
-assignees: ''
-
+title: ""
+labels: ""
+assignees: ""
 ---
 
 **Describe the bug**
@@ -12,6 +11,7 @@ A clear and concise description of what the bug is.
 
 **To Reproduce**
 Steps to reproduce the behavior:
+
 1. Get the library from '...' and version '...'
 2. Use the class and method '....'
 3. See error
@@ -26,8 +26,9 @@ If applicable, the full exception stacktrace that you get.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. Windows, Linux, Mac]
- - Version [e.g. 22]
+
+- OS: [e.g. Windows, Linux, Mac]
+- Version [e.g. 22]
 
 **Additional context**
 Add any other context about the problem here.
