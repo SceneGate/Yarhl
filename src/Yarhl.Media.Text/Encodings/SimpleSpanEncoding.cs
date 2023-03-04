@@ -159,14 +159,25 @@ namespace Yarhl.Media.Text.Encodings
         }
 
         /// <inheritdoc/>
-        public override byte[] GetBytes(string s) => GetBytes(s.AsSpan());
+        public override byte[] GetBytes(string s)
+        {
+            ArgumentNullException.ThrowIfNull(s);
+            return GetBytes(s.AsSpan());
+        }
 
         /// <inheritdoc/>
-        public override byte[] GetBytes(char[] chars) => GetBytes(chars.AsSpan());
+        public override byte[] GetBytes(char[] chars)
+        {
+            ArgumentNullException.ThrowIfNull(chars);
+            return GetBytes(chars.AsSpan());
+        }
 
         /// <inheritdoc/>
-        public override byte[] GetBytes(char[] chars, int index, int count) =>
-            GetBytes(chars.AsSpan(index, count));
+        public override byte[] GetBytes(char[] chars, int index, int count)
+        {
+            ArgumentNullException.ThrowIfNull(chars);
+            return GetBytes(chars.AsSpan(index, count));
+        }
 
         /// <summary>
         /// Encodes the characters.
@@ -175,6 +186,9 @@ namespace Yarhl.Media.Text.Encodings
         /// <returns>The output encoded data.</returns>
         public byte[] GetBytes(ReadOnlySpan<char> chars)
         {
+            // This will trigger the Encode call twice: get buffer length + encode in buffer.
+            // It will hit performance but it should consume less memory than
+            // using a dynamic list and copying again into an array.
             int length = GetByteCount(chars);
             byte[] buffer = new byte[length];
             _ = GetBytes(chars, buffer);
@@ -183,12 +197,20 @@ namespace Yarhl.Media.Text.Encodings
         }
 
         /// <inheritdoc/>
-        public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex) =>
-            GetBytes(chars.AsSpan(charIndex, charCount), bytes.AsSpan(byteIndex));
+        public override int GetBytes(char[] chars, int charIndex, int charCount, byte[] bytes, int byteIndex)
+        {
+            ArgumentNullException.ThrowIfNull(chars);
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetBytes(chars.AsSpan(charIndex, charCount), bytes.AsSpan(byteIndex));
+        }
 
         /// <inheritdoc/>
-        public override int GetBytes(string s, int charIndex, int charCount, byte[] bytes, int byteIndex) =>
-            GetBytes(s.AsSpan(charIndex, charCount), bytes.AsSpan(byteIndex));
+        public override int GetBytes(string s, int charIndex, int charCount, byte[] bytes, int byteIndex)
+        {
+            ArgumentNullException.ThrowIfNull(s);
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetBytes(s.AsSpan(charIndex, charCount), bytes.AsSpan(byteIndex));
+        }
 
         /// <inheritdoc/>
         public override int GetBytes(ReadOnlySpan<char> chars, Span<byte> bytes)
@@ -200,11 +222,18 @@ namespace Yarhl.Media.Text.Encodings
         }
 
         /// <inheritdoc/>
-        public override int GetCharCount(byte[] bytes) => GetCharCount(bytes.AsSpan());
+        public override int GetCharCount(byte[] bytes)
+        {
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetCharCount(bytes.AsSpan());
+        }
 
         /// <inheritdoc/>
-        public override int GetCharCount(byte[] bytes, int index, int count) =>
-            GetCharCount(bytes.AsSpan(index, count));
+        public override int GetCharCount(byte[] bytes, int index, int count)
+        {
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetCharCount(bytes.AsSpan(index, count));
+        }
 
         /// <inheritdoc/>
         public override int GetCharCount(ReadOnlySpan<byte> bytes)
@@ -215,10 +244,18 @@ namespace Yarhl.Media.Text.Encodings
         }
 
         /// <inheritdoc/>
-        public override char[] GetChars(byte[] bytes) => GetChars(bytes.AsSpan());
+        public override char[] GetChars(byte[] bytes)
+        {
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetChars(bytes.AsSpan());
+        }
 
         /// <inheritdoc/>
-        public override char[] GetChars(byte[] bytes, int index, int count) => GetChars(bytes.AsSpan(index, count));
+        public override char[] GetChars(byte[] bytes, int index, int count)
+        {
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetChars(bytes.AsSpan(index, count));
+        }
 
         /// <summary>
         /// Decodes the bytes.
@@ -234,8 +271,12 @@ namespace Yarhl.Media.Text.Encodings
         }
 
         /// <inheritdoc/>
-        public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex) =>
-            GetChars(bytes.AsSpan(byteIndex, byteCount), chars.AsSpan(charIndex));
+        public override int GetChars(byte[] bytes, int byteIndex, int byteCount, char[] chars, int charIndex)
+        {
+            ArgumentNullException.ThrowIfNull(bytes);
+            ArgumentNullException.ThrowIfNull(chars);
+            return GetChars(bytes.AsSpan(byteIndex, byteCount), chars.AsSpan(charIndex));
+        }
 
         /// <inheritdoc/>
         public override int GetChars(ReadOnlySpan<byte> bytes, Span<char> chars)
@@ -247,11 +288,17 @@ namespace Yarhl.Media.Text.Encodings
         }
 
         /// <inheritdoc/>
-        public override string GetString(byte[] bytes) => GetString(bytes, 0, bytes.Length);
+        public override string GetString(byte[] bytes)
+        {
+            ArgumentNullException.ThrowIfNull(bytes);
+            return GetString(bytes, 0, bytes.Length);
+        }
 
         /// <inheritdoc/>
         public override string GetString(byte[] bytes, int index, int count)
         {
+            ArgumentNullException.ThrowIfNull(bytes);
+
             int length = GetCharCount(bytes.AsSpan(index, count));
             return string.Create(length, ValueTuple.Create(this, bytes, index, count), (chars, state) =>
             {
@@ -314,7 +361,7 @@ namespace Yarhl.Media.Text.Encodings
                 // We can't use the GetChunk API since we need the full string in one call.
                 ReadOnlySpan<char> errorText = bufferString.ToString().AsSpan();
 
-                Encode(errorText, buffer);
+                Encode(errorText, buffer, true);
             }
         }
 
