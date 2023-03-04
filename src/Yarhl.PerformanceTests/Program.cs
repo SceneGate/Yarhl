@@ -17,39 +17,27 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.PerformanceTests
+#pragma warning disable SA1200 // False positive of namespace and using
+using System.CommandLine;
+using BenchmarkDotNet.Running;
+#pragma warning restore SA1200
+
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("", "SA1516", Justification = "Broken blank line rule")]
+
+var encodingPerf = new Command("encoding", "Run the perf test for encodings");
+encodingPerf.SetHandler(() => BenchmarkRunner.Run<Yarhl.PerformanceTests.Encodings.EncodingSpan>());
+
+var streamComparePerf = new Command("stream-compare", "Run the perf test for DataStream compare");
+streamComparePerf.SetHandler(() => BenchmarkRunner.Run<Yarhl.PerformanceTests.IO.DataStreamCompare>());
+
+var streamReadWritePerf = new Command("stream-rw", "Run the perf test for DataStream Read/Write");
+streamReadWritePerf.SetHandler(() => BenchmarkRunner.Run<Yarhl.PerformanceTests.IO.DataStreamReadWriteTests>());
+
+var rootCommand = new RootCommand("Yarhl performance tests")
 {
-    using BenchmarkDotNet.Running;
+    encodingPerf,
+    streamComparePerf,
+    streamReadWritePerf,
+};
 
-    static class Program
-    {
-        static void Main(string[] args)
-        {
-            if (args.Length > 0 && args[0] == "auto") {
-                RunAuto();
-            } else {
-                RunManual();
-            }
-        }
-
-        static void RunAuto()
-        {
-            BenchmarkRunner.Run<DataStreamReadWriteTests>();
-        }
-
-        static void RunManual()
-        {
-            const int Iterations = 1_000;
-
-            var test1 = new DataStreamCompare();
-            test1.Length = 1024 * 1024;
-            test1.SetUp();
-
-            for (int i = 0; i < Iterations; i++) {
-                test1.Compare();
-            }
-
-            test1.CleanUp();
-        }
-    }
-}
+return rootCommand.Invoke(args);

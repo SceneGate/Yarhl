@@ -84,7 +84,7 @@ The libraries only support the latest version of .NET and its LTS: **.NET 6.0**.
 
 - [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl&logo=nuget)](https://www.nuget.org/packages/Yarhl):
   core, format conversion, file system and binary reading / writing (IO).
-- [![Yarhl.Media](https://img.shields.io/nuget/v/Yarhl.Media?label=Yarhl.Media&logo=nuget)](https://www.nuget.org/packages/Yarhl.Media):
+- [![Yarhl.Media.Text](https://img.shields.io/nuget/v/Yarhl.Media.Text?label=Yarhl.Media.Text&logo=nuget)](https://www.nuget.org/packages/Yarhl.Media.Text):
   text formats (Po) and encodings.
 
 Preview releases can be found in this

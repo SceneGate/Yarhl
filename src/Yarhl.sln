@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarhl", "Yarhl\Yarhl.csproj", "{9477DC2F-8F66-4F40-A34D-94B773B77F14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarhl.Media", "Yarhl.Media\Yarhl.Media.csproj", "{9EC7B7B0-C67C-4834-AC0B-8916A6F00A96}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarhl.Media.Text", "Yarhl.Media.Text\Yarhl.Media.Text.csproj", "{9EC7B7B0-C67C-4834-AC0B-8916A6F00A96}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarhl.UnitTests", "Yarhl.UnitTests\Yarhl.UnitTests.csproj", "{032CD3C2-4BEA-4C52-8FB5-28B4DCCB044A}"
 EndProject

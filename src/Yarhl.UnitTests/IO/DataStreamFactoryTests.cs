@@ -598,7 +598,6 @@ namespace Yarhl.UnitTests.IO
         {
             string originalFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
             string symlinkFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            Console.WriteLine(originalFile);
             Assert.That(File.Exists(originalFile), Is.False);
             Assert.That(File.Exists(symlinkFile), Is.False);
 

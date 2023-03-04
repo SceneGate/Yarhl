@@ -18,6 +18,7 @@
     <PackageReference Include="System.Composition" />
     <PackageReference Include="System.Runtime.Loader" />
     <PackageReference Include="System.Text.Encoding.CodePages"/>
+    <PackageReference Include="System.Buffers" />
   </ItemGroup>
 
 </Project>

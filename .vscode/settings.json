@@ -18,8 +18,10 @@
         "cref",
         "Dependee",
         "Ekona",
+        "Diagnoser",
         "finalizer",
         "msgctxt",
-        "Msgid"
+        "Msgid",
+        "typeparam"
     ],
 }

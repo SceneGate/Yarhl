@@ -3,13 +3,12 @@
 
   <PropertyGroup>
     <Description>Yarhl unit tests.</Description>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <LangVersion>9.0</LangVersion>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
-    <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
+    <ProjectReference Include="..\Yarhl.Media.Text\Yarhl.Media.Text.csproj" />
 
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
