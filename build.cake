@@ -6,6 +6,7 @@ Task("Define-Project")
 {
     info.CoverageTarget = 99; // can't be 100 due to platform-specific code paths
     info.WarningsAsErrors = false; // TEMP
+    info.BuildType = BuildType.Preview; // TEMP
 
     info.AddLibraryProjects("Yarhl");
     info.AddLibraryProjects("Yarhl.Media.Text");
