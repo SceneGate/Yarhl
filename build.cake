@@ -5,9 +5,11 @@ Task("Define-Project")
     .Does<BuildInfo>(info =>
 {
     info.CoverageTarget = 99; // can't be 100 due to platform-specific code paths
+    info.WarningsAsErrors = false; // TEMP
 
     info.AddLibraryProjects("Yarhl");
     info.AddLibraryProjects("Yarhl.Media.Text");
+    info.AddLibraryProjects("Yarhl.Plugins");
     info.AddTestProjects("Yarhl.UnitTests");
     info.AddTestProjects("Yarhl.IntegrationTests");
 
