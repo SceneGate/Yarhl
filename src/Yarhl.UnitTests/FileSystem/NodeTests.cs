@@ -366,7 +366,7 @@ namespace Yarhl.UnitTests.FileSystem
             var dummyFormat = new StringFormatTest("3");
             using Node node = new Node("mytest", dummyFormat);
 
-            node.TransformWith<PrivateConverter>();
+            _ = node.TransformWith<PrivateConverter>();
             Assert.IsInstanceOf<IntFormatTest>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
             Assert.AreEqual(4, node.GetFormatAs<IntFormatTest>().Value);
@@ -474,16 +474,14 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void TransformWithPrivateTypeThrowsException()
+        public void TransformWithPrivateTypeDoesNotThrowsException()
         {
             var dummyFormat = new StringFormatTest("3");
             using Node node = new Node("mytest", dummyFormat);
 
             Assert.That(
                 () => node.TransformWith(typeof(PrivateConverter)),
-                Throws.InvalidOperationException.With.Message.EqualTo(
-                    "Cannot find converter " +
-                    typeof(PrivateConverter).FullName));
+                Throws.Nothing);
         }
 
         [Test]
@@ -538,9 +536,7 @@ namespace Yarhl.UnitTests.FileSystem
             // It won't be discovered
             Assert.That(
                 () => node.TransformWith(typeof(ConverterWithoutGenericInterface)),
-                Throws.InvalidOperationException.With.Message.EqualTo(
-                    "Cannot find converter " +
-                    typeof(ConverterWithoutGenericInterface).FullName));
+                Throws.InvalidOperationException.With.Message.EqualTo(msg));
         }
 
         [Test]

@@ -514,6 +514,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <returns>The format read.</returns>
         /// <typeparam name="T">The type of the format to read.</typeparam>
+        [Obsolete("ConvertFormat.To() is obsoleted. Use the converter directly.")]
         public T ReadFormat<T>()
         {
             if (Disposed)

@@ -33,6 +33,7 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="src">Format to convert.</param>
         /// <typeparam name="TDst">The destination format type.</typeparam>
+        [Obsolete("To() overloads are deprecated. Use the converter type or object overloads: With()")]
         public static TDst To<TDst>(dynamic src)
         {
             return (TDst)To(typeof(TDst), src);
@@ -44,6 +45,7 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="dstType">Type of the destination format.</param>
         /// <param name="src">Format to convert.</param>
+        [Obsolete("To() overloads are deprecated. Use the converter type or object overloads: With()")]
         public static object To(Type dstType, dynamic src)
         {
             if (dstType == null)
@@ -75,22 +77,18 @@ namespace Yarhl.FileFormat
         /// </summary>
         /// <param name="converterType">Type of the converter.</param>
         /// <param name="src">Format to convert.</param>
+        /// <param name="args">
+        /// Arguments for the constructor of the type if any.
+        /// </param>
         /// <returns>The new format.</returns>
-        public static object With(Type converterType, dynamic src)
+        public static object With(Type converterType, dynamic src, params object?[] args)
         {
-            if (converterType == null)
-                throw new ArgumentNullException(nameof(converterType));
+            ArgumentNullException.ThrowIfNull(converterType);
+            ValidateConverterType(converterType, src.GetType());
 
-            var extensions = PluginManager.Instance.GetConverters()
-                .Where(x => x.Metadata.Type == converterType);
+            dynamic converter = Activator.CreateInstance(converterType, args)
+                ?? throw new InvalidOperationException("Invalid converter type");
 
-            // Same as Single operation but with nice errors
-            if (!extensions.Any()) {
-                throw new InvalidOperationException(
-                    $"Cannot find converter {converterType}");
-            }
-
-            dynamic converter = extensions.First().CreateExport().Value;
             return converter.Convert(src);
         }
 
@@ -100,6 +98,7 @@ namespace Yarhl.FileFormat
         /// <param name="src">Format to convert.</param>
         /// <typeparam name="TConv">Type of the converter.</typeparam>
         /// <returns>The new format.</returns>
+        [Obsolete("Create the converter object or use the IFormat.ConvertWith() extension method.")]
         public static object With<TConv>(dynamic src)
             where TConv : IConverter, new()
         {
@@ -116,6 +115,7 @@ namespace Yarhl.FileFormat
         /// <typeparam name="TConv">Type of the converter.</typeparam>
         /// <typeparam name="TParam">Type of the parameters.</typeparam>
         /// <returns>The new format.</returns>
+        [Obsolete("Create the converter object or use the IFormat.ConvertWith() extension method.")]
         public static object With<TConv, TParam>(TParam param, dynamic src)
             where TConv : IConverter, IInitializer<TParam>, new()
         {
@@ -130,35 +130,43 @@ namespace Yarhl.FileFormat
         /// <returns>The new format.</returns>
         /// <param name="converter">Converter to use.</param>
         /// <param name="src">Format to convert.</param>
+        [Obsolete("Create the converter object or use the IFormat.ConvertWith() extension method.")]
         public static object With(IConverter converter, dynamic src)
         {
-            if (converter == null)
-                throw new ArgumentNullException(nameof(converter));
+            ArgumentNullException.ThrowIfNull(converter);
+            ArgumentNullException.ThrowIfNull(src);
+            ValidateConverterType(converter.GetType(), src.GetType());
 
-            if (src == null)
-                throw new ArgumentNullException(nameof(src));
+            return ((dynamic)converter).Convert(src);
+        }
 
-            Type[] converterInterfaces = converter.GetType().GetInterfaces();
-            bool implementConverter = converterInterfaces.Any(i =>
+        /// <summary>
+        /// Validates the type implements the expected interface for the input.
+        /// </summary>
+        /// <param name="converterType">The type of the converter.</param>
+        /// <param name="inputType">The type of the input.</param>
+        /// <exception cref="InvalidOperationException">
+        /// The converter does not implement the interface.
+        /// </exception>
+        internal static void ValidateConverterType(Type converterType, Type inputType)
+        {
+            Type[] converterInterfaces = converterType.GetInterfaces();
+            bool implementConverter = Array.Exists(converterInterfaces, i =>
                 i.IsGenericType &&
                 i.GetGenericTypeDefinition() == typeof(IConverter<,>));
-
             if (!implementConverter) {
                 throw new InvalidOperationException(
                     "Converter doesn't implement IConverter<,>");
             }
 
-            bool canConvert = converterInterfaces.Any(i =>
+            bool canConvert = Array.Exists(converterInterfaces, i =>
                 i.IsGenericType &&
                 i.GenericTypeArguments.Length == 2 &&
-                i.GenericTypeArguments[0].IsAssignableFrom(src.GetType()));
-
+                i.GenericTypeArguments[0].IsAssignableFrom(inputType));
             if (!canConvert) {
                 throw new InvalidOperationException(
-                    "Converter cannot convert from/to the type");
+                    $"Converter cannot convert the type: {inputType.FullName}");
             }
-
-            return ((dynamic)converter).Convert(src);
         }
     }
 }

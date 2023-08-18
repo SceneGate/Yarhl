@@ -36,6 +36,7 @@ namespace Yarhl
     /// <para>Plugin assemblies are loaded from the directory with the Yarhl
     /// assembly and the 'Plugins' subfolder with its children.</para>
     /// </remarks>
+    [Obsolete("PluginManager is obsolete. Use the new assembly Yarhl.Plugins.")]
     public sealed class PluginManager
     {
         static readonly string[] IgnoredLibraries = {
@@ -214,7 +215,8 @@ namespace Yarhl
             // MEF would try to load its dependencies.
             return paths
                 .Select(p => new { Name = Path.GetFileName(p), Path = p })
-                .Where(p => !IgnoredLibraries.Any(
+                .Where(p => !Array.Exists(
+                    IgnoredLibraries,
                     ign => p.Name.StartsWith(ign, StringComparison.OrdinalIgnoreCase)))
                 .Select(p => p.Path)
                 .LoadAssemblies();

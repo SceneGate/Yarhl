@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,12 @@ namespace Yarhl
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using System.Runtime.InteropServices;
     using System.Runtime.Loader;
 
     /// <summary>
     /// Utilities to work with Assemblies.
     /// </summary>
-    static class AssemblyUtils
+    internal static class AssemblyUtils
     {
         /// <summary>
         /// Load assemblies.

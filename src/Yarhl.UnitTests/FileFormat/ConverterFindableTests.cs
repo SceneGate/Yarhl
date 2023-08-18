@@ -19,6 +19,7 @@
 // SOFTWARE.
 namespace Yarhl.UnitTests.FileFormat
 {
+    using System;
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
@@ -63,7 +64,7 @@ namespace Yarhl.UnitTests.FileFormat
 
             Assert.DoesNotThrow(() =>
                 converter1.Single(t =>
-                    t.GetType().GetInterfaces().Any(i =>
+                    Array.Exists(t.GetType().GetInterfaces(), i =>
                         i.IsGenericType &&
                         i.GenericTypeArguments.Length == 2 &&
                         i.GenericTypeArguments[0] == typeof(string) &&
@@ -75,7 +76,7 @@ namespace Yarhl.UnitTests.FileFormat
 
             Assert.DoesNotThrow(() =>
                 converter2.Single(t =>
-                    t.GetType().GetInterfaces().Any(i =>
+                    Array.Exists(t.GetType().GetInterfaces(), i =>
                         i.IsGenericType &&
                         i.GenericTypeArguments.Length == 2 &&
                         i.GenericTypeArguments[0] == typeof(int) &&

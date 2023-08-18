@@ -231,13 +231,12 @@ namespace Yarhl.UnitTests.FileFormat
         }
 
         [Test]
-        public void ConvertWithTypeThrowsIfConverterNotFound()
+        public void ConvertWithTypeDoesNotThrowsIfConverterNotFound()
         {
             using var format = new StringFormatTest("3");
             Assert.That(
                 () => ConvertFormat.With(typeof(HiddenConverter), format),
-                Throws.InvalidOperationException.With.Message.EqualTo(
-                    $"Cannot find converter {typeof(HiddenConverter).FullName}"));
+                Throws.Nothing);
         }
 
         [Test]
@@ -247,7 +246,7 @@ namespace Yarhl.UnitTests.FileFormat
             Assert.That(
                 () => ConvertFormat.With(typeof(DateTime), format),
                 Throws.InvalidOperationException.With.Message.EqualTo(
-                    $"Cannot find converter {typeof(DateTime).FullName}"));
+                    "Converter doesn't implement IConverter<,>"));
         }
 
         [Test]
@@ -329,7 +328,7 @@ namespace Yarhl.UnitTests.FileFormat
         public void ConvertWithInstanceThrowsExceptionIfInvalidConverter()
         {
             using var format = new StringFormatTest("3");
-            string msg = "Converter cannot convert from/to the type";
+            string msg = "Converter cannot convert the type: Yarhl.UnitTests.FileFormat.StringFormatTest";
 
             Assert.That(
                 () => ConvertFormat.With<SingleOuterConverterExample>(format),

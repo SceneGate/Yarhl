@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,10 +19,13 @@
 // SOFTWARE.
 namespace Yarhl.FileFormat
 {
+    using System;
+
     /// <summary>
     /// Initialization interface.
     /// </summary>
     /// <typeparam name="T">Type of the parameters for the initialize.</typeparam>
+    [Obsolete("IInitialize is obsolete. Use the converter constructor or properties")]
     public interface IInitializer<in T>
     {
         /// <summary>

@@ -25,7 +25,7 @@ namespace Yarhl.FileFormat
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Design",
         "CA1040:AvoidEmptyInterfaces",
-        Justification = "We use the interface as a compile time marker.")]
+        Justification = "Provides a minimal of type checking when we don't know the generics")]
     public interface IConverter
     {
     }

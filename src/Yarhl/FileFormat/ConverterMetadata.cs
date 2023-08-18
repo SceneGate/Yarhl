@@ -24,6 +24,7 @@ namespace Yarhl.FileFormat
     /// <summary>
     /// Metadata associated to a IConverter interface.
     /// </summary>
+    [Obsolete("Use the new assembly Yarhl.Plugins.")]
     public class ConverterMetadata : IExportMetadata
     {
         /// <summary>
