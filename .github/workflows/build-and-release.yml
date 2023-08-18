@@ -85,7 +85,7 @@ jobs:
   push_artifacts:
     name: "Push artifacts"
     # TEMP
-    if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/feature/new-converter-api'
+    # if: github.ref == 'refs/heads/develop' || startsWith(github.ref, 'refs/tags/v')
     needs: [ "build_main", "build_sec" ]
     runs-on: ubuntu-latest
     env:
