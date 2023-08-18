@@ -24,4 +24,5 @@
         "Msgid",
         "typeparam"
     ],
+    "dotnet.defaultSolution": "src/Yarhl.sln",
 }

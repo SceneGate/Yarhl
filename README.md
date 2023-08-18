@@ -1,35 +1,50 @@
-# Yarhl: Yarhl, A format ResearcH Library ![awesomeness](https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp)
+# Yarhl, A format ResearcH Library [![awesomeness](https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp)](https://github.com/SceneGate)
 
 ![Yarhl Logo](https://raw.githubusercontent.com/SceneGate/Yarhl/develop/docs/images/logo.png)
 
-> **Yarhl** is framework to **implement and convert file formats**. It provides
-> a virtual file system, format conversion APIs, full featured binary IO and
-> plugin support to support common formats. It's built in **C# / .NET** and
-> works in Windows, Linux and Mac OS X.
+<!-- markdownlint-disable MD033 -->
+<p align="center">
+  <a href="https://www.nuget.org/packages?q=Yarhl">
+    <img alt="Stable version" src="https://img.shields.io/nuget/v/Yarhl?label=Stable" />
+  </a>
+  &nbsp;
+  <a href="https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview">
+    <img alt="GitHub commits since latest release (by SemVer)" src="https://img.shields.io/github/commits-since/SceneGate/Yarhl/latest?sort=semver" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/SceneGate/Yarhl/workflows/Build%20and%20release">
+    <img alt="Build and release" src="https://github.com/SceneGate/Yarhl/workflows/Build%20and%20release/badge.svg?branch=develop" />
+  </a>
+  &nbsp;
+  <a href="https://bestpractices.coreinfrastructure.org/projects/2919">
+    <img alt="CII Best Practices" src="https://bestpractices.coreinfrastructure.org/projects/2919/badge" />
+  </a>
+  &nbsp;
+  <a href="https://choosealicense.com/licenses/mit/">
+    <img alt="MIT License" src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat" />
+  </a>
+  &nbsp;
+</p>
 
-<!-- prettier-ignore -->
-| Stable | [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl)](https://www.nuget.org/packages/Yarhl) |
-|------------------| ------ |
-| **Preview** | [![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/SceneGate/Yarhl/latest?sort=semver)](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview) |
-| **Build & Test** | ![Build and release](https://github.com/SceneGate/Yarhl/workflows/Build%20and%20release/badge.svg?branch=develop) |
-| **Open source!** | [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/2919/badge)](https://bestpractices.coreinfrastructure.org/projects/2919) [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)](https://choosealicense.com/licenses/mit/) |
+**Yarhl** is a set of libraries that helps to **implement and convert file
+formats**. It provides a virtual file system, format conversion APIs, full
+featured binary IO and plugin support to support common formats. It's built in
+**C# / .NET** and works in any OS that supports the .NET runtime.
 
-## Features
-
-- :books: Format implementation architecture and guidelines
-- :recycle: Format conversion API
-- :open_file_folder: Virtual file system with format transformations
-- :1234: Binary IO
-  - Custom `Stream` with sub-stream supports (memory efficiency!)
+- :books: **Format implementation** architecture and guidelines
+- :recycle: **Format conversion** API
+- :open_file_folder: **Virtual file system** with format transformations
+- :1234: **Enhanced binary IO API**
+  - Custom `Stream` with **sub-stream supports** (memory and disk efficient!)
   - Full feature binary and text readers and writers
-  - Simple binary (de)serializer
-- :page_with_curl: Text formats
-  - Industry-standard translation format: PO
-  - Table text replaces
-  - Common encodings: euc-jp, token-escaped encoding
-  - Base class for quick and simple encoding implementations
+  - Simple binary (de)serializer by attributes in the model.
+- :page_with_curl: Standard text formats
+  - Industry-standard localization format: **GNU gettext PO**
+  - Table text replacements
+  - **Common encodings**: euc-jp, token-escaped encoding
+  - **API for simple encoding implementations**
 
-## Getting started guide
+## Getting started
 
 Check out the
 [getting started guide](https://scenegate.github.io/Yarhl/guides/getting-started/introduction.html)
@@ -43,34 +58,34 @@ public class BinaryArchive2Container : IConverter<IBinary, NodeContainerFormat>
 {
     public NodeContainerFormat Convert(IBinary source)
     {
+        // Format: number of files + table with "name + offset + size", then file data.
         var reader = new DataReader(source.Stream);
         var container = new NodeContainerFormat();
 
-        // Format: table with "name + offset + size", then file data.
-        // The offset to the first file give us the number of entries.
-        int numFiles = reader.ReadInt32() / 0x18;
-        reader.Stream.Position = 0;
-
-        for (int i = 0; i < numFiles; i++) {
-            string name = reader.ReadString(0x10); // 16 bytes for name
+        int numFiles = reader.ReadInt32();
+        for (int i = 0; i < numFiles; i++)
+        {
+            string name = reader.ReadString(bytesCount: 0x10, encoding: Encoding.UTF8);
             uint offset = reader.ReadUInt32();
             uint size = reader.ReadUInt32();
 
-            // Create a substream for the child, a stream from a region
+            // Create a sub-stream for the child, a stream from a region
             // of the parent stream without making any read/write or copies.
-            Node node = NodeFactory.FromSubstream(name, source.Stream, offset, size);
-            container.Root.Add(node);
+            Node child = NodeFactory.FromSubstream(name, source.Stream, offset, size);
+            container.Root.Add(child);
         }
 
         return container;
     }
 }
 
-// Unpack a child from the container file.
-Node dataNode = NodeFactory.FromFile("file.bin", FileOpenMode.Read)
-    .TransformWith<BinaryArchive2Container>() // Binary -> container (virtual file system)
-    .Children["data"].Children["text.json"]   // Navigate the children
-    .Stream.WriteTo("text.json");             // Export to the disk
+// Convert the binary file into a virtual folder (no disk writing).
+using Node root = NodeFactory.FromFile("file.bin", FileOpenMode.Read);
+root.TransformWith<BinaryArchive2Container>(); // Binary -> node format
+
+// Extract a child into disk.
+Node child = root.Children["text.json"]   // Navigate the children
+child.Stream.WriteTo("output/text.json"); // Export to the disk (creates missing dirs)
 ```
 
 Feel free to ask any question in the
@@ -80,14 +95,14 @@ check the complete documentation [here](https://scenegate.github.io/Yarhl/).
 ## Usage
 
 This project provides the following libraries as NuGet packages (via nuget.org).
-The libraries only support the latest version of .NET and its LTS: **.NET 6.0**.
+The libraries support the latest version of .NET and its LTS.
 
 - [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl&logo=nuget)](https://www.nuget.org/packages/Yarhl):
   core, format conversion, file system and binary reading / writing (IO).
 - [![Yarhl.Media.Text](https://img.shields.io/nuget/v/Yarhl.Media.Text?label=Yarhl.Media.Text&logo=nuget)](https://www.nuget.org/packages/Yarhl.Media.Text):
   text formats (Po) and encodings.
 
-Preview releases can be found in this
+**Preview releases** can be found in this
 [Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
 To use a preview release, create a file `nuget.config` in the same directory of
 your solution file (.sln) with the following content:
@@ -96,12 +111,23 @@ your solution file (.sln) with the following content:
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
   <packageSources>
+    <clear/>
+    <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
     <add key="SceneGate-Preview" value="https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json" />
   </packageSources>
+  <packageSourceMapping>
+    <packageSource key="nuget.org">
+      <package pattern="*" />
+    </packageSource>
+    <packageSource key="SceneGate-Preview">
+      <package pattern="Yarhl*" />
+    </packageSource>
+  </packageSourceMapping>
 </configuration>
 ```
 
-Then restore / install as usual via Visual Studio, Rider or command-line.
+Then restore / install as usual via Visual Studio, Rider or command-line. You
+may need to restart Visual Studio for the changes to apply.
 
 ## Contributing
 
@@ -117,7 +143,7 @@ To build, test and generate artifacts run:
 # Only required the first time
 dotnet tool restore
 
-# Default target is Stage-Artifacts
+# Default target is Stage-Artifacts that builds, runs tests and create the NuGets
 dotnet cake
 ```
 
