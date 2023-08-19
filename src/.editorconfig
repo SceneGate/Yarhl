@@ -10,7 +10,7 @@ indent_size = 4
 indent_style = space
 tab_width = 8
 trim_trailing_whitespace = true
-end_of_line = lf
+end_of_line = unset # Hard to enforce on Windows, Git will take care
 insert_final_newline = true
 
 ## .NET style rules

@@ -218,23 +218,9 @@ namespace Yarhl.FileSystem
             if (Disposed)
                 throw new ObjectDisposedException(nameof(Node));
 
-            if (Format is null) {
-                throw new InvalidOperationException(
-                    "Cannot transform a node without format");
-            }
-
-            ConvertFormat.ValidateConverterType(typeof(TConv), Format.GetType());
-
             // This is a valid use of ConvertFormat.With as we don't care about
-            // the returned type. As the method was deprecated we replicate
-            // the same logic here.
-            dynamic converter = new TConv();
-            dynamic input = Format; // passing an object variable doesn't work
-            object result = converter.Convert(input);
-
-            CastAndChangeFormat(result);
-
-            return this;
+            // the returned type. There isn't anything to do type safety.
+            return TransformWith(typeof(TConv));
         }
 
         /// <summary>
@@ -286,6 +272,40 @@ namespace Yarhl.FileSystem
 
             object result = ConvertFormat.With(converterType, Format, args);
             CastAndChangeFormat(result);
+
+            return this;
+        }
+
+        /// <summary>
+        /// Transform the node format to another format using a converter.
+        /// </summary>
+        /// <remarks>
+        /// This API may behave slower and produce less obvious exceptions.
+        /// It's recommended to use instead
+        /// <see cref="TransformWith{TSrc, TDst}(IConverter{TSrc, TDst})"/>.
+        /// </remarks>
+        /// <param name="converter">Convert to use.</param>
+        /// <returns>This node.</returns>
+        public Node TransformWith(IConverter converter)
+        {
+            if (Disposed)
+                throw new ObjectDisposedException(nameof(Node));
+
+            if (converter == null)
+                throw new ArgumentNullException(nameof(converter));
+
+            if (Format is null) {
+                throw new InvalidOperationException(
+                    "Cannot transform a node without format");
+            }
+
+            ConvertFormat.ValidateConverterType(converter.GetType(), Format.GetType());
+
+            dynamic converterDyn = converter;
+            dynamic source = Format;
+            IFormat newFormat = converterDyn.Convert(source);
+
+            ChangeFormat(newFormat);
 
             return this;
         }

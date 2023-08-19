@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -198,6 +198,15 @@ namespace Yarhl.UnitTests
             Assert.That(conv.Convert(new PluginFormat()), Is.EqualTo(0));
         }
 
+        [Test]
+        [Ignore("To be fixed")]
+        public void GetConvertersWithParametersReturnsMetadata()
+        {
+            var formats = PluginManager.Instance.GetConverters()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(PluginConverterParametrized)));
+        }
+
         [Export(typeof(IExistsInterface))]
         public class ExistsClass : IExistsInterface
         {
@@ -224,6 +233,19 @@ namespace Yarhl.UnitTests
 
         public class PluginConverter : IConverter<PluginFormat, int>
         {
+            public int Convert(PluginFormat source)
+            {
+                return PluginFormat.Value;
+            }
+        }
+
+        [PartNotDiscoverable] // TODO: remove attribute
+        public class PluginConverterParametrized : IConverter<PluginFormat, int>
+        {
+            public PluginConverterParametrized(bool ignoreMe)
+            {
+            }
+
             public int Convert(PluginFormat source)
             {
                 return PluginFormat.Value;
