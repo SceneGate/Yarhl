@@ -13,7 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarhl.IntegrationTests", "Y
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarhl.PerformanceTests", "Yarhl.PerformanceTests\Yarhl.PerformanceTests.csproj", "{ADF44DD6-B355-45FB-A50A-06CBCE2EFF6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarhl.Plugins", "Yarhl.Plugins\Yarhl.Plugins.csproj", "{BA0B3521-B41A-413E-A63C-B8F5EE196B08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarhl.Plugins", "Yarhl.Plugins\Yarhl.Plugins.csproj", "{BA0B3521-B41A-413E-A63C-B8F5EE196B08}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5B9743C-A789-449C-9F2F-F39EE77AD890}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7EA26602-EB23-42EE-805B-4C47D5B5325E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -100,6 +110,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{032CD3C2-4BEA-4C52-8FB5-28B4DCCB044A} = {7EA26602-EB23-42EE-805B-4C47D5B5325E}
+		{B32EE98E-01F2-4B98-8160-7567C5AE1A8D} = {7EA26602-EB23-42EE-805B-4C47D5B5325E}
+		{ADF44DD6-B355-45FB-A50A-06CBCE2EFF6E} = {7EA26602-EB23-42EE-805B-4C47D5B5325E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F21F79FF-3DF4-496F-AA90-791897A59DA8}

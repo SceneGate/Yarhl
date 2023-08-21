@@ -27,6 +27,7 @@ namespace Yarhl
     /// <summary>
     /// Utilities to work with Assemblies.
     /// </summary>
+    [Obsolete("Use the new assembly Yarhl.Plugins.")]
     internal static class AssemblyUtils
     {
         /// <summary>

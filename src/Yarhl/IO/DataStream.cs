@@ -43,7 +43,7 @@ namespace Yarhl.IO
         "",
         "S3881",
         Justification = "Historical reasons: https://docs.microsoft.com/en-us/dotnet/api/system.io.stream.dispose")]
-    public class DataStream : Stream
+    public partial class DataStream : Stream
     {
         static readonly ConcurrentDictionary<Stream, StreamInfo> Instances = new ConcurrentDictionary<Stream, StreamInfo>();
         readonly Stack<long> positionStack = new Stack<long>();
@@ -304,32 +304,6 @@ namespace Yarhl.IO
         }
 
         /// <summary>
-        /// Move the position of the Stream.
-        /// </summary>
-        /// <param name="shift">Distance to move position.</param>
-        /// <param name="mode">Mode to move position.</param>
-        [Obsolete("Use the overload with SeekOrigin.")]
-        public void Seek(long shift, SeekMode mode)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            switch (mode) {
-                case SeekMode.Current:
-                    _ = Seek(shift, SeekOrigin.Current);
-                    break;
-                case SeekMode.Start:
-                    _ = Seek(shift, SeekOrigin.Begin);
-                    break;
-                case SeekMode.End:
-                    _ = Seek(shift, SeekOrigin.End);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(mode));
-            }
-        }
-
-        /// <summary>
         /// Move the position of the stream.
         /// </summary>
         /// <param name="offset">Distance to move position.</param>
@@ -356,21 +330,6 @@ namespace Yarhl.IO
             }
 
             return Position;
-        }
-
-        /// <summary>
-        /// Push the current position into a stack and move to a new one.
-        /// </summary>
-        /// <param name="shift">Distance to move position.</param>
-        /// <param name="mode">Mode to move position.</param>
-        [Obsolete("Use the overload with SeekOrigin.")]
-        public void PushToPosition(long shift, SeekMode mode)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            positionStack.Push(Position);
-            Seek(shift, mode);
         }
 
         /// <summary>
@@ -410,25 +369,6 @@ namespace Yarhl.IO
                 throw new InvalidOperationException("Position stack is empty");
 
             Position = positionStack.Pop();
-        }
-
-        /// <summary>
-        /// Run a method in a specific position.
-        /// This command will move into the position, run the method and return
-        /// to the current position.
-        /// </summary>
-        /// <param name="action">Action to run.</param>
-        /// <param name="position">Position to move.</param>
-        /// <param name="mode">Mode to move position.</param>
-        [Obsolete("Use the overload with SeekOrigin.")]
-        public void RunInPosition(Action action, long position, SeekMode mode)
-        {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
-
-            PushToPosition(position, mode);
-            action();
-            PopPosition();
         }
 
         /// <summary>
@@ -507,23 +447,6 @@ namespace Yarhl.IO
 
             position = pos + read;
             return read;
-        }
-
-        /// <summary>
-        /// Reads a format from this stream.
-        /// </summary>
-        /// <returns>The format read.</returns>
-        /// <typeparam name="T">The type of the format to read.</typeparam>
-        [Obsolete("ConvertFormat.To() is obsoleted. Use the converter directly.")]
-        public T ReadFormat<T>()
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(DataStream));
-
-            T format;
-            using (var binary = new BinaryFormat(this))
-                format = ConvertFormat.To<T>(binary);
-            return format;
         }
 
         /// <summary>

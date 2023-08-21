@@ -17,15 +17,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.UnitTests
+namespace Yarhl.UnitTests.Plugins
 {
     using System;
     using System.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using NUnit.Framework;
-    using Yarhl.FileFormat;
     using Yarhl.IO;
+    using Yarhl.Plugins;
+    using Yarhl.Plugins.FileFormat;
     using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
@@ -163,7 +164,7 @@ namespace Yarhl.UnitTests
         public void FindLazyExtensionWithMetadata()
         {
             var formats = PluginManager.Instance
-                .FindLazyExtensions<IFormat, FormatMetadata>()
+                .FindLazyExtensions<Yarhl.FileFormat.IFormat, FormatMetadata>()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Does.Contain(typeof(PluginFormat)));
         }
@@ -172,7 +173,7 @@ namespace Yarhl.UnitTests
         public void FindLazyExtesionWithMetadataIsUnique()
         {
             var formats = PluginManager.Instance
-                .FindLazyExtensions<IFormat, FormatMetadata>()
+                .FindLazyExtensions<Yarhl.FileFormat.IFormat, FormatMetadata>()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Is.Unique);
         }
@@ -226,12 +227,12 @@ namespace Yarhl.UnitTests
             }
         }
 
-        public class PluginFormat : IFormat
+        public class PluginFormat : Yarhl.FileFormat.IFormat
         {
             public static int Value => 0;
         }
 
-        public class PluginConverter : IConverter<PluginFormat, int>
+        public class PluginConverter : Yarhl.FileFormat.IConverter<PluginFormat, int>
         {
             public int Convert(PluginFormat source)
             {
@@ -240,7 +241,7 @@ namespace Yarhl.UnitTests
         }
 
         [PartNotDiscoverable] // TODO: remove attribute
-        public class PluginConverterParametrized : IConverter<PluginFormat, int>
+        public class PluginConverterParametrized : Yarhl.FileFormat.IConverter<PluginFormat, int>
         {
             public PluginConverterParametrized(bool ignoreMe)
             {

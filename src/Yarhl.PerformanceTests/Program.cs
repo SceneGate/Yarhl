@@ -17,10 +17,8 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-#pragma warning disable SA1200 // False positive of namespace and using
 using System.CommandLine;
 using BenchmarkDotNet.Running;
-#pragma warning restore SA1200
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("", "SA1516", Justification = "Broken blank line rule")]
 
@@ -33,11 +31,15 @@ streamComparePerf.SetHandler(() => BenchmarkRunner.Run<Yarhl.PerformanceTests.IO
 var streamReadWritePerf = new Command("stream-rw", "Run the perf test for DataStream Read/Write");
 streamReadWritePerf.SetHandler(() => BenchmarkRunner.Run<Yarhl.PerformanceTests.IO.DataStreamReadWriteTests>());
 
+var nodeTransformInterfaces = new Command("node-transformWithInterfaces", "Run the perf test for Node.TransformWith");
+nodeTransformInterfaces.SetHandler(() => BenchmarkRunner.Run<Yarhl.PerformanceTests.FileSystem.NodeTransformWithInterfaces>());
+
 var rootCommand = new RootCommand("Yarhl performance tests")
 {
     encodingPerf,
     streamComparePerf,
     streamReadWritePerf,
+    nodeTransformInterfaces,
 };
 
 return rootCommand.Invoke(args);

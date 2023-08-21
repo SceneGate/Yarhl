@@ -27,7 +27,7 @@ namespace Yarhl.FileSystem
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
-    public class Node : NavigableNode<Node>
+    public partial class Node : NavigableNode<Node>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Node"/> class.
@@ -162,52 +162,6 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Transforms the node format to the specified format.
-        /// </summary>
-        /// <typeparam name="TDst">Format to convert.</typeparam>
-        /// <returns>This node.</returns>
-        [Obsolete("To() overloads are deprecated. Use TransformWith()")]
-        public Node TransformTo<TDst>()
-            where TDst : IFormat
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Node));
-
-            if (Format == null) {
-                throw new InvalidOperationException(
-                    "Cannot transform a node without format");
-            }
-
-            ChangeFormat(ConvertFormat.To<TDst>(Format));
-            return this;
-        }
-
-        /// <summary>
-        /// Transforms the node format to the specified format.
-        /// </summary>
-        /// <returns>This node.</returns>
-        /// <param name="dst">Format to convert. It must implement IFormat.</param>
-        [Obsolete("To() overloads are deprecated. Use TransformWith()")]
-        public Node TransformTo(Type dst)
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Node));
-
-            if (dst == null)
-                throw new ArgumentNullException(nameof(dst));
-
-            if (Format == null) {
-                throw new InvalidOperationException(
-                    "Cannot transform a node without format");
-            }
-
-            object result = ConvertFormat.To(dst, Format);
-            CastAndChangeFormat(result);
-
-            return this;
-        }
-
-        /// <summary>
         /// Transform the node format to another format with a given converter.
         /// </summary>
         /// <returns>This node.</returns>
@@ -221,32 +175,6 @@ namespace Yarhl.FileSystem
             // This is a valid use of ConvertFormat.With as we don't care about
             // the returned type. There isn't anything to do type safety.
             return TransformWith(typeof(TConv));
-        }
-
-        /// <summary>
-        /// Transform the node format to another format with a given converter
-        /// initialized with parameters.
-        /// </summary>
-        /// <returns>This node.</returns>
-        /// <typeparam name="TConv">The type of the converter to use.</typeparam>
-        /// <typeparam name="TParam">The type for initializing the converter.</typeparam>
-        /// <param name="param">Parameters to initialize the converter.</param>
-        [Obsolete("IInitialize is obsolete. Use the converter constructor and TransformWith(converter)")]
-        public Node TransformWith<TConv, TParam>(TParam param)
-            where TConv : IConverter, IInitializer<TParam>, new()
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Node));
-
-            if (Format == null) {
-                throw new InvalidOperationException(
-                    "Cannot transform a node without format");
-            }
-
-            object result = ConvertFormat.With<TConv, TParam>(param, Format);
-            CastAndChangeFormat(result);
-
-            return this;
         }
 
         /// <summary>
@@ -305,36 +233,6 @@ namespace Yarhl.FileSystem
             dynamic source = Format;
             IFormat newFormat = converterDyn.Convert(source);
 
-            ChangeFormat(newFormat);
-
-            return this;
-        }
-
-        /// <summary>
-        /// Transform the node format to another format using a converter.
-        /// </summary>
-        /// <param name="converter">Convert to use.</param>
-        /// <typeparam name="TSrc">The type of the source format.</typeparam>
-        /// <typeparam name="TDst">The type of the destination format.</typeparam>
-        /// <returns>This node.</returns>
-        public Node TransformWith<TSrc, TDst>(IConverter<TSrc, TDst> converter)
-            where TSrc : IFormat
-            where TDst : IFormat
-        {
-            if (Disposed)
-                throw new ObjectDisposedException(nameof(Node));
-
-            if (converter == null)
-                throw new ArgumentNullException(nameof(converter));
-
-            if (Format is null) {
-                throw new InvalidOperationException(
-                    "Cannot transform a node without format");
-            }
-
-            ConvertFormat.ValidateConverterType(converter.GetType(), Format.GetType());
-
-            TDst newFormat = converter.Convert((TSrc)Format);
             ChangeFormat(newFormat);
 
             return this;
