@@ -129,6 +129,21 @@ your solution file (.sln) with the following content:
 Then restore / install as usual via Visual Studio, Rider or command-line. You
 may need to restart Visual Studio for the changes to apply.
 
+## Showcase
+
+Some cool projects built with _Yarhl_:
+
+- [**Ekona**](https://scenegate.github.io/Ekona/): support Nintendo DS file
+  formats.
+- [**Lemon**](https://scenegate.github.io/Lemon/): support Nintendo 3DS file
+  formats.
+- [**LayTea**](https://www.pleonex.dev/LayTea/): modding tools for _Professor
+  Layton_ games.
+- [**Attack of Friday Monsters tools**](https://github.com/pleonex/AttackFridayMonsters):
+  modding tools for _Attack of the Friday Monsters_ game.
+- [**Metatron**](https://github.com/TraduSquare/Metatron): translation framework
+  for _Shin Megami Tensei_ saga games.
+
 ## Contributing
 
 The repository requires to build .NET 6.0 SDK and .NET Framework 4.8 or latest
