@@ -7,6 +7,12 @@
       "commands": [
         "dotnet-cake"
       ]
+    },
+    "xmldoc2markdown": {
+      "version": "3.1.0",
+      "commands": [
+        "xmldoc2md"
+      ]
     }
   }
 }

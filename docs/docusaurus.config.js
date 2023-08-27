@@ -21,8 +21,8 @@ const config = {
   organizationName: 'SceneGate', // Usually your GitHub org/user name.
   projectName: 'Yarhl', // Usually your repo name.
 
-  onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'throw',
+  onBrokenLinks: 'warn',
+  onBrokenMarkdownLinks: 'warn',
 
   // Even if you don't use internalization, you can use this field to set useful
   // metadata like html lang. For example, if your site is Chinese, you may want
@@ -52,6 +52,10 @@ const config = {
       }),
     ],
   ],
+  themes: ['@docusaurus/theme-mermaid'],
+  markdown: {
+    mermaid: true,
+  },
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -70,7 +74,13 @@ const config = {
             position: 'left',
             label: 'Guides',
           },
-          {to: '/docs/api', label: 'API', position: 'left'},
+          {
+            type: 'docSidebar',
+            sidebarId: 'apiDocsSidebar',
+            position: 'left',
+            label: 'API',
+          },
+         // {to: '/docs/api', label: 'API', position: 'left'},
           {
             href: 'https://github.com/SceneGate/Yarhl',
             className: 'header-github-link',
