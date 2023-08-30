@@ -35,7 +35,7 @@
     "resource": [
       {
         "files": [
-          "images/**"
+          "**/images/**"
         ]
       }
     ],
@@ -43,7 +43,7 @@
     "globalMetadata": {
       "_appTitle": "Yarhl",
       "_appName": "Yarhl",
-      "_appFooter": "<span>Part of the <a href=\"https://github.com/SceneGate\" target=\"_blank\">SceneGate framework</a>. Docs made with <a href=\"https://dotnet.github.io/docfx\">docfx</a></span>",
+      "_appFooter": "<span>Part of the <a href=\"https://github.com/SceneGate\" target=\"_blank\">SceneGate framework</a>. Docs made with <a href=\"https://dotnet.github.io/docfx\" target=\"_blank\">docfx</a></span>",
       "_appLogoPath": "images/logo-50.png",
       "_appFaviconPath": "images/favicon.ico",
       "_enableSearch": true,

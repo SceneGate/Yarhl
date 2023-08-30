@@ -163,6 +163,8 @@ dotnet_diagnostic.IDE1006.severity = warning
 ## Code analyzers
 ### .NET SDK
 dotnet_diagnostic.CA1303.severity = none # We don't translate exception and log messages from English
+dotnet_diagnostic.IDE0058.severity = suggestion # Expression value is never used
+dotnet_diagnostic.SA1025.severity = none # Allow spaces in comments to structure info
 
 ### StyleCop
 dotnet_diagnostic.SA1101.severity = none # Do not force to prefix local calls with 'this'
@@ -174,8 +176,8 @@ dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
 ### SonarAnalyzer
 dotnet_diagnostic.S1135.severity = suggestion # It's almost inevitable to have TODO but add bug ID
 
-# Special rules for test projects
-[*Tests/**]
+# Special rules for test and example projects
+[{*Tests/**,*Examples/**}]
 dotnet_diagnostic.CS1591.severity = none # Disable documentation
 dotnet_diagnostic.CA1001.severity = none # No need to implement IDisposable in test classes with cleanup.
 dotnet_diagnostic.CA1034.severity = none # Public types in test classes for testing implementations
@@ -185,5 +187,9 @@ dotnet_diagnostic.CA1305.severity = none # No culture method for quick test code
 dotnet_diagnostic.CA1307.severity = none # No culture method for quick test code
 dotnet_diagnostic.SA0001.severity = none # Disable documentation
 dotnet_diagnostic.SA1600.severity = none # Disable documentation
+dotnet_diagnostic.SA1201.severity = none # Allow enums inside classes
 dotnet_diagnostic.S2699.severity = none # Assert may be in helper methods
 dotnet_diagnostic.S3966.severity = none # Dispose twice to test implementation
+
+[*Examples/**]
+dotnet_diagnostic.SA1123.severity = none # Allow namespaces to insert code snippets in markdown

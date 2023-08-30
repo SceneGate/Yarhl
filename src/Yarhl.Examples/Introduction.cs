@@ -17,41 +17,35 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-using System.IO;
-using SceneGate.Ekona.Containers.Rom;
-using SceneGate.Games.ProfessorLayton.Containers;
-using SceneGate.Games.ProfessorLayton.Texts.LondonLife;
+namespace Yarhl.Examples;
+
+using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
 using Yarhl.Media.Text;
 
-namespace Yarhl.Examples;
-
 internal static class Introduction
 {
-    /// <summary>
-    /// Export texts from Professor Layton London Life game.
-    /// </summary>
-    /// <param name="gameFilePath">Path to game file.</param>
     internal static void ExportText(string gameFilePath)
     {
         #region Demo1
-        // Read game file system
+        // 1. Read game file system
         Node game = NodeFactory.FromFile(gameFilePath, FileOpenMode.Read)
             .TransformWith<Binary2NitroRom>();
 
-        // Navigate to the container that has our text file and unpack it.
+        // 2. Navigate to the container that has our text file and unpack it.
         Node msgNode = Navigator.SearchNode(game, "data/ll/common/ll_common.darc")
             .TransformWith<BinaryDarc2Container>() // binary -> file system (container)
             .Children[2]                           // text file is the third file
             .TransformWith<DencDecompression>();   // the file is compressed with LZSS
 
-        // Convert its proprietary binary format into industry-standard translation format PO.
-        // As it's a huge text file, the converter splits the content into different files.
+        // 3. Convert its proprietary binary format into industry-standard translation format PO.
+        //    As it's a huge text file, the converter splits the content into different files.
         msgNode.TransformWith<Binary2MessageCollection>()
             .TransformWith<MessageCollection2PoContainer, LondonLifeRegion>(LondonLifeRegion.Usa);
 
         foreach (var children in msgNode.Children) {
+            // 4. Save the PO format into disk
             children.TransformWith<Po2Binary>()
                 .Stream.WriteTo(Path.Combine("outputs", "london_life", $"{children.Name}.po"));
         }
@@ -73,5 +67,32 @@ internal static class Introduction
         textNode.TransformWith<Po2Binary>()
             .Stream.WriteTo(Path.Combine("outputs", "london_life", "translated.po"));
         #endregion
+    }
+
+    // Fake converters to avoid external dependencies
+    private sealed class Binary2NitroRom : IConverter
+    {
+    }
+
+    private sealed class BinaryDarc2Container : IConverter
+    {
+    }
+
+    private sealed class DencDecompression : IConverter
+    {
+    }
+
+    private sealed class Binary2MessageCollection : IConverter
+    {
+    }
+
+    private sealed class MessageCollection2PoContainer : IConverter, IInitializer<LondonLifeRegion>
+    {
+        public void Initialize(LondonLifeRegion parameters) => throw new NotImplementedException();
+    }
+
+    private enum LondonLifeRegion
+    {
+        Usa = 0,
     }
 }

@@ -1,16 +1,9 @@
-# Yarhl, A Format research library
+# Yarhl, A format ResearcH Library ![SceneGate awesome](https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp)
 
 ![Yarhl logo](./images/logo-large.png)
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">
-  <a href="https://github.com/SceneGate">
-    <img
-      alt="SceneGate awesome"
-      src="https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp"
-    />
-  </a>
-  &nbsp;
   <a href="https://www.nuget.org/packages?q=Yarhl">
     <img
       alt="Stable version"
@@ -64,23 +57,61 @@ The project has the following .NET libraries (NuGet packages via nuget.org). The
 libraries only support the latest .NET LTS version: **.NET 6.0**.
 
 - [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl&logo=nuget)](https://www.nuget.org/packages/Yarhl)
-  - `Yarhl`: plugin manager to find formats and converters.
   - `Yarhl.FileFormat`: format conversion APIs.
   - `Yarhl.FileSystem`: virtual file system.
   - `Yarhl.IO`: streams, binary and text reading / writing.
-- [![Yarhl.Media](https://img.shields.io/nuget/v/Yarhl.Media?label=Yarhl.Media&logo=nuget)](https://www.nuget.org/packages/Yarhl.Media)
+- [![Yarhl.Media.Text](https://img.shields.io/nuget/v/Yarhl.Media.Text?label=Yarhl.Media.Text&logo=nuget)](https://www.nuget.org/packages/Yarhl.Media.Text)
   - `Yarhl.Media.Text`: translation formats and converters (Po), table replacer.
   - `Yarhl.Media.Text.Encoding`: _euc-jp_ and token-escaped encodings.
+- [![Yarhl.Plugins](https://img.shields.io/nuget/v/Yarhl.Plugins?label=Yarhl.Plugins&logo=nuget)](https://www.nuget.org/packages/Yarhl.Plugins)
+  - `Yarhl.Plugins`: discover formats and converters from .NET assemblies.
+
+> [!NOTE]  
+> _Are you planning to try a preview version?_ Check-out the
+> [GitHub project readme](https://github.com/SceneGate/Yarhl#install) for
+> details how to get setup the NuGet preview feed.
 
 ## Quick demo
 
-You can use _Yarhl_ to create applications to convert and work with file formats
-already supported by its plugins. For instance, let's extract the text from a
-_NDS_ game using two _Yarhl_ libraries:
+You can use _Yarhl_ to create applications that converts file formats. For
+instance, let's extract the text from a game into a translatable file format
+like [PO](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html).
+We can use the following libraries for this task:
 
+- [Yarhl.Media.Text](./articles/media-text/po-format.md): support for PO format.
 - [Ekona](https://github.com/SceneGate/Ekona/): support of NDS game file system.
 - [LayTea](https://github.com/pleonex/LayTea): support for formats from
   _Professor Layton_ games.
+
+The flow of format conversions would be:
+
+```mermaid
+flowchart TB
+  subgraph S1 [1. Access game files]
+    S1_A("File from disk\n(Binary format)") -->|Binary2NitroRom| S1_B
+    S1_B(Container)
+  end
+  subgraph S2 [2. Unpack game file with the text]
+    S2_A("Navigate to file\n`data/ll_common.darc`\n(Binary format)") --> |BinaryDarc2Container| S2_B
+    S2_B(Container) --> S2_C
+    S2_C("Navigate to file 2\n(Binary format)") -->|DencDecompression| S2_D
+    S2_D("Decompressed binary")
+  end
+  subgraph S3 [3. Convert to PO format]
+    S3_A("Decompressed binary") --> |Binary2MessageCollection| S3_B
+    S3_B("Game text format") --> |MessageCollection2Po| S3_C
+    S3_C("PO format")
+  end
+  subgraph S4 [4. Save PO format to disk]
+    S4_A("PO format") --> |Po2Binary| S4_B
+    S4_B("Binary format") -->|"Stream.WriteTo(output)"| S4_C
+    S4_C(("Done!"))
+  end
+
+  S1 --> S2
+  S2 --> S3
+  S3 --> S4
+```
 
 [!code-csharp[Demo1](./../src/Yarhl.Examples/Introduction.cs?name=Demo1)]
 
