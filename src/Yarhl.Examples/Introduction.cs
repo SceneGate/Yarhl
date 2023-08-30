@@ -28,9 +28,9 @@ internal static class Introduction
 {
     internal static void ExportText(string gameFilePath)
     {
-        #region Demo1
-        // 1. Read game file system
-        Node game = NodeFactory.FromFile(gameFilePath, FileOpenMode.Read)
+        #region Demo_Containers
+        // 1. Read the game file system from a file (deserialize)
+        using Node game = NodeFactory.FromFile(gameFilePath, FileOpenMode.Read)
             .TransformWith<Binary2NitroRom>();
 
         // 2. Navigate to the container that has our text file and unpack it.
@@ -40,32 +40,31 @@ internal static class Introduction
             .TransformWith<DencDecompression>();   // the file is compressed with LZSS
 
         // 3. Convert its proprietary binary format into industry-standard translation format PO.
-        //    As it's a huge text file, the converter splits the content into different files.
+        //    As it's a big text file, the converter splits the content into different files.
         msgNode.TransformWith<Binary2MessageCollection>()
             .TransformWith<MessageCollection2PoContainer, LondonLifeRegion>(LondonLifeRegion.Usa);
 
         foreach (var children in msgNode.Children) {
-            // 4. Save the PO format into disk
+            // 4. Convert the PO into a binary format (serialize) and write to disk
             children.TransformWith<Po2Binary>()
-                .Stream.WriteTo(Path.Combine("outputs", "london_life", $"{children.Name}.po"));
+                .Stream.WriteTo(children.Name + ".po");
         }
         #endregion
 
-        #region Demo2
-        Node textNode = msgNode.Children["Script dialogs"];
+        #region Demo_Po
+        // Let's create a new PO format
+        var metadata = new PoHeader("software1", "SceneGate", "es-ES");
+        Po translatableContent = new Po(metadata);
 
-        // Converts back to PO format as in previous demo we serialized into binary.
-        textNode.TransformWith<Binary2Po>();
+        // Now let's add one entry.
+        var entry1 = new PoEntry("Hello world!");
+        entry1.Translated = "¡Hola mundo!";
+        translatableContent.Add(entry1);
 
-        // Get format object.
-        Po po = textNode.GetFormatAs<Po>();
-
-        // Change one translation entry.
-        po.Entries[0].Translated = "Hello world!";
-
-        // Save the file again
-        textNode.TransformWith<Po2Binary>()
-            .Stream.WriteTo(Path.Combine("outputs", "london_life", "translated.po"));
+        // Finally let's save the format into a file on disk
+        var serializer = new Po2Binary();
+        using BinaryFormat binaryPo = serializer.Convert(translatableContent);
+        binaryPo.Stream.WriteTo("strings.po");
         #endregion
     }
 

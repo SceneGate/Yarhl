@@ -67,66 +67,43 @@ libraries only support the latest .NET LTS version: **.NET 6.0**.
   - `Yarhl.Plugins`: discover formats and converters from .NET assemblies.
 
 > [!NOTE]  
-> _Are you planning to try a preview version?_ Check-out the
+> _Are you planning to try a preview version?_  
+> Check-out the
 > [GitHub project readme](https://github.com/SceneGate/Yarhl#install) for
-> details how to get setup the NuGet preview feed.
+> details on how to setup the NuGet preview feed for SceneGate projects.
 
 ## Quick demo
 
-You can use _Yarhl_ to create applications that converts file formats. For
-instance, let's extract the text from a game into a translatable file format
-like [PO](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html).
-We can use the following libraries for this task:
+_Yarhl_ allows you to work with different file formats with an unified API for
+conversion into binary (serialization / deserialization). Let's try to create a
+new translatable file format
+[PO](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html) from
+[Yarhl.Media.Text](./articles/media-text/po-format.md) and save it into disk.
 
-- [Yarhl.Media.Text](./articles/media-text/po-format.md): support for PO format.
-- [Ekona](https://github.com/SceneGate/Ekona/): support of NDS game file system.
-- [LayTea](https://github.com/pleonex/LayTea): support for formats from
+[!code-csharp[Demo PO](./../src/Yarhl.Examples/Introduction.cs?name=Demo_Po)]
+
+It's frequent to find formats that are _containers_. _Yarhl_ allows to have a
+_virtual file system_ to work with its content without having to extract it into
+disk (saving space and time). For instance, let's open a game file from
+_Nintendo DS_ that contains thousand of files. Then we will navigate through its
+files, unpacking, decompressing and finally converting one file into _PO_. We
+can use the following libraries for this task:
+
+- [Ekona](https://scenegate.github.com/Ekona/): support of NDS game file system.
+- [LayTea](https://github.com/pleonex/LayTea): support of formats from
   _Professor Layton_ games.
 
-The flow of format conversions would be:
-
-```mermaid
-flowchart TB
-  subgraph S1 [1. Access game files]
-    S1_A("File from disk\n(Binary format)") -->|Binary2NitroRom| S1_B
-    S1_B(Container)
-  end
-  subgraph S2 [2. Unpack game file with the text]
-    S2_A("Navigate to file\n`data/ll_common.darc`\n(Binary format)") --> |BinaryDarc2Container| S2_B
-    S2_B(Container) --> S2_C
-    S2_C("Navigate to file 2\n(Binary format)") -->|DencDecompression| S2_D
-    S2_D("Decompressed binary")
-  end
-  subgraph S3 [3. Convert to PO format]
-    S3_A("Decompressed binary") --> |Binary2MessageCollection| S3_B
-    S3_B("Game text format") --> |MessageCollection2Po| S3_C
-    S3_C("PO format")
-  end
-  subgraph S4 [4. Save PO format to disk]
-    S4_A("PO format") --> |Po2Binary| S4_B
-    S4_B("Binary format") -->|"Stream.WriteTo(output)"| S4_C
-    S4_C(("Done!"))
-  end
-
-  S1 --> S2
-  S2 --> S3
-  S3 --> S4
-```
-
-[!code-csharp[Demo1](./../src/Yarhl.Examples/Introduction.cs?name=Demo1)]
-
-At this point, we can also interact with any format. For instance, let's change
-a translation entry.
-
-[!code-csharp[Demo2](./../src/Yarhl.Examples/Introduction.cs?name=Demo2)]
+[!code-csharp[Demo containers](./../src/Yarhl.Examples/Introduction.cs?name=Demo_Containers)]
 
 ## Showcase
 
 Some cool projects built with _Yarhl_:
 
+- [**Texim**](https://github.com/SceneGate/Texim): experimental API for image
+  file formats.
 - [**Ekona**](https://scenegate.github.io/Ekona/): support Nintendo DS file
   formats.
-- [**Lemon**](https://scenegate.github.io/Lemon/): support Nintendo 3DS file
+- [**Lemon**](https://github.com/SceneGate/Lemon/): support Nintendo 3DS file
   formats.
 - [**LayTea**](https://www.pleonex.dev/LayTea/): modding tools for _Professor
   Layton_ games.
