@@ -7,10 +7,10 @@
   href: ./getting-started/architecture.md
 
 - name: ♻ Formats and converters
-- name: Converting formats
-  href: ./formats/use-converters.md
-- name: Implementing a converter
-  href: ./formats/implement-converter.md
+- name: Formats
+  href: ./formats/formats.md
+- name: Converters
+  href: ./formats/converters.md
 
 - name: 📁 Virtual file system
 - name: Node overview

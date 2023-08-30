@@ -1,5 +1,5 @@
 - name: 📝 Text formats
-- name: PO translation format
+- name: GNU Gettext PO format
   href: ./po-format.md
 - name: Encodings
   href: ./encodings.md

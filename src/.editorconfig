@@ -192,4 +192,5 @@ dotnet_diagnostic.S2699.severity = none # Assert may be in helper methods
 dotnet_diagnostic.S3966.severity = none # Dispose twice to test implementation
 
 [*Examples/**]
-dotnet_diagnostic.SA1123.severity = none # Allow namespaces to insert code snippets in markdown
+dotnet_diagnostic.SA1123.severity = none # Allow regions to insert code snippets in markdown
+dotnet_diagnostic.SA1124.severity = none # Allow regions to insert code snippets in markdown

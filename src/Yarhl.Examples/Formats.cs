@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2022 SceneGate
+// Copyright (c) 2023 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,10 +19,48 @@
 // SOFTWARE.
 namespace Yarhl.Examples;
 
-public static class Program
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+using Yarhl.FileFormat;
+
+public class Formats
 {
-    public static void Main()
+    #region FormatImpl
+    public class GameTextFormat : IFormat
     {
-        Introduction.ExportText("game.nds");
+        public Collection<string> Texts { get; init; }
+
+        public int SceneId { get; set; }
     }
+    #endregion
+
+    #region FormatWrapper
+    public class SoundFormat : ThirdPartyWave, IFormat
+    {
+    }
+    #endregion
+
+    public class ThirdPartyWave
+    {
+    }
+
+    #region CloneableFormat
+    public class Image : ICloneableFormat
+    {
+        public int Width { get; set; }
+
+        public int Height { get; set; }
+
+        public byte[] IndexedPixels { get; set; }
+
+        public object DeepClone()
+        {
+            return new Image {
+                Width = Width,
+                Height = Height,
+                IndexedPixels = IndexedPixels.ToArray(),
+            };
+        }
+    }
+    #endregion
 }

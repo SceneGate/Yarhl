@@ -44,53 +44,13 @@ featured binary IO and plugin support to support common formats. It's built in
   - **Common encodings**: euc-jp, token-escaped encoding
   - **API for simple encoding implementations**
 
-## Getting started
+## Get started
 
-Check out the
-[getting started guide](https://scenegate.github.io/Yarhl/guides/getting-started/introduction.html)
-to start using the full power of _Yarhl_. Below you have a code snippet to show
-how easy is to implement a new container format and convert and navigate through
-it.
-
-```csharp
-// Implement a new format container from binary (file) into a virtual file system.
-public class BinaryArchive2Container : IConverter<IBinary, NodeContainerFormat>
-{
-    public NodeContainerFormat Convert(IBinary source)
-    {
-        // Format: number of files + table with "name + offset + size", then file data.
-        var reader = new DataReader(source.Stream);
-        var container = new NodeContainerFormat();
-
-        int numFiles = reader.ReadInt32();
-        for (int i = 0; i < numFiles; i++)
-        {
-            string name = reader.ReadString(bytesCount: 0x10, encoding: Encoding.UTF8);
-            uint offset = reader.ReadUInt32();
-            uint size = reader.ReadUInt32();
-
-            // Create a sub-stream for the child, a stream from a region
-            // of the parent stream without making any read/write or copies.
-            Node child = NodeFactory.FromSubstream(name, source.Stream, offset, size);
-            container.Root.Add(child);
-        }
-
-        return container;
-    }
-}
-
-// Convert the binary file into a virtual folder (no disk writing).
-using Node root = NodeFactory.FromFile("file.bin", FileOpenMode.Read);
-root.TransformWith<BinaryArchive2Container>(); // Binary -> node format
-
-// Extract a child into disk.
-Node child = root.Children["text.json"]   // Navigate the children
-child.Stream.WriteTo("output/text.json"); // Export to the disk (creates missing dirs)
-```
+Check out the [documentation site](https://scenegate.github.io/Yarhl/index.html)
+to start learning the power of _Yarhl_.
 
 Feel free to ask any question in the
-[project Discussion site](https://github.com/SceneGate/Yarhl/discussions) and
-check the complete documentation [here](https://scenegate.github.io/Yarhl/).
+[project discussions](https://github.com/SceneGate/Yarhl/discussions).
 
 ## Usage
 
@@ -101,6 +61,8 @@ The libraries support the latest version of .NET and its LTS.
   core, format conversion, file system and binary reading / writing (IO).
 - [![Yarhl.Media.Text](https://img.shields.io/nuget/v/Yarhl.Media.Text?label=Yarhl.Media.Text&logo=nuget)](https://www.nuget.org/packages/Yarhl.Media.Text):
   text formats (Po) and encodings.
+- [![Yarhl.Plugins](https://img.shields.io/nuget/v/Yarhl.Plugins?label=Yarhl.Plugins&logo=nuget)](https://www.nuget.org/packages/Yarhl.Plugins):
+  discover formats and converters from .NET assemblies.
 
 **Preview releases** can be found in this
 [Azure DevOps package repository](https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview).
@@ -133,6 +95,8 @@ may need to restart Visual Studio for the changes to apply.
 
 Some cool projects built with _Yarhl_:
 
+- [**Texim**](https://github.com/SceneGate/Texim): experimental API for image
+  file formats.
 - [**Ekona**](https://scenegate.github.io/Ekona/): support Nintendo DS file
   formats.
 - [**Lemon**](https://scenegate.github.io/Lemon/): support Nintendo 3DS file
