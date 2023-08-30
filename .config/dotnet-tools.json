@@ -8,10 +8,10 @@
         "dotnet-cake"
       ]
     },
-    "xmldoc2markdown": {
-      "version": "3.1.0",
+    "docfx": {
+      "version": "2.70.1",
       "commands": [
-        "xmldoc2md"
+        "docfx"
       ]
     }
   }

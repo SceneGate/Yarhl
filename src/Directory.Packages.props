@@ -17,9 +17,6 @@
         <PackageVersion Include="BenchmarkDotNet" Version="0.13.1" />
         <PackageVersion Include="System.CommandLine" Version="2.0.0-beta3.22114.1" />
 
-        <PackageVersion Include="SceneGate.Ekona" Version="0.1.0-preview.15" />
-        <PackageVersion Include="LayTea" Version="0.1.0-preview.87" />
-
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="1.1.1" />
 
         <PackageVersion Include="StyleCop.Analyzers" Version="1.1.118" />

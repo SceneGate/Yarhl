@@ -1,0 +1,8 @@
+- name: Docs
+  href: articles/
+
+- name: API
+  href: api/
+
+- name: GitHub
+  href: https://github.com/SceneGate/Yarhl

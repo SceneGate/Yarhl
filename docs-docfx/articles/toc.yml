@@ -1,0 +1,45 @@
+- name: ✨ Getting started
+- name: Introduction
+  href: ../index.md
+- name: Getting started guide
+  href: ./getting-started/tutorial.md
+
+- name: ♻ File formats
+- name: Framework architecture
+  href: ./file-formats/arch-overview.md
+- name: Format converters
+  href: ./file-formats/format-converter.md
+
+- name: 📁 Virtual file system
+- name: Node overview
+  href: ./virtual-file-system/nodes.md
+- name: Navigate the nodes
+  href: ./virtual-file-system/navigate-nodes.md
+- name: Create a node hierarchy
+  href: ./virtual-file-system/create-nodes-hierarchy.md
+
+- name: 🧮 Binary formats
+- name: DataStream
+  href: ./formats-binary/datastream.md
+- name: Binary format
+  href: ./formats-binary/binaryformat.md
+- name: Binary reader and writer
+  href: ./formats-binary/binaryreader-writer.md
+- name: Text reader and writer
+  href: ./formats-binary/textreader-writer.md
+- name: Binary (de)serialization
+  href: ./formats-binary/serialization.md
+- name: Custom streams
+  href: ./formats-binary/custom-streams.md
+
+- name: 📝 Text formats
+- name: PO translation format
+  href: ./formats-text/po-format.md
+- name: Encodings
+  href: ./formats-text/encodings.md
+- name: Tables
+  href: ./formats-text/tables.md
+
+- name: 🔌 Plugins
+- name: Overview
+  href: ./plugins/plugin-overview.md

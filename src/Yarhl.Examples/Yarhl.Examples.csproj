@@ -9,9 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
     <ProjectReference Include="..\Yarhl.Media\Yarhl.Media.csproj" />
-
-    <PackageReference Include="SceneGate.Ekona" />
-    <PackageReference Include="LayTea" />
   </ItemGroup>
 
 </Project>
