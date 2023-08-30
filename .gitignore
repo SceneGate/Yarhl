@@ -18,7 +18,7 @@ BenchmarkDotNet.Artifacts/
 src/Yarhl.Examples/outputs/
 
 # Docs
-statiq-docs/output
-statiq-docs/cache
-statiq-docs/wwwroot
-statiq-docs/temp
+docs-statiq/output
+docs-statiq/cache
+docs-statiq/wwwroot
+docs-statiq/temp
