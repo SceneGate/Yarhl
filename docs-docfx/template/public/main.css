@@ -22,3 +22,21 @@
     display: none !important;
   }
 }
+
+/* Give more space for section separation in a doc */
+h2 {
+  margin-top: 2rem !important;
+}
+
+/* Improve TOC with a line for categories (entries without link) */
+.toc span.name-only {
+  border-bottom-color: var(--bs-tertiary-color) !important;
+  border-bottom-width: 2px !important;
+  border-bottom-style: solid !important;
+  margin-bottom: 0 !important;
+  margin-top: 0.6rem !important;
+}
+
+.toc span.name-only:first() {
+  margin-top: 0.4rem !important;
+}
