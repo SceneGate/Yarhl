@@ -72,46 +72,20 @@ convert. You can theoretically implement `IConverter<string, int>`. However, in
 order to provide some features the library expects that every format implements
 the _empty_ interface [`IFormat`](xref:Yarhl.FileFormat.IFormat).
 
-By using the `IFormat` interface it allows the APIs to:
+By using the [`IFormat`](xref:Yarhl.FileFormat.IFormat) interface it allows the
+APIs to:
 
 - Provide extension methods that applies to formats only (like `ConvertWith`).
 - Provide type discovery for _formats_ via _Yarhl.Plugins_.
 - Prevent unboxing performance issues.
 
-### Working with existing models
+## Working with existing models
 
-Models should implement the `IFormat` interface. If you have a model and cannot
-be modified to inherit from the interface, then it's possible to create a
-_format wrapper_.
+Models should implement the [`IFormat`](xref:Yarhl.FileFormat.IFormat)
+interface. If you have a model and cannot be modified to inherit from the
+interface, then it's possible to create a _format wrapper_.
 
 For instance, let's see how to provide a format-compatible class for a
 third-party sound format `ThirdPartyWave`:
 
 [!code-csharp[format wrapper](./../../../../src/Yarhl.Examples/Formats.cs?name=FormatWrapper)]
-
-## Cloneable formats
-
-.NET does not provide an interface to guarantee a
-[deep clone](https://learn.microsoft.com/en-us/dotnet/api/system.icloneable?view=net-7.0#remarks)
-implementation.
-
-The [`ICloneableFormat`](xref:Yarhl.FileFormat.ICloneableFormat) gives the
-possibility to a format implementation to specify how it should _deep_ clone its
-data into a new format. This could be a simple as copying its properties into a
-new object or in the case of binary data copying all its bytes into a new
-stream.
-
-[!code-csharp[cloneable](./../../../../src/Yarhl.Examples/Formats.cs?name=CloneableFormat)]
-
-The interface already implements `IFormat` so it's not needed to implement both.
-
-> [!NOTE]  
-> This interface is not required to be implemented by every format but some APIs
-> of the library relies on it. For instance it's only possible to clone a
-> [node via its constructor](<xref:Yarhl.FileSystem.Node.%23ctor(Yarhl.FileSystem.Node)>)
-> if it has a format that implements
-> [`ICloneableFormat`](xref:Yarhl.FileFormat.ICloneableFormat).
-
-> [!NOTE]  
-> The built-in formats from _Yarhl_ implements
-> [`ICloneableFormat`](xref:Yarhl.FileFormat.ICloneableFormat).

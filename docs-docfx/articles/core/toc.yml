@@ -11,6 +11,12 @@
   href: ./formats/formats.md
 - name: Converters
   href: ./formats/converters.md
+- name: Advanced
+  items:
+  - name: Clonable format
+    href: ./formats/clonable-format.md
+  - name: Use cases for converters
+    href: ./formats/converters-usecases.md
 
 - name: 📁 Virtual file system
 - name: Node overview

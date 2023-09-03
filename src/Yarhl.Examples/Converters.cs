@@ -32,10 +32,12 @@ public class Converters
 
         // Create a new converter instance
         var po2binary = new Po2Binary();
+
+        // Convert!
         using var binaryPoFormat = po2binary.Convert(poFormat);
 
-        // Binary format is a wrapper over a DataStream (enhanced Stream)
-        // we can now save the Stream into a file
+        // Binary format is a wrapper over a DataStream (enhanced System.IO.Stream)
+        // We can now save the Stream into a file
         binaryPoFormat.Stream.WriteTo("strings.po");
         #endregion
     }
