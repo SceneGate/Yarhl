@@ -11,7 +11,33 @@ Task("Define-Project")
     info.AddTestProjects("Yarhl.UnitTests");
     info.AddTestProjects("Yarhl.IntegrationTests");
 
+    info.WarningsAsErrors = false;
     info.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
+});
+
+Task("DocFx-BuildDoc")
+    .Does<BuildInfo>(info =>
+{
+    if (!FileExists(info.DocFxFile)) {
+        Warning("There isn't documentation.");
+        return;
+    }
+
+    string docsDir = System.IO.Path.GetDirectoryName(info.DocFxFile);
+    if (FileExists(info.ChangelogFile) && DirectoryExists($"{docsDir}/dev")) {
+        CopyFile(info.ChangelogFile, $"{docsDir}/dev/Changelog.md");
+    }
+
+    string args = $"-o {info.ArtifactsDirectory}/_site";
+    if (info.WarningsAsErrors) {
+        args += " --warningsAsErrors";
+    }
+
+    DotNetTool($"docfx {info.DocFxFile} {args}");
+
+    Zip(
+        $"{info.ArtifactsDirectory}/_site",
+        $"{info.ArtifactsDirectory}/docs.zip");
 });
 
 Task("Prepare-IntegrationTests")
@@ -53,7 +79,10 @@ public IEnumerable<string> GetTargetFrameworks(string projectPath)
 }
 
 Task("Default")
-    .IsDependentOn("Stage-Artifacts");
+    .IsDependentOn("BuildTest")
+    .IsDependentOn("DocFx-BuildDoc")
+    .IsDependentOn("Pack-Libs")
+    .IsDependentOn("Pack-Apps");
 
 string target = Argument("target", "Default");
 RunTarget(target);
