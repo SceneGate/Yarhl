@@ -240,7 +240,7 @@ file80Stream.Dispose(); // <-- It will also dispose parentStream
 ```
 
 You can control this behavior by using the
-[constructor that takes the argument `bool transferOwnership`](<xref:Yarhl.IO.DataStream.#ctor(System.IO.Stream,System.Int64,System.Int64,System.Boolean)>).
+[constructor that takes the argument `bool transferOwnership`](<xref:Yarhl.IO.DataStream.%23ctor(System.IO.Stream,System.Int64,System.Int64,System.Boolean)>).
 Pass a `false` value to never dispose the parent `Stream`.
 
 ## Thread-safety

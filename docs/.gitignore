@@ -7,3 +7,6 @@
 /**/bin/
 /**/obj/
 _site
+
+# DrawIO
+.$*.drawio*

@@ -1,7 +1,7 @@
 - name: ✨ Getting started
 - name: Introduction
   href: ../../index.md
-- name: 🚧 Getting started guide
+- name: Getting started guide
   href: ./getting-started/tutorial.md
 - name: 🚧 Framework architecture
   href: ./getting-started/architecture.md
@@ -15,15 +15,15 @@
   href: ./formats/converters.md
 - name: Advanced
   items:
-  - name: Clonable format
-    href: ./formats/clonable-format.md
+  - name: Cloneable format
+    href: ./formats/cloneable-format.md
   - name: Use cases for converters
     href: ./formats/converters-usecases.md
 
 - name: 📁 Virtual file system
-- name: 🚧 Node overview
+- name: 🚧 Nodes
   href: ./virtual-file-system/nodes.md
-- name: 🚧 Navigate the nodes
+- name: 🚧 Node navigation
   href: ./virtual-file-system/navigate-nodes.md
 - name: 🚧 Create a node hierarchy
   href: ./virtual-file-system/create-nodes-hierarchy.md

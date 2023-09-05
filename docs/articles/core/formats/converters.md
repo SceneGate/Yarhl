@@ -172,10 +172,9 @@ type-safety when due to technical reason we can't know the types of the
 converter, so we can't use
 [`IConverter<TSrc, TDst>`](xref:Yarhl.FileFormat.IConverter`2).
 
-For instance
-[`Node.TransformWith(IConverter converter)`](<xref:Yarhl.FileSystem.Node.TransformWith(Yarhl.FileFormat.IConverter)>)
-uses the base interface to provide a simple API. Requiring the fully typed
-interface would make users to specify to repeat the types:
+For instance `Node.TransformWith(IConverter converter)` uses the base interface
+to provide a simple API. Requiring the fully typed interface would make users to
+specify to repeat the types:
 `node.TransformWith<IBinary, NodeContainerFormat>(myConverter)` as the compiler
 cannot guess these types at compile-type. By having the simple interface we can
 just use `node.TransformWith(myConverter)`.

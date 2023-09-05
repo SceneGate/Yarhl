@@ -34,7 +34,7 @@
     ],
     "resource": [
       {
-        "files": [ "**/images/**" ],
+        "files": [ "**/images/**", "**/resources/**" ],
         "exclude": [ "_site/**", "obj/**" ]
       }
     ],
