@@ -1,10 +1,12 @@
 - name: ✨ Getting started
 - name: Introduction
   href: ../../index.md
-- name: Getting started guide
+- name: 🚧 Getting started guide
   href: ./getting-started/tutorial.md
-- name: Framework architecture
+- name: 🚧 Framework architecture
   href: ./getting-started/architecture.md
+- name: 🚧 Yarhl in other .NET languages
+  href: ./getting-started/net-languages.md
 
 - name: ♻ Formats and converters
 - name: Formats
@@ -19,27 +21,27 @@
     href: ./formats/converters-usecases.md
 
 - name: 📁 Virtual file system
-- name: Node overview
+- name: 🚧 Node overview
   href: ./virtual-file-system/nodes.md
-- name: Navigate the nodes
+- name: 🚧 Navigate the nodes
   href: ./virtual-file-system/navigate-nodes.md
-- name: Create a node hierarchy
+- name: 🚧 Create a node hierarchy
   href: ./virtual-file-system/create-nodes-hierarchy.md
 
 - name: 🧮 Binary formats
 - name: DataStream
   href: ./binary/datastream.md
-- name: Binary format
+- name: 🚧 Binary format
   href: ./binary/binaryformat.md
-- name: Binary reader and writer
+- name: 🚧 Binary reader and writer
   href: ./binary/binaryreader-writer.md
-- name: Text reader and writer
+- name: 🚧 Text reader and writer
   href: ./binary/textreader-writer.md
-- name: Binary (de)serialization
+- name: 🚧 Binary (de)serialization
   href: ./binary/serialization.md
-- name: Custom streams
+- name: 🚧 Custom streams
   href: ./binary/custom-streams.md
 
 - name: 🔌 Plugins
-- name: Overview
+- name: 🚧 Overview
   href: ../plugins/overview.md
