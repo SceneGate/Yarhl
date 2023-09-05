@@ -122,7 +122,7 @@ To build, test and generate artifacts run:
 # Only required the first time
 dotnet tool restore
 
-# Default target is Stage-Artifacts that builds, runs tests and create the NuGets
+# Default target is "Default" that builds, runs tests, build doc and create the NuGets
 dotnet cake
 ```
 

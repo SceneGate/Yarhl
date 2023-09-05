@@ -13,12 +13,3 @@ tools/*
 
 # Benchmarks
 BenchmarkDotNet.Artifacts/
-
-# Example outputs
-src/Yarhl.Examples/outputs/
-
-# Docs
-docs-statiq/output
-docs-statiq/cache
-docs-statiq/wwwroot
-docs-statiq/temp

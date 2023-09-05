@@ -11,6 +11,8 @@ Task("Define-Project")
     info.AddTestProjects("Yarhl.UnitTests");
     info.AddTestProjects("Yarhl.IntegrationTests");
 
+    info.ChangelogFile = "docs/articles/Changelog.md";
+
     info.WarningsAsErrors = false;
     info.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
 });
@@ -21,11 +23,6 @@ Task("DocFx-BuildDoc")
     if (!FileExists(info.DocFxFile)) {
         Warning("There isn't documentation.");
         return;
-    }
-
-    string docsDir = System.IO.Path.GetDirectoryName(info.DocFxFile);
-    if (FileExists(info.ChangelogFile) && DirectoryExists($"{docsDir}/dev")) {
-        CopyFile(info.ChangelogFile, $"{docsDir}/dev/Changelog.md");
     }
 
     string args = $"-o {info.ArtifactsDirectory}/_site";
