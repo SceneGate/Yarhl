@@ -17,13 +17,12 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.Examples;
+namespace Yarhl.Examples.Formats;
 
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 using Yarhl.FileFormat;
 
-public class Formats
+public static class Formats
 {
     #region FormatImpl
     public class GameTextFormat : IFormat

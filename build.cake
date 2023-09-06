@@ -13,7 +13,6 @@ Task("Define-Project")
 
     info.ChangelogFile = "docs/articles/Changelog.md";
 
-    info.WarningsAsErrors = false;
     info.PreviewNuGetFeed = "https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json";
 });
 

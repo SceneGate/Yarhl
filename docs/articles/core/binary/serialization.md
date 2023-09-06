@@ -1,3 +1,0 @@
-# Binary (de)serialization
-
-TODO

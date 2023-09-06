@@ -26,7 +26,7 @@ operations by their common denominator: **converting models.**
 Let's see how to _serialize_ / convert a _Po_ model into binary data to write on
 disk:
 
-[!code-csharp[serialize PO](./../../../../src/Yarhl.Examples/Converters.cs?name=SerializePo)]
+[!code-csharp[serialize PO](./../../../../src/Yarhl.Examples/Formats/Converters.cs?name=SerializePo)]
 
 ## Implementing a new converter
 

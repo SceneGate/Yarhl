@@ -21,7 +21,7 @@
     href: ./formats/converters-usecases.md
 
 - name: 📁 Virtual file system
-- name: 🚧 Nodes
+- name: Nodes
   href: ./virtual-file-system/nodes.md
 - name: 🚧 Node navigation
   href: ./virtual-file-system/navigate-nodes.md
@@ -37,8 +37,8 @@
   href: ./binary/binaryreader-writer.md
 - name: 🚧 Text reader and writer
   href: ./binary/textreader-writer.md
-- name: 🚧 Binary (de)serialization
-  href: ./binary/serialization.md
+- name: 🚧 (De)serialization via attributes
+  href: ./binary/attr-serialization.md
 - name: 🚧 Custom streams
   href: ./binary/custom-streams.md
 

@@ -6,21 +6,21 @@ implementation.
 
 The [`ICloneableFormat`](xref:Yarhl.FileFormat.ICloneableFormat) gives the
 possibility to a format implementation to specify how it should _deep_ clone its
-data into a new format. This could be a simple as copying its properties into a
-new object or in the case of binary data copying all its bytes into a new
+data into a new format. This could be as simple as copying its properties into a
+new object or in the case of binary data, copying all its bytes into a new
 stream.
 
-[!code-csharp[cloneable](./../../../../src/Yarhl.Examples/Formats.cs?name=CloneableFormat)]
+[!code-csharp[cloneable](./../../../../src/Yarhl.Examples/Formats/Formats.cs?name=CloneableFormat)]
 
-The interface already implements `IFormat` so it's not needed to implement both.
+The interface already implements `IFormat` so it's not needed to add both.
 
-> [!NOTE]  
+> [!IMPORTANT]  
 > This interface is not required to be implemented by every format but some APIs
 > of the library relies on it. For instance it's only possible to clone a
 > [node via its constructor](<xref:Yarhl.FileSystem.Node.%23ctor(Yarhl.FileSystem.Node)>)
 > if it has a format that implements
 > [`ICloneableFormat`](xref:Yarhl.FileFormat.ICloneableFormat).
 
-> [!NOTE]  
+> [!TIP]  
 > The built-in formats from _Yarhl_ implements
 > [`ICloneableFormat`](xref:Yarhl.FileFormat.ICloneableFormat).

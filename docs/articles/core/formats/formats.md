@@ -10,7 +10,7 @@ usually with properties and methods. The only requirement to have a _Yarhl
 format-compatible_ is to implement the empty interface
 [`IFormat`](xref:Yarhl.FileFormat.IFormat).
 
-[!code-csharp[format implementation](./../../../../src/Yarhl.Examples/Formats.cs?name=FormatImpl)]
+[!code-csharp[format implementation](./../../../../src/Yarhl.Examples/Formats/Formats.cs?name=FormatImpl)]
 
 ## Converting formats
 
@@ -21,7 +21,7 @@ The _converters_ classes are responsible to convert one format into a new one.
 To use it, create a new instance and call its
 [`Convert(source)`](<xref:Yarhl.FileFormat.IConverter`2.Convert(`0)>) method.
 
-[!code-csharp[serialize PO](./../../../../src/Yarhl.Examples/Converters.cs?name=SerializePo)]
+[!code-csharp[serialize PO](./../../../../src/Yarhl.Examples/Formats/Converters.cs?name=SerializePo)]
 
 ### Fluent API
 
@@ -88,4 +88,4 @@ interface, then it's possible to create a _format wrapper_.
 For instance, let's see how to provide a format-compatible class for a
 third-party sound format `ThirdPartyWave`:
 
-[!code-csharp[format wrapper](./../../../../src/Yarhl.Examples/Formats.cs?name=FormatWrapper)]
+[!code-csharp[format wrapper](./../../../../src/Yarhl.Examples/Formats/Formats.cs?name=FormatWrapper)]

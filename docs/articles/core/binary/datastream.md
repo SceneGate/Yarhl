@@ -11,8 +11,9 @@ memory.
 ## Sub-streams
 
 A _sub-stream_ is _view_ of a part of a regular **Stream**. Just like in .NET
-`Span<T>` allows to work with a segment of an array, `DataStream` allows to do
-it with a `Stream` but keeping the same API as any other regular `Stream`.
+[`Span<T>`](xref:System.Span`1) allows to work with a segment of an array,
+`DataStream` allows to do it with a `Stream` but keeping the same API as any
+other regular `Stream`.
 
 When you create a `DataStream` from another `Stream` you can specify its
 _offset_ and _length_ to perform IO operations (reading / writing) only in that
@@ -22,7 +23,7 @@ Let's imagine we have a binary format for a container (like a _zip_ or _tar_
 file without compression). In this format the content for the first file is in
 the position `0x100`. The content for the second file is at `0x3C0`.
 
-![container format](./images/datastream-container.drawio.png)
+![Container format with a header and 3 files inside](./images/datastream-container.drawio.png)
 
 If we want to only work with the data of the second file, we could create a
 _sub-stream_ that starts at `0x3C0` and has the file length. It will allow to
@@ -30,7 +31,7 @@ have a `Stream` object based on the parent `Stream`. We can now pass this new
 stream to any other API, for instance to a JSON deserializer to read its
 content, without having to _export_ or do any prior copy.
 
-![Container format with assigned substreams](./images/datastream-container-substreams.drawio.png)
+![Container format with assigned substreams to each file](./images/datastream-container-substreams.drawio.png)
 
 Another use case is reading a binary format with sections. By creating a
 `DataStream` for each individual section, the application can have a design more
@@ -41,7 +42,7 @@ section.
 
 The constructors of `DataStream` takes a `Stream` with optional offset and
 lengths for _sub-streams_. You can also create a `DataStream` from other source
-via the `DataStreamFactory`.
+via the [`DataStreamFactory`](xref:Yarhl.IO.DataStreamFactory).
 
 It can quickly initialize a new `DataStream` from memory:
 
@@ -73,8 +74,8 @@ using var stream = DataStreamFactory.FromFile("input/file.bin", FileOpenMode.Rea
 using var stream = DataStreamFactory.FromFile("input/file.bin", FileOpenMode.Read, 0x100, 0x40);
 ```
 
-where `FileOpenMode` is an enumeration that internally maps to the .NET
-enumerations `FileMode` and `FileAccess` as follow:
+where [`FileOpenMode`](xref:Yarhl.IO.FileOpenMode) is an enumeration that
+internally maps to the .NET enumerations `FileMode` and `FileAccess` as follow:
 
 - `FileOpenMode.Read`: read a file, throwing an exception if it doesn't exists.
   Maps to `FileMode.Open` and `FileAccess.Read`.
@@ -99,8 +100,10 @@ enumerations `FileMode` and `FileAccess` as follow:
 > `FileStream` by hand and pass it to the `DataStream` constructor or
 > `FromStream` methods.
 
-Finally the factory also provides the methods `FromStream` similar to the
-parameters accepted by the constructor of `DataStream`.
+Finally the factory also provides the methods
+[`FromStream`](<xref:Yarhl.IO.DataStreamFactory.FromStream(System.IO.Stream,System.Int64,System.Int64)>)
+similar to the parameters accepted by the constructor of
+[`DataStream`](xref:Yarhl.IO.DataStream).
 
 ## IO operations
 
@@ -109,9 +112,10 @@ parameters accepted by the constructor of `DataStream`.
 
 ### Writing to a file
 
-The `WriteTo` API allows to write the entire content of the stream into a file
-on the given path. This applies to the content that targets this `DataStream`,
-not the entire parent `Stream`.
+The [`WriteTo`](<xref:Yarhl.IO.DataStream.WriteTo(System.String)>) API allows to
+write the entire content of the stream into a file on the given path. This
+applies to the content that targets this `DataStream`, not the entire parent
+`Stream`.
 
 > [!NOTE]  
 > The method ignores the current position, it will always start writing from the
@@ -133,9 +137,10 @@ stream.WriteTo("output/file.bin");
 
 ### Comparing data
 
-The method `Compare` allows to compare byte-to-byte the content of the current
-stream against another. If will return `false` if any byte between the two
-streams are different. It will also return `false` if the length does not match.
+The method [`Compare`](<xref:Yarhl.IO.DataStream.Compare(System.IO.Stream)>)
+allows to compare byte-to-byte the content of the current stream against
+another. If will return `false` if any byte between the two streams are
+different. It will also return `false` if the length does not match.
 
 > [!NOTE]  
 > The method ignores the current position. It will always start reading **both
@@ -171,16 +176,20 @@ string name = ReadFilename(stream);
 stream.PopPosition(); // return to 0x100, keep reading from there
 ```
 
-`PushToPosition` will move to the given position, saving the current position in
-an internal stack. Calling `PopPosition` will return to our original position.
+[`PushToPosition`](<xref:Yarhl.IO.DataStream.PushToPosition(System.Int64,System.IO.SeekOrigin)>)
+will move to the given position, saving the current position in an internal
+stack. Calling [`PopPosition`](xref:Yarhl.IO.DataStream.PopPosition) will return
+to our original position.
 
-The class also provides `PushCurrentPosition`. It saves the current position
-into the stack. For instance, before calling an external method that may modify
-our position.
+The class also provides
+[`PushCurrentPosition`](xref:Yarhl.IO.DataStream.PushCurrentPosition). It saves
+the current position into the stack. For instance, before calling an external
+method that may modify our position.
 
-Finally, the method `RunInPosition` allows to run an action such as a lambda
-expression or a method saving and restoring our current position. We could
-re-write the previous example as:
+Finally, the method
+[`RunInPosition`](<xref:Yarhl.IO.DataStream.RunInPosition(System.Action,System.Int64,System.IO.SeekOrigin)>)
+allows to run an action such as a lambda expression or a method saving and
+restoring our current position. We could re-write the previous example as:
 
 ```csharp
 stream.Position = 0x100;
@@ -191,9 +200,11 @@ stream.RunInPosition(() => name = ReadFilename(stream), 0x800);
 
 ### Writing segments
 
-The `WriteSegmentTo` APIs allows to write a part of our `DataStream` into
-`Stream` or file on disk. This is a shortcut to create a temporary `DataStream`
-and run the regular `WriteTo` method.
+The
+[`WriteSegmentTo`](<xref:Yarhl.IO.DataStream.WriteSegmentTo(System.Int64,System.String)>)
+APIs allows to write a part of our `DataStream` into `Stream` or file on disk.
+This is a shortcut to create a temporary `DataStream` and run the regular
+`WriteTo` method.
 
 ```csharp
 var stream = new DataStream(...);
@@ -242,6 +253,10 @@ file80Stream.Dispose(); // <-- It will also dispose parentStream
 You can control this behavior by using the
 [constructor that takes the argument `bool transferOwnership`](<xref:Yarhl.IO.DataStream.%23ctor(System.IO.Stream,System.Int64,System.Int64,System.Boolean)>).
 Pass a `false` value to never dispose the parent `Stream`.
+
+> [!TIP]  
+> You can get the total number of `DataStream` created via the static property
+> [`ActiveStreams`](xref:Yarhl.IO.DataStream.ActiveStreams).
 
 ## Thread-safety
 
