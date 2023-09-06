@@ -14,9 +14,9 @@ You will learn how to:
 By the end of this guide you will have a program that converts a binary file
 into an editable text file!
 
-![Diagram showing hexadecimal content and an arrow into a final PO text file](images/goal_overview.drawio.png)
+![Diagram showing hexadecimal viewer with some bytes and an arrow pointing to a PO text file](images/goal_overview.drawio.png)
 
-Prepare your self a good cup of your favorite drink 🥤 and let's dive into it!  
+Prepare your self a good cup of 🍵 or ☕ and let's dive into it! 🤿  
 And if you have any question along the way don't hesitate to
 [ask for help](https://github.com/SceneGate/Yarhl/discussions).
 
@@ -27,8 +27,8 @@ And if you have any question along the way don't hesitate to
 > Unfortunately Yarhl is not supported outside .NET languages.
 
 > [!TIP]  
-> If you new into .NET development, start by learning with the free course of C#
-> from [Microsoft](https://aka.ms/selfguidedcsharp).
+> If you aer new into .NET development, start by learning with the free course
+> of C# from [Microsoft](https://aka.ms/selfguidedcsharp).
 
 ## Pre-requisites
 
@@ -86,20 +86,23 @@ download the dependencies from
 </ItemGroups>
 ```
 
+Nice, we have an application ready to add some code.
+
 > [!TIP]  
 > Check-out [nuget.org](https://www.nuget.org/packages?q=Yarhl) for the latest
 > version available of Yarhl.
 
 ## Format specification
 
-Nice, we have an application ready to add some code. First we need to understand
-the file we will give support and read its text content. If we open the file
-with an _hexadecimal viewer_ we will something like the following:
+Our goal is to make a program that converts the downloaded file `texts.bin` into
+a new file in a format that we can easily open, like a text file `.txt`. We can
+inspect the content in its pure format, bytes, by using programs such as
+_hexadecimal viewers_.
 
-![File opened with an hex viewer](./images/hex_view.png)
+![File opened with an hex viewer where there is some text along _random_ bytes](./images/hex_view.png)
 
-We can see some text there. That file matches the following specification of a
-binary format:
+We can see there isn't only text but bytes with other meanings. This file
+matches the following specification:
 
 | Offset | Type        | Description              |
 | ------ | ----------- | ------------------------ |
@@ -116,16 +119,16 @@ where `TextEntry` is:
 
 ## Format implementation
 
-From the above specification we are interested in keeping a list of _entries_
-with their identifier number and text content. Next step is to create a new
-class to represent our format.
+From the above specification we are interested in keeping a **list of _entries_
+with their identifier number and text content**. Next step is to create a new
+class to represent this format.
 
 Let's create a new class named `TxtiFormat`. It will have a property with the
 collection of entries (initialized for convenience).
 
 [!code-csharp[TxtiFormat](../../../../src/Yarhl.Examples/Tutorial/TxtiFormat.cs?name=Class&highlight=4)]
 
-Did you notice the **inheritance**?  
+Did you notice the **inheritance with `IFormat`**?  
 Format models should implement the interface `IFormat`. In this way Yarhl knows
 that this type implements a format. The interface is empty, it doesn't need to
 implement any specific method or property, it acts as a marker.
@@ -138,9 +141,9 @@ This time we don't need to inherit from `IFormat` as this class does not
 represent a file format itself. It's part of one.
 
 😎 Cool, we have our first **file format implemented!** It's time to add some
-code to fill these classes from the file.
+code to fill these classes from the file `texts.bin`.
 
-## Deserialization: implementing binary to format
+## Converting binary data into the format
 
 First we will do what it's named **deserialization**: reading binary data from a
 file to fill a model.
@@ -163,8 +166,9 @@ The interface asks to have a method that performs the conversion:
 produces as an output the model `TxtiFormat`. Add the method to our class.
 
 It's time to start adding code to read data from the file. First we need a
-_binary reader_ class that will help us to get integers and strings from binary
-content. We will create an instance of our enhanced `DataReader`.
+_binary reader_ class that will help us to read integers and strings from binary
+content. Yarhl provides an enhanced version of .NET `BinaryReader` with the
+class `DataReader`.
 
 [!code-csharp[Binary2Txti reading first 4 chars](../../../../src/Yarhl.Examples/Tutorial/Binary2Txti.cs?name=ValidateHeader&highlight=1,5)]
 
@@ -198,9 +202,9 @@ Next, let's create an instance of our converter and convert/read that file!
 
 If we run our program now we should see the following output:
 
-![deserializer output](images/deserializer_output.png)
+![deserializer output showing 3 entries and text 'Hello World!'](images/deserializer_output.png)
 
-## Exporting: implementing format to PO
+## Converting Txti into a standard PO format
 
 So far we have been able to read the binary file into a model. If our intention
 is to be able to modify it or use it outside the program, we will need to
@@ -210,8 +214,8 @@ programs can open.
 To deal with _translatable content_ one of the industry standards is
 [GNU Gettext PO](https://en.wikipedia.org/wiki/Gettext)
 
-Our goal now is to something we may call **exporting: convert `TxtiFormat` into
-`Po`**.
+Our goal now is to do something we may call **exporting**: convert `TxtiFormat`
+into a standard format like `Po`, so we can write it on a file later.
 
 ```mermaid
 graph LR
@@ -219,13 +223,13 @@ graph LR
   B["Po"] -->|Po2Binary| C["Binary"]
 ```
 
-Repeating the process from before, we create a class `TxtiPo` to implement this
+Repeating the process from before, we create a class `Txti2Po` to implement this
 time `IConverter<TxtiFormat, Po>`. Let's add some basic implementation:
 
 [!code-csharp[Converter Txti to PO](../../../../src/Yarhl.Examples/Tutorial/Txti2Po.cs?name=Converter)]
 
 Our converter returns the data into another format model: `Po`. We will need one
-additional step before we can save the data into `Po` format on disk: converting
+additional step before we can save the data to disk: converting the `Po` model
 to binary (serializing). To do this task, `Yarhl.Media.Text` provides the
 converter `Po2Binary` that implements `IConverter<Po, BinaryFormat>`.
 
@@ -234,25 +238,25 @@ converter `Po2Binary` that implements `IConverter<Po, BinaryFormat>`.
 There is a second way to use the _converters_ that could be easier to read when
 we need to **chain conversions**.
 
-We can use a `Node`. They represent a _file_ on a virtual, non-existing file
+We can use `Node`s. They represent a _file_ on a virtual, non-existing, file
 system that it's in our program. A `Node` has a format. If you create one from a
-file, it will have `BinaryFormat` (`IBinary`). We can then _convert_ the format
-of our node using the API `TransformWith`:
+file, it will have `BinaryFormat` (`IBinary`) to start with. We can then
+_convert_ the binary format of our node using the API `TransformWith`:
 
 [!code-csharp[Chaining conversions](../../../../src/Yarhl.Examples/Tutorial/Program.cs?name=ExportNodes)]
 
-Congrats! You just finished the program 👏👏.  
+Congrats! You just finished the program. 👏👏  
 Feel free to open your output file with any text editor or PO-specific software
 like [PO Edit](https://poedit.net/) or [Weblate](https://weblate.org).
 
-![PO in VSCode](images/po_vscode.png)
+![PO opened in VSCode](images/po_vscode.png)
 
-![PO in PoEdit](images/po_poedit.png)
+![PO opened in PoEdit](images/po_poedit.png)
 
 ## Wrap up
 
 In this guide we saw how to implement a file format and two converters. We were
-able to read a binary file and generate an standard format that allows us to
+able to read a binary file and generate a standard format that allows us to
 inspect the content and edit it.
 
 ```mermaid
@@ -262,11 +266,18 @@ graph LR
   C["Po"] -->|Po2Binary| D["Binary PO"]
 ```
 
+Check-out the docs to learn more details about Yarhl and its features
+
+- [Format](../formats/formats.md)
+- [Converters](../formats/converters.md)
+- [`DataStream`](../binary/datastream.md)
+- [Nodes](../virtual-file-system/nodes.md)
+
 > [!NOTE]  
 > We could have taken a shortcut and create a converter to do _binary TXTI_ to
 > _PO_. Creating the intermediate conversion into the model `TxtiFormat` makes
-> our application more modular an extension. If in the future we need to export
-> into a _XLIFF_ file instead of _PO_ it would be easier to do.
+> our application more extensible. In the future we may need to export into a
+> _XLIFF_ file instead of _PO_.
 
 > [!TIP]  
 > Do you want to keep playing?  
