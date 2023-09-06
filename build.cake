@@ -25,11 +25,9 @@ Task("DocFx-BuildDoc")
     }
 
     string args = $"-o {info.ArtifactsDirectory}/_site";
-
-    // TODO: I think it fails because the current PleOps.Cake overwrites the version
-    // if (info.WarningsAsErrors) {
-    //     args += " --warningsAsErrors";
-    // }
+    if (info.WarningsAsErrors) {
+        args += " --warningsAsErrors";
+    }
 
     DotNetTool($"docfx {info.DocFxFile} {args}");
 
@@ -77,6 +75,9 @@ public IEnumerable<string> GetTargetFrameworks(string projectPath)
 }
 
 Task("Default")
+    .IsDependentOn("Stage-Artifacts-NewDocs");
+
+Task("Stage-Artifacts-NewDocs")
     .IsDependentOn("BuildTest")
     .IsDependentOn("DocFx-BuildDoc")
     .IsDependentOn("Pack-Libs")
