@@ -23,10 +23,12 @@
 - name: 📁 Virtual file system
 - name: Nodes
   href: ./virtual-file-system/nodes.md
+- name: Node factory
+  href: ./virtual-file-system/node-factory.md
 - name: 🚧 Node navigation
   href: ./virtual-file-system/navigate-nodes.md
-- name: 🚧 Create a node hierarchy
-  href: ./virtual-file-system/create-nodes-hierarchy.md
+- name: 🚧 Container format
+  href: ./virtual-file-system/container-format.md
 
 - name: 🧮 Binary formats
 - name: DataStream
