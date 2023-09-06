@@ -85,6 +85,24 @@ public class RgbImage2IndexedImage : IConverter<RgbImage, NodeContainerFormat>
 }
 #endregion
 
+#region FontImporter
+public class FontGlyphsImporter : IConverter<Font, Font>
+{
+    private readonly RgbImage glyphs;
+
+    public FontGlyphsImporter(RgbImage glyphs)
+    {
+        this.glyphs = glyphs;
+    }
+
+    public Font Convert(Font source)
+    {
+        // TODO: Update Font instance with the glyph images
+        return source;
+    }
+}
+#endregion
+
 #region ExecutableTextImporter
 public record TextBlockInfo(uint Position, string Text);
 
