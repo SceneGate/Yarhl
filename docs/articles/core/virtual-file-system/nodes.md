@@ -49,11 +49,66 @@ Assert.AreEqual(gameFile.Stream.BaseStream, game.Stream.BaseStream);
 
 ## Children
 
-TODO: collection and indexer. Navigator ref. Add and remove children.
+A node may have children if it has a container type. Children are stored as
+references in a collection and can be accessed via the property `Children`.
+
+It's possible to iterate `Children` with a `foreach` or a regular `for` and get
+the number of children with `node.Children.Count`.
+
+To access to a child use its index, `Children[3]`, or its name,
+`Children["image.png"]`. You can chain this operation to navigate the hierarchy:
+`node.Children[1].Children["map1.scr"]`.
+
+Another possibility is to use the child path to navigate the tree via the
+[`Navigator`](xref:Yarhl.FileSystem.Navigator) class:
+`Navigator.SearchNode(rootNode, "/data.tar/scripts/map1.scr")`.
+
+### Add or remove
+
+At any time it's possible to add or remove children from its parent node. Use
+the method `Add` to add one or more nodes as its children.
+
+> [!IMPORTANT]  
+> A node cannot have two children with the same name.
+
+Use the `Remove` method to remove a child from its parent by instance reference
+or node name.
+
+> [!NOTE]  
+> A removed child **is not disposed**. Consider freeing its formats, especially
+> if they have binary type or are containers.
+
+The method `RemoveChildren` removes all the children. Additionally its parameter
+allow to dispose them.
 
 ## Format
 
-TODO: GetFormat, Format, Stream, IsContainer, ChangeFormat
+A node can have any [format](../formats/formats.md) type that implements the
+interface `IFormat`. It can also have a `null` format.
+
+The `Format` property gets access to the format by returning an instance of type
+`IFormat`. For convenience, there is also the method `GetFormatAs<T>()` that
+tries to cast the node format to the desired type. It will **return `null`** if
+the casting is not possible.
+
+The property `IsContainer` returns `true` when the node have a type that allows
+having children. This would be `NodeContainerFormat` or `null`.
+
+The property `Stream` is a shortcut to `GetFormatAs<IBinary>().Stream` and it
+will also return `null` if the format is not an implementation of `IBinary`.
+
+### Changing format
+
+The node can change its format via the method `ChangeFormat(format)`.
+
+If the current format is a container, first it will remove any children from
+this node. If the future format is a container, it will move the children from
+the format to the node.
+
+Additionally there is an optional argument to indicate if the method should
+dispose the current format before changing. By default is `true`, meaning it
+will call the method `Dispose` from the current format if it implements
+`IDisposable`.
 
 ## Format conversion
 
@@ -61,12 +116,39 @@ TODO: how it affect children
 
 ## Tags
 
-TODO: metadata, restore?
+Nodes can store additional metadata via the generic dictionary `Tags`. Each tag
+has a `string` as a key and it can have any type as value. Use it to store
+metadata of the node, outside of its regular format.
+
+Converters may use the `Tags` to provide additional information about the nodes.
+For instance, the _Ekona_ library adds to every node the tag
+`scenegate.ekona.id` with the internal ID of the file in the game file.
+
+> [!NOTE]  
+> **Avoid depending on _tags_ in a converter.**  
+> It could be that the node has a given tag just after running a converter. But
+> if it was created from a file on disk it may not have it again.
 
 ## Cloning a node
 
-TODO
+The constructor
+[`Node(node)`](<xref:Yarhl.FileSystem.Node.#ctor(Yarhl.FileSystem.Node)>) allows
+to do a _deep_ clone of a node. This includes name, format and tags.
+
+If the format of the source node is not null, **it must implement
+[`ICloneableFormat`](../formats/cloneable-format.md)**. As children are also
+_deep_ cloned, all of them must have a format that implements
+`ICloneableFormat`.
+
+As `NodeContainerFormat` implements `ICloneableFormat`, the children of the node
+will also be deep cloned.
 
 ## Dispose
 
-TODO
+`Node` implements `IDisposable`. The `Dispose` method will remove and dispose
+all of its children, recursively. It will also dispose its format if it
+implements `IDisposable`.
+
+> [!IMPORTANT]  
+> A node cannot be used anymore after calling `Dispose`. This also affects to
+> all its children (recursively).

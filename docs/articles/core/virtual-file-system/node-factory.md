@@ -2,7 +2,7 @@
 
 The [`Node`](xref:Yarhl.FileSystem.Node) constructor requires at least a
 **non-null name**. It's not required to provide an _extension_ in the name. Its
-format can be initially `null`, you can [change it later](#format).
+format can be initially `null`, you can [change it later](nodes.md#format).
 
 ```csharp
 IFormat binary = ...;
@@ -13,7 +13,7 @@ using var nodeNoFormat = new Node("myNode2");
 
 > [!NOTE]  
 > There is another overload of the `Node` constructor with a `Node` parameter.
-> It's covered in the [node clone](node.md#cloning-a-node) topic.
+> It's covered in the [node clone](nodes.md#cloning-a-node) topic.
 
 To cover common use cases, the
 [`NodeFactory`](xref:Yarhl.FileSystem.NodeFactory) provides APIs to create nodes
@@ -58,7 +58,7 @@ If the path points to a symbolic link from _Windows_ or _Unix_, it will resolve
 to the target.
 
 > [!TIP]  
-> The new node will have a [tag](node.md#tags) named `FileInfo` containing an
+> The new node will have a [tag](nodes.md#tags) named `FileInfo` containing an
 > instance of .NET
 > [`FileInfo`](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)
 > for the given path. If the path was pointing to a symbolic link, the file info
