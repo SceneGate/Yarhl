@@ -39,8 +39,6 @@ public static class Program
         Console.WriteLine($"Number of entries: {txti.Entries.Count}");
         Console.WriteLine($"First text: '{txti.Entries[0].Text}'");
         #endregion
-
-
     }
 
     public static void FakeMain2(string[] args)

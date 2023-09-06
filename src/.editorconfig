@@ -195,5 +195,8 @@ dotnet_diagnostic.S3966.severity = none # Dispose twice to test implementation
 dotnet_diagnostic.SA1123.severity = none # Allow regions to insert code snippets in markdown
 dotnet_diagnostic.SA1124.severity = none # Allow regions to insert code snippets in markdown
 dotnet_diagnostic.S1481.severity = none # Allow unused variables
-dotnet_diagnostic.SA1313.severity = suggestion # Seems to be a bug with records
 dotnet_diagnostic.SA1515.severity = none # Allow comments after #region
+
+# TODO: Reconsider after bumping versions, seems to be buggy
+dotnet_diagnostic.SA1313.severity = suggestion # Seems to be a bug with records
+dotnet_diagnostic.SA1000.severity = none # Space before parentheses in new()
