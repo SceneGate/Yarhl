@@ -25,9 +25,11 @@ Task("DocFx-BuildDoc")
     }
 
     string args = $"-o {info.ArtifactsDirectory}/_site";
-    if (info.WarningsAsErrors) {
-        args += " --warningsAsErrors";
-    }
+
+    // TODO: I think it fails because the current PleOps.Cake overwrites the version
+    // if (info.WarningsAsErrors) {
+    //     args += " --warningsAsErrors";
+    // }
 
     DotNetTool($"docfx {info.DocFxFile} {args}");
 
