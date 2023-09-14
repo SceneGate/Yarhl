@@ -199,6 +199,7 @@ dotnet_diagnostic.IDE0059.severity = none # Allow unused variables
 dotnet_diagnostic.IDE0060.severity = none # Allow unused variables
 dotnet_diagnostic.RCS1163.severity = none # Allow unused variables
 dotnet_diagnostic.SA1515.severity = none # Allow comments after #region
+dotnet_diagnostic.SA1512.severity = none # Allow spaces after comments
 
 # TODO: Reconsider after bumping versions, seems to be buggy
 dotnet_diagnostic.SA1313.severity = suggestion # Seems to be a bug with records
