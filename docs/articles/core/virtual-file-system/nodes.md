@@ -68,18 +68,19 @@ Another possibility is to use the child path to navigate the tree via the
 At any time it's possible to add or remove children from its parent node. Use
 the method `Add` to add one or more nodes as its children.
 
-> [!IMPORTANT]  
-> A node cannot have two children with the same name.
-
 Use the `Remove` method to remove a child from its parent by instance reference
 or node name.
 
-> [!NOTE]  
-> A removed child **is not disposed**. Consider freeing its formats, especially
-> if they have binary type or are containers.
-
 The method `RemoveChildren` removes all the children. Additionally its parameter
 allow to dispose them.
+
+> [!NOTE]  
+> A removed child **is not disposed**. Consider freeing its formats, especially
+> if they have binary type or are containers. `RemoveChildren` does offer the
+> possibility to dispose the children.
+
+> [!IMPORTANT]  
+> A node cannot have two children with the same name.
 
 ## Format
 
@@ -112,7 +113,21 @@ will call the method `Dispose` from the current format if it implements
 
 ## Format conversion
 
-TODO: how it affect children
+Apart from the changing the format API, a _node_ also provides methods to
+_transform_ the format by using a [converter](../formats/converters.md).
+
+<!-- TODO: example -->
+
+The
+[`TransformWith()`](<xref:Yarhl.FileSystem.Node.TransformWith``2(Yarhl.FileFormat.IConverter{``0,``1})>)
+is a shortcut method to run a converter with the current node's format and then
+call `ChangeFormat()` with the result. Note the considerations of
+[changing format](#changing-format) like what it would happen for container
+formats.
+
+This API allows a syntax fluent-like for chaining conversions.
+
+<!-- TODO: example -->
 
 ## Tags
 
@@ -132,8 +147,8 @@ For instance, the _Ekona_ library adds to every node the tag
 ## Cloning a node
 
 The constructor
-[`Node(node)`](<xref:Yarhl.FileSystem.Node.#ctor(Yarhl.FileSystem.Node)>) allows
-to do a _deep_ clone of a node. This includes name, format and tags.
+[`Node(node)`](<xref:Yarhl.FileSystem.Node.%23ctor(Yarhl.FileSystem.Node)>)
+allows to do a _deep_ clone of a node. This includes name, format and tags.
 
 If the format of the source node is not null, **it must implement
 [`ICloneableFormat`](../formats/cloneable-format.md)**. As children are also

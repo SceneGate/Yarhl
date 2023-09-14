@@ -107,4 +107,15 @@ and returns a boolean to accept or not the file.
 
 ## Create node hierarchy
 
-TODO
+Given a _root_ node and a child with an associated path, you may want to
+_insert_ it in the hierarchy. The API
+[`CreateContainersForChild(root, path, child)`](<xref:Yarhl.FileSystem.NodeFactory.CreateContainersForChild(Yarhl.FileSystem.Node,System.String,Yarhl.FileSystem.Node)>)
+adds the child in the given path from the _root_ node, creating any necessary
+intermediary container node.
+
+As an example, we have a scenario were we just created our _root_ node and we
+have a child that we want to add in `data/gfx/scene1/`. The method will create
+the node containers `data`, `gfx` and `scene1`. It will add them to the _root_
+node and then add our child to `scene1`.
+
+<!-- TODO: example -->
