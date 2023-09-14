@@ -4,12 +4,7 @@ The [`Node`](xref:Yarhl.FileSystem.Node) constructor requires at least a
 **non-null name**. It's not required to provide an _extension_ in the name. Its
 format can be initially `null`, you can [change it later](nodes.md#format).
 
-```csharp
-IFormat binary = ...;
-using var node = new Node("myNode", binary);
-
-using var nodeNoFormat = new Node("myNode2");
-```
+[!code-csharp[node constructors](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=Constructor)]
 
 > [!NOTE]  
 > There is another overload of the `Node` constructor with a `Node` parameter.
@@ -34,9 +29,16 @@ node will have the format [`BinaryFormat`](xref:Yarhl.IO.BinaryFormat).
 - .NET `Stream`:
   [`FromStream(name, stream)`](<xref:Yarhl.FileSystem.NodeFactory.FromStream(System.String,System.IO.Stream)>)
 - Segment of a .NET `Stream`:
-  [`FromSubStream(name, stream, offset, lengt)`](<xref:Yarhl.FileSystem.NodeFactory.FromSubstream(System.String,System.IO.Stream,System.Int64,System.Int64)>)
+  [`FromSubstream(name, stream, offset, lengt)`](<xref:Yarhl.FileSystem.NodeFactory.FromSubstream(System.String,System.IO.Stream,System.Int64,System.Int64)>)
 
-<!-- TODO: example -->
+[!code-csharp[from binary](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=BinaryData)]
+
+> [!IMPORTANT]  
+> The APIs `FromStream` and `FromSubstream` will take ownership of the stream
+> argument. Do not dispose the stream variable directly. If you don't want that
+> the format takes the ownership, create a
+> [BinaryFormat](xref:Yarhl.IO.BinaryFormat) with
+> [DataStreamFactory.FromStreamKeepingOwnership](<xref:Yarhl.IO.DataStreamFactory.FromStreamKeepingOwnership(System.IO.Stream,System.Int64,System.Int64)>).
 
 ## Create nodes from files
 
@@ -57,6 +59,8 @@ file on disk.
 If the path points to a symbolic link from _Windows_ or _Unix_, it will resolve
 to the target.
 
+[!code-csharp[from files](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=Files)]
+
 > [!TIP]  
 > The new node will have a [tag](nodes.md#tags) named `FileInfo` containing an
 > instance of .NET
@@ -64,7 +68,9 @@ to the target.
 > for the given path. If the path was pointing to a symbolic link, the file info
 > will contain information of the link, not the actual target.
 
-<!-- TODO: example -->
+> [!TIP]  
+> Check-out the [DataStream](../binary/datastream.md#factory) topic for
+> information about the `FileOpenMode` arguments.
 
 ## Create a container node
 
@@ -72,6 +78,8 @@ The
 [`CreateContainer(name)`](<xref:Yarhl.FileSystem.NodeFactory.CreateContainer(System.String)>)
 method allows to create a node with the given node for _container_ usage. It
 will have the format `NodeContainerFormat`.
+
+[!code-csharp[container](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=Container)]
 
 ## Create nodes from directories
 
@@ -88,7 +96,7 @@ information about the filter from the .NET API
 [`Directory.GetFiles`](<https://learn.microsoft.com/en-us/dotnet/api/system.io.directory.getfiles#system-io-directory-getfiles(system-string-system-string)>).
 The node will have the name of the root directory from the given path.
 
-<!-- TODO: example -->
+[!code-csharp[directory](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=Directory1)]
 
 The method
 [`FromDirectory(path, filter, name, iterateDirectories, mode)`](<xref:Yarhl.FileSystem.NodeFactory.FromDirectory(System.String,System.String,System.String,System.Boolean,Yarhl.IO.FileOpenMode)>)
@@ -96,14 +104,14 @@ behaves similar but allows to specify the name of the node. It also has a new
 argument to specify if it should **iterate recursively through any directory**
 and create the full hierarchy.
 
-<!-- TODO: example -->
+[!code-csharp[directory](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=Directory2)]
 
 To provide advanced filtering capabilities, there are two more methods that
 behaves similar to above. In these cases instead of a `string` to filter, you
 can specify a function (lambda or method) that takes as an argument a file path
 and returns a boolean to accept or not the file.
 
-<!-- TODO: example -->
+[!code-csharp[directory](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=Directory3)]
 
 ## Create node hierarchy
 
@@ -118,4 +126,4 @@ have a child that we want to add in `data/gfx/scene1/`. The method will create
 the node containers `data`, `gfx` and `scene1`. It will add them to the _root_
 node and then add our child to `scene1`.
 
-<!-- TODO: example -->
+[!code-csharp[hierarchy](./../../../../src/Yarhl.Examples/FileSystem/NodeFactoryExamples.cs?name=CreateHierarchy)]

@@ -31,21 +31,7 @@ Let's see it with an example from the
 [Ekona](https://scenegate.github.io/Ekona/index.html) library that provides
 implementation for _Nintendo DS_ formats.
 
-```csharp
-// Create node from a disk file
-using Node game = NodeFactory.FromFile("game.nds", FileOpenMode.Read);
-
-// Use the `Binary2NitroRom` converter to convert the binary format
-// into node containers (virtual file system tree).
-game.TransformWith<Binary2NitroRom>();
-
-// Now we can access to every game file. For instance, we can export one file
-Node gameFile = game.Children["data"].Children["graphics"].Children["map.bin"];
-
-// Same FileStream but reading from different offsets.
-// No disk writing was required.
-Assert.AreEqual(gameFile.Stream.BaseStream, game.Stream.BaseStream);
-```
+[!code-csharp[overview](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=Overview)]
 
 ## Children
 
@@ -59,20 +45,25 @@ To access to a child use its index, `Children[3]`, or its name,
 `Children["image.png"]`. You can chain this operation to navigate the hierarchy:
 `node.Children[1].Children["map1.scr"]`.
 
-Another possibility is to use the child path to navigate the tree via the
-[`Navigator`](xref:Yarhl.FileSystem.Navigator) class:
-`Navigator.SearchNode(rootNode, "/data.tar/scripts/map1.scr")`.
+[!code-csharp[children](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=AccessChildren)]
+
+> [!TIP]  
+> You can find more ways to iterate or navigate nodes across a hierarchy in the
+> [`Navigator`](xref:Yarhl.FileSystem.Navigator) class.
 
 ### Add or remove
 
-At any time it's possible to add or remove children from its parent node. Use
-the method `Add` to add one or more nodes as its children.
+It's possible to add or remove children from its parent node. Use the method
+`Add` to add one or more nodes as its children.
 
 Use the `Remove` method to remove a child from its parent by instance reference
-or node name.
+or node name. The method will **not throw an exception** if the node to remove
+is not found. The method will return `false` in those cases.
 
 The method `RemoveChildren` removes all the children. Additionally its parameter
 allow to dispose them.
+
+[!code-csharp[add remove](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=AddRemove)]
 
 > [!NOTE]  
 > A removed child **is not disposed**. Consider freeing its formats, especially
@@ -80,7 +71,11 @@ allow to dispose them.
 > possibility to dispose the children.
 
 > [!IMPORTANT]  
-> A node cannot have two children with the same name.
+> A node cannot have two children with the same name. Adding a node with the
+> same name will replace the node.
+
+> [!IMPORTANT]  
+> You should not add or remove while iterating the `Children` property.
 
 ## Format
 
@@ -116,18 +111,26 @@ will call the method `Dispose` from the current format if it implements
 Apart from the changing the format API, a _node_ also provides methods to
 _transform_ the format by using a [converter](../formats/converters.md).
 
-<!-- TODO: example -->
+If the converter does not need any
+[parameter](../formats/converters.md#parameters) and it has a public
+parameterless constructor (default case) you can use the short API
+[`TransformWith<Converter>()`](xref:Yarhl.FileSystem.Node.TransformWith``1)
 
-The
-[`TransformWith()`](<xref:Yarhl.FileSystem.Node.TransformWith``2(Yarhl.FileFormat.IConverter{``0,``1})>)
-is a shortcut method to run a converter with the current node's format and then
-call `ChangeFormat()` with the result. Note the considerations of
-[changing format](#changing-format) like what it would happen for container
-formats.
+If it takes parameters or the instance needs to be created in a different way
+(e.g. factory), pass the converter object via
+[`TransformWith(converter)`](<xref:Yarhl.FileSystem.Node.TransformWith``2(Yarhl.FileFormat.IConverter{``0,``1})>).
 
-This API allows a syntax fluent-like for chaining conversions.
+[!code-csharp[transform](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=Transform)]
 
-<!-- TODO: example -->
+The `TransformWith()` method are a shortcut method to run a converter with the
+current node's format and then call `ChangeFormat()` with the result. Note the
+considerations of [changing format](#changing-format) like what it would happen
+for container formats.
+
+The method returns the same instance of the node. This allows a syntax
+fluent-like for chaining conversions.
+
+[!code-csharp[transform chaining](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=TransformChain)]
 
 ## Tags
 
