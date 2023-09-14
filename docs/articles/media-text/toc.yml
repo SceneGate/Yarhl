@@ -1,0 +1,7 @@
+- name: 📝 Text formats
+- name: 🚧 GNU Gettext PO format
+  href: ./po-format.md
+- name: 🚧 Encodings
+  href: ./encodings.md
+- name: 🚧 Tables
+  href: ./tables.md

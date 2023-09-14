@@ -17,10 +17,12 @@
         "Conv",
         "cref",
         "Dependee",
+        "Ekona",
         "Diagnoser",
         "finalizer",
         "msgctxt",
         "Msgid",
         "typeparam"
     ],
+    "dotnet.defaultSolution": "src/Yarhl.sln",
 }

@@ -11,9 +11,5 @@ artifacts/
 # Cake
 tools/*
 
-# Docs
-docs/_site/
-docs/api/
-
 # Benchmarks
 BenchmarkDotNet.Artifacts/

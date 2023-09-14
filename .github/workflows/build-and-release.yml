@@ -37,7 +37,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Build, test and stage"
-        run: dotnet cake --target=Stage-Artifacts --configuration=Release --verbosity=diagnostic
+        run: dotnet cake --target=Stage-Artifacts-NewDocs --configuration=Release --verbosity=diagnostic
 
       - name: "Publish test results"
         uses: actions/upload-artifact@v2
