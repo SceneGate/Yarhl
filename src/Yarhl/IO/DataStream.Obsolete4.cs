@@ -109,5 +109,4 @@ public partial class DataStream
             format = ConvertFormat.To<T>(binary);
         return format;
     }
-
 }
