@@ -1,10 +1,5 @@
 ﻿namespace Yarhl.UnitTests.FileFormat;
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Yarhl.FileFormat;
 
@@ -13,38 +8,38 @@ public partial class ConvertFormatTests
     [Test]
     public void ConvertWithGeneric()
     {
-        using var format = new StringFormatTest("3");
+        using var format = new StringFormat("3");
         Assert.That(
-            ConvertFormat.With<FormatTestDuplicatedConverter1>(format),
+            (ConvertFormat.With<StringFormat2IntFormat>(format) as IntFormat).Value,
             Is.EqualTo(3));
     }
 
     [Test]
     public void ConvertWithGenericInitializerInterface()
     {
-        using var format = new StringFormatTest("C0");
+        using var format = new StringFormat("C0");
         Assert.That(
-            (ConvertFormat.With<ConverterWithInitializerInterface, NumberStyles>(
+            (ConvertFormat.With<StringFormatConverterWithInitializerInterface, NumberStyles>(
                 NumberStyles.HexNumber,
-                format) as IntFormatTest)?.Value,
+                format) as IntFormat)?.Value,
             Is.EqualTo(192));
     }
 
     [Test]
     public void ConvertWithInstance()
     {
-        using var format = new StringFormatTest("3");
-        var converter = new StringFormatTest2IntFormatTestConverter();
+        using var format = new StringFormat("3");
+        var converter = new StringFormat2IntFormat();
         Assert.That(
-            (ConvertFormat.With(converter, format) as IntFormatTest)?.Value,
+            (ConvertFormat.With(converter, format) as IntFormat)?.Value,
             Is.EqualTo(3));
     }
 
     [Test]
     public void ConvertWithInstanceThrowsIfConverterIsNull()
     {
-        using var format = new StringFormatTest("3");
-        StringFormatTest2IntFormatTestConverter converter = null;
+        using var format = new StringFormat("3");
+        StringFormat2IntFormat converter = null;
         Assert.That(
             () => ConvertFormat.With(converter, format),
             Throws.ArgumentNullException);
@@ -53,7 +48,7 @@ public partial class ConvertFormatTests
     [Test]
     public void ConvertWithGenericAndInstanceThrowsExceptionIfNoImplementIConverter()
     {
-        using var format = new StringFormatTest("3");
+        using var format = new StringFormat("3");
         string msg = "Converter doesn't implement IConverter<,>";
 
         Assert.That(
@@ -72,18 +67,18 @@ public partial class ConvertFormatTests
     [Test]
     public void ConvertWithGenericOrInstanceThrowsIfFormatIsNull()
     {
-        StringFormatTest format = null;
+        StringFormat format = null;
 
         Assert.That(
-            () => ConvertFormat.With<StringFormatTest2IntFormatTestConverter>(format),
+            () => ConvertFormat.With<StringFormat2IntFormat>(format),
             Throws.ArgumentNullException);
         Assert.That(
-            () => ConvertFormat.With<ConverterWithInitializerInterface, NumberStyles>(
+            () => ConvertFormat.With<StringFormatConverterWithInitializerInterface, NumberStyles>(
                 NumberStyles.Integer,
                 format),
             Throws.ArgumentNullException);
 
-        var converter = new StringFormatTest2IntFormatTestConverter();
+        var converter = new StringFormat2IntFormat();
         Assert.That(
             () => ConvertFormat.With(converter, format),
             Throws.ArgumentNullException);
@@ -92,17 +87,17 @@ public partial class ConvertFormatTests
     [Test]
     public void ConvertWithGenericOrInstanceThrowsExceptionIfInvalidConverter()
     {
-        using var format = new StringFormatTest("3");
-        string msg = "Converter cannot convert the type: Yarhl.UnitTests.FileFormat.StringFormatTest";
+        using var format = new StringFormat("3");
+        const string msg = "Converter cannot convert the type: Yarhl.UnitTests.FileFormat.StringFormat";
 
         Assert.That(
-            () => ConvertFormat.With<SingleOuterConverterExample>(format),
+            () => ConvertFormat.With<IntFormat2StringFormat>(format),
             Throws.InvalidOperationException.With.Message.EqualTo(msg));
         Assert.That(
-            () => ConvertFormat.With<ConverterAndOtherInterface, int>(4, format),
+            () => ConvertFormat.With<IntFormat2StringFormat, int>(4, format),
             Throws.InvalidOperationException.With.Message.EqualTo(msg));
 
-        var converter = new SingleOuterConverterExample();
+        var converter = new IntFormat2StringFormat();
         Assert.That(
             () => ConvertFormat.With(converter, format),
             Throws.InvalidOperationException.With.Message.EqualTo(msg));

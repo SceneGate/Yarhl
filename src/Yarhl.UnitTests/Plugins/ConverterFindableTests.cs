@@ -24,7 +24,6 @@ namespace Yarhl.UnitTests.Plugins
     using NUnit.Framework;
     using Yarhl.FileFormat;
     using Yarhl.Plugins;
-    using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
     public class ConverterFindableTests
@@ -89,13 +88,13 @@ namespace Yarhl.UnitTests.Plugins
         public void FindDerivedConverter()
         {
             var converters = PluginManager.Instance
-                .FindExtensions<IConverter<string, ushort>>();
-            IConverter<string, ushort> converter = null;
+                .FindExtensions<IConverter<string, long>>();
+            IConverter<string, long> converter = null;
             Assert.That(
                 () => converter = converters.Single(),
                 Throws.Nothing);
             Assert.IsInstanceOf<DerivedConverter>(converter);
-            Assert.IsInstanceOf<BaseConverter>(converter);
+            Assert.IsInstanceOf<BaseAbstractConverter>(converter);
             Assert.That(converter.Convert("3"), Is.EqualTo(3));
         }
 

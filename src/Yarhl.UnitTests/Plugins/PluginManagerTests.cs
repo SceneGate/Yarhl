@@ -51,10 +51,10 @@ namespace Yarhl.UnitTests.Plugins
         public void FormatMetadataContainsNameAndType()
         {
             var format = PluginManager.Instance.GetFormats()
-                .Single(p => p.Metadata.Type == typeof(StringFormatTest));
+                .Single(p => p.Metadata.Type == typeof(StringFormat));
             Assert.That(
                 format.Metadata.Name,
-                Is.EqualTo(typeof(StringFormatTest).FullName));
+                Is.EqualTo(typeof(StringFormat).FullName));
         }
 
         [Test]

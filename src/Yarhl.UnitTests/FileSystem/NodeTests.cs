@@ -20,7 +20,7 @@
 namespace Yarhl.UnitTests.FileSystem
 {
     using System;
-    using System.Composition;
+    using System.Globalization;
     using NUnit.Framework;
     using Yarhl.FileFormat;
     using Yarhl.FileSystem;
@@ -28,20 +28,20 @@ namespace Yarhl.UnitTests.FileSystem
     using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
-    public class NodeTests
+    public partial class NodeTests
     {
         [Test]
         public void ConstructorSetName()
         {
-            using Node node = new Node("mytest");
+            using var node = new Node("mytest");
             Assert.AreEqual("mytest", node.Name);
         }
 
         [Test]
         public void ConstructorSetNameAndFormat()
         {
-            var dummyFormat = new StringFormatTest(string.Empty);
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat(string.Empty);
+            using var node = new Node("mytest", dummyFormat);
             Assert.AreEqual("mytest", node.Name);
             Assert.AreSame(dummyFormat, node.Format);
         }
@@ -49,22 +49,22 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ConstructorWithoutFormatNullProperty()
         {
-            using Node node = new Node("mytest");
+            using var node = new Node("mytest");
             Assert.IsNull(node.Format);
         }
 
         [Test]
         public void ConstructorAllowsNullFormat()
         {
-            using Node node = new Node("mytest", null);
+            using var node = new Node("mytest", null);
             Assert.That(node.Format, Is.Null);
         }
 
         [Test]
         public void GetStreamWhenBinaryFormatReturnsStream()
         {
-            BinaryFormat format = new BinaryFormat();
-            using Node node = new Node("myteset", format);
+            var format = new BinaryFormat();
+            using var node = new Node("myteset", format);
             Assert.AreEqual(format.Stream, node.Stream);
             node.Dispose();
         }
@@ -72,89 +72,89 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void GetStreamIfFormatIsNotBinaryFormatReturnsNull()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
             Assert.IsNull(node.Stream);
         }
 
         [Test]
         public void GetStreamWithoutFormatReturnsNull()
         {
-            using Node node = new Node("mytest");
+            using var node = new Node("mytest");
             Assert.IsNull(node.Stream);
         }
 
         [Test]
         public void IsContainerIfFormatNodeContainer()
         {
-            NodeContainerFormat format = new NodeContainerFormat();
-            using Node node = new Node("NodeTest", format);
+            var format = new NodeContainerFormat();
+            using var node = new Node("NodeTest", format);
             Assert.IsTrue(node.IsContainer);
         }
 
         [Test]
         public void IsNotContainerForDifferentFormat()
         {
-            StringFormatTest format = new StringFormatTest("3");
-            using Node node = new Node("NodeTest", format);
+            var format = new StringFormat("3");
+            using var node = new Node("NodeTest", format);
             Assert.IsFalse(node.IsContainer);
         }
 
         [Test]
         public void IsNotContainerIfNoFormat()
         {
-            using Node node = new Node("mytest");
+            using var node = new Node("mytest");
             Assert.That(node.IsContainer, Is.False);
         }
 
         [Test]
         public void IsContainerIfFormatDerivedFromNodeContainer()
         {
-            MyContainer format = new MyContainer();
-            using Node node = new Node("MyTest", format);
+            var format = new DerivedContainerFormat();
+            using var node = new Node("MyTest", format);
             Assert.IsTrue(node.IsContainer);
         }
 
         [Test]
         public void GetFormatAs()
         {
-            StringFormatTest format = new StringFormatTest("3");
-            using Node node = new Node("NodeTest", format);
-            Assert.AreSame(node.Format, node.GetFormatAs<StringFormatTest>());
+            var format = new StringFormat("3");
+            using var node = new Node("NodeTest", format);
+            Assert.AreSame(node.Format, node.GetFormatAs<StringFormat>());
         }
 
         [Test]
         public void GetFormatAsReturnNullIfNoCastingPossible()
         {
-            StringFormatTest format = new StringFormatTest("3");
-            using Node node = new Node("NodeTest", format);
-            Assert.IsNull(node.GetFormatAs<IntFormatTest>());
+            var format = new StringFormat("3");
+            using var node = new Node("NodeTest", format);
+            Assert.IsNull(node.GetFormatAs<IntFormat>());
         }
 
         [Test]
         public void GetFormatAsAfterDisposeThrowsException()
         {
-            using StringFormatTest format = new StringFormatTest("3");
-            Node node = new Node("NodeTest", format);
+            using var format = new StringFormat("3");
+            var node = new Node("NodeTest", format);
             node.Dispose();
             Assert.That(
-                node.GetFormatAs<StringFormatTest>,
+                node.GetFormatAs<StringFormat>,
                 Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
         public void GetFormatReturnNullIfNoFormat()
         {
-            using Node node = new Node("test");
-            Assert.That(node.GetFormatAs<StringFormatTest>(), Is.Null);
+            using var node = new Node("test");
+            Assert.That(node.GetFormatAs<StringFormat>(), Is.Null);
         }
 
         [Test]
         public void ChangeFormat()
         {
-            var dummyFormat1 = new StringFormatTest("3");
-            var dummyFormat2 = new IntFormatTest(4);
-            using Node node = new Node("mytest", dummyFormat1);
+            var dummyFormat1 = new StringFormat("3");
+            var dummyFormat2 = new IntFormat(4);
+            using var node = new Node("mytest", dummyFormat1);
             node.ChangeFormat(dummyFormat2);
             Assert.AreNotSame(node.Format, dummyFormat1);
             Assert.AreSame(node.Format, dummyFormat2);
@@ -163,8 +163,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ChangeFormatWithoutPreviousFormat()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest");
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest");
             node.ChangeFormat(dummyFormat);
             Assert.AreSame(node.Format, dummyFormat);
         }
@@ -172,9 +172,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ChangeFormatDisposePreviousFormat()
         {
-            var dummyFormat1 = new StringFormatTest("3");
-            var dummyFormat2 = new IntFormatTest(4);
-            using Node node = new Node("mytest", dummyFormat1);
+            var dummyFormat1 = new StringFormat("3");
+            var dummyFormat2 = new IntFormat(4);
+            using var node = new Node("mytest", dummyFormat1);
             node.ChangeFormat(dummyFormat2);
             Assert.IsTrue(dummyFormat1.Disposed);
             Assert.IsFalse(dummyFormat2.Disposed);
@@ -183,9 +183,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ChangeFormatDoesNothingForSameFormat()
         {
-            var dummyFormat1 = new StringFormatTest("3");
-            var dummyFormat2 = dummyFormat1;
-            using Node node = new Node("mytest", dummyFormat1);
+            var dummyFormat1 = new StringFormat("3");
+            StringFormat dummyFormat2 = dummyFormat1;
+            using var node = new Node("mytest", dummyFormat1);
             node.ChangeFormat(dummyFormat2);
             Assert.AreEqual(dummyFormat2, node.Format);
             Assert.IsFalse(dummyFormat1.Disposed);
@@ -195,9 +195,9 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ChangeFormatWithoutDisposingPreviousFormat()
         {
-            var dummyFormat1 = new StringFormatTest("3");
-            var dummyFormat2 = new IntFormatTest(4);
-            using Node node = new Node("mytest", dummyFormat1);
+            var dummyFormat1 = new StringFormat("3");
+            var dummyFormat2 = new IntFormat(4);
+            using var node = new Node("mytest", dummyFormat1);
             node.ChangeFormat(dummyFormat2, false);
             Assert.IsFalse(dummyFormat1.Disposed);
             Assert.IsFalse(dummyFormat2.Disposed);
@@ -206,8 +206,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void ChangeFormatToNull()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
             node.ChangeFormat(null);
             Assert.IsNull(node.Format);
         }
@@ -215,8 +215,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SetContainerFormatAddChildren()
         {
-            using Node node = new Node("MyTest");
-            NodeContainerFormat format = new NodeContainerFormat();
+            using var node = new Node("MyTest");
+            var format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
             node.ChangeFormat(format);
 
@@ -229,8 +229,8 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SetContainerFormatTransferHandlingToNode()
         {
-            using Node node = new Node("MyTest");
-            NodeContainerFormat format = new NodeContainerFormat();
+            using var node = new Node("MyTest");
+            var format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
             node.ChangeFormat(format);
 
@@ -245,13 +245,13 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SetFromContainerToDifferentCleanChildren()
         {
-            using Node node = new Node("mytest");
-            NodeContainerFormat format = new NodeContainerFormat();
+            using var node = new Node("mytest");
+            var format = new NodeContainerFormat();
             format.Root.Add(new Node("Child"));
             node.ChangeFormat(format);
             Assert.IsNotEmpty(node.Children);
 
-            StringFormatTest newFormat = new StringFormatTest("3");
+            var newFormat = new StringFormat("3");
             node.ChangeFormat(newFormat);
             Assert.IsEmpty(node.Children);
         }
@@ -259,41 +259,41 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void SetFormatThrowExceptionIfDisposed()
         {
-            using Node node = new Node("MyTest");
+            using var node = new Node("MyTest");
             node.Dispose();
-            StringFormatTest format = new StringFormatTest("3");
-            Assert.Throws<ObjectDisposedException>(() => node.ChangeFormat(format));
+            var format = new StringFormat("3");
+            _ = Assert.Throws<ObjectDisposedException>(() => node.ChangeFormat(format));
         }
 
         [Test]
         public void TransformWithGeneric()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
-            _ = node.TransformWith<PrivateConverter>();
-            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            _ = node.TransformWith<StringFormat2IntFormat>();
+            Assert.IsInstanceOf<IntFormat>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual(4, node.GetFormatAs<IntFormatTest>().Value);
+            Assert.AreEqual(3, node.GetFormatAs<IntFormat>().Value);
         }
 
         [Test]
         public void TransformWithGenericReturnsNode()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
-            Assert.That(node.TransformWith<PrivateConverter>(), Is.SameAs(node));
+            Assert.That(node.TransformWith<StringFormat2IntFormat>(), Is.SameAs(node));
         }
 
         [Test]
         public void TransformWithGenericThrowsIfConverterDoesNotReturnIFormat()
         {
-            var dummy = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummy);
+            var dummy = new StringFormat("3");
+            using var node = new Node("mytest", dummy);
 
             Assert.That(
-                () => node.TransformWith<StringFormatTest2NoFormat>(),
+                () => node.TransformWith<StringFormat2NoFormat>(),
                 Throws.InvalidOperationException);
         }
 
@@ -301,7 +301,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void TransformWithGenericDoesNotThrowIfReturnsNull()
         {
             var dummy = new NullSource();
-            using Node node = new Node("mytest", dummy);
+            using var node = new Node("mytest", dummy);
 
             Assert.That(
                 () => node.TransformWith<NullConverter>(),
@@ -310,90 +310,43 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void TransformWithInit()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-
-            node.TransformWith<PrivateConverter, int>(4);
-            Assert.IsInstanceOf<IntFormatTest>(node.Format);
-            Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual(7, node.GetFormatAs<IntFormatTest>().Value);
-        }
-
-        [Test]
-        public void TransformWithInitReturnsNode()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-
-            Assert.That(
-                node.TransformWith<PrivateConverter, int>(4),
-                Is.SameAs(node));
-        }
-
-        [Test]
-        public void TransformWithInitThrowsIfConverterDoesNotReturnIFormat()
-        {
-            var dummy = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummy);
-
-            Assert.That(
-                () => node.TransformWith<StringFormatTest2NoFormat, int>(2),
-                Throws.InvalidOperationException);
-        }
-
-        [Test]
-        public void TransformWithInitDoesNotThrowIfReturnsNull()
-        {
-            var dummy = new NullSource();
-            using Node node = new Node("mytest", dummy);
-
-            Assert.That(
-                () => node.TransformWith<NullConverter, int>(2),
-                Throws.Nothing);
-            Assert.That(node.Format, Is.Null);
-        }
-
-        [Test]
         public void TransformWithType()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
-            node.TransformWith(typeof(StringFormatTest2IntFormatTestConverter));
-            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            _ = node.TransformWith(typeof(StringFormat2IntFormat));
+            Assert.IsInstanceOf<IntFormat>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual(3, node.GetFormatAs<IntFormatTest>().Value);
+            Assert.AreEqual(3, node.GetFormatAs<IntFormat>().Value);
         }
 
         [Test]
         public void TransformWithTypeReturnsNode()
         {
-            var dummyFormat = new IntFormatTest();
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new IntFormat();
+            using var node = new Node("mytest", dummyFormat);
 
             Assert.That(
-                node.TransformWith(typeof(StringFormatTest2IntFormatTestConverter)),
+                node.TransformWith(typeof(IntFormat2StringFormat)),
                 Is.SameAs(node));
         }
 
         [Test]
-        public void TransformWithPrivateTypeDoesNotThrowsException()
+        public void TransformWithPrivateTypeThrowsException()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            using var node = new Node("mytest", new NodeContainerFormat());
 
             Assert.That(
                 () => node.TransformWith(typeof(PrivateConverter)),
-                Throws.Nothing);
+                Throws.Exception);
         }
 
         [Test]
         public void TransformWithTypeThrowsIfNull()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
             Type myType = null;
             Assert.That(
@@ -404,11 +357,11 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void TransformWithTypeThrowsIfConverterDoesNotReturnIFormat()
         {
-            var dummy = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummy);
+            var dummy = new StringFormat("3");
+            using var node = new Node("mytest", dummy);
 
             Assert.That(
-                () => node.TransformWith(typeof(StringFormatTest2NoFormat)),
+                () => node.TransformWith(typeof(StringFormat2NoFormat)),
                 Throws.InvalidOperationException);
         }
 
@@ -416,7 +369,7 @@ namespace Yarhl.UnitTests.FileSystem
         public void TransformWithTypeDoesNotThrowIfReturnsNull()
         {
             var dummy = new NullSource();
-            using Node node = new Node("mytest", dummy);
+            using var node = new Node("mytest", dummy);
 
             Assert.That(
                 () => node.TransformWith(typeof(NullConverter)),
@@ -427,15 +380,12 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void TransformWithThrowsIfNoConverterImplementation()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
-            var msg = "Converter doesn't implement IConverter<,>";
+            const string msg = "Converter doesn't implement IConverter<,>";
             Assert.That(
                 () => node.TransformWith<ConverterWithoutGenericInterface>(),
-                Throws.InvalidOperationException.With.Message.EqualTo(msg));
-            Assert.That(
-                () => node.TransformWith<ConverterWithoutGenericInterface, int>(0),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
 
             // It won't be discovered
@@ -447,111 +397,106 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void TransformWithInstance()
         {
-            PrivateConverter converter = new PrivateConverter();
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var converter = new StringFormat2IntFormat();
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
-            node.TransformWith<StringFormatTest, IntFormatTest>(converter);
-            Assert.IsInstanceOf<IntFormatTest>(node.Format);
+            _ = node.TransformWith(converter);
+            Assert.IsInstanceOf<IntFormat>(node.Format);
             Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual(4, node.GetFormatAs<IntFormatTest>().Value);
+            Assert.AreEqual(3, node.GetFormatAs<IntFormat>().Value);
         }
 
         [Test]
         public void TransformWithInstanceReturnsNode()
         {
-            PrivateConverter converter = new PrivateConverter();
-            var dummyFormat = new IntFormatTest(3);
-            using Node node = new Node("mytest", dummyFormat);
+            var converter = new IntFormat2StringFormat();
+            var dummyFormat = new IntFormat(3);
+            using var node = new Node("mytest", dummyFormat);
 
             Assert.That(
-                node.TransformWith<IntFormatTest, StringFormatTest>(converter),
+                node.TransformWith(converter),
                 Is.SameAs(node));
         }
 
         [Test]
         public void TransformWithInstanceThrowsExceptionIfSelectWrongConverter()
         {
-            PrivateConverter converter = new PrivateConverter();
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            var converter = new IntFormat2StringFormat();
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
 
             Assert.That(
-                () => node.TransformWith<IntFormatTest, StringFormatTest>(converter),
-                Throws.InstanceOf<InvalidCastException>());
+                () => node.TransformWith(converter),
+                Throws.InstanceOf<InvalidOperationException>());
         }
 
         [Test]
         public void TransformWithInstanceThrowsIfConverterNull()
         {
-            PrivateConverter converter = null;
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
+            StringFormat2IntFormat converter = null;
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
             Assert.That(
-                () => node.TransformWith<StringFormatTest, IntFormatTest>(converter),
+                () => node.TransformWith(converter),
                 Throws.ArgumentNullException);
         }
 
         [Test]
         public void TransformWithInstanceDisposeFormat()
         {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-            node.TransformWith(new StringFormatTest2IntFormatTestConverter());
+            var dummyFormat = new StringFormat("3");
+            using var node = new Node("mytest", dummyFormat);
+            _ = node.TransformWith(new StringFormat2IntFormat());
             Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(node.GetFormatAs<IntFormatTest>().Disposed);
+            Assert.IsFalse(node.GetFormatAs<IntFormat>().Disposed);
             node.Dispose();
         }
 
         [Test]
         public void TransformAfterDisposeThrowsException()
         {
-            using var dummyFormat = new StringFormatTest("3");
-            Node node = new Node("mytest", dummyFormat);
+            using var dummyFormat = new StringFormat("3");
+            var node = new Node("mytest", dummyFormat);
             node.Dispose();
 
             Assert.That(
-                () => node.TransformWith<PrivateConverter>(),
+                () => node.TransformWith<StringFormat2IntFormat>(),
                 Throws.TypeOf<ObjectDisposedException>());
             Assert.That(
-                () => node.TransformWith<PrivateConverter, int>(0),
-                Throws.TypeOf<ObjectDisposedException>());
-            Assert.That(
-                () => node.TransformWith(typeof(PrivateConverter)),
+                () => node.TransformWith(typeof(StringFormat2IntFormat)),
                 Throws.TypeOf<ObjectDisposedException>());
 
-            var converter = new PrivateConverter();
+            var converter = new StringFormat2IntFormat();
             Assert.That(
-                () => node.TransformWith<StringFormatTest, IntFormatTest>(converter),
+                () => node.TransformWith(converter),
                 Throws.TypeOf<ObjectDisposedException>());
         }
 
         [Test]
         public void TransformWithoutFormatThrowException()
         {
-            string msg = "Cannot transform a node without format";
-            using Node node = new Node("mytest");
+            const string msg = "Cannot transform a node without format";
+            using var node = new Node("mytest");
+
             Assert.That(
-                () => node.TransformWith<PrivateConverter>(),
+                () => node.TransformWith<StringFormat2IntFormat>(),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
             Assert.That(
-                () => node.TransformWith<PrivateConverter, int>(0),
-                Throws.InvalidOperationException.With.Message.EqualTo(msg));
-            Assert.That(
-                () => node.TransformWith(typeof(PrivateConverter)),
+                () => node.TransformWith(typeof(StringFormat2IntFormat)),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
 
-            var converter = new PrivateConverter();
+            var converter = new StringFormat2IntFormat();
             Assert.That(
-                () => node.TransformWith<StringFormatTest, IntFormatTest>(converter),
+                () => node.TransformWith<StringFormat, IntFormat>(converter),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));
         }
 
         [Test]
         public void DisposeDoesDisposeFormat()
         {
-            using var dummyFormat = new StringFormatTest("3");
-            Node node = new Node("mytest", dummyFormat);
+            using var dummyFormat = new StringFormat("3");
+            var node = new Node("mytest", dummyFormat);
             Assert.IsFalse(node.Disposed);
             Assert.IsFalse(dummyFormat.Disposed);
             node.Dispose();
@@ -562,7 +507,7 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void DisposeTwiceDoesNotThrow()
         {
-            using Node node = new Node("mytest", new StringFormatTest("3"));
+            using var node = new Node("mytest", new StringFormat("3"));
             node.Dispose();
             Assert.DoesNotThrow(node.Dispose);
         }
@@ -570,14 +515,14 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CloneNullNodeThrowsException()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = new Node((Node)null));
+            _ = Assert.Throws<ArgumentNullException>(() => _ = new Node((Node)null));
         }
 
         [Test]
         public void NotCloneableFormatThrowsException()
         {
-            using Node node = new Node("test", new StringFormatTest("3"));
-            Assert.Throws<InvalidOperationException>(() => _ = new Node(node));
+            using var node = new Node("test", new StringFormat("3"));
+            _ = Assert.Throws<InvalidOperationException>(() => _ = new Node(node));
         }
 
         [Test]
@@ -586,7 +531,7 @@ namespace Yarhl.UnitTests.FileSystem
             using Node node = NodeFactory.FromMemory("test");
             node.Tags["TestTag"] = 23;
 
-            using Node clone = new Node(node);
+            using var clone = new Node(node);
 
             Assert.AreNotSame(node, clone);
             Assert.AreEqual(1, clone.Tags.Count);
@@ -596,44 +541,23 @@ namespace Yarhl.UnitTests.FileSystem
         [Test]
         public void CloneNullFormatNode()
         {
-            using Node node = new Node("test");
-            using Node clone = new Node(node);
+            using var node = new Node("test");
+            using var clone = new Node(node);
 
             Assert.AreNotSame(node, clone);
             Assert.IsNull(clone.Format);
         }
 
-        [PartNotDiscoverable]
-        public class PrivateConverter :
-            IConverter<StringFormatTest, IntFormatTest>,
-            IConverter<IntFormatTest, StringFormatTest>,
-            IInitializer<int>
+        private sealed class DerivedContainerFormat : NodeContainerFormat
         {
-            int offset;
-
-            public PrivateConverter()
-            {
-                offset = 1;
-            }
-
-            public void Initialize(int parameters)
-            {
-                offset = parameters;
-            }
-
-            public IntFormatTest Convert(StringFormatTest source)
-            {
-                return new IntFormatTest(System.Convert.ToInt32(source.Value) + offset);
-            }
-
-            public StringFormatTest Convert(IntFormatTest source)
-            {
-                return new StringFormatTest(source.Value.ToString());
-            }
         }
 
-        class MyContainer : NodeContainerFormat
+        private sealed class PrivateConverter : IConverter<NodeContainerFormat, DerivedContainerFormat>
         {
+            public DerivedContainerFormat Convert(NodeContainerFormat source)
+            {
+                return new DerivedContainerFormat();
+            }
         }
     }
 }
