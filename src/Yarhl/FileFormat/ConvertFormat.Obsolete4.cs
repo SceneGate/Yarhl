@@ -32,51 +32,6 @@ using System.Threading.Tasks;
 public static partial class ConvertFormat
 {
     /// <summary>
-    /// Converts the format to the specified type.
-    /// </summary>
-    /// <returns>The new format.</returns>
-    /// <param name="src">Format to convert.</param>
-    /// <typeparam name="TDst">The destination format type.</typeparam>
-    [Obsolete("To() overloads are deprecated. Use the converter type or object overloads: With()")]
-    public static TDst To<TDst>(dynamic src)
-    {
-        return (TDst)To(typeof(TDst), src);
-    }
-
-    /// <summary>
-    /// Converts the format into the specified type.
-    /// </summary>
-    /// <returns>The new format.</returns>
-    /// <param name="dstType">Type of the destination format.</param>
-    /// <param name="src">Format to convert.</param>
-    [Obsolete("To() overloads are deprecated. Use the converter type or object overloads: With()")]
-    public static object To(Type dstType, dynamic src)
-    {
-        if (dstType == null)
-            throw new ArgumentNullException(nameof(dstType));
-
-        if (src == null)
-            throw new ArgumentNullException(nameof(src));
-
-        // Search the converter for the giving types.
-        Type srcType = src.GetType();
-        var extensions = PluginManager.Instance.GetConverters()
-            .Where(e => e.Metadata.CanConvert(srcType, dstType));
-
-        // Same as Single operation but with nice errors
-        if (!extensions.Any()) {
-            throw new InvalidOperationException(
-                $"Cannot find converter for: {srcType} -> {dstType}");
-        } else if (extensions.Skip(1).Any()) {
-            throw new InvalidOperationException(
-                $"Multiple converters for: {srcType} -> {dstType}");
-        }
-
-        dynamic converter = extensions.First().CreateExport().Value;
-        return converter.Convert(src);
-    }
-
-    /// <summary>
     /// Converts the format using a converter with the specified type.
     /// </summary>
     /// <param name="src">Format to convert.</param>

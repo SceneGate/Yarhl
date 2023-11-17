@@ -38,7 +38,9 @@ namespace Yarhl.FileFormat
         public static object With(Type converterType, dynamic src, params object?[] args)
         {
             ArgumentNullException.ThrowIfNull(converterType);
-            ValidateConverterType(converterType, src.GetType());
+            if (src is not null) {
+                ValidateConverterType(converterType, src.GetType());
+            }
 
             dynamic converter = Activator.CreateInstance(converterType, args)
                 ?? throw new InvalidOperationException("Invalid converter type");

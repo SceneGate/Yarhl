@@ -32,7 +32,7 @@ namespace Yarhl.UnitTests.Media.Text
         public void ConvertEmptyPo()
         {
             var po = new Po();
-            CompareText(ConvertFormat.To<BinaryFormat>(po), string.Empty);
+            CompareText(new Po2Binary().Convert(po), string.Empty);
         }
 
         [Test]
@@ -118,7 +118,7 @@ msgstr """"
 
             var newPo = ConvertStringToPo(text);
 
-            CompareText(ConvertFormat.To<BinaryFormat>(po), text);
+            CompareText(new Po2Binary().Convert(po), text);
             Assert.AreEqual(po.Header.ProjectIdVersion, newPo.Header.ProjectIdVersion);
             Assert.AreEqual(po.Header.ReportMsgidBugsTo, newPo.Header.ReportMsgidBugsTo);
             Assert.AreEqual(po.Header.CreationDate, newPo.Header.CreationDate);
@@ -162,7 +162,7 @@ msgstr """"
             var newPo = ConvertStringToPo(text);
             var newHeader = newPo.Header;
 
-            CompareText(ConvertFormat.To<BinaryFormat>(testPo), text);
+            CompareText(new Po2Binary().Convert(testPo), text);
             Assert.AreEqual(header.ProjectIdVersion, newHeader.ProjectIdVersion);
             Assert.AreEqual(header.ReportMsgidBugsTo, newHeader.ReportMsgidBugsTo);
             Assert.AreEqual(header.CreationDate, newHeader.CreationDate);
@@ -253,7 +253,7 @@ msgstr ""translated""
             text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
 
-            CompareText(ConvertFormat.To<BinaryFormat>(testPo), text);
+            CompareText(new Po2Binary().Convert(testPo), text);
             Assert.That(newPo.Header, Is.Not.Null);
             Assert.That(newPo.Header.ProjectIdVersion, Is.Empty);
             Assert.AreEqual(2, newPo.Entries.Count);
@@ -289,7 +289,7 @@ msgstr ""translated""
             text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
 
-            CompareText(ConvertFormat.To<BinaryFormat>(testPo), text);
+            CompareText(new Po2Binary().Convert(testPo), text);
             Assert.AreEqual(1, newPo.Entries.Count);
             Assert.AreEqual(testPo.Entries[0].Original, newPo.Entries[0].Original);
             Assert.AreEqual(testPo.Entries[0].Translated, newPo.Entries[0].Translated);
@@ -320,7 +320,7 @@ msgstr """"
             text = text.Replace("\r\n", "\n");
             var newPo = ConvertStringToPo(text);
 
-            CompareText(ConvertFormat.To<BinaryFormat>(testPo), text);
+            CompareText(new Po2Binary().Convert(testPo), text);
             Assert.AreEqual(1, newPo.Entries.Count);
             Assert.AreEqual(testPo.Entries[0].Original, newPo.Entries[0].Original);
             Assert.AreEqual(testPo.Entries[0].Translated, newPo.Entries[0].Translated);
@@ -376,7 +376,7 @@ msgstr ""translated""
 
             var newPo = ConvertStringToPo(text);
 
-            CompareText(ConvertFormat.To<BinaryFormat>(testPo), text);
+            CompareText(new Po2Binary().Convert(testPo), text);
             Assert.AreEqual(testPo.Header.ProjectIdVersion, newPo.Header.ProjectIdVersion);
             Assert.AreEqual(testPo.Header.ReportMsgidBugsTo, newPo.Header.ReportMsgidBugsTo);
             Assert.AreEqual(testPo.Header.Language, newPo.Header.Language);
@@ -479,11 +479,11 @@ msgstr """"
             var entry = new PoEntry("Test") { Translated = "Prueba" };
             po.Add(entry);
 
-            BinaryFormat poBinary = ConvertFormat.To<BinaryFormat>(po);
+            BinaryFormat poBinary = new Po2Binary().Convert(po);
 
             Assert.AreNotEqual(0, poBinary.Stream.Position);
 
-            Po result = ConvertFormat.To<Po>(poBinary);
+            Po result = new Binary2Po().Convert(poBinary);
 
             Assert.IsNotNull(result);
             Assert.AreEqual(1, result.Entries.Count);
@@ -503,7 +503,7 @@ msgstr """"
             new TextDataWriter(textFormat.Stream).Write(binary);
             textFormat.Stream.Position = 0;
 
-            return ConvertFormat.To<Po>(textFormat);
+            return new Binary2Po().Convert(textFormat);
         }
     }
 }

@@ -980,28 +980,6 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
-        public void ReadFormat()
-        {
-            DataStream stream = new DataStream();
-            stream.WriteByte(0xAF);
-            stream.Position = 0x00;
-            Assert.AreEqual(0xAF, stream.ReadFormat<byte>());
-            stream.Dispose();
-        }
-
-        [Test]
-        public void ReadFormAfterDisposeThrowException()
-        {
-            DataStream stream = new DataStream();
-            stream.WriteByte(0xAF);
-            stream.Position = 0x00;
-
-            stream.Dispose();
-            Assert.IsTrue(stream.Disposed);
-            Assert.Throws<ObjectDisposedException>(() => stream.ReadFormat<byte>());
-        }
-
-        [Test]
         public void WritesAByteAndIncreasePosition()
         {
             using DataStream stream = new DataStream(baseStream);

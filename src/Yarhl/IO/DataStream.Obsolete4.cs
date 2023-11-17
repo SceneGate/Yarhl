@@ -92,21 +92,4 @@ public partial class DataStream
         action();
         PopPosition();
     }
-
-    /// <summary>
-    /// Reads a format from this stream.
-    /// </summary>
-    /// <returns>The format read.</returns>
-    /// <typeparam name="T">The type of the format to read.</typeparam>
-    [Obsolete("ConvertFormat.To() is obsoleted. Use the converter directly.")]
-    public T ReadFormat<T>()
-    {
-        if (Disposed)
-            throw new ObjectDisposedException(nameof(DataStream));
-
-        T format;
-        using (var binary = new BinaryFormat(this))
-            format = ConvertFormat.To<T>(binary);
-        return format;
-    }
 }

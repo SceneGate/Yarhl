@@ -20,6 +20,8 @@
 namespace Yarhl.UnitTests.FileFormat
 {
     using System;
+    using System.Composition;
+    using System.Globalization;
     using Yarhl.FileFormat;
 
     // Disable file may only contain a single class since we aren't going
@@ -156,6 +158,23 @@ namespace Yarhl.UnitTests.FileFormat
     {
     }
 
+    public class ConverterWithInitializerInterface :
+        IConverter<StringFormatTest, IntFormatTest>,
+        IInitializer<NumberStyles>
+    {
+        private NumberStyles style;
+
+        public IntFormatTest Convert(StringFormatTest source)
+        {
+            return new IntFormatTest(int.Parse(source.Value, style));
+        }
+
+        public void Initialize(NumberStyles parameters)
+        {
+            style = parameters;
+        }
+    }
+
     public class StringFormatTest2IntFormatTestConverter :
         IConverter<StringFormatTest, IntFormatTest>,
         IConverter<IntFormatTest, StringFormatTest>
@@ -201,6 +220,102 @@ namespace Yarhl.UnitTests.FileFormat
         }
     }
 
+    public class FormatTestDuplicatedConverter1 :
+        IConverter<StringFormatTest, short>
+    {
+        public short Convert(StringFormatTest source)
+        {
+            return System.Convert.ToInt16(source.Value);
+        }
+    }
+
+    public class FormatTestDuplicatedConverter2 :
+        IConverter<StringFormatTest, short>
+    {
+        public short Convert(StringFormatTest source)
+        {
+            return System.Convert.ToInt16(source.Value);
+        }
+    }
+
+    public class FormatTestBadConstructor :
+        IConverter<StringFormatTest, ushort>
+    {
+        public FormatTestBadConstructor()
+        {
+            throw new Exception();
+        }
+
+        public FormatTestBadConstructor(string dummy)
+        {
+            // This one doesn't throw
+            Dummy = dummy;
+        }
+
+        public string Dummy { get; }
+
+        public ushort Convert(StringFormatTest source)
+        {
+            return ushort.Parse(source.Value);
+        }
+    }
+
+    public class InterfaceImpl : IInterface
+    {
+        public int Z { get; set; }
+    }
+
+    public class ConverterInterface :
+        IConverter<IInterface, int>
+    {
+        public int Convert(IInterface source)
+        {
+            return source.Z;
+        }
+    }
+
+    public class BaseFormat
+    {
+        public ushort X { get; set; }
+    }
+
+    public class DerivedFormat : BaseFormat
+    {
+        public ushort Y { get; set; }
+    }
+
+    public class ConvertDerivedFormat :
+        IConverter<ushort, DerivedFormat>, IConverter<DerivedFormat, ushort>
+    {
+        public DerivedFormat Convert(ushort source)
+        {
+            return new DerivedFormat {
+                X = source,
+                Y = (ushort)(source + 1),
+            };
+        }
+
+        public ushort Convert(DerivedFormat source)
+        {
+            return source.Y;
+        }
+    }
+
+    public class ConvertBaseFormat :
+        IConverter<int, BaseFormat>, IConverter<BaseFormat, int>
+    {
+        public BaseFormat Convert(int source)
+        {
+            return new BaseFormat {
+                X = (ushort)(source + 2),
+            };
+        }
+
+        public int Convert(BaseFormat source)
+        {
+            return source.X + 5;
+        }
+    }
 #pragma warning restore SA1402, SA1649
 
 }

@@ -29,52 +29,6 @@ using Yarhl.FileFormat;
 public partial class Node
 {
     /// <summary>
-    /// Transforms the node format to the specified format.
-    /// </summary>
-    /// <typeparam name="TDst">Format to convert.</typeparam>
-    /// <returns>This node.</returns>
-    [Obsolete("To() overloads are deprecated. Use TransformWith()")]
-    public Node TransformTo<TDst>()
-        where TDst : IFormat
-    {
-        if (Disposed)
-            throw new ObjectDisposedException(nameof(Node));
-
-        if (Format == null) {
-            throw new InvalidOperationException(
-                "Cannot transform a node without format");
-        }
-
-        ChangeFormat(ConvertFormat.To<TDst>(Format));
-        return this;
-    }
-
-    /// <summary>
-    /// Transforms the node format to the specified format.
-    /// </summary>
-    /// <returns>This node.</returns>
-    /// <param name="dst">Format to convert. It must implement IFormat.</param>
-    [Obsolete("To() overloads are deprecated. Use TransformWith()")]
-    public Node TransformTo(Type dst)
-    {
-        if (Disposed)
-            throw new ObjectDisposedException(nameof(Node));
-
-        if (dst == null)
-            throw new ArgumentNullException(nameof(dst));
-
-        if (Format == null) {
-            throw new InvalidOperationException(
-                "Cannot transform a node without format");
-        }
-
-        object result = ConvertFormat.To(dst, Format);
-        CastAndChangeFormat(result);
-
-        return this;
-    }
-
-    /// <summary>
     /// Transform the node format to another format with a given converter
     /// initialized with parameters.
     /// </summary>

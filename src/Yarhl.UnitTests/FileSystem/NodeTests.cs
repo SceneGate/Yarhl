@@ -266,101 +266,6 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
-        public void TransformToGeneric()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-
-            node.TransformTo<IntFormatTest>();
-            Assert.IsInstanceOf<IntFormatTest>(node.Format);
-            Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual(3, node.GetFormatAs<IntFormatTest>().Value);
-        }
-
-        [Test]
-        public void TransformToGenericReturnNode()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-            Assert.That(node.TransformTo<IntFormatTest>(), Is.SameAs(node));
-        }
-
-        [Test]
-        public void TransformToWithType()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-
-            var result = node.TransformTo(typeof(IntFormatTest));
-            Assert.IsInstanceOf<IntFormatTest>(node.Format);
-            Assert.AreNotSame(dummyFormat, node.Format);
-            Assert.AreEqual(3, node.GetFormatAs<IntFormatTest>().Value);
-            Assert.AreSame(node, result);
-        }
-
-        [Test]
-        public void TransformToWithTypeReturnNode()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-            Assert.That(node.TransformTo(typeof(IntFormatTest)), Is.SameAs(node));
-        }
-
-        [Test]
-        public void TransformToWithTypeNullThrowsException()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-
-            Assert.That(() => node.TransformTo(null), Throws.ArgumentNullException);
-        }
-
-        [Test]
-        public void TransformToWithTypeThrowsIfConverterDoesNotReturnIFormat()
-        {
-            var dummy = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummy);
-
-            Assert.That(
-                () => node.TransformTo(typeof(NoFormat)),
-                Throws.InvalidOperationException);
-        }
-
-        [Test]
-        public void TransformToWithTypeDoesNotThrowIfReturnsNull()
-        {
-            var dummy = new NullSource();
-            using Node node = new Node("mytest", dummy);
-
-            Assert.That(
-                () => node.TransformTo(typeof(NullDestination)),
-                Throws.Nothing);
-            Assert.That(node.Format, Is.Null);
-        }
-
-        [Test]
-        public void TransformToGenericDisposeFormat()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-            node.TransformTo<IntFormatTest>();
-            Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(node.GetFormatAs<IntFormatTest>().Disposed);
-            node.Dispose();
-        }
-
-        [Test]
-        public void TransformToWithTypeDisposeFormat()
-        {
-            var dummyFormat = new StringFormatTest("3");
-            using Node node = new Node("mytest", dummyFormat);
-            node.TransformTo(typeof(IntFormatTest));
-            Assert.IsTrue(dummyFormat.Disposed);
-            Assert.IsFalse(node.GetFormatAs<IntFormatTest>().Disposed);
-            node.Dispose();
-        }
-
-        [Test]
         public void TransformWithGeneric()
         {
             var dummyFormat = new StringFormatTest("3");
@@ -588,18 +493,23 @@ namespace Yarhl.UnitTests.FileSystem
         }
 
         [Test]
+        public void TransformWithInstanceDisposeFormat()
+        {
+            var dummyFormat = new StringFormatTest("3");
+            using Node node = new Node("mytest", dummyFormat);
+            node.TransformWith(new StringFormatTest2IntFormatTestConverter());
+            Assert.IsTrue(dummyFormat.Disposed);
+            Assert.IsFalse(node.GetFormatAs<IntFormatTest>().Disposed);
+            node.Dispose();
+        }
+
+        [Test]
         public void TransformAfterDisposeThrowsException()
         {
             using var dummyFormat = new StringFormatTest("3");
             Node node = new Node("mytest", dummyFormat);
             node.Dispose();
 
-            Assert.That(
-                node.TransformTo<IntFormatTest>,
-                Throws.TypeOf<ObjectDisposedException>());
-            Assert.That(
-                () => node.TransformTo(typeof(IntFormatTest)),
-                Throws.TypeOf<ObjectDisposedException>());
             Assert.That(
                 () => node.TransformWith<PrivateConverter>(),
                 Throws.TypeOf<ObjectDisposedException>());
@@ -621,12 +531,6 @@ namespace Yarhl.UnitTests.FileSystem
         {
             string msg = "Cannot transform a node without format";
             using Node node = new Node("mytest");
-            Assert.That(
-                node.TransformTo<IntFormatTest>,
-                Throws.InvalidOperationException.With.Message.EqualTo(msg));
-            Assert.That(
-                () => node.TransformTo(typeof(IntFormatTest)),
-                Throws.InvalidOperationException.With.Message.EqualTo(msg));
             Assert.That(
                 () => node.TransformWith<PrivateConverter>(),
                 Throws.InvalidOperationException.With.Message.EqualTo(msg));

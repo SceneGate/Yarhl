@@ -267,6 +267,7 @@ dotnet_diagnostic.CA1305.severity = none # No culture method for quick test code
 dotnet_diagnostic.CA1307.severity = none # No culture method for quick test code
 dotnet_diagnostic.SA0001.severity = none # Disable documentation
 dotnet_diagnostic.SA1600.severity = none # Disable documentation
+dotnet_diagnostic.SA1601.severity = none # Disable documentation
 dotnet_diagnostic.SA1201.severity = none # Allow enums inside classes
 dotnet_diagnostic.S1144.severity = none # Remove unused setter
 dotnet_diagnostic.S2094.severity = none # Remove empty class
