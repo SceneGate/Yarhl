@@ -213,11 +213,6 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Transform the node format to another format using a converter.
         /// </summary>
-        /// <remarks>
-        /// This API may behave slower and produce less obvious exceptions.
-        /// It's recommended to use instead
-        /// <see cref="TransformWith{TSrc, TDst}(IConverter{TSrc, TDst})"/>.
-        /// </remarks>
         /// <param name="converter">Convert to use.</param>
         /// <returns>This node.</returns>
         public Node TransformWith(IConverter converter)
