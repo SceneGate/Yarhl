@@ -200,7 +200,7 @@ namespace Yarhl.UnitTests.Plugins
         }
 
         [Test]
-        [Ignore("To be fixed")]
+        [Ignore("To be re-implemented without MEF")]
         public void GetConvertersWithParametersReturnsMetadata()
         {
             var formats = PluginManager.Instance.GetConverters()
@@ -240,7 +240,7 @@ namespace Yarhl.UnitTests.Plugins
             }
         }
 
-        [PartNotDiscoverable] // TODO: remove attribute
+        [PartNotDiscoverable] // TODO: After re-implement without MEF
         public class PluginConverterParametrized : Yarhl.FileFormat.IConverter<PluginFormat, int>
         {
             public PluginConverterParametrized(bool ignoreMe)

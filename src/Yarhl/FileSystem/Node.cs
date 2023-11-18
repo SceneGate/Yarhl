@@ -62,8 +62,9 @@ namespace Yarhl.FileSystem
         public Node(Node node)
             : this(node != null ? node.Name : string.Empty)
         {
-            if (node!.Format != null && node.Format is not ICloneableFormat)
+            if (node!.Format != null && node.Format is not ICloneableFormat) {
                 throw new InvalidOperationException("Format does not implement ICloneableFormat interface.");
+            }
 
             ICloneableFormat? newFormat = null;
             if (node.Format != null) {
@@ -113,8 +114,9 @@ namespace Yarhl.FileSystem
         public T? GetFormatAs<T>()
             where T : class, IFormat
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Node));
+            }
 
             return Format as T;
         }
@@ -137,8 +139,9 @@ namespace Yarhl.FileSystem
         /// </param>
         public void ChangeFormat(IFormat? newFormat, bool disposePreviousFormat = true)
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Node));
+            }
 
             if (newFormat == Format) {
                 return;
@@ -169,8 +172,9 @@ namespace Yarhl.FileSystem
         public Node TransformWith<TConv>()
             where TConv : IConverter, new()
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Node));
+            }
 
             // This is a valid use of ConvertFormat.With as we don't care about
             // the returned type. There isn't anything to do type safety.
@@ -187,11 +191,13 @@ namespace Yarhl.FileSystem
         /// </param>
         public Node TransformWith(Type converterType, params object?[] args)
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Node));
+            }
 
-            if (converterType == null)
+            if (converterType == null) {
                 throw new ArgumentNullException(nameof(converterType));
+            }
 
             if (Format is null) {
                 throw new InvalidOperationException(
@@ -216,11 +222,13 @@ namespace Yarhl.FileSystem
         /// <returns>This node.</returns>
         public Node TransformWith(IConverter converter)
         {
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(Node));
+            }
 
-            if (converter == null)
+            if (converter == null) {
                 throw new ArgumentNullException(nameof(converter));
+            }
 
             if (Format is null) {
                 throw new InvalidOperationException(
@@ -231,9 +239,9 @@ namespace Yarhl.FileSystem
 
             dynamic converterDyn = converter;
             dynamic source = Format;
-            IFormat newFormat = converterDyn.Convert(source);
+            object newFormat = converterDyn.Convert(source);
 
-            ChangeFormat(newFormat);
+            CastAndChangeFormat(newFormat);
 
             return this;
         }

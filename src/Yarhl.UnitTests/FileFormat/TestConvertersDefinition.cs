@@ -1,6 +1,7 @@
 ﻿namespace Yarhl.UnitTests.FileFormat;
 
 using System;
+using System.Composition;
 using System.Globalization;
 using Yarhl.FileFormat;
 
@@ -56,6 +57,20 @@ public sealed class IntFormat : IFormat, IDisposable
     }
 }
 
+public sealed class IntNonDisposableFormat : IFormat
+{
+    public IntNonDisposableFormat()
+    {
+    }
+
+    public IntNonDisposableFormat(int val)
+    {
+        Value = val;
+    }
+
+    public int Value { get; set; }
+}
+
 public class NoFormat
 {
 }
@@ -66,6 +81,57 @@ public class NullSource : IFormat
 
 public class NullDestination : IFormat
 {
+}
+
+public class StringFormat2IntFormat : IConverter<StringFormat, IntFormat>
+{
+    public IntFormat Convert(StringFormat source)
+    {
+        return new IntFormat(System.Convert.ToInt32(source.Value));
+    }
+}
+
+[PartNotDiscoverable]
+public class StringFormatConverterWithConstructor : IConverter<StringFormat, IntFormat>
+{
+    private readonly NumberStyles style;
+    private readonly int delta;
+
+    public StringFormatConverterWithConstructor(NumberStyles style, int delta)
+    {
+        this.style = style;
+        this.delta = delta;
+    }
+
+    public IntFormat Convert(StringFormat source)
+    {
+        return new IntFormat(int.Parse(source.Value, style) + delta);
+    }
+}
+
+[PartNotDiscoverable]
+public class StringFormatConverterWithSeveralConstructors :
+    IConverter<StringFormat, IntFormat>
+{
+    private readonly NumberStyles style;
+    private readonly int delta;
+
+    public StringFormatConverterWithSeveralConstructors(NumberStyles style)
+    {
+        this.style = style;
+        delta = 0;
+    }
+
+    public StringFormatConverterWithSeveralConstructors(int delta)
+    {
+        style = NumberStyles.AllowParentheses;
+        this.delta = delta;
+    }
+
+    public IntFormat Convert(StringFormat source)
+    {
+        return new IntFormat(int.Parse(source.Value, style) + delta);
+    }
 }
 
 public class StringFormatConverterWithInitializerInterface :
@@ -85,14 +151,6 @@ public class StringFormatConverterWithInitializerInterface :
     }
 }
 
-public class StringFormat2IntFormat : IConverter<StringFormat, IntFormat>
-{
-    public IntFormat Convert(StringFormat source)
-    {
-        return new IntFormat(System.Convert.ToInt32(source.Value));
-    }
-}
-
 public class IntFormat2StringFormat :
     IConverter<IntFormat, StringFormat>,
     IInitializer<int>
@@ -105,6 +163,33 @@ public class IntFormat2StringFormat :
     public void Initialize(int parameters)
     {
         // Test
+    }
+}
+
+public sealed class IntFormatDisposableConverter :
+    IConverter<IntFormat, StringFormat>,
+    IDisposable
+{
+    public bool Disposed { get; private set; }
+
+    public StringFormat Convert(IntFormat source)
+    {
+        return new StringFormat(source.Value.ToString());
+    }
+
+    public void Dispose()
+    {
+        Disposed = true;
+        GC.SuppressFinalize(this);
+    }
+}
+
+public class IntNonDisposableFormatConverter :
+    IConverter<IntNonDisposableFormat, StringFormat>
+{
+    public StringFormat Convert(IntNonDisposableFormat source)
+    {
+        return new StringFormat(source.Value.ToString());
     }
 }
 

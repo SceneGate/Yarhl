@@ -53,38 +53,4 @@ public partial class Node
 
         return this;
     }
-
-    /// <summary>
-    /// Transform the node format to another format using a converter.
-    /// </summary>
-    /// <remarks>
-    /// It wasn't marked as obsolete as sometimes the compiler may pick this one
-    /// when you use <see cref="TransformWith(IConverter)"/>.
-    /// </remarks>
-    /// <param name="converter">Convert to use.</param>
-    /// <typeparam name="TSrc">The type of the source format.</typeparam>
-    /// <typeparam name="TDst">The type of the destination format.</typeparam>
-    /// <returns>This node.</returns>
-    public Node TransformWith<TSrc, TDst>(IConverter<TSrc, TDst> converter)
-        where TSrc : IFormat
-        where TDst : IFormat
-    {
-        if (Disposed)
-            throw new ObjectDisposedException(nameof(Node));
-
-        if (converter == null)
-            throw new ArgumentNullException(nameof(converter));
-
-        if (Format is null) {
-            throw new InvalidOperationException(
-                "Cannot transform a node without format");
-        }
-
-        ConvertFormat.ValidateConverterType(converter.GetType(), Format.GetType());
-
-        TDst newFormat = converter.Convert((TSrc)Format);
-        ChangeFormat(newFormat);
-
-        return this;
-    }
 }
