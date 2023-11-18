@@ -8,6 +8,7 @@ Task("Define-Project")
 
     info.AddLibraryProjects("Yarhl");
     info.AddLibraryProjects("Yarhl.Media.Text");
+    info.AddLibraryProjects("Yarhl.Plugins");
     info.AddTestProjects("Yarhl.UnitTests");
     info.AddTestProjects("Yarhl.IntegrationTests");
 

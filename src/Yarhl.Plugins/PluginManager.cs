@@ -17,7 +17,7 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl
+namespace Yarhl.Plugins
 {
     using System;
     using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Yarhl
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Yarhl.FileFormat;
+    using Yarhl.Plugins.FileFormat;
 
     /// <summary>
     /// Plugin manager.
@@ -153,25 +153,25 @@ namespace Yarhl
         /// Get a list of format extensions.
         /// </summary>
         /// <returns>Enumerable of lazy formats with metadata.</returns>
-        public IEnumerable<ExportFactory<IFormat, FormatMetadata>> GetFormats()
+        public IEnumerable<ExportFactory<Yarhl.FileFormat.IFormat, FormatMetadata>> GetFormats()
         {
-            return FindLazyExtensions<IFormat, FormatMetadata>();
+            return FindLazyExtensions<Yarhl.FileFormat.IFormat, FormatMetadata>();
         }
 
         /// <summary>
         /// Get a list of converter extensions.
         /// </summary>
         /// <returns>Enumerable of lazy converters with metadata.</returns>
-        public IEnumerable<ExportFactory<IConverter, ConverterMetadata>> GetConverters()
+        public IEnumerable<ExportFactory<Yarhl.FileFormat.IConverter, ConverterMetadata>> GetConverters()
         {
-            return FindLazyExtensions<IConverter, ConverterMetadata>();
+            return FindLazyExtensions<Yarhl.FileFormat.IConverter, ConverterMetadata>();
         }
 
         static void DefineFormatConventions(ConventionBuilder conventions)
         {
-            conventions
-                .ForTypesDerivedFrom<IFormat>()
-                .Export<IFormat>(
+            _ = conventions
+                .ForTypesDerivedFrom<Yarhl.FileFormat.IFormat>()
+                .Export<Yarhl.FileFormat.IFormat>(
                     export => export
                         .AddMetadata("Name", t => t.FullName)
                         .AddMetadata("Type", t => t))
@@ -182,24 +182,24 @@ namespace Yarhl
 
         static void DefineConverterConventions(ConventionBuilder conventions)
         {
-            bool ConverterInterfaceFilter(Type i) =>
+            static bool ConverterInterfaceFilter(Type i) =>
                 i.IsGenericType &&
-                i.GetGenericTypeDefinition().IsEquivalentTo(typeof(IConverter<,>));
+                i.GetGenericTypeDefinition().IsEquivalentTo(typeof(Yarhl.FileFormat.IConverter<,>));
 
             // We export three types each converter:
             // 1.- Export the specific generic converter types
             // 2.- Export the IConverter interfaces with the interfaces metadata
             // 3.- Export again the IConverter interface to fill common metadata
-            conventions
-                .ForTypesDerivedFrom(typeof(IConverter<,>))
+            _ = conventions
+                .ForTypesDerivedFrom(typeof(Yarhl.FileFormat.IConverter<,>))
                 .ExportInterfaces(ConverterInterfaceFilter)
                 .ExportInterfaces(
                     ConverterInterfaceFilter,
                     (inter, export) => export
                         .AddMetadata("InternalSources", inter.GenericTypeArguments[0])
                         .AddMetadata("InternalDestinations", inter.GenericTypeArguments[1])
-                        .AsContractType<IConverter>())
-                .Export<IConverter>(
+                        .AsContractType<Yarhl.FileFormat.IConverter>())
+                .Export<Yarhl.FileFormat.IConverter>(
                     export => export
                     .AddMetadata("Name", t => t.FullName)
                     .AddMetadata("Type", t => t))
@@ -214,7 +214,8 @@ namespace Yarhl
             // MEF would try to load its dependencies.
             return paths
                 .Select(p => new { Name = Path.GetFileName(p), Path = p })
-                .Where(p => !IgnoredLibraries.Any(
+                .Where(p => !Array.Exists(
+                    IgnoredLibraries,
                     ign => p.Name.StartsWith(ign, StringComparison.OrdinalIgnoreCase)))
                 .Select(p => p.Path)
                 .LoadAssemblies();
@@ -233,7 +234,7 @@ namespace Yarhl
             var programDir = AppDomain.CurrentDomain.BaseDirectory;
             var libraryAssemblies = Directory.GetFiles(programDir, "*.dll");
             var programAssembly = Directory.GetFiles(programDir, "*.exe");
-            containerConfig
+            _ = containerConfig
                 .WithAssemblies(LoadAssemblies(libraryAssemblies))
                 .WithAssemblies(LoadAssemblies(programAssembly));
 
@@ -244,7 +245,7 @@ namespace Yarhl
                     pluginDir,
                     "*.dll",
                     SearchOption.AllDirectories);
-                containerConfig.WithAssemblies(LoadAssemblies(pluginFiles));
+                _ = containerConfig.WithAssemblies(LoadAssemblies(pluginFiles));
             }
 
             return containerConfig.CreateContainer();

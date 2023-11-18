@@ -118,7 +118,7 @@ parameterless constructor (default case) you can use the short API
 
 If it takes parameters or the instance needs to be created in a different way
 (e.g. factory), pass the converter object via
-[`TransformWith(converter)`](<xref:Yarhl.FileSystem.Node.TransformWith``2(Yarhl.FileFormat.IConverter{``0,``1})>).
+[`TransformWith(converter)`](<xref:Yarhl.FileSystem.Node.TransformWith(Yarhl.FileFormat.IConverter)>).
 
 [!code-csharp[transform](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=Transform)]
 

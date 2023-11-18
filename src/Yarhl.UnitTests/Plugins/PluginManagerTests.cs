@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,15 +17,16 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.UnitTests
+namespace Yarhl.UnitTests.Plugins
 {
     using System;
     using System.Composition;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using NUnit.Framework;
-    using Yarhl.FileFormat;
     using Yarhl.IO;
+    using Yarhl.Plugins;
+    using Yarhl.Plugins.FileFormat;
     using Yarhl.UnitTests.FileFormat;
 
     [TestFixture]
@@ -50,10 +51,10 @@ namespace Yarhl.UnitTests
         public void FormatMetadataContainsNameAndType()
         {
             var format = PluginManager.Instance.GetFormats()
-                .Single(p => p.Metadata.Type == typeof(StringFormatTest));
+                .Single(p => p.Metadata.Type == typeof(StringFormat));
             Assert.That(
                 format.Metadata.Name,
-                Is.EqualTo(typeof(StringFormatTest).FullName));
+                Is.EqualTo(typeof(StringFormat).FullName));
         }
 
         [Test]
@@ -163,7 +164,7 @@ namespace Yarhl.UnitTests
         public void FindLazyExtensionWithMetadata()
         {
             var formats = PluginManager.Instance
-                .FindLazyExtensions<IFormat, FormatMetadata>()
+                .FindLazyExtensions<Yarhl.FileFormat.IFormat, FormatMetadata>()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Does.Contain(typeof(PluginFormat)));
         }
@@ -172,7 +173,7 @@ namespace Yarhl.UnitTests
         public void FindLazyExtesionWithMetadataIsUnique()
         {
             var formats = PluginManager.Instance
-                .FindLazyExtensions<IFormat, FormatMetadata>()
+                .FindLazyExtensions<Yarhl.FileFormat.IFormat, FormatMetadata>()
                 .Select(f => f.Metadata.Type);
             Assert.That(formats, Is.Unique);
         }
@@ -198,6 +199,15 @@ namespace Yarhl.UnitTests
             Assert.That(conv.Convert(new PluginFormat()), Is.EqualTo(0));
         }
 
+        [Test]
+        [Ignore("To be re-implemented without MEF")]
+        public void GetConvertersWithParametersReturnsMetadata()
+        {
+            var formats = PluginManager.Instance.GetConverters()
+                .Select(f => f.Metadata.Type);
+            Assert.That(formats, Does.Contain(typeof(PluginConverterParametrized)));
+        }
+
         [Export(typeof(IExistsInterface))]
         public class ExistsClass : IExistsInterface
         {
@@ -217,13 +227,26 @@ namespace Yarhl.UnitTests
             }
         }
 
-        public class PluginFormat : IFormat
+        public class PluginFormat : Yarhl.FileFormat.IFormat
         {
             public static int Value => 0;
         }
 
-        public class PluginConverter : IConverter<PluginFormat, int>
+        public class PluginConverter : Yarhl.FileFormat.IConverter<PluginFormat, int>
         {
+            public int Convert(PluginFormat source)
+            {
+                return PluginFormat.Value;
+            }
+        }
+
+        [PartNotDiscoverable] // TODO: After re-implement without MEF
+        public class PluginConverterParametrized : Yarhl.FileFormat.IConverter<PluginFormat, int>
+        {
+            public PluginConverterParametrized(bool ignoreMe)
+            {
+            }
+
             public int Convert(PluginFormat source)
             {
                 return PluginFormat.Value;

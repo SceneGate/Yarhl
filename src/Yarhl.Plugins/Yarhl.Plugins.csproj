@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Library to translation projects. It provides features for implementing file formats, converters and a virtual file system.</Description>
+    <Description>Assembly scaning for file formats and converters implemented with Yarhl.</Description>
     <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
@@ -13,12 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="Yarhl.PerformanceTests" />
+    <PackageReference Include="System.Composition" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" />
-    <PackageReference Include="System.Text.Encoding.CodePages" />
+    <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
   </ItemGroup>
 
 </Project>

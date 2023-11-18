@@ -1,4 +1,4 @@
-// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2019 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,37 +17,36 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl
+namespace Yarhl.Plugins.FileFormat
 {
     using System;
-    using System.Collections.Generic;
-    using System.Reflection;
-    using System.Runtime.InteropServices;
-    using System.Runtime.Loader;
 
     /// <summary>
-    /// Utilities to work with Assemblies.
+    /// Metadata associated to a Format class.
     /// </summary>
-    static class AssemblyUtils
+    public class FormatMetadata : IExportMetadata
     {
         /// <summary>
-        /// Load assemblies.
+        /// Initializes a new instance of the <see cref="FormatMetadata" /> class.
         /// </summary>
-        /// <param name="paths">List of assemblies to load.</param>
-        /// <returns>The assemblies.</returns>
-        public static IEnumerable<Assembly> LoadAssemblies(this IEnumerable<string> paths)
+        public FormatMetadata()
         {
-            List<Assembly> assemblies = new List<Assembly>();
-            foreach (string path in paths) {
-                try {
-                    Assembly assembly = AssemblyLoadContext.Default.LoadFromAssemblyPath(path);
-                    assemblies.Add(assembly);
-                } catch (BadImageFormatException) {
-                    // Bad IL. Skip.
-                }
-            }
-
-            return assemblies;
+            // MEF should always set these properties, so they won't be null.
+            // We set some initial values to ensure later they are not set to null.
+            Name = "<invalid>";
+            Type = typeof(FormatMetadata);
         }
+
+        /// <summary>
+        /// Gets or sets the type full name. Shortcut of Type.FullName.
+        /// </summary>
+        /// <value>The full name of the type.</value>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the type of the format.
+        /// </summary>
+        /// <value>The type of the format.</value>
+        public Type Type { get; set; }
     }
 }

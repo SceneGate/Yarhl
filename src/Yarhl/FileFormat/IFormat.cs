@@ -25,7 +25,7 @@ namespace Yarhl.FileFormat
     [System.Diagnostics.CodeAnalysis.SuppressMessage(
         "Microsoft.Design",
         "CA1040:AvoidEmptyInterfaces",
-        Justification = "We use the interface as a compile time marker.")]
+        Justification = "Provides type discovery while scanning assemblies and extension methods.")]
     public interface IFormat
     {
     }

@@ -1,6 +1,6 @@
 # Yarhl, A format ResearcH Library [![awesomeness](https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp)](https://github.com/SceneGate)
 
-![Yarhl Logo](https://raw.githubusercontent.com/SceneGate/Yarhl/develop/docs/images/logo.png)
+![Yarhl Logo](./docs/images/logo-large.png)
 
 <!-- markdownlint-disable MD033 -->
 <p align="center">

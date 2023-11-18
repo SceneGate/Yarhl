@@ -22,11 +22,12 @@ namespace Yarhl.UnitTests.FileFormat
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
+    using Yarhl.Plugins;
 
     public abstract class BaseGeneralTests<T>
         where T : IFormat
     {
-        protected string Name { get => typeof(T).FullName; }
+        protected string Name => typeof(T).FullName;
 
         [Test]
         public void FormatIsFoundAndIsUnique()

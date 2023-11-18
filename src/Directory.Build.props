@@ -42,6 +42,5 @@
     <ItemGroup>
         <PackageReference Include="StyleCop.Analyzers" PrivateAssets="All"/>
         <PackageReference Include="SonarAnalyzer.CSharp" PrivateAssets="All"/>
-        <PackageReference Include="Roslynator.Analyzers" PrivateAssets="All"/>
     </ItemGroup>
 </Project>

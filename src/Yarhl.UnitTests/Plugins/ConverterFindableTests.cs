@@ -17,11 +17,13 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.UnitTests.FileFormat
+namespace Yarhl.UnitTests.Plugins
 {
+    using System;
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
+    using Yarhl.Plugins;
 
     [TestFixture]
     public class ConverterFindableTests
@@ -63,7 +65,7 @@ namespace Yarhl.UnitTests.FileFormat
 
             Assert.DoesNotThrow(() =>
                 converter1.Single(t =>
-                    t.GetType().GetInterfaces().Any(i =>
+                    Array.Exists(t.GetType().GetInterfaces(), i =>
                         i.IsGenericType &&
                         i.GenericTypeArguments.Length == 2 &&
                         i.GenericTypeArguments[0] == typeof(string) &&
@@ -75,7 +77,7 @@ namespace Yarhl.UnitTests.FileFormat
 
             Assert.DoesNotThrow(() =>
                 converter2.Single(t =>
-                    t.GetType().GetInterfaces().Any(i =>
+                    Array.Exists(t.GetType().GetInterfaces(), i =>
                         i.IsGenericType &&
                         i.GenericTypeArguments.Length == 2 &&
                         i.GenericTypeArguments[0] == typeof(int) &&
@@ -86,13 +88,13 @@ namespace Yarhl.UnitTests.FileFormat
         public void FindDerivedConverter()
         {
             var converters = PluginManager.Instance
-                .FindExtensions<IConverter<string, ushort>>();
-            IConverter<string, ushort> converter = null;
+                .FindExtensions<IConverter<string, long>>();
+            IConverter<string, long> converter = null;
             Assert.That(
                 () => converter = converters.Single(),
                 Throws.Nothing);
             Assert.IsInstanceOf<DerivedConverter>(converter);
-            Assert.IsInstanceOf<BaseConverter>(converter);
+            Assert.IsInstanceOf<BaseAbstractConverter>(converter);
             Assert.That(converter.Convert("3"), Is.EqualTo(3));
         }
 
