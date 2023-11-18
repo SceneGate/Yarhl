@@ -1,0 +1,49 @@
+- name: ✨ Getting started
+- name: Introduction
+  href: ../../index.md
+- name: Getting started guide
+  href: ./getting-started/tutorial.md
+- name: 🚧 Framework architecture
+  href: ./getting-started/architecture.md
+- name: 🚧 Yarhl in other .NET languages
+  href: ./getting-started/net-languages.md
+
+- name: ♻ Formats and converters
+- name: Formats
+  href: ./formats/formats.md
+- name: Converters
+  href: ./formats/converters.md
+- name: Advanced
+  items:
+  - name: Cloneable format
+    href: ./formats/cloneable-format.md
+  - name: Use cases for converters
+    href: ./formats/converters-usecases.md
+
+- name: 📁 Virtual file system
+- name: Nodes
+  href: ./virtual-file-system/nodes.md
+- name: Node factory
+  href: ./virtual-file-system/node-factory.md
+- name: 🚧 Node navigation
+  href: ./virtual-file-system/navigate-nodes.md
+- name: 🚧 Container format
+  href: ./virtual-file-system/container-format.md
+
+- name: 🧮 Binary formats
+- name: DataStream
+  href: ./binary/datastream.md
+- name: 🚧 Binary format
+  href: ./binary/binaryformat.md
+- name: 🚧 Binary reader and writer
+  href: ./binary/binaryreader-writer.md
+- name: 🚧 Text reader and writer
+  href: ./binary/textreader-writer.md
+- name: 🚧 (De)serialization via attributes
+  href: ./binary/attr-serialization.md
+- name: 🚧 Custom streams
+  href: ./binary/custom-streams.md
+
+- name: 🔌 Plugins
+- name: 🚧 Overview
+  href: ../plugins/overview.md

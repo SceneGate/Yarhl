@@ -1,11 +1,14 @@
-- name: Home
-  href: index.md
+- name: Core
+  href: articles/core/
 
-- name: Guides
-  href: guides/
+- name: Text formats
+  href: articles/media-text/
 
 - name: API
-  href: dev/
+  href: api/
+
+- name: Changelog
+  href: articles/Changelog.md
 
 - name: GitHub
   href: https://github.com/SceneGate/Yarhl
