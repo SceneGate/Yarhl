@@ -1,45 +1,6 @@
-# Yarhl, A format ResearcH Library ![SceneGate awesome](https://img.shields.io/badge/SceneGate-awesome%20%F0%9F%95%B6-blue?logo=csharp)
+# Yarhl, A format ResearcH Library
 
 ![Yarhl logo](./images/logo-large.png)
-
-<!-- markdownlint-disable MD033 -->
-<p align="center">
-  <a href="https://www.nuget.org/packages?q=Yarhl">
-    <img
-      alt="Stable version"
-      src="https://img.shields.io/nuget/v/Yarhl?label=Stable"
-    />
-  </a>
-  &nbsp;
-  <a href="https://dev.azure.com/SceneGate/SceneGate/_packaging?_a=feed&feed=SceneGate-Preview">
-    <img
-      alt="GitHub commits since latest release (by SemVer)"
-      src="https://img.shields.io/github/commits-since/SceneGate/Yarhl/latest?sort=semver"
-    />
-  </a>
-  &nbsp;
-  <a href="https://github.com/SceneGate/Yarhl/workflows/Build%20and%20release">
-    <img
-      alt="Build and release"
-      src="https://github.com/SceneGate/Yarhl/workflows/Build%20and%20release/badge.svg?branch=develop"
-    />
-  </a>
-  &nbsp;
-  <a href="https://bestpractices.coreinfrastructure.org/projects/2919">
-    <img
-      alt="CII Best Practices"
-      src="https://bestpractices.coreinfrastructure.org/projects/2919/badge"
-    />
-  </a>
-  &nbsp;
-  <a href="https://choosealicense.com/licenses/mit/">
-    <img
-      alt="MIT License"
-      src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat"
-    />
-  </a>
-  &nbsp;
-</p>
 
 _Yarhl_ is a set of libraries that helps to **implement and convert file
 formats** It empowers you with...

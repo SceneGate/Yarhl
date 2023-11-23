@@ -2,14 +2,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Library to translation projects. It provides features for implementing file formats, converters and a virtual file system.</Description>
+    <Description>Library with features for implementing file formats, converters and a virtual file system.</Description>
+    <IsPackable>true</IsPackable>
+
     <TargetFramework>net6.0</TargetFramework>
+
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../../docs/images/favicon-128.png" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
-    <None Include="../../README.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
+    <None Include="../../docs/index.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

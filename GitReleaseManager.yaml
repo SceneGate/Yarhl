@@ -13,13 +13,21 @@ export:
 # Configuration values used when closing a milestone
 close:
   use-issue-comments: false
+#  issue-comment: |-
+#    :tada: This issue has been resolved in version {milestone} :tada:
+#
+#    The release is available on:
+#
+#    - [GitHub release](https://github.com/{owner}/{repository}/releases/tag/{milestone})
+#
+#    Your **[GitReleaseManager](https://github.com/GitTools/GitReleaseManager)** bot :package::rocket:
 
 # The labels that will be used to include issues in release notes.
 issue-labels-include:
   - Breaking
   - Bug
-  - Documentation
   - Duplicate
+  - Documentation
   - Enhancement
   - Feature
   - Improvement

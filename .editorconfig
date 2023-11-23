@@ -5,6 +5,9 @@ root = true
 [*]
 indent_style = space
 
+[*.yml]
+indent_size = 2
+
 [*.md]
 charset = utf-8
 insert_final_newline = true
@@ -240,14 +243,9 @@ dotnet_diagnostic.IDE0045.severity = suggestion # Simplify ifs
 dotnet_diagnostic.IDE0046.severity = suggestion # Simplify ifs
 
 ### StyleCop
-dotnet_diagnostic.SA1000.severity = none # false positive, space before parentheses in new()
-dotnet_diagnostic.SA1009.severity = none # false positive with ()! for null checking
-dotnet_diagnostic.SA1011.severity = none # False positive due to nullables
 dotnet_diagnostic.SA1101.severity = none # Do not force to prefix local calls with 'this'
-dotnet_diagnostic.SA1313.severity = none # Pascal naming broken with records.
 dotnet_diagnostic.SA1204.severity = suggestion # Static methods should be before non-static
 dotnet_diagnostic.SA1500.severity = none # Allow inline braces
-dotnet_diagnostic.SA1516.severity = none # Multiple blank lines - broken with top-level statements
 dotnet_diagnostic.SA1633.severity = none # No XML-format header in source files
 
 ### SonarAnalyzer
@@ -266,6 +264,7 @@ dotnet_diagnostic.CA1062.severity = none # No need to validate args in test meth
 dotnet_diagnostic.CA1305.severity = none # No culture method for quick test code
 dotnet_diagnostic.CA1307.severity = none # No culture method for quick test code
 dotnet_diagnostic.SA0001.severity = none # Disable documentation
+dotnet_diagnostic.SA1402.severity = none # Multiple types in the same file
 dotnet_diagnostic.SA1600.severity = none # Disable documentation
 dotnet_diagnostic.SA1601.severity = none # Disable documentation
 dotnet_diagnostic.SA1201.severity = none # Allow enums inside classes

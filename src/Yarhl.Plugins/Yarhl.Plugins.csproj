@@ -2,14 +2,17 @@
 
   <PropertyGroup>
     <Description>Assembly scaning for file formats and converters implemented with Yarhl.</Description>
+    <IsPackable>true</IsPackable>
+
     <TargetFramework>net6.0</TargetFramework>
+
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <None Include="../../docs/images/favicon-128.png" Pack="true" PackagePath="$(PackageIcon)" Visible="false" />
-    <None Include="../../README.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
+    <None Include="../../docs/index.md" Pack="true" PackagePath="$(PackageReadmeFile)" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>

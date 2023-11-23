@@ -1,16 +1,25 @@
 {
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Launch (console)",
+            "name": "Run perf test",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "Cake: Run Build for release",
+            "preLaunchTask": "Build release",
             "program": "${workspaceFolder}/src/Yarhl.PerformanceTests/bin/Release/net6.0/Yarhl.PerformanceTests.dll",
             "args": [ "auto" ],
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "console": "internalConsole"
+        },
+        {
+            "name": ".NET Attach",
+            "type": "coreclr",
+            "request": "attach",
+            "processId": "${command:pickProcess}"
         }
     ]
 }

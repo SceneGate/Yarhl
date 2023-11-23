@@ -1,4 +1,4 @@
-// Copyright (c) 2020 SceneGate
+﻿// Copyright (c) 2020 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -300,7 +300,7 @@ namespace Yarhl.Media.Text.Encodings
             ArgumentNullException.ThrowIfNull(bytes);
 
             int length = GetCharCount(bytes.AsSpan(index, count));
-            return string.Create(length, ValueTuple.Create(this, bytes, index, count), (chars, state) =>
+            return string.Create(length, (this, bytes, index, count), (chars, state) =>
             {
                 var (encoding, stateBytes, stateIndex, stateCount) = state;
                 _ = encoding.GetChars(stateBytes.AsSpan(stateIndex, stateCount), chars);

@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarhl.Plugins", "Yarhl.Plug
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E5B9743C-A789-449C-9F2F-F39EE77AD890}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
+		..\.editorconfig = ..\.editorconfig
 		..\.github\workflows\build-and-release.yml = ..\.github\workflows\build-and-release.yml
 		Directory.Build.props = Directory.Build.props
 		Directory.Packages.props = Directory.Packages.props
@@ -26,7 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7EA26602-EB23-42EE-805B-4C47D5B5325E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yarhl.Examples", "Yarhl.Examples\Yarhl.Examples.csproj", "{9E6C19AC-D497-482B-8929-AADC44D9F9A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yarhl.Examples", "Yarhl.Examples\Yarhl.Examples.csproj", "{9E6C19AC-D497-482B-8929-AADC44D9F9A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

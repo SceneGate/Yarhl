@@ -1,4 +1,4 @@
-// Copyright (c) 2020 SceneGate
+﻿// Copyright (c) 2020 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -210,7 +210,7 @@ namespace Yarhl.PerformanceTests.Encodings
                         chars++;
                     } else if (current is >= 0xA1 and <= 0xDF) {
                         chars++;
-                    } else if (current is(>= 0x81 and <= 0x9F) or(>= 0xE0 and <= 0xFC)) {
+                    } else if (current is (>= 0x81 and <= 0x9F) or (>= 0xE0 and <= 0xFC)) {
                         lead = current;
                     } else {
                         throw new FormatException();
@@ -295,7 +295,7 @@ namespace Yarhl.PerformanceTests.Encodings
                         codePoint = current;
                     } else if (current is >= 0xA1 and <= 0xDF) {
                         codePoint = 0xFF61 - 0xA1 + current;
-                    } else if (current is(>= 0x81 and <= 0x9F) or(>= 0xE0 and <= 0xFC)) {
+                    } else if (current is (>= 0x81 and <= 0x9F) or (>= 0xE0 and <= 0xFC)) {
                         lead = current;
                     } else {
                         throw new FormatException();
@@ -370,7 +370,7 @@ namespace Yarhl.PerformanceTests.Encodings
                         codePoint = current;
                     } else if (current is >= 0xA1 and <= 0xDF) {
                         codePoint = 0xFF61 - 0xA1 + current;
-                    } else if (current is(>= 0x81 and <= 0x9F) or(>= 0xE0 and <= 0xFC)) {
+                    } else if (current is (>= 0x81 and <= 0x9F) or (>= 0xE0 and <= 0xFC)) {
                         lead = current;
                     } else {
                         throw new FormatException();

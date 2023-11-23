@@ -3,6 +3,8 @@
 using System;
 using Yarhl.FileFormat;
 
+#pragma warning disable SA1649 // File name match type name
+
 public class BasicConverter : IConverter<string, byte>
 {
     public byte Convert(string source)
