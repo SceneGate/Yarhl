@@ -9,9 +9,6 @@ on:
     branches: [ develop ]
     # Stable
     tags: [ "v*" ]
-  release:
-    types:
-      - published
 
 jobs:
   build:

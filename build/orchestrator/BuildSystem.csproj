@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cake.Frosting.PleOps.Recipe" Version="0.9.0-preview.85" />
+    <PackageReference Include="Cake.Frosting.PleOps.Recipe" Version="1.0.0" />
   </ItemGroup>
 
 </Project>
