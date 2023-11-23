@@ -12,7 +12,7 @@ public sealed class BuildLifetime : FrostingLifetime<PleOpsBuildContext>
 {
     public override void Setup(PleOpsBuildContext context, ISetupContext info)
     {
-        context.DotNetContext.CoverageTarget = 100;
+        context.DotNetContext.CoverageTarget = 99; // due to platform-specific code
 
         // Update build parameters from command line arguments.
         context.ReadArguments();
