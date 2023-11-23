@@ -1,5 +1,8 @@
 ﻿namespace Yarhl.UnitTests.FileFormat;
+
 using Yarhl.FileFormat;
+
+#pragma warning disable SA1649 // File name match type name
 
 public interface IInterface
 {

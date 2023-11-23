@@ -1,4 +1,4 @@
-// Copyright (c) 2023 SceneGate
+﻿// Copyright (c) 2023 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,8 @@ namespace Yarhl.Examples.Formats;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
 using Yarhl.IO;
+
+#pragma warning disable SA1649 // File name match type name
 
 #region ManyToOneFont
 public class Font2Binary : IConverter<Font, BinaryFormat>

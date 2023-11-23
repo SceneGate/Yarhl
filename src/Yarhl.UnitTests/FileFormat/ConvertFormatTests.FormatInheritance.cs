@@ -1,4 +1,5 @@
 ﻿namespace Yarhl.UnitTests.FileFormat;
+
 using System;
 using NUnit.Framework;
 using Yarhl.FileFormat;

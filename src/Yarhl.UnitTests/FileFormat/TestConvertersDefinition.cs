@@ -7,6 +7,8 @@ using Yarhl.FileFormat;
 
 // Disable file may only contain a single class since we aren't going
 // to create a file per test converter.
+#pragma warning disable SA1649 // File name match type name
+
 public class ConverterWithoutGenericInterface : IConverter, IInitializer<int>
 {
     public void Initialize(int parameters)
