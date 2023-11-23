@@ -2,19 +2,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <Description>Yarhl library for text format and conversion support.</Description>
+    <Description>Library with Yarhl converters for text formats.</Description>
+    <IsPackable>true</IsPackable>
+
     <TargetFramework>net6.0</TargetFramework>
+
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
     <InternalsVisibleTo Include="Yarhl.UnitTests" />
-    <AssemblyAttribute Include="System.CLSCompliantAttribute">
-      <_Parameter1>true</_Parameter1>
-    </AssemblyAttribute>
-    <AssemblyAttribute Include="System.Runtime.InteropServices.ComVisibleAttribute">
-      <_Parameter1>true</_Parameter1>
-    </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup>

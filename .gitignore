@@ -1,15 +1,15 @@
 # Output
-bin/
 obj/
-artifacts/
+bin/
+build/artifacts/
+build/temp/
+/CHANGELOG.md
+/CHANGELOG.NEXT.md
 
 # IDE
 *.userprefs
 *.user
 *.vs
-
-# Cake
-tools/*
 
 # Benchmarks
 BenchmarkDotNet.Artifacts/
