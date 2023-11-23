@@ -73,7 +73,10 @@ public static partial class ConvertFormat
     public static object With(IConverter converter, dynamic src)
     {
         ArgumentNullException.ThrowIfNull(converter);
-        ArgumentNullException.ThrowIfNull(src);
+        if (src is null) {
+            throw new ArgumentNullException(nameof(src));
+        }
+
         ValidateConverterType(converter.GetType(), src.GetType());
 
         return ((dynamic)converter).Convert(src);

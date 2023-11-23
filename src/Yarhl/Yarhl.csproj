@@ -5,7 +5,7 @@
     <Description>Library with features for implementing file formats, converters and a virtual file system.</Description>
     <IsPackable>true</IsPackable>
 
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
 
     <Nullable>enable</Nullable>
   </PropertyGroup>

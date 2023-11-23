@@ -12,13 +12,13 @@ public class PrepareIntegrationTestsTask : FrostingTask<PleOpsBuildContext>
     public override void Run(PleOpsBuildContext context)
     {
         // Copy a good and bad plugin to test the assembly load logic
-        string pluginPath = $"src/Yarhl.Media.Text/bin/{context.DotNetContext.Configuration}/net6.0/Yarhl.Media.Text.dll";
         string badPluginPath = context.DotNetContext.SolutionPath; // this isn't a DLL for sure :D
 
         string outputBasePath = $"src/Yarhl.IntegrationTests/bin/{context.DotNetContext.Configuration}";
         string testProjectPath = "src/Yarhl.IntegrationTests/Yarhl.IntegrationTests.csproj";
 
         foreach (string framework in GetTargetFrameworks(testProjectPath)) {
+            string pluginPath = $"src/Yarhl.Media.Text/bin/{context.DotNetContext.Configuration}/{framework}/Yarhl.Media.Text.dll";
             string pluginDir = $"{outputBasePath}/{framework}/Plugins";
             _ = Directory.CreateDirectory(pluginDir);
             File.Copy(pluginPath, $"{pluginDir}/Yarhl.Media.Text.dll", true);
