@@ -3,7 +3,7 @@
 
   <PropertyGroup>
     <Description>Plugin integration tests for Yarhl.</Description>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>

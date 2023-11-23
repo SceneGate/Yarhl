@@ -15,7 +15,7 @@ formats** It empowers you with...
 ## Usage
 
 The project has the following .NET libraries (NuGet packages via nuget.org). The
-libraries only support the latest .NET LTS version: **.NET 6.0**.
+libraries only support .NET LTS versions: **.NET 6.0** and **.NET 8.0**.
 
 - [![Yarhl](https://img.shields.io/nuget/v/Yarhl?label=Yarhl&logo=nuget)](https://www.nuget.org/packages/Yarhl)
   - `Yarhl.FileFormat`: format conversion APIs.

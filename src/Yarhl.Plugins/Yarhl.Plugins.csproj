@@ -4,7 +4,7 @@
     <Description>Assembly scaning for file formats and converters implemented with Yarhl.</Description>
     <IsPackable>true</IsPackable>
 
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
 
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>

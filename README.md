@@ -110,32 +110,27 @@ Some cool projects built with _Yarhl_:
 
 ## Contributing
 
-The repository requires to build .NET 6.0 SDK and .NET Framework 4.8 or latest
-Mono (for DocFX). If you open the project with VS Code and you did install the
-[VS Code Remote Containers](https://code.visualstudio.com/docs/remote/containers)
-extension, you can have an already pre-configured development environment with
-Docker or Podman.
+The repository requires to build .NET 8.0 SDK.
 
 To build, test and generate artifacts run:
 
 ```sh
-# Only required the first time
-dotnet tool restore
+# Build and run tests
+dotnet run --project build/orchestrator
 
-# Default target is "Default" that builds, runs tests, build doc and create the NuGets
-dotnet cake
-```
-
-To just build and test quickly, run:
-
-```sh
-dotnet cake --target=BuildTest
+# (Optional) Create bundles (nuget, zips, docs)
+dotnet run --project build/orchestrator -- --target=Bundle
 ```
 
 Additionally you can use _Visual Studio_ or _JetBrains Rider_ as any other .NET
 project.
 
 To contribute follow the [contributing guidelines](CONTRIBUTING.md).
+
+### How to release
+
+Create a new _GitHub release_ with a tag name `v{Version}` (e.g. `v2.4`) and
+that's it! This triggers a pipeline that builds and deploy the project.
 
 ## License
 

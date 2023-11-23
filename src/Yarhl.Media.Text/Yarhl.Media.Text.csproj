@@ -5,7 +5,7 @@
     <Description>Library with Yarhl converters for text formats.</Description>
     <IsPackable>true</IsPackable>
 
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
 
     <Nullable>enable</Nullable>
   </PropertyGroup>
