@@ -674,13 +674,19 @@ namespace Yarhl.IO
         /// <param name="otherStream">Stream to compare with.</param>
         public bool Compare(Stream otherStream)
         {
-            if (otherStream == null)
+            if (otherStream == null) {
                 throw new ArgumentNullException(nameof(otherStream));
+            }
 
             // We can't check if the other stream is disposed because Stream
             // doesn't provide the property, so we delay it to the Seek method.
-            if (Disposed)
+            if (Disposed) {
                 throw new ObjectDisposedException(nameof(DataStream));
+            }
+
+            if (this == otherStream) {
+                return true;
+            }
 
             long startPosition = Position;
             long otherStreamStartPosition = otherStream.Position;

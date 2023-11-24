@@ -1607,6 +1607,18 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void CompareSameStreams()
+        {
+            using var stream1 = new DataStream();
+            stream1.WriteByte(0xCA);
+            stream1.WriteByte(0xFE);
+            stream1.WriteByte(0x00);
+            stream1.WriteByte(0xFF);
+            DataStream stream2 = stream1;
+            Assert.IsTrue(stream1.Compare(stream2));
+        }
+
+        [Test]
         public void CompareTwoEqualStreams()
         {
             DataStream stream1 = new DataStream();
