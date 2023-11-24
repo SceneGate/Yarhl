@@ -21,6 +21,7 @@ namespace Yarhl.FileSystem
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     /// <summary>
@@ -30,8 +31,10 @@ namespace Yarhl.FileSystem
     public abstract class NavigableNode<T> : IDisposable
         where T : NavigableNode<T>
     {
-        readonly List<T> children;
-        readonly DefaultNavigableNodeComparer defaultComparer = new DefaultNavigableNodeComparer();
+        private readonly List<T> children;
+        private readonly DefaultNavigableNodeComparer defaultComparer = new DefaultNavigableNodeComparer();
+
+        private string name;
 
         /// <summary>
         /// Initializes a new instance of the
@@ -40,15 +43,6 @@ namespace Yarhl.FileSystem
         /// <param name="name">Node name.</param>
         protected NavigableNode(string name)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException(nameof(name));
-
-            if (name.Contains(NodeSystem.PathSeparator)) {
-                throw new ArgumentException(
-                    "Name contains invalid characters",
-                    nameof(name));
-            }
-
             Name = name;
             Tags = new Dictionary<string, dynamic>();
             children = new List<T>();
@@ -56,10 +50,31 @@ namespace Yarhl.FileSystem
         }
 
         /// <summary>
-        /// Gets the node name.
+        /// Gets or sets the node name.
         /// </summary>
         public string Name {
-            get;
+            get => name;
+
+            [MemberNotNull(nameof(name))]
+            set {
+                if (string.IsNullOrEmpty(value)) {
+                    throw new ArgumentNullException(nameof(value));
+                }
+
+                if (value.Contains(NodeSystem.PathSeparator)) {
+                    throw new ArgumentException(
+                        "Name contains invalid characters",
+                        nameof(value));
+                }
+
+                if (Parent?.Children.Any(c => c != this && c.name == value) ?? false) {
+                    throw new ArgumentException(
+                        "Parent already contains a node with the desired name",
+                        nameof(value));
+                }
+
+                name = value;
+            }
         }
 
         /// <summary>
@@ -67,6 +82,8 @@ namespace Yarhl.FileSystem
         /// </summary>
         /// <remarks>
         /// <para>It includes the names of all the parent nodes and this node.</para>
+        /// <para>As nodes may change their name, the path from children may
+        /// change at any time. Do not store it as keys.</para>
         /// </remarks>
         public string Path => (Parent?.Path ?? string.Empty) + NodeSystem.PathSeparator + Name;
 
