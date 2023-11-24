@@ -51,6 +51,20 @@ To access to a child use its index, `Children[3]`, or its name,
 > You can find more ways to iterate or navigate nodes across a hierarchy in the
 > [`Navigator`](xref:Yarhl.FileSystem.Navigator) class.
 
+### Path
+
+The [`Path`](xref:Yarhl.FileSystem.NavigableNode`1.Path) property provides the
+full route to the node. It contains the name of all its parent from the root
+node to the node. It does include the node name.
+
+The path separator is constant for every OS. It's defined in
+[`NodeSystem.PathSeparator`](xref:Yarhl.FileSystem.NodeSystem.PathSeparator).
+
+> [!WARNING]  
+> Nodes may change their name. If a _parent_ node change its name, the path of
+> all its children will change as well. Be careful storing the path, for
+> instance as a key, as it may change.
+
 ### Add or remove
 
 It's possible to add or remove children from its parent node. Use the method
