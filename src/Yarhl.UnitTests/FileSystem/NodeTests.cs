@@ -137,9 +137,10 @@ public partial class NodeTests
         var dummyFormat1 = new StringFormat("3");
         var dummyFormat2 = new IntFormat(4);
         using var node = new Node("mytest", dummyFormat1);
-        node.ChangeFormat(dummyFormat2);
+        Node output = node.ChangeFormat(dummyFormat2);
         Assert.AreNotSame(node.Format, dummyFormat1);
         Assert.AreSame(node.Format, dummyFormat2);
+        Assert.AreSame(node, output);
     }
 
     [Test]
