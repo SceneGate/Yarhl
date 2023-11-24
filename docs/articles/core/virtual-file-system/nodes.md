@@ -146,6 +146,23 @@ fluent-like for chaining conversions.
 
 [!code-csharp[transform chaining](./../../../../src/Yarhl.Examples/FileSystem/NodeExamples.cs?name=TransformChain)]
 
+### Transform collections
+
+You can also apply a converter to a collection of nodes by using the following
+extension methods:
+
+- `IEnumerable<Node>.TransformWith`: use the converter with all the nodes and
+  return an `IEnumerable`.
+  - Note that this has the same behavior as an `IEnumerable`: **the conversion
+    will not happen until the collection is iterated**.
+- `NavigableNodeCollection<Node>.TransformCollectionWith`: use the converter
+  with all the nodes and returns the same collection.
+  - The conversion happens immediately.
+
+Only the overload that takes a converter instance `TransformWith(IConverter)`
+will re-use the same converter for every node. The other overloads will create a
+new converter for each node.
+
 ## Tags
 
 Nodes can store additional metadata via the generic dictionary `Tags`. Each tag
