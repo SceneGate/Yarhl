@@ -124,6 +124,7 @@ namespace Yarhl.FileSystem
         /// <summary>
         /// Change the format of the current node.
         /// </summary>
+        /// <returns>This node.</returns>
         /// <remarks>
         /// <para>If the previous format was a container, this method will
         /// remove the children of the node.
@@ -137,14 +138,14 @@ namespace Yarhl.FileSystem
         /// If <see langword="true" /> the method will dispose the previous
         /// format.
         /// </param>
-        public void ChangeFormat(IFormat? newFormat, bool disposePreviousFormat = true)
+        public Node ChangeFormat(IFormat? newFormat, bool disposePreviousFormat = true)
         {
             if (Disposed) {
                 throw new ObjectDisposedException(nameof(Node));
             }
 
             if (newFormat == Format) {
-                return;
+                return this;
             }
 
             // If it was a container, clean children
@@ -162,6 +163,8 @@ namespace Yarhl.FileSystem
             if (IsContainer) {
                 AddContainerChildren();
             }
+
+            return this;
         }
 
         /// <summary>
