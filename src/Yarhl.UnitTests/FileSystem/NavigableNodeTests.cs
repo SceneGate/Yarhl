@@ -45,6 +45,10 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(
                 () => new DummyNavigable(string.Empty),
                 Throws.TypeOf<ArgumentNullException>());
+
+            using var node = new DummyNavigable("name");
+            Assert.That(() => node.Name = null, Throws.ArgumentNullException);
+            Assert.That(() => node.Name = string.Empty, Throws.ArgumentNullException);
         }
 
         [Test]
@@ -55,6 +59,9 @@ namespace Yarhl.UnitTests.FileSystem
             Assert.That(
                 ex.Message,
                 Contains.Substring("Name contains invalid characters"));
+
+            using var node = new DummyNavigable("name");
+            Assert.That(() => node.Name = "MyT/est", Throws.ArgumentException);
         }
 
         [Test]
@@ -62,6 +69,20 @@ namespace Yarhl.UnitTests.FileSystem
         {
             using var node = new DummyNavigable("MyNameTest");
             Assert.AreEqual("MyNameTest", node.Name);
+
+            node.Name = "MyNewName";
+            Assert.That(node.Name, Is.EqualTo("MyNewName"));
+        }
+
+        [Test]
+        public void RenamingWithParentChildMatchThrows()
+        {
+            using var parent = new DummyNavigable("parent");
+            using var node1 = new DummyNavigable("node1");
+            parent.Add(node1);
+            parent.Add(new DummyNavigable("node2"));
+
+            Assert.That(() => node1.Name = "node2", Throws.ArgumentException);
         }
 
         [Test]
@@ -80,6 +101,22 @@ namespace Yarhl.UnitTests.FileSystem
 
             Assert.AreEqual("/MyParent/MyChild", node.Path);
             Assert.AreEqual("/MyParent", parentNode.Path);
+        }
+
+        [Test]
+        public void RenamingChangesPath()
+        {
+            using var parent = new DummyNavigable("parent");
+            using var node = new DummyNavigable("node1");
+            parent.Add(node);
+
+            Assert.That(node.Path, Is.EqualTo("/parent/node1"));
+
+            parent.Name = "root";
+            Assert.That(node.Path, Is.EqualTo("/root/node1"));
+
+            node.Name = "child";
+            Assert.That(node.Path, Is.EqualTo("/root/child"));
         }
 
         [Test]
