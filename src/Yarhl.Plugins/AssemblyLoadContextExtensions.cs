@@ -46,6 +46,8 @@ public static class AssemblyLoadContextExtensions
     /// <param name="paths">The list of assembly paths to load.</param>
     /// <returns>A collection of assemblies that could be loaded.</returns>
     /// <remarks>
+    /// SECURITY NOTE: Ensure that you trust those assemblies. You may introduce
+    /// a security risk by running arbitrary code.
     /// If an assembly fails to load it will be silently skipped.
     /// </remarks>
     public static IEnumerable<Assembly> TryLoadFromAssembliesPath(this AssemblyLoadContext loader, IEnumerable<string> paths)
@@ -72,6 +74,8 @@ public static class AssemblyLoadContextExtensions
     /// </param>
     /// <returns>A collection of assemblies that could be loaded.</returns>
     /// <remarks>
+    /// SECURITY NOTE: Ensure that you trust those assemblies. You may introduce
+    /// a security risk by running arbitrary code.
     /// If an assembly fails to load it will be silently skipped.
     /// </remarks>
     public static IEnumerable<Assembly> TryLoadFromDirectory(this AssemblyLoadContext loader, string directory, bool recursive)
@@ -89,6 +93,8 @@ public static class AssemblyLoadContextExtensions
     /// <param name="loader">The load context to use to load.</param>
     /// <returns>A collection of assemblies that could be loaded.</returns>
     /// <remarks>
+    /// SECURITY NOTE: Ensure that you trust those assemblies. You may introduce
+    /// a security risk by running arbitrary code.
     /// If an assembly fails to load it will be silently skipped.
     /// </remarks>
     public static IEnumerable<Assembly> TryLoadFromExecutingDirectory(this AssemblyLoadContext loader)
