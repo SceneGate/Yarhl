@@ -24,6 +24,7 @@ namespace Yarhl.IntegrationTests
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.Plugins;
+    using Yarhl.Plugins.FileFormat;
 
     [TestFixture]
     public class PluginDiscovery
@@ -31,8 +32,8 @@ namespace Yarhl.IntegrationTests
         [Test]
         public void YarhlMediaIsInPluginsFolder()
         {
-            string programDir = AppDomain.CurrentDomain.BaseDirectory;
-            string pluginDir = Path.Combine(programDir, PluginManager.PluginDirectory);
+            string programDir = Path.GetDirectoryName(Environment.ProcessPath);
+            string pluginDir = Path.Combine(programDir, "Plugins");
             Assert.IsTrue(Directory.Exists(pluginDir));
 
             Assert.IsTrue(File.Exists(Path.Combine(pluginDir, "Yarhl.Media.Text.dll")));
@@ -43,25 +44,33 @@ namespace Yarhl.IntegrationTests
         [Test]
         public void CanFoundPoByFormat()
         {
-            var formats = PluginManager.Instance.GetFormats();
+            string programDir = Path.GetDirectoryName(Environment.ProcessPath);
+            string pluginDir = Path.Combine(programDir, "Plugins");
+            TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
+
+            var formats = ConvertersLocator.Instance.Formats;
             Assert.That(formats, Is.Not.Empty);
             Assert.That(
-                formats.Select(t => t.Metadata.Name),
+                formats.Select(t => t.Name),
                 Does.Contain("Yarhl.Media.Text.Po"));
         }
 
         [Test]
         public void CanFoundPoConverterFromTypes()
         {
-            Type poType = PluginManager.Instance.GetFormats()
-                .Single(f => f.Metadata.Name == "Yarhl.Media.Text.Po")
-                .Metadata.Type;
+            string programDir = Path.GetDirectoryName(Environment.ProcessPath);
+            string pluginDir = Path.Combine(programDir, "Plugins");
+            TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
-            var converters = PluginManager.Instance.GetConverters()
-                .Where(f => f.Metadata.CanConvert(poType));
+            Type poType = ConvertersLocator.Instance.Formats
+                .Single(f => f.Name == "Yarhl.Media.Text.Po")
+                .Type;
+
+            var converters = ConvertersLocator.Instance.Converters
+                .Where(f => f.CanConvert(poType));
             Assert.That(converters, Is.Not.Empty);
             Assert.That(
-                converters.Select(t => t.Metadata.Name),
+                converters.Select(t => t.Name),
                 Does.Contain("Yarhl.Media.Text.Po2Binary"));
         }
     }

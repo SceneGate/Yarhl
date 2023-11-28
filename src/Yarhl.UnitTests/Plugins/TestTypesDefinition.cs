@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2023 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,26 +17,55 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.Plugins.FileFormat
+namespace Yarhl.UnitTests.Plugins;
+
+using System;
+
+#pragma warning disable SA1649 // File name should match first type name
+#pragma warning disable S2326 // Unused type parameters should be removed
+
+public interface IExistsInterface
 {
-    using System;
+}
 
-    /// <summary>
-    /// Base metadata associated to a exported type.
-    /// </summary>
-    public interface IExportMetadata
+public interface IGenericInterface<T>
+{
+}
+
+public interface IGenericInterface<T1, T2>
+{
+}
+
+public class ExistsClass : IExistsInterface
+{
+}
+
+public class Generic1Class : IGenericInterface<int>
+{
+}
+
+public class Generic2Class : IGenericInterface<string, int>
+{
+}
+
+public class GenericMultipleClass :
+    IGenericInterface<string, int>,
+    IGenericInterface<int, string>
+{
+}
+
+public abstract class AbstractClass : IExistsInterface
+{
+}
+
+public abstract class AbstractGenericClass : IGenericInterface<string, int>
+{
+}
+
+public class ConstructorWithException
+{
+    public ConstructorWithException()
     {
-        /// <summary>
-        /// Gets or sets the name of the extension.
-        /// Usually it's the FullName property of Type.
-        /// </summary>
-        /// <value>Name of the extension.</value>
-        string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of the extension.
-        /// </summary>
-        /// <value>The type of the extension.</value>
-        Type Type { get; set; }
+        throw new Exception();
     }
 }

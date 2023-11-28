@@ -22,7 +22,7 @@ namespace Yarhl.UnitTests.FileFormat
     using System.Linq;
     using NUnit.Framework;
     using Yarhl.FileFormat;
-    using Yarhl.Plugins;
+    using Yarhl.Plugins.FileFormat;
 
     public abstract class BaseGeneralTests<T>
         where T : IFormat
@@ -32,8 +32,8 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatIsFoundAndIsUnique()
         {
-            var formats = PluginManager.Instance.GetFormats()
-                .Select(f => f.Metadata.Type);
+            var formats = ConvertersLocator.Instance.Formats
+                .Select(f => f.Type);
             Assert.That(formats, Does.Contain(typeof(T)));
             Assert.That(formats, Is.Unique);
         }
@@ -41,8 +41,8 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatNameMatchAndIsUnique()
         {
-            var names = PluginManager.Instance.GetFormats()
-                .Select(f => f.Metadata.Name);
+            var names = ConvertersLocator.Instance.Formats
+                .Select(f => f.Name);
             Assert.That(names, Does.Contain(Name));
             Assert.That(names, Is.Unique);
         }

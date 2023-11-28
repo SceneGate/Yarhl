@@ -16,10 +16,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Composition" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
   </ItemGroup>
 

@@ -1,7 +1,6 @@
 ﻿namespace Yarhl.UnitTests.FileFormat;
 
 using System;
-using System.Composition;
 using System.Globalization;
 using Yarhl.FileFormat;
 
@@ -93,7 +92,6 @@ public class StringFormat2IntFormat : IConverter<StringFormat, IntFormat>
     }
 }
 
-[PartNotDiscoverable]
 public class StringFormatConverterWithConstructor : IConverter<StringFormat, IntFormat>
 {
     private readonly NumberStyles style;
@@ -111,7 +109,6 @@ public class StringFormatConverterWithConstructor : IConverter<StringFormat, Int
     }
 }
 
-[PartNotDiscoverable]
 public class StringFormatConverterWithSeveralConstructors :
     IConverter<StringFormat, IntFormat>
 {

@@ -1,9 +1,34 @@
-﻿namespace Yarhl.UnitTests.Plugins;
+﻿namespace Yarhl.UnitTests.Plugins.FileFormat;
 
 using System;
 using Yarhl.FileFormat;
 
 #pragma warning disable SA1649 // File name match type name
+
+public class PluginFormat : Yarhl.FileFormat.IFormat
+{
+    public static int Value => 0;
+}
+
+public class PluginConverter : Yarhl.FileFormat.IConverter<PluginFormat, int>
+{
+    public int Convert(PluginFormat source)
+    {
+        return PluginFormat.Value;
+    }
+}
+
+public class PluginConverterParametrized : Yarhl.FileFormat.IConverter<PluginFormat, int>
+{
+    public PluginConverterParametrized(bool ignoreMe)
+    {
+    }
+
+    public int Convert(PluginFormat source)
+    {
+        return PluginFormat.Value;
+    }
+}
 
 public class BasicConverter : IConverter<string, byte>
 {
