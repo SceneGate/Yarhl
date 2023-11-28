@@ -177,6 +177,29 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void ConstructorFromFile()
+        {
+            string tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            File.WriteAllBytes(tempFile, new byte[] { 0xCA, 0xFE });
+
+            try {
+                using var format = new BinaryFormat(tempFile, FileOpenMode.ReadWrite);
+                Assert.That(format.Stream.BaseStream, Is.InstanceOf<LazyFileStream>());
+                Assert.That(format.Stream.Position, Is.EqualTo(0));
+                Assert.That(format.Stream.Length, Is.EqualTo(2));
+                Assert.That(format.Stream.ReadByte(), Is.EqualTo(0xCA));
+            } finally {
+                File.Delete(tempFile);
+            }
+        }
+
+        [Test]
+        public void ConstructorFromFileInvalidParams()
+        {
+            Assert.That(() => new BinaryFormat(null, FileOpenMode.Read), Throws.ArgumentNullException);
+        }
+
+        [Test]
         public void Clone()
         {
             byte[] data = { 0x01, 0x02, 0x03 };

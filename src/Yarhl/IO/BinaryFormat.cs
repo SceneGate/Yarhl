@@ -46,8 +46,7 @@ namespace Yarhl.IO
         /// </param>
         public BinaryFormat(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             Stream = stream as DataStream ?? DataStreamFactory.FromStream(stream);
         }
@@ -67,14 +66,28 @@ namespace Yarhl.IO
         /// <param name="length">Length of the substream.</param>
         public BinaryFormat(Stream stream, long offset, long length)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
-            if (offset < 0 || offset > stream.Length)
+            ArgumentNullException.ThrowIfNull(stream);
+            if (offset < 0 || offset > stream.Length) {
                 throw new ArgumentOutOfRangeException(nameof(offset));
-            if (length < 0 || offset + length > stream.Length)
+            }
+
+            if (length < 0 || offset + length > stream.Length) {
                 throw new ArgumentOutOfRangeException(nameof(length));
+            }
 
             Stream = DataStreamFactory.FromStream(stream, offset, length);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BinaryFormat"/> class.
+        /// </summary>
+        /// <param name="path">The path of the file.</param>
+        /// <param name="mode">The mode to open the file.</param>
+        public BinaryFormat(string path, FileOpenMode mode)
+        {
+            ArgumentNullException.ThrowIfNull(path);
+
+            Stream = DataStreamFactory.FromFile(path, mode);
         }
 
         /// <summary>
@@ -126,8 +139,9 @@ namespace Yarhl.IO
         /// </param>
         protected virtual void Dispose(bool disposing)
         {
-            if (Disposed)
+            if (Disposed) {
                 return;
+            }
 
             Disposed = true;
             if (disposing) {
