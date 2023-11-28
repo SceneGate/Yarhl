@@ -727,8 +727,9 @@ namespace Yarhl.IO
         /// <param name="start">Defined starting position.</param>
         public DataStream Slice(long start)
         {
-            if (start < 0 || start > Length)
+            if (start < 0 || start > Length) {
                 throw new ArgumentOutOfRangeException(nameof(start));
+            }
 
             return new DataStream(this, start, Length - start);
         }
@@ -741,10 +742,13 @@ namespace Yarhl.IO
         /// <param name="length">Defined length to be written.</param>
         public DataStream Slice(long start, long length)
         {
-            if (start < 0 || start > Length)
+            if (start < 0 || start > Length) {
                 throw new ArgumentOutOfRangeException(nameof(start));
-            if (length < 0 || start + length > Length)
+            }
+
+            if (length < 0 || start + length > Length) {
                 throw new ArgumentOutOfRangeException(nameof(length));
+            }
 
             return new DataStream(this, start, length);
         }
