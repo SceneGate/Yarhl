@@ -721,6 +721,35 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Creates a substream starting in a defined position.
+        /// </summary>
+        /// <returns>The substream defined by offset and length parameters.</returns>
+        /// <param name="start">Defined starting position.</param>
+        public DataStream Slice(long start)
+        {
+            if (start < 0 || start > Length)
+                throw new ArgumentOutOfRangeException(nameof(start));
+
+            return new DataStream(this, start, Length - start);
+        }
+
+        /// <summary>
+        /// Creates a substream starting in a defined position and with a defined length.
+        /// </summary>
+        /// <returns>The substream defined by offset and length parameters.</returns>
+        /// <param name="start">Defined starting position.</param>
+        /// <param name="length">Defined length to be written.</param>
+        public DataStream Slice(long start, long length)
+        {
+            if (start < 0 || start > Length)
+                throw new ArgumentOutOfRangeException(nameof(start));
+            if (length < 0 || start + length > Length)
+                throw new ArgumentOutOfRangeException(nameof(length));
+
+            return new DataStream(this, start, length);
+        }
+
+        /// <summary>
         /// Releases all resource used by the <see cref="DataStream"/>
         /// object.
         /// </summary>

@@ -980,6 +980,41 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void SliceStream()
+        {
+            DataStream stream = new DataStream();
+            stream.WriteByte(0xBE);
+            stream.WriteByte(0xBA);
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+
+            DataStream testSlice = stream.Slice(2);
+            Assert.That(
+                () => testSlice,
+                Throws.Nothing);
+            Assert.AreEqual(0, testSlice.Position);
+            Assert.AreEqual(2, testSlice.Offset);
+            Assert.AreEqual(stream.Length - testSlice.Offset, testSlice.Length);
+
+            testSlice = stream.Slice(2, 1);
+            Assert.That(
+                () => testSlice,
+                Throws.Nothing);
+            Assert.AreEqual(0, testSlice.Position);
+            Assert.AreEqual(2, testSlice.Offset);
+            Assert.AreEqual(1, testSlice.Length);
+            Assert.That(
+                () => stream.Slice(10),
+                Throws.Exception);
+            Assert.That(
+                () => stream.Slice(10, 10),
+                Throws.Exception);
+            Assert.That(
+                () => stream.Slice(2, 10),
+                Throws.Exception);
+        }
+
+        [Test]
         public void WritesAByteAndIncreasePosition()
         {
             using DataStream stream = new DataStream(baseStream);
