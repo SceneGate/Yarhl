@@ -23,10 +23,8 @@ namespace Yarhl.UnitTests.IO
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.VisualStudio.TestPlatform.PlatformAbstractions.Interfaces;
     using Moq;
     using NUnit.Framework;
-    using NUnit.Framework.Internal;
     using Yarhl.FileFormat;
     using Yarhl.IO;
     using Yarhl.IO.StreamFormat;
