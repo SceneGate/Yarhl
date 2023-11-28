@@ -1368,17 +1368,44 @@ namespace Yarhl.UnitTests.IO
         {
             string tempFile = Path.Combine(
                 Path.GetTempPath(),
-                Path.GetRandomFileName(),
                 Path.GetRandomFileName());
 
-            DataStream stream = new DataStream();
-            stream.WriteTo(tempFile);
+            try {
+                var stream = new DataStream();
+                stream.WriteTo(tempFile);
 
-            Assert.That(File.Exists(tempFile), Is.True);
-            FileStream fs = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
-            Assert.AreEqual(0, fs.Length);
-            fs.Dispose();
-            File.Delete(tempFile);
+                Assert.That(File.Exists(tempFile), Is.True);
+
+                using var fs = new FileStream(tempFile, FileMode.Open, FileAccess.Read);
+                Assert.That(fs.Length, Is.EqualTo(0));
+            } finally {
+                File.Delete(tempFile);
+            }
+        }
+
+        [Test]
+        public void WriteToWhenTruncatesExistingFile()
+        {
+            string tempFile = Path.Combine(
+                Path.GetTempPath(),
+                Path.GetRandomFileName());
+
+            byte[] expected = new byte[] { 0xCA, 0xFE };
+            using var stream = new DataStream();
+            stream.Write(expected);
+
+            try {
+                // Pre-fill the output file with some long content
+                File.WriteAllText(tempFile, "hello world!");
+
+                // Overwrite with 2 bytes stream content
+                stream.WriteTo(tempFile);
+
+                byte[] actual = File.ReadAllBytes(tempFile);
+                Assert.That(actual, Is.EquivalentTo(expected));
+            } finally {
+                File.Delete(tempFile);
+            }
         }
 
         [Test]

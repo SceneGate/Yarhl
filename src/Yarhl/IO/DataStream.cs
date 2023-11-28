@@ -616,7 +616,7 @@ namespace Yarhl.IO
             }
 
             // We use FileStream so it creates a file even when the length is zero
-            using var segment = new FileStream(fileOut, FileMode.OpenOrCreate, FileAccess.Write);
+            using var segment = new FileStream(fileOut, FileMode.Create, FileAccess.Write);
             WriteSegmentTo(start, length, segment);
         }
 

@@ -94,6 +94,8 @@ internally maps to the .NET enumerations `FileMode` and `FileAccess` as follow:
 > hundreds of `DataStream` on different files ready without running out of
 > resources in the operative system.
 
+<!-- ignore warning -->
+
 > [!TIP]  
 > `FileOpenMode` is handy enumeration that covers most use cases. If you require
 > any other combination of `FileMode` and `FileAccess` you can create the
@@ -119,7 +121,9 @@ applies to the content that targets this `DataStream`, not the entire parent
 
 > [!NOTE]  
 > The method ignores the current position, it will always start writing from the
-> start to the end. It will **restore** the current position after comparing.
+> start to the end. It will **restore** the current position after writing. It
+> will also start **truncate** the output file. It will not append or preserve
+> any existing content.
 
 The path should point to the output file. If there is any directory that doesn't
 exist, it will create them first.
