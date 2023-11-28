@@ -38,6 +38,14 @@ Another use case is reading a binary format with sections. By creating a
 modular and safe. It would prevent reading data outside the range of the
 section.
 
+We can create a _sub-stream_ from the `DataStream` constructor:
+
+[!code-csharp[SubStreamConstructor](./../../../../src/Yarhl.Examples/IO/DataStreamExamples.cs?name=SubStreamConstructor)]
+
+or from the `Slice` API:
+
+[!code-csharp[SubStreamConstructor](./../../../../src/Yarhl.Examples/IO/DataStreamExamples.cs?name=SubStreamSlice)]
+
 ## Factory
 
 The constructors of `DataStream` takes a `Stream` with optional offset and

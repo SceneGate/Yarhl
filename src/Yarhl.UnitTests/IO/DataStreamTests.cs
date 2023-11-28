@@ -980,6 +980,107 @@ namespace Yarhl.UnitTests.IO
         }
 
         [Test]
+        public void SliceUsesSameBaseStream()
+        {
+            baseStream.Write(new byte[] { 0xCA, 0xFE });
+            using var parent = new DataStream(baseStream);
+
+            using DataStream slice = parent.Slice(1);
+
+            Assert.That(parent.BaseStream, Is.SameAs(baseStream));
+            Assert.That(slice.BaseStream, Is.SameAs(baseStream));
+        }
+
+        [Test]
+        public void SliceStream()
+        {
+            using var stream = new DataStream();
+            stream.WriteByte(0xBE);
+            stream.WriteByte(0xBA);
+            stream.WriteByte(0xCA);
+            stream.WriteByte(0xFE);
+
+            using DataStream testSlice = stream.Slice(2);
+            Assert.That(testSlice, Is.Not.Null);
+
+            Assert.Multiple(() => {
+                Assert.That(testSlice.Position, Is.EqualTo(0));
+                Assert.That(testSlice.Offset, Is.EqualTo(2));
+                Assert.That(testSlice.Length, Is.EqualTo(2));
+                Assert.That(testSlice.ReadByte(), Is.EqualTo(0xCA));
+            });
+        }
+
+        [Test]
+        public void SliceWithLength()
+        {
+            baseStream.Write(new byte[] { 0xBE, 0xBA, 0xCA, 0xFE });
+            using var stream = new DataStream(baseStream);
+
+            using DataStream testSlice = stream.Slice(2, 1);
+
+            Assert.That(testSlice, Is.Not.Null);
+            Assert.Multiple(() => {
+                Assert.That(testSlice.Position, Is.EqualTo(0));
+                Assert.That(testSlice.Offset, Is.EqualTo(2));
+                Assert.That(testSlice.Length, Is.EqualTo(1));
+                Assert.That(testSlice.ReadByte(), Is.EqualTo(0xCA));
+            });
+        }
+
+        [Test]
+        public void SliceZeroLengthSucceeds()
+        {
+            baseStream.Write(new byte[] { 0xBE, 0xBA, 0xCA, 0xFE });
+            using var stream = new DataStream(baseStream);
+
+            using DataStream testSlice = stream.Slice(2, 0);
+
+            Assert.That(testSlice, Is.Not.Null);
+            Assert.Multiple(() => {
+                Assert.That(testSlice.Offset, Is.EqualTo(2));
+                Assert.That(testSlice.Length, Is.EqualTo(0));
+            });
+
+            using DataStream endSlice = stream.Slice(4);
+            Assert.That(endSlice, Is.Not.Null);
+            Assert.Multiple(() => {
+                Assert.That(endSlice.Offset, Is.EqualTo(4));
+                Assert.That(endSlice.Length, Is.EqualTo(0));
+            });
+        }
+
+        [Test]
+        public void SliceCannotExpand()
+        {
+            baseStream.Write(new byte[] { 0xBE, 0xBA, 0xCA, 0xFE });
+            using var stream = new DataStream(baseStream);
+
+            using DataStream testSlice = stream.Slice(2, 1);
+
+            testSlice.Position = 1;
+            Assert.That(() => testSlice.WriteByte(0xC0), Throws.InstanceOf<InvalidOperationException>());
+
+            using DataStream endSlice = stream.Slice(4, 0);
+            Assert.That(() => endSlice.WriteByte(0xC0), Throws.InstanceOf<InvalidOperationException>());
+        }
+
+        [Test]
+        public void SliceThrowsWithInvalidArgs()
+        {
+            baseStream.Write(new byte[] { 0xBE, 0xBA, 0xCA, 0xFE });
+            using var stream = new DataStream(baseStream);
+
+            Assert.Multiple(() => {
+                Assert.That(() => stream.Slice(-1), Throws.InstanceOf<ArgumentOutOfRangeException>());
+                Assert.That(() => stream.Slice(5), Throws.InstanceOf<ArgumentOutOfRangeException>());
+                Assert.That(() => stream.Slice(-1, 1), Throws.InstanceOf<ArgumentOutOfRangeException>());
+                Assert.That(() => stream.Slice(5, 1), Throws.InstanceOf<ArgumentOutOfRangeException>());
+                Assert.That(() => stream.Slice(0, 5), Throws.InstanceOf<ArgumentOutOfRangeException>());
+            });
+        }
+
+        [Test]
         public void WritesAByteAndIncreasePosition()
         {
             using DataStream stream = new DataStream(baseStream);
