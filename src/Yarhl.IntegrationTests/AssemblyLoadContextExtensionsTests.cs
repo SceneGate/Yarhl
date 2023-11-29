@@ -71,7 +71,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void LoadingIgnoreSystemLibraries()
     {
-        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext.TryLoadFromExecutingDirectory();
+        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext.TryLoadFromBaseLoadDirectory();
 
         Assert.That(loaded.Select(a => a.GetName().Name), Does.Not.Contain("testhost"));
     }
@@ -80,7 +80,7 @@ public class AssemblyLoadContextExtensionsTests
     public void LoadingExecutingDirGetsYarhl()
     {
         // We cannot use ConverterLocator as it will load Yarhl as it uses some of its types.
-        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext.TryLoadFromExecutingDirectory();
+        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext.TryLoadFromBaseLoadDirectory();
 
         Assert.That(loaded.Select(a => a.GetName().Name), Does.Contain("Yarhl"));
 

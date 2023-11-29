@@ -88,7 +88,8 @@ public static class AssemblyLoadContextExtensions
     }
 
     /// <summary>
-    /// Try to load every .NET assembly in the directory of the current process.
+    /// Try to load every .NET assembly in the current domain base directory.
+    /// This is usually the process path or the entry assembly path.
     /// </summary>
     /// <param name="loader">The load context to use to load.</param>
     /// <returns>A collection of assemblies that could be loaded.</returns>
@@ -97,9 +98,9 @@ public static class AssemblyLoadContextExtensions
     /// a security risk by running arbitrary code.
     /// If an assembly fails to load it will be silently skipped.
     /// </remarks>
-    public static IEnumerable<Assembly> TryLoadFromExecutingDirectory(this AssemblyLoadContext loader)
+    public static IEnumerable<Assembly> TryLoadFromBaseLoadDirectory(this AssemblyLoadContext loader)
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath) ??
+        string programDir = Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory) ??
             throw new ArgumentException("Cannot determine process directory");
 
         string[] libraryAssemblies = Directory.GetFiles(programDir, "*.dll");
