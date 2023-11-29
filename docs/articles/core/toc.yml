@@ -45,5 +45,9 @@
   href: ./binary/custom-streams.md
 
 - name: 🔌 Plugins
-- name: 🚧 Overview
+- name: Overview
   href: ../plugins/overview.md
+- name: Loading assemblies
+  href: ../plugins/load-assembly.md
+- name: Locating converter types
+  href: ../plugins/locate-types.md

@@ -94,6 +94,13 @@ public sealed class TypeLocator
         ArgumentNullException.ThrowIfNull(baseType);
         ArgumentNullException.ThrowIfNull(assembly);
 
+        if (baseType.IsGenericTypeDefinition) {
+            throw new ArgumentException(
+                "Generic type definition doesn't work on this method. " +
+                $"Use {nameof(FindImplementationsOfGeneric)} instead.",
+                nameof(baseType));
+        }
+
         return assembly.ExportedTypes
             .Where(baseType.IsAssignableFrom)
             .Where(t => t.IsClass && !t.IsAbstract)

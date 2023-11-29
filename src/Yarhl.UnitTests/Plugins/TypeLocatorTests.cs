@@ -115,6 +115,21 @@ public class TypeLocatorTests
     }
 
     [Test]
+    public void FindImplementationThrowsWithGenericTypeDefinitions()
+    {
+        Assert.That(
+            () => TypeLocator.Instance
+                .FindImplementationsOf(typeof(IGenericInterface<,>))
+                .ToArray(),
+            Throws.ArgumentException);
+        Assert.That(
+            () => TypeLocator.Instance
+                .FindImplementationsOf(typeof(IGenericInterface<,>), typeof(IGenericInterface<,>).Assembly)
+                .ToArray(),
+            Throws.ArgumentException);
+    }
+
+    [Test]
     public void FindImplementationIgnoresAbstractClasses()
     {
         var results = TypeLocator.Instance
