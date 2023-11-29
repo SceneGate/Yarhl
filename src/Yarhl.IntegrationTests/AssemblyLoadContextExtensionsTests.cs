@@ -128,7 +128,7 @@ public class AssemblyLoadContextExtensionsTests
         string pluginDir = Path.Combine(programDir, "Plugins");
         TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
-        var formats = ConvertersLocator.Instance.Formats;
+        var formats = ConverterLocator.Instance.Formats;
         Assert.That(formats, Is.Not.Empty);
         Assert.That(
             formats.Select(t => t.Name),
@@ -142,11 +142,11 @@ public class AssemblyLoadContextExtensionsTests
         string pluginDir = Path.Combine(programDir, "Plugins");
         TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
-        Type poType = ConvertersLocator.Instance.Formats
+        Type poType = ConverterLocator.Instance.Formats
             .Single(f => f.Name == "Yarhl.Media.Text.Po")
             .Type;
 
-        var converters = ConvertersLocator.Instance.Converters
+        var converters = ConverterLocator.Instance.Converters
             .Where(f => f.CanConvert(poType));
         Assert.That(converters, Is.Not.Empty);
         Assert.That(

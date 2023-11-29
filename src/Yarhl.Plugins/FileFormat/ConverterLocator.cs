@@ -25,18 +25,18 @@ using Yarhl.FileFormat;
 /// <summary>
 /// Locates converter types across assemblies and provide their information.
 /// </summary>
-public sealed class ConvertersLocator
+public sealed class ConverterLocator
 {
     private static readonly object LockObj = new();
-    private static ConvertersLocator? singleInstance;
+    private static ConverterLocator? singleInstance;
 
     private readonly List<InterfaceImplementationInfo> formatsMetadata;
     private readonly List<ConverterTypeInfo> convertersMetadata;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="ConvertersLocator"/> class.
+    /// Initializes a new instance of the <see cref="ConverterLocator"/> class.
     /// </summary>
-    private ConvertersLocator()
+    private ConverterLocator()
     {
         formatsMetadata = new List<InterfaceImplementationInfo>();
         Formats = formatsMetadata;
@@ -51,11 +51,11 @@ public sealed class ConvertersLocator
     /// Gets the plugin manager instance.
     /// </summary>
     /// <remarks><para>It initializes the manager if needed.</para></remarks>
-    public static ConvertersLocator Instance {
+    public static ConverterLocator Instance {
         get {
             if (singleInstance == null) {
                 lock (LockObj) {
-                    singleInstance ??= new ConvertersLocator();
+                    singleInstance ??= new ConverterLocator();
                 }
             }
 
@@ -76,6 +76,10 @@ public sealed class ConvertersLocator
     /// <summary>
     /// Scan the assemblies from the load context to look for formats and converters.
     /// </summary>
+    /// <remarks>
+    /// This method is already called when the instance is created. Only needed
+    /// after loading additional assemblies.
+    /// </remarks>
     public void ScanAssemblies()
     {
         formatsMetadata.Clear();

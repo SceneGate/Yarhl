@@ -23,122 +23,173 @@ using System;
 using System.Linq;
 using NUnit.Framework;
 using Yarhl.FileFormat;
+using Yarhl.FileSystem;
+using Yarhl.IO;
 using Yarhl.Plugins;
+using Yarhl.Plugins.FileFormat;
 
 [TestFixture]
 public class ConvertersLocatorTests
 {
-    /*
     [Test]
-    public void FormatMetadataContainsNameAndType()
+    public void InstanceIsSingleton()
     {
-        var format = TypeLocator.Instance.GetFormats()
-            .Single(p => p.Metadata.Type == typeof(StringFormat));
-        Assert.That(
-            format.Metadata.Name,
-            Is.EqualTo(typeof(StringFormat).FullName));
+        ConverterLocator instance1 = ConverterLocator.Instance;
+        ConverterLocator instance2 = ConverterLocator.Instance;
+
+        Assert.That(instance1, Is.SameAs(instance2));
+    }
+
+    [Test]
+    public void InstanceIsInitialized()
+    {
+        ConverterLocator instance = ConverterLocator.Instance;
+
+        Assert.That(instance.Formats, Is.Not.Null);
+        Assert.That(instance.Converters, Is.Not.Null);
+    }
+
+    [Test]
+    public void LocateFormatsWithTypeInfo()
+    {
+        InterfaceImplementationInfo myFormat = ConverterLocator.Instance.Formats
+            .FirstOrDefault(i => i.Type == typeof(DerivedSourceFormat));
+
+        Assert.That(myFormat, Is.Not.Null);
+        Assert.That(myFormat.InterfaceImplemented, Is.EqualTo(typeof(IFormat)));
+        Assert.That(myFormat.Name, Is.EqualTo(typeof(DerivedSourceFormat).FullName));
     }
 
     [Test]
     public void FormatsAreNotDuplicated()
     {
-        Assert.That(
-            TypeLocator.Instance.GetFormats().Select(f => f.Metadata.Type),
-            Is.Unique);
+        InterfaceImplementationInfo[] formats = ConverterLocator.Instance.Formats
+            .Where(f => f.Type == typeof(MySourceFormat))
+            .ToArray();
+
+        Assert.That(formats, Has.Length.EqualTo(1));
     }
 
     [Test]
-    public void GetFormatsReturnsKnownFormats()
+    public void LocateFormatsFindYarhlBaseFormats()
     {
         Assert.That(
-            TypeLocator.Instance.GetFormats().Select(f => f.Metadata.Name),
-            Does.Contain(typeof(BinaryFormat).FullName));
+            ConverterLocator.Instance.Formats.Select(f => f.Type),
+            Does.Contain(typeof(BinaryFormat)));
+
+        Assert.That(
+            ConverterLocator.Instance.Formats.Select(f => f.Type),
+            Does.Contain(typeof(NodeContainerFormat)));
     }
 
     [Test]
-    public void FindSingleInnerConverter()
+    public void LocateConvertersWithTypeInfo()
     {
-        IConverter<string, ulong> converter = null;
-        Assert.That(
-            () => converter = TypeLocator.Instance
-                .FindExtensions<IConverter<string, ulong>>()
-                .Single(),
-            Throws.Nothing);
-        Assert.That(
-            converter,
-            Is.InstanceOf<SingleOuterConverterExample.SingleInnerConverterExample>());
-        Assert.That(converter.Convert("4"), Is.EqualTo(4));
+        ConverterTypeInfo result = ConverterLocator.Instance.Converters
+            .FirstOrDefault(i => i.Type == typeof(MyConverter));
+
+        Assert.That(result, Is.Not.Null);
+        Assert.That(result.InterfaceImplemented, Is.EqualTo(typeof(IConverter<MySourceFormat, MyDestFormat>)));
+        Assert.That(result.Name, Is.EqualTo(typeof(MyConverter).FullName));
+        Assert.That(result.SourceType, Is.EqualTo(typeof(MySourceFormat)));
+        Assert.That(result.DestinationType, Is.EqualTo(typeof(MyDestFormat)));
     }
 
     [Test]
-    public void FindSingleOuterConverter()
+    public void ConvertersAreNotDuplicated()
     {
-        IConverter<string, uint> converter = null;
-        Assert.That(
-            () => converter = TypeLocator.Instance
-                .FindExtensions<IConverter<string, uint>>()
-                .Single(),
-            Throws.Nothing);
-        Assert.That(converter, Is.InstanceOf<SingleOuterConverterExample>());
-        Assert.That(converter.Convert("5"), Is.EqualTo(5));
+        ConverterTypeInfo[] results = ConverterLocator.Instance.Converters
+            .Where(f => f.Type == typeof(MyConverter))
+            .ToArray();
+
+        Assert.That(results, Has.Length.EqualTo(1));
     }
 
     [Test]
-    public void FindTwoConvertersInSameClass()
+    public void ScanAssembliesDoesNotDuplicateFindings()
     {
-        var converter1 = TypeLocator.Instance
-            .FindExtensions<IConverter<string, int>>();
-        Assert.IsInstanceOf<TwoConvertersExample>(converter1.Single());
+        ConverterLocator.Instance.ScanAssemblies();
 
-        Assert.DoesNotThrow(() =>
-            converter1.Single(t =>
-                Array.Exists(t.GetType().GetInterfaces(), i =>
-                    i.IsGenericType &&
-                    i.GenericTypeArguments.Length == 2 &&
-                    i.GenericTypeArguments[0] == typeof(string) &&
-                    i.GenericTypeArguments[1] == typeof(int))));
-
-        var converter2 = TypeLocator.Instance
-            .FindExtensions<IConverter<int, string>>();
-        Assert.IsInstanceOf<TwoConvertersExample>(converter2.Single());
-
-        Assert.DoesNotThrow(() =>
-            converter2.Single(t =>
-                Array.Exists(t.GetType().GetInterfaces(), i =>
-                    i.IsGenericType &&
-                    i.GenericTypeArguments.Length == 2 &&
-                    i.GenericTypeArguments[0] == typeof(int) &&
-                    i.GenericTypeArguments[1] == typeof(string))));
+        FormatsAreNotDuplicated();
+        ConvertersAreNotDuplicated();
     }
 
     [Test]
-    public void FindDerivedConverter()
+    public void LocateConverterWithParameters()
     {
-        var converters = TypeLocator.Instance
-            .FindExtensions<IConverter<string, long>>();
-        IConverter<string, long> converter = null;
-        Assert.That(
-            () => converter = converters.Single(),
-            Throws.Nothing);
-        Assert.IsInstanceOf<DerivedConverter>(converter);
-        Assert.IsInstanceOf<BaseAbstractConverter>(converter);
-        Assert.That(converter.Convert("3"), Is.EqualTo(3));
+        ConverterTypeInfo[] results = ConverterLocator.Instance.Converters
+            .Where(f => f.Type == typeof(MyConverterParametrized))
+            .ToArray();
+
+        Assert.That(results.Length, Is.EqualTo(1));
     }
 
     [Test]
-    public void FindConvertsWithOtherInterfaces()
+    public void LocateSingleInnerConverter()
     {
-        IConverter<string, short> converter = null;
-        Assert.That(
-            () => converter = TypeLocator.Instance
-                .FindExtensions<IConverter<string, short>>()
-                .Single(),
-            Throws.Nothing);
-        Assert.That(converter, Is.InstanceOf<ConverterAndOtherInterface>());
-        Assert.That(converter.Convert("3"), Is.EqualTo(3));
-        Assert.That(
-            ((ConverterAndOtherInterface)converter).Dispose,
-            Throws.Nothing);
+        ConverterTypeInfo converter = ConverterLocator.Instance.Converters
+                .FirstOrDefault(c => c.Type == typeof(SingleOuterConverter.SingleInnerConverter));
+
+        Assert.That(converter, Is.Not.Null);
     }
-    */
+
+    [Test]
+    public void LocateSingleOuterConverter()
+    {
+        ConverterTypeInfo converter = ConverterLocator.Instance.Converters
+                .FirstOrDefault(c => c.Type == typeof(SingleOuterConverter));
+
+        Assert.That(converter, Is.Not.Null);
+    }
+
+    [Test]
+    public void LocateTwoConvertersInSameClass()
+    {
+        ConverterTypeInfo[] converters = ConverterLocator.Instance.Converters
+            .Where(c => c.Type == typeof(TwoConverters))
+            .ToArray();
+
+        Assert.That(converters.Length, Is.EqualTo(2));
+        Assert.That(
+            Array.Exists(
+                converters,
+                c => c.InterfaceImplemented == typeof(IConverter<MySourceFormat, MyDestFormat>)),
+            Is.True);
+        Assert.That(
+            Array.Exists(
+                converters,
+                c => c.SourceType == typeof(MySourceFormat) && c.DestinationType == typeof(MyDestFormat)),
+            Is.True);
+
+        Assert.That(
+            Array.Exists(
+                converters,
+                c => c.InterfaceImplemented == typeof(IConverter<MyDestFormat, MySourceFormat>)),
+            Is.True);
+        Assert.That(
+            Array.Exists(
+                converters,
+                c => c.SourceType == typeof(MyDestFormat) && c.DestinationType == typeof(MySourceFormat)),
+            Is.True);
+    }
+
+    [Test]
+    public void LocateDerivedConverter()
+    {
+        ConverterTypeInfo[] converters = ConverterLocator.Instance.Converters
+            .Where(c => c.Type == typeof(DerivedConverter))
+            .ToArray();
+
+        Assert.That(converters.Length, Is.EqualTo(1));
+    }
+
+    [Test]
+    public void LocateConvertsWithOtherInterfaces()
+    {
+        ConverterTypeInfo[] converters = ConverterLocator.Instance.Converters
+            .Where(c => c.Type == typeof(ConverterAndOtherInterface))
+            .ToArray();
+
+        Assert.That(converters.Length, Is.EqualTo(1));
+    }
 }

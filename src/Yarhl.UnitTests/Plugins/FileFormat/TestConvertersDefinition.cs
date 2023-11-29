@@ -41,74 +41,57 @@ public class MyConverterParametrized : IConverter<MySourceFormat, MyDestFormat>
     }
 }
 
-public class SingleOuterConverterExample : IConverter<string, uint>
+public class SingleOuterConverter : IConverter<MySourceFormat, MyDestFormat>
 {
-    public uint Convert(string source)
+    public MyDestFormat Convert(MySourceFormat source)
     {
-        return System.Convert.ToUInt32(source);
+        return new MyDestFormat();
     }
 
-    public class SingleInnerConverterExample : IConverter<string, ulong>
+    public class SingleInnerConverter : IConverter<MySourceFormat, MyDestFormat>
     {
-        public ulong Convert(string source)
+        public MyDestFormat Convert(MySourceFormat source)
         {
-            return System.Convert.ToUInt64(source);
+            return new MyDestFormat();
         }
     }
 }
 
 public sealed class ConverterAndOtherInterface :
-    IConverter<string, short>,
+    IConverter<MySourceFormat, MyDestFormat>,
     IDisposable
 {
-    public short Convert(string source)
+    public MyDestFormat Convert(MySourceFormat source)
     {
-        return System.Convert.ToInt16(source);
+        return new MyDestFormat();
     }
 
     public void Dispose()
     {
-        // Test dispose
+        GC.SuppressFinalize(this);
     }
 }
 
-public class TwoConvertersExample :
-    IConverter<string, int>, IConverter<int, string>
+public class TwoConverters :
+    IConverter<MySourceFormat, MyDestFormat>,
+    IConverter<MyDestFormat, MySourceFormat>
 {
-    public int Convert(string source)
+    public MyDestFormat Convert(MySourceFormat source)
     {
-        return System.Convert.ToInt32(source);
+        return new MyDestFormat();
     }
 
-    public string Convert(int source)
+    public MySourceFormat Convert(MyDestFormat source)
     {
-        return source.ToString();
-    }
-}
-
-public class DuplicatedConverter1 :
-    IConverter<string, sbyte>
-{
-    public sbyte Convert(string source)
-    {
-        return System.Convert.ToSByte(source);
+        return new MySourceFormat();
     }
 }
 
-public class DuplicatedConverter2 :
-    IConverter<string, sbyte>
+public abstract class BaseAbstractConverter : IConverter<MySourceFormat, MyDestFormat>
 {
-    public sbyte Convert(string source)
+    public MyDestFormat Convert(MySourceFormat source)
     {
-        return System.Convert.ToSByte(source);
-    }
-}
-
-public abstract class BaseAbstractConverter : IConverter<string, long>
-{
-    public long Convert(string source)
-    {
-        return System.Convert.ToInt64(source);
+        return new MyDestFormat();
     }
 }
 
