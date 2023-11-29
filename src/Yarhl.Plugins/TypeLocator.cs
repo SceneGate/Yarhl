@@ -141,25 +141,16 @@ public sealed class TypeLocator
             type.IsGenericType
             && type.GetGenericTypeDefinition().IsEquivalentTo(baseType);
 
-        IEnumerable<Type> converterTypes = assembly.ExportedTypes
+        return assembly.ExportedTypes
+            .Where(t => t.IsClass && !t.IsAbstract)
             .Where(t => Array.Exists(t.GetInterfaces(), ValidImplementationInterface))
-            .Where(t => t.IsClass && !t.IsAbstract);
-
-        foreach (Type type in converterTypes) {
-            // A class may implement the interface several
-            // times with different generic types
-            IEnumerable<Type[]> interfaceImplementations = type.GetInterfaces()
+            .SelectMany(type => type.GetInterfaces() // A class may implement a generic interface multiple times
                 .Where(ValidImplementationInterface)
-                .Select(i => i.GenericTypeArguments);
-
-            foreach (Type[] genericTypes in interfaceImplementations) {
-                var metadata = new GenericInterfaceImplementationInfo(
-                    type.FullName!,
-                    type,
-                    baseType,
-                    genericTypes);
-                yield return metadata;
-            }
-        }
+                .Select(implementedInterface =>
+                    new GenericInterfaceImplementationInfo(
+                        type.FullName!,
+                        type,
+                        implementedInterface,
+                        implementedInterface.GenericTypeArguments)));
     }
 }

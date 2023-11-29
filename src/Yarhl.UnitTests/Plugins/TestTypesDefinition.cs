@@ -54,7 +54,15 @@ public class GenericMultipleClass :
 {
 }
 
+public interface ISecondInterface : IExistsInterface
+{
+}
+
 public abstract class AbstractClass : IExistsInterface
+{
+}
+
+public interface ISecondGenericInterface : IGenericInterface<string, int>
 {
 }
 

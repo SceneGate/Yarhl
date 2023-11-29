@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2023 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ public class TypeLocatorTests
     [Test]
     public void InstanceInitializePluginManager()
     {
-        var instance = TypeLocator.Instance;
+        TypeLocator instance = TypeLocator.Instance;
         Assert.That(instance, Is.Not.Null);
         Assert.That(instance.LoadContext, Is.Not.Null);
     }
@@ -38,8 +38,8 @@ public class TypeLocatorTests
     [Test]
     public void InstanceIsCreatedOnce()
     {
-        var instance1 = TypeLocator.Instance;
-        var instance2 = TypeLocator.Instance;
+        TypeLocator instance1 = TypeLocator.Instance;
+        TypeLocator instance2 = TypeLocator.Instance;
         Assert.That(instance1, Is.SameAs(instance2));
     }
 
@@ -50,11 +50,12 @@ public class TypeLocatorTests
             .FindImplementationsOf(typeof(IExistsInterface))
             .ToList();
 
-        Assert.That(extensions, Has.Count.EqualTo(1));
+        int index = extensions.FindIndex(i => i.Type == typeof(ExistsClass));
+        Assert.That(index, Is.Not.EqualTo(-1));
+
         Assert.Multiple(() => {
-            Assert.That(extensions[0].Name, Is.EqualTo(typeof(ExistsClass).FullName));
-            Assert.That(extensions[0].Type, Is.EqualTo(typeof(ExistsClass)));
-            Assert.That(extensions[0].InterfaceImplemented, Is.EqualTo(typeof(IExistsInterface)));
+            Assert.That(extensions[index].Name, Is.EqualTo(typeof(ExistsClass).FullName));
+            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IExistsInterface)));
         });
     }
 
@@ -65,11 +66,12 @@ public class TypeLocatorTests
             .FindImplementationsOf(typeof(IExistsInterface), typeof(IExistsInterface).Assembly)
             .ToList();
 
-        Assert.That(extensions, Has.Count.EqualTo(1));
+        int index = extensions.FindIndex(i => i.Type == typeof(ExistsClass));
+        Assert.That(index, Is.Not.EqualTo(-1));
+
         Assert.Multiple(() => {
-            Assert.That(extensions[0].Name, Is.EqualTo(typeof(ExistsClass).FullName));
-            Assert.That(extensions[0].Type, Is.EqualTo(typeof(ExistsClass)));
-            Assert.That(extensions[0].InterfaceImplemented, Is.EqualTo(typeof(IExistsInterface)));
+            Assert.That(extensions[index].Name, Is.EqualTo(typeof(ExistsClass).FullName));
+            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IExistsInterface)));
         });
     }
 
@@ -110,5 +112,151 @@ public class TypeLocatorTests
         Assert.That(
             () => TypeLocator.Instance.FindImplementationsOf(typeof(IExistsInterface), null),
             Throws.ArgumentNullException);
+    }
+
+    [Test]
+    public void FindImplementationIgnoresAbstractClasses()
+    {
+        var results = TypeLocator.Instance
+            .FindImplementationsOf(typeof(IExistsInterface))
+            .ToList();
+
+        Assert.That(results.Find(i => i.Type == typeof(AbstractClass)), Is.Null);
+    }
+
+    [Test]
+    public void FindImplementationIgnoresInterfaces()
+    {
+        var results = TypeLocator.Instance
+            .FindImplementationsOf(typeof(IExistsInterface))
+            .ToList();
+
+        Assert.That(results.Find(i => i.Type == typeof(ISecondInterface)), Is.Null);
+    }
+
+    [Test]
+    public void FindImplementationCanFindConstructorWithException()
+    {
+        var results = TypeLocator.Instance
+            .FindImplementationsOf(typeof(ConstructorWithException))
+            .ToList();
+
+        Assert.That(results, Has.Count.EqualTo(1));
+        Assert.Multiple(() => {
+            Assert.That(results[0].Name, Is.EqualTo(typeof(ConstructorWithException).FullName));
+            Assert.That(results[0].Type, Is.EqualTo(typeof(ConstructorWithException)));
+            Assert.That(results[0].InterfaceImplemented, Is.EqualTo(typeof(ConstructorWithException)));
+        });
+    }
+
+    [Test]
+    public void FindImplementationOfGenericInterface1()
+    {
+        var extensions = TypeLocator.Instance
+            .FindImplementationsOfGeneric(typeof(IGenericInterface<>))
+            .ToList();
+
+        int index = extensions.FindIndex(i => i.Type == typeof(Generic1Class));
+        Assert.That(index, Is.Not.EqualTo(-1));
+
+        Assert.Multiple(() => {
+            Assert.That(extensions[index].Name, Is.EqualTo(typeof(Generic1Class).FullName));
+            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IGenericInterface<int>)));
+            Assert.That(extensions[index].GenericTypes, Has.Count.EqualTo(1));
+            Assert.That(extensions[index].GenericTypes[0], Is.EqualTo(typeof(int)));
+        });
+
+        // For code coverage -.-
+        GenericInterfaceImplementationInfo copyInfo = extensions[index] with { };
+        Assert.That(copyInfo, Is.EqualTo(extensions[index]));
+    }
+
+    [Test]
+    public void FindImplementationOfGenericInterface2()
+    {
+        var extensions = TypeLocator.Instance
+            .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
+            .ToList();
+
+        int index = extensions.FindIndex(i => i.Type == typeof(Generic2Class));
+        Assert.That(index, Is.Not.EqualTo(-1));
+
+        Assert.Multiple(() => {
+            Assert.That(extensions[index].Name, Is.EqualTo(typeof(Generic2Class).FullName));
+            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IGenericInterface<string, int>)));
+            Assert.That(extensions[index].GenericTypes, Has.Count.EqualTo(2));
+            Assert.That(extensions[index].GenericTypes[0], Is.EqualTo(typeof(string)));
+            Assert.That(extensions[index].GenericTypes[1], Is.EqualTo(typeof(int)));
+        });
+    }
+
+    [Test]
+    public void FindImplementationOfGenericClass()
+    {
+        var extensions = TypeLocator.Instance
+            .FindImplementationsOf(typeof(Generic2Class))
+            .ToList();
+
+        int index = extensions.FindIndex(i => i.Type == typeof(Generic2Class));
+        Assert.That(index, Is.Not.EqualTo(-1));
+
+        Assert.Multiple(() => {
+            Assert.That(extensions[index].Name, Is.EqualTo(typeof(Generic2Class).FullName));
+            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(Generic2Class)));
+        });
+    }
+
+    [Test]
+    public void FindImplementationOfMultipleGenericInterfaces()
+    {
+        var extensions = TypeLocator.Instance
+            .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
+            .Where(i => i.Type == typeof(GenericMultipleClass))
+            .ToList();
+
+        Assert.That(extensions, Has.Count.EqualTo(2));
+
+        Assert.Multiple(() => {
+            Assert.That(extensions[0].Name, Is.EqualTo(typeof(GenericMultipleClass).FullName));
+            Assert.That(extensions[1].Name, Is.EqualTo(typeof(GenericMultipleClass).FullName));
+
+            Assert.That(extensions[0].GenericTypes, Has.Count.EqualTo(2));
+            Assert.That(extensions[1].GenericTypes, Has.Count.EqualTo(2));
+
+            int indexString2Int = extensions.FindIndex(
+                i => i.InterfaceImplemented == typeof(IGenericInterface<string, int>));
+            Assert.That(extensions[indexString2Int].GenericTypes[0], Is.EqualTo(typeof(string)));
+            Assert.That(extensions[indexString2Int].GenericTypes[1], Is.EqualTo(typeof(int)));
+            Assert.That(
+                extensions[indexString2Int].InterfaceImplemented,
+                Is.EqualTo(typeof(IGenericInterface<string, int>)));
+
+            int indexInt2String = indexString2Int == 0 ? 1 : 0;
+            Assert.That(extensions[indexInt2String].GenericTypes[0], Is.EqualTo(typeof(int)));
+            Assert.That(extensions[indexInt2String].GenericTypes[1], Is.EqualTo(typeof(string)));
+            Assert.That(
+                extensions[indexInt2String].InterfaceImplemented,
+                Is.EqualTo(typeof(IGenericInterface<int, string>)));
+        });
+    }
+
+    [Test]
+    public void FindImplementationOfGenericIgnoresInterfaces()
+    {
+        var results = TypeLocator.Instance
+            .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
+            .ToList();
+
+        Assert.That(results.Find(i => i.Type == typeof(ISecondGenericInterface)), Is.Null);
+    }
+
+    [Test]
+    public void FindImplementationOfGenericIgnoresAbstractClasses()
+    {
+        var results = TypeLocator.Instance
+            .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
+            .ToList();
+
+        Assert.That(results.Find(i => i.Type == typeof(AbstractGenericClass)), Is.Null);
     }
 }
