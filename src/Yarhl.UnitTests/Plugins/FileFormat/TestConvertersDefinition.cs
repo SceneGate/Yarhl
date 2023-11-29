@@ -5,36 +5,39 @@ using Yarhl.FileFormat;
 
 #pragma warning disable SA1649 // File name match type name
 
-public class PluginFormat : Yarhl.FileFormat.IFormat
+public class MySourceFormat : IFormat
 {
-    public static int Value => 0;
 }
 
-public class PluginConverter : Yarhl.FileFormat.IConverter<PluginFormat, int>
+public class MyDestFormat : IFormat
 {
-    public int Convert(PluginFormat source)
+}
+
+public class DerivedSourceFormat : MySourceFormat
+{
+}
+
+public class DerivedDestFormat : IFormat
+{
+}
+
+public class MyConverter : IConverter<MySourceFormat, MyDestFormat>
+{
+    public MyDestFormat Convert(MySourceFormat source)
     {
-        return PluginFormat.Value;
+        return new MyDestFormat();
     }
 }
 
-public class PluginConverterParametrized : Yarhl.FileFormat.IConverter<PluginFormat, int>
+public class MyConverterParametrized : IConverter<MySourceFormat, MyDestFormat>
 {
-    public PluginConverterParametrized(bool ignoreMe)
+    public MyConverterParametrized(bool ignoreMe)
     {
     }
 
-    public int Convert(PluginFormat source)
+    public MyDestFormat Convert(MySourceFormat source)
     {
-        return PluginFormat.Value;
-    }
-}
-
-public class BasicConverter : IConverter<string, byte>
-{
-    public byte Convert(string source)
-    {
-        return System.Convert.ToByte(source);
+        return new MyDestFormat();
     }
 }
 

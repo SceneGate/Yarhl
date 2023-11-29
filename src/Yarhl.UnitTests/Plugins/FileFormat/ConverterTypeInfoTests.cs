@@ -19,215 +19,145 @@
 // SOFTWARE.
 namespace Yarhl.UnitTests.Plugins.FileFormat;
 
-using System;
-using System.Diagnostics.CodeAnalysis;
 using NUnit.Framework;
+using Yarhl.FileFormat;
+using Yarhl.Plugins;
 using Yarhl.Plugins.FileFormat;
 
 [TestFixture]
 public class ConverterTypeInfoTests
 {
-    /*
+    private readonly ConverterTypeInfo converterInfo = new(
+        typeof(MyConverter).FullName!,
+        typeof(MyConverter),
+        typeof(IConverter<MySourceFormat, MyDestFormat>),
+        new[] { typeof(MySourceFormat), typeof(MyDestFormat) });
+
     [Test]
-    public void GetAndSetProperties()
+    public void SourceAndDestinationInfoFromGenericTypes()
     {
-        var metadata = new ConverterTypeInfo {
-            Name = "test",
-            Type = typeof(int),
-            InternalSources = typeof(string),
-            InternalDestinations = typeof(DateTime),
-        };
-        Assert.That(metadata.Name, Is.EqualTo("test"));
-        Assert.That(metadata.Type, Is.EqualTo(typeof(int)));
-        Assert.That(metadata.InternalSources, Is.EqualTo(typeof(string)));
-        Assert.That(metadata.InternalDestinations, Is.EqualTo(typeof(DateTime)));
+        Assert.That(converterInfo.SourceType, Is.EqualTo(typeof(MySourceFormat)));
+        Assert.That(converterInfo.DestinationType, Is.EqualTo(typeof(MyDestFormat)));
     }
 
     [Test]
-    public void GetSourcesReturnOneElementArrayForSingleSource()
+    public void CreateFromGenericInfo()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = typeof(int),
-        };
-        Type[] sources = metadata.GetSources();
-        Assert.That(sources.Length, Is.EqualTo(1));
-        Assert.That(sources[0], Is.EqualTo(typeof(int)));
+        var genericInfo = new GenericInterfaceImplementationInfo(
+            typeof(MyConverter).FullName!,
+            typeof(MyConverter),
+            typeof(IConverter<MySourceFormat, MyDestFormat>),
+            new[] { typeof(MySourceFormat), typeof(MyDestFormat) });
+
+        var info = new ConverterTypeInfo(genericInfo);
+        Assert.Multiple(() => {
+            Assert.That(info.Name, Is.EqualTo(genericInfo.Name));
+            Assert.That(info.Type, Is.EqualTo(genericInfo.Type));
+            Assert.That(info.InterfaceImplemented, Is.EqualTo(genericInfo.InterfaceImplemented));
+            Assert.That(info.GenericTypes, Is.EquivalentTo(genericInfo.GenericTypes));
+
+            Assert.That(info.SourceType, Is.EqualTo(typeof(MySourceFormat)));
+            Assert.That(info.DestinationType, Is.EqualTo(typeof(MyDestFormat)));
+        });
+
+        var copy = info with { };
+        Assert.That(copy, Is.EqualTo(info));
     }
 
     [Test]
-    public void GetSourcesReturnTwoElementsArrayForListOfSources()
+    public void CreateFromGenericInfoThrowsIfMoreThanTwoGenericTypes()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new Type[] { typeof(int), typeof(string) },
-        };
-        Type[] sources = metadata.GetSources();
-        Assert.That(sources.Length, Is.EqualTo(2));
-        Assert.That(sources[0], Is.EqualTo(typeof(int)));
-        Assert.That(sources[1], Is.EqualTo(typeof(string)));
-    }
+        var generic3Info = new GenericInterfaceImplementationInfo(
+            typeof(MyConverter).FullName!,
+            typeof(MyConverter),
+            typeof(IConverter<MySourceFormat, MyDestFormat>),
+            new[] { typeof(MySourceFormat), typeof(MyDestFormat), typeof(string) });
 
-    [Test]
-    public void GetSourcesReturnEmptyArrayForDefaultValue()
-    {
-        var metadata = new ConverterTypeInfo();
-        Assert.That(metadata.GetSources(), Is.Empty);
-    }
+        var generic1Info = new GenericInterfaceImplementationInfo(
+            typeof(MyConverter).FullName!,
+            typeof(MyConverter),
+            typeof(IConverter<MySourceFormat, MyDestFormat>),
+            new[] { typeof(MySourceFormat) });
 
-    [Test]
-    public void GetDestinationsReturnOneElementArrayForSingleSource()
-    {
-        var metadata = new ConverterTypeInfo {
-            InternalDestinations = typeof(int),
-        };
-        Type[] dests = metadata.GetDestinations();
-        Assert.That(dests.Length, Is.EqualTo(1));
-        Assert.That(dests[0], Is.EqualTo(typeof(int)));
-    }
-
-    [Test]
-    public void GetDestinationsReturnTwoElementsArrayForListOfSources()
-    {
-        var metadata = new ConverterTypeInfo {
-            InternalDestinations = new Type[] { typeof(int), typeof(string) },
-        };
-        Type[] dests = metadata.GetDestinations();
-        Assert.That(dests.Length, Is.EqualTo(2));
-        Assert.That(dests[0], Is.EqualTo(typeof(int)));
-        Assert.That(dests[1], Is.EqualTo(typeof(string)));
-    }
-
-    [Test]
-    public void GetDestinationsReturnEmptyArrayForDefaultValue()
-    {
-        var metadata = new ConverterTypeInfo();
-        Assert.That(metadata.GetDestinations(), Is.Empty);
+        Assert.That(() => new ConverterTypeInfo(generic3Info), Throws.ArgumentException);
+        Assert.That(() => new ConverterTypeInfo(generic1Info), Throws.ArgumentException);
     }
 
     [Test]
     public void CanConvertSourceThrowsExceptionIfNullArgument()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new Type[] { typeof(int), typeof(string) },
-        };
         Assert.That(
-            () => metadata.CanConvert(null),
+            () => converterInfo.CanConvert(null),
             Throws.ArgumentNullException);
     }
 
     [Test]
     public void CanConvertReturnsTrueForExactType()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = typeof(int),
-        };
-        Assert.That(metadata.CanConvert(typeof(int)), Is.True);
-    }
-
-    [Test]
-    public void CanConvertReturnsTrueForTypeInList()
-    {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new[] { typeof(string), typeof(int) },
-        };
-        Assert.That(metadata.CanConvert(typeof(int)), Is.True);
+        Assert.That(converterInfo.CanConvert(typeof(MySourceFormat)), Is.True);
     }
 
     [Test]
     public void CanConvertReturnsTrueForDerivedTypes()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = typeof(Base),
-        };
-        Assert.That(metadata.CanConvert(typeof(Derived)), Is.True);
+        Assert.That(converterInfo.CanConvert(typeof(DerivedSourceFormat)), Is.True);
+    }
+
+    [Test]
+    public void CanConvertReturnsFalseForBaseTypes()
+    {
+        Assert.That(converterInfo.CanConvert(typeof(IFormat)), Is.False);
     }
 
     [Test]
     public void CanConvertReturnsFalseForDifferentTypes()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new[] { typeof(string), typeof(int) },
-        };
-        Assert.That(metadata.CanConvert(typeof(DateTime)), Is.False);
+        Assert.That(converterInfo.CanConvert(typeof(MyDestFormat)), Is.False);
     }
 
     [Test]
     public void CanConvertReturnsForExactSourceAndDest()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = typeof(int),
-            InternalDestinations = typeof(string),
-        };
         Assert.That(
-            metadata.CanConvert(typeof(int), typeof(string)),
+            converterInfo.CanConvert(typeof(MySourceFormat), typeof(MyDestFormat)),
             Is.True);
         Assert.That(
-            metadata.CanConvert(typeof(string), typeof(string)),
-            Is.False);
-        Assert.That(
-            metadata.CanConvert(typeof(int), typeof(int)),
-            Is.False);
-    }
-
-    [Test]
-    public void CanConvertReturnsForSourceAndDestInSameOrderList()
-    {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new[] { typeof(int), typeof(DateTime) },
-            InternalDestinations = new[] { typeof(string), typeof(sbyte) },
-        };
-        Assert.That(
-            metadata.CanConvert(typeof(DateTime), typeof(sbyte)),
-            Is.True);
-        Assert.That(
-            metadata.CanConvert(typeof(DateTime), typeof(string)),
+            converterInfo.CanConvert(typeof(MyDestFormat), typeof(MySourceFormat)),
             Is.False);
     }
 
     [Test]
     public void CanConvertReturnsForSourceAndDestDerived()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new[] { typeof(Base) },
-            InternalDestinations = new[] { typeof(Derived) },
-        };
+        // Source is a derived format
         Assert.That(
-            metadata.CanConvert(typeof(Derived), typeof(Base)),
+            converterInfo.CanConvert(typeof(DerivedSourceFormat), typeof(MyDestFormat)),
             Is.True);
 
-        metadata = new ConverterTypeInfo {
-            InternalSources = new[] { typeof(Derived) },
-            InternalDestinations = new[] { typeof(Base) },
-        };
+        // Destination is a base type
         Assert.That(
-            metadata.CanConvert(typeof(Base), typeof(Base)),
+            converterInfo.CanConvert(typeof(MySourceFormat), typeof(IFormat)),
+            Is.True);
+
+        // Cannot convert base type
+        Assert.That(
+            converterInfo.CanConvert(typeof(IFormat), typeof(MyDestFormat)),
             Is.False);
+
+        // Cannot convert to derived type
         Assert.That(
-            metadata.CanConvert(typeof(Derived), typeof(Derived)),
+            converterInfo.CanConvert(typeof(MySourceFormat), typeof(DerivedDestFormat)),
             Is.False);
     }
 
     [Test]
     public void CanConvertSourceDestThrowsExceptionIfNullArgument()
     {
-        var metadata = new ConverterTypeInfo {
-            InternalSources = new Type[] { typeof(int), typeof(string) },
-            InternalDestinations = new Type[] { typeof(int), typeof(string) },
-        };
         Assert.That(
-            () => metadata.CanConvert(null, typeof(int)),
+            () => converterInfo.CanConvert(null, typeof(int)),
             Throws.ArgumentNullException);
         Assert.That(
-            () => metadata.CanConvert(typeof(int), null),
+            () => converterInfo.CanConvert(typeof(int), null),
             Throws.ArgumentNullException);
     }
-
-    class Base
-    {
-    }
-
-    [SuppressMessage("Build", "CA1812", Justification = "Indirect instances")]
-    class Derived : Base
-    {
-    }
-    */
 }
