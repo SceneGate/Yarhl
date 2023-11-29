@@ -36,21 +36,19 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void TestPreconditionYarhlMediaIsInPluginsFolder()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
-        string pluginDir = Path.Combine(programDir, "Plugins");
+        string pluginDir = GetPluginsDirectory();
         Assert.IsTrue(Directory.Exists(pluginDir));
 
         Assert.IsTrue(File.Exists(Path.Combine(pluginDir, "Yarhl.Media.Text.dll")));
         Assert.IsTrue(File.Exists(Path.Combine(pluginDir, "MyBadPlugin.dll")));
 
-        Assert.IsFalse(File.Exists(Path.Combine(programDir, "Yarhl.Media.Text.dll")));
+        Assert.IsFalse(File.Exists(Path.Combine(GetProgramDirectory(), "Yarhl.Media.Text.dll")));
     }
 
     [Test]
     public void LoadingYarhlMediaFromPath()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
-        string assemblyPath = Path.Combine(programDir, "Plugins", "Yarhl.Media.Text.dll");
+        string assemblyPath = Path.Combine(GetPluginsDirectory(), "Yarhl.Media.Text.dll");
         Assembly? loaded = TypeLocator.Instance.LoadContext.TryLoadFromAssemblyPath(assemblyPath);
 
         Assert.That(loaded, Is.Not.Null);
@@ -64,8 +62,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void LoadingInvalidAssemblyReturnsNull()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
-        string assemblyPath = Path.Combine(programDir, "Plugins", "MyBadPlugin.dll");
+        string assemblyPath = Path.Combine(GetPluginsDirectory(), "MyBadPlugin.dll");
         Assembly? loaded = TypeLocator.Instance.LoadContext.TryLoadFromAssemblyPath(assemblyPath);
 
         Assert.That(loaded, Is.Null);
@@ -95,8 +92,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void LoadingPluginsDirGetsYarhlMedia()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
-        string pluginDir = Path.Combine(programDir, "Plugins");
+        string pluginDir = GetPluginsDirectory();
         IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext
             .TryLoadFromDirectory(pluginDir, false);
 
@@ -110,7 +106,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void LoadingPluginsDirRecursiveGetsYarhlMedia()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
+        string programDir = GetProgramDirectory();
         IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext
             .TryLoadFromDirectory(programDir, true);
 
@@ -124,8 +120,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void FindFormatFromPluginsDir()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
-        string pluginDir = Path.Combine(programDir, "Plugins");
+        string pluginDir = GetPluginsDirectory();
         TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
         var formats = ConverterLocator.Instance.Formats;
@@ -138,8 +133,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void FindConverterFromPluginsDir()
     {
-        string programDir = Path.GetDirectoryName(Environment.ProcessPath)!;
-        string pluginDir = Path.Combine(programDir, "Plugins");
+        string pluginDir = GetPluginsDirectory();
         TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
         Type poType = ConverterLocator.Instance.Formats
@@ -153,4 +147,10 @@ public class AssemblyLoadContextExtensionsTests
             converters.Select(t => t.Name),
             Does.Contain("Yarhl.Media.Text.Po2Binary"));
     }
+
+    private static string GetProgramDirectory() =>
+        AppDomain.CurrentDomain.BaseDirectory;
+
+    private static string GetPluginsDirectory() =>
+        Path.Combine(GetProgramDirectory(), "Plugins");
 }
