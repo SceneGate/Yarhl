@@ -11,6 +11,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
     <ProjectReference Include="..\Yarhl.Media.Text\Yarhl.Media.Text.csproj" />
+    <ProjectReference Include="..\Yarhl.Plugins\Yarhl.Plugins.csproj" />
   </ItemGroup>
 
 </Project>
