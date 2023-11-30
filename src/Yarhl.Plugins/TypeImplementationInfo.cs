@@ -20,9 +20,8 @@
 namespace Yarhl.Plugins;
 
 /// <summary>
-/// Provides information about a type that implements an interface.
+/// Provides information about a type that implements a base type.
 /// </summary>
 /// <param name="Name">The name of the implementation type. Shortcut for Type.FullName.</param>
-/// <param name="Type">The type that implements the interface.</param>
-/// <param name="InterfaceImplemented">Interface implemented.</param>
-public record InterfaceImplementationInfo(string Name, Type Type, Type InterfaceImplemented);
+/// <param name="Type">The implementation type.</param>
+public record TypeImplementationInfo(string Name, Type Type);

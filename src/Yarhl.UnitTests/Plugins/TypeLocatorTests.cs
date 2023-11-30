@@ -68,7 +68,6 @@ public class TypeLocatorTests
 
         Assert.Multiple(() => {
             Assert.That(extensions[index].Name, Is.EqualTo(typeof(ExistsClass).FullName));
-            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IExistsInterface)));
         });
     }
 
@@ -84,7 +83,6 @@ public class TypeLocatorTests
 
         Assert.Multiple(() => {
             Assert.That(extensions[index].Name, Is.EqualTo(typeof(ExistsClass).FullName));
-            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IExistsInterface)));
         });
     }
 
@@ -99,7 +97,6 @@ public class TypeLocatorTests
         Assert.Multiple(() => {
             Assert.That(extensions[0].Name, Is.EqualTo(typeof(ExistsClass).FullName));
             Assert.That(extensions[0].Type, Is.EqualTo(typeof(ExistsClass)));
-            Assert.That(extensions[0].InterfaceImplemented, Is.EqualTo(typeof(ExistsClass)));
         });
     }
 
@@ -173,7 +170,6 @@ public class TypeLocatorTests
         Assert.Multiple(() => {
             Assert.That(results[0].Name, Is.EqualTo(typeof(ConstructorWithException).FullName));
             Assert.That(results[0].Type, Is.EqualTo(typeof(ConstructorWithException)));
-            Assert.That(results[0].InterfaceImplemented, Is.EqualTo(typeof(ConstructorWithException)));
         });
     }
 
@@ -189,13 +185,13 @@ public class TypeLocatorTests
 
         Assert.Multiple(() => {
             Assert.That(extensions[index].Name, Is.EqualTo(typeof(Generic1Class).FullName));
-            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IGenericInterface<int>)));
-            Assert.That(extensions[index].GenericTypes, Has.Count.EqualTo(1));
-            Assert.That(extensions[index].GenericTypes[0], Is.EqualTo(typeof(int)));
+            Assert.That(extensions[index].GenericBaseType, Is.EqualTo(typeof(IGenericInterface<int>)));
+            Assert.That(extensions[index].GenericTypeParameters, Has.Count.EqualTo(1));
+            Assert.That(extensions[index].GenericTypeParameters[0], Is.EqualTo(typeof(int)));
         });
 
         // For code coverage -.-
-        GenericInterfaceImplementationInfo copyInfo = extensions[index] with { };
+        GenericTypeImplementationInfo copyInfo = extensions[index] with { };
         Assert.That(copyInfo, Is.EqualTo(extensions[index]));
     }
 
@@ -211,10 +207,10 @@ public class TypeLocatorTests
 
         Assert.Multiple(() => {
             Assert.That(extensions[index].Name, Is.EqualTo(typeof(Generic2Class).FullName));
-            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(IGenericInterface<string, int>)));
-            Assert.That(extensions[index].GenericTypes, Has.Count.EqualTo(2));
-            Assert.That(extensions[index].GenericTypes[0], Is.EqualTo(typeof(string)));
-            Assert.That(extensions[index].GenericTypes[1], Is.EqualTo(typeof(int)));
+            Assert.That(extensions[index].GenericBaseType, Is.EqualTo(typeof(IGenericInterface<string, int>)));
+            Assert.That(extensions[index].GenericTypeParameters, Has.Count.EqualTo(2));
+            Assert.That(extensions[index].GenericTypeParameters[0], Is.EqualTo(typeof(string)));
+            Assert.That(extensions[index].GenericTypeParameters[1], Is.EqualTo(typeof(int)));
         });
     }
 
@@ -230,7 +226,6 @@ public class TypeLocatorTests
 
         Assert.Multiple(() => {
             Assert.That(extensions[index].Name, Is.EqualTo(typeof(Generic2Class).FullName));
-            Assert.That(extensions[index].InterfaceImplemented, Is.EqualTo(typeof(Generic2Class)));
         });
     }
 
@@ -248,22 +243,22 @@ public class TypeLocatorTests
             Assert.That(extensions[0].Name, Is.EqualTo(typeof(GenericMultipleClass).FullName));
             Assert.That(extensions[1].Name, Is.EqualTo(typeof(GenericMultipleClass).FullName));
 
-            Assert.That(extensions[0].GenericTypes, Has.Count.EqualTo(2));
-            Assert.That(extensions[1].GenericTypes, Has.Count.EqualTo(2));
+            Assert.That(extensions[0].GenericTypeParameters, Has.Count.EqualTo(2));
+            Assert.That(extensions[1].GenericTypeParameters, Has.Count.EqualTo(2));
 
             int indexString2Int = extensions.FindIndex(
-                i => i.InterfaceImplemented == typeof(IGenericInterface<string, int>));
-            Assert.That(extensions[indexString2Int].GenericTypes[0], Is.EqualTo(typeof(string)));
-            Assert.That(extensions[indexString2Int].GenericTypes[1], Is.EqualTo(typeof(int)));
+                i => i.GenericBaseType == typeof(IGenericInterface<string, int>));
+            Assert.That(extensions[indexString2Int].GenericTypeParameters[0], Is.EqualTo(typeof(string)));
+            Assert.That(extensions[indexString2Int].GenericTypeParameters[1], Is.EqualTo(typeof(int)));
             Assert.That(
-                extensions[indexString2Int].InterfaceImplemented,
+                extensions[indexString2Int].GenericBaseType,
                 Is.EqualTo(typeof(IGenericInterface<string, int>)));
 
             int indexInt2String = indexString2Int == 0 ? 1 : 0;
-            Assert.That(extensions[indexInt2String].GenericTypes[0], Is.EqualTo(typeof(int)));
-            Assert.That(extensions[indexInt2String].GenericTypes[1], Is.EqualTo(typeof(string)));
+            Assert.That(extensions[indexInt2String].GenericTypeParameters[0], Is.EqualTo(typeof(int)));
+            Assert.That(extensions[indexInt2String].GenericTypeParameters[1], Is.EqualTo(typeof(string)));
             Assert.That(
-                extensions[indexInt2String].InterfaceImplemented,
+                extensions[indexInt2String].GenericBaseType,
                 Is.EqualTo(typeof(IGenericInterface<int, string>)));
         });
     }

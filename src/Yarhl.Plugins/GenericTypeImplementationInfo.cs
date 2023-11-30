@@ -20,15 +20,17 @@
 namespace Yarhl.Plugins;
 
 /// <summary>
-/// Provides information about a type that implements a generic interface.
+/// Provides information about a type that implements a generic base type.
 /// </summary>
 /// <param name="Name">The name of the implementation type. Shortcut for Type.FullName.</param>
-/// <param name="Type">The type that implements the interface.</param>
-/// <param name="InterfaceImplemented">The actual generic interface with type arguments implemented.</param>
-/// <param name="GenericTypes">The list of types specified in the generic.</param>
-public record GenericInterfaceImplementationInfo(
+/// <param name="Type">The implementation type.</param>
+/// <param name="GenericBaseType">The actual generic base type with type parameters implemented.</param>
+/// <param name="GenericTypeParameters">
+/// The collection of the type parameters in the generic base type implemented.
+/// </param>
+public record GenericTypeImplementationInfo(
     string Name,
     Type Type,
-    Type InterfaceImplemented,
-    IReadOnlyList<Type> GenericTypes)
-    : InterfaceImplementationInfo(Name, Type, InterfaceImplemented);
+    Type GenericBaseType,
+    IReadOnlyList<Type> GenericTypeParameters)
+    : TypeImplementationInfo(Name, Type);

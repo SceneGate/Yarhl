@@ -43,7 +43,7 @@ public class ConverterTypeInfoTests
     [Test]
     public void CreateFromGenericInfo()
     {
-        var genericInfo = new GenericInterfaceImplementationInfo(
+        var genericInfo = new GenericTypeImplementationInfo(
             typeof(MyConverter).FullName!,
             typeof(MyConverter),
             typeof(IConverter<MySourceFormat, MyDestFormat>),
@@ -53,8 +53,8 @@ public class ConverterTypeInfoTests
         Assert.Multiple(() => {
             Assert.That(info.Name, Is.EqualTo(genericInfo.Name));
             Assert.That(info.Type, Is.EqualTo(genericInfo.Type));
-            Assert.That(info.InterfaceImplemented, Is.EqualTo(genericInfo.InterfaceImplemented));
-            Assert.That(info.GenericTypes, Is.EquivalentTo(genericInfo.GenericTypes));
+            Assert.That(info.GenericBaseType, Is.EqualTo(genericInfo.GenericBaseType));
+            Assert.That(info.GenericTypeParameters, Is.EquivalentTo(genericInfo.GenericTypeParameters));
 
             Assert.That(info.SourceType, Is.EqualTo(typeof(MySourceFormat)));
             Assert.That(info.DestinationType, Is.EqualTo(typeof(MyDestFormat)));
@@ -67,13 +67,13 @@ public class ConverterTypeInfoTests
     [Test]
     public void CreateFromGenericInfoThrowsIfMoreThanTwoGenericTypes()
     {
-        var generic3Info = new GenericInterfaceImplementationInfo(
+        var generic3Info = new GenericTypeImplementationInfo(
             typeof(MyConverter).FullName!,
             typeof(MyConverter),
             typeof(IConverter<MySourceFormat, MyDestFormat>),
             new[] { typeof(MySourceFormat), typeof(MyDestFormat), typeof(string) });
 
-        var generic1Info = new GenericInterfaceImplementationInfo(
+        var generic1Info = new GenericTypeImplementationInfo(
             typeof(MyConverter).FullName!,
             typeof(MyConverter),
             typeof(IConverter<MySourceFormat, MyDestFormat>),

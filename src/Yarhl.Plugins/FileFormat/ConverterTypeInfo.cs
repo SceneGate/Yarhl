@@ -29,16 +29,16 @@ public record ConverterTypeInfo(
     Type Type,
     Type InterfaceImplemented,
     IReadOnlyList<Type> GenericTypes)
-    : GenericInterfaceImplementationInfo(Name, Type, InterfaceImplemented, GenericTypes)
+    : GenericTypeImplementationInfo(Name, Type, InterfaceImplemented, GenericTypes)
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="ConverterTypeInfo"/> class.
     /// </summary>
     /// <param name="info">The generic implementor information.</param>
-    public ConverterTypeInfo(GenericInterfaceImplementationInfo info)
-        : this(info.Name, info.Type, info.InterfaceImplemented, info.GenericTypes)
+    public ConverterTypeInfo(GenericTypeImplementationInfo info)
+        : this(info.Name, info.Type, info.GenericBaseType, info.GenericTypeParameters)
     {
-        if (info.GenericTypes.Count != 2) {
+        if (info.GenericTypeParameters.Count != 2) {
             throw new ArgumentException("Invalid number of generics. Expected 2.");
         }
     }

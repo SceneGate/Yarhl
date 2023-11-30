@@ -82,7 +82,7 @@ public sealed class TypeLocator
     /// </summary>
     /// <param name="baseType">The base type to find implementors.</param>
     /// <returns>A collection of types implementing the base type.</returns>
-    public IEnumerable<InterfaceImplementationInfo> FindImplementationsOf(Type baseType)
+    public IEnumerable<TypeImplementationInfo> FindImplementationsOf(Type baseType)
     {
         ArgumentNullException.ThrowIfNull(baseType);
 
@@ -98,7 +98,7 @@ public sealed class TypeLocator
     /// <param name="baseType">The base type to find implementors.</param>
     /// <param name="assembly">The assembly to scan.</param>
     /// <returns>A collection of types implementing the base type.</returns>
-    public IEnumerable<InterfaceImplementationInfo> FindImplementationsOf(Type baseType, Assembly assembly)
+    public IEnumerable<TypeImplementationInfo> FindImplementationsOf(Type baseType, Assembly assembly)
     {
         ArgumentNullException.ThrowIfNull(baseType);
         ArgumentNullException.ThrowIfNull(assembly);
@@ -113,7 +113,7 @@ public sealed class TypeLocator
         return assembly.ExportedTypes
             .Where(baseType.IsAssignableFrom)
             .Where(t => t.IsClass && !t.IsAbstract)
-            .Select(type => new InterfaceImplementationInfo(type.FullName!, type, baseType));
+            .Select(type => new TypeImplementationInfo(type.FullName!, type));
     }
 
     /// <summary>
@@ -126,7 +126,7 @@ public sealed class TypeLocator
     /// The list may contain several times the same if it implements the same interface
     /// multiple types with different generic types.
     /// </remarks>
-    public IEnumerable<GenericInterfaceImplementationInfo> FindImplementationsOfGeneric(Type baseType)
+    public IEnumerable<GenericTypeImplementationInfo> FindImplementationsOfGeneric(Type baseType)
     {
         ArgumentNullException.ThrowIfNull(baseType);
 
@@ -146,7 +146,7 @@ public sealed class TypeLocator
     /// The list may contain several entries for the same implementation type
     /// if it implements several type the generic with different parameters.
     /// </remarks>
-    public IEnumerable<GenericInterfaceImplementationInfo> FindImplementationsOfGeneric(
+    public IEnumerable<GenericTypeImplementationInfo> FindImplementationsOfGeneric(
         Type baseType,
         Assembly assembly)
     {
@@ -163,7 +163,7 @@ public sealed class TypeLocator
             .SelectMany(type => type.GetInterfaces() // A class may implement a generic interface multiple times
                 .Where(ValidImplementationInterface)
                 .Select(implementedInterface =>
-                    new GenericInterfaceImplementationInfo(
+                    new GenericTypeImplementationInfo(
                         type.FullName!,
                         type,
                         implementedInterface,

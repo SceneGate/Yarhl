@@ -73,18 +73,17 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateFormatsWithTypeInfo()
     {
-        InterfaceImplementationInfo myFormat = ConverterLocator.Default.Formats
+        TypeImplementationInfo myFormat = ConverterLocator.Default.Formats
             .FirstOrDefault(i => i.Type == typeof(DerivedSourceFormat));
 
         Assert.That(myFormat, Is.Not.Null);
-        Assert.That(myFormat.InterfaceImplemented, Is.EqualTo(typeof(IFormat)));
         Assert.That(myFormat.Name, Is.EqualTo(typeof(DerivedSourceFormat).FullName));
     }
 
     [Test]
     public void FormatsAreNotDuplicated()
     {
-        InterfaceImplementationInfo[] formats = ConverterLocator.Default.Formats
+        TypeImplementationInfo[] formats = ConverterLocator.Default.Formats
             .Where(f => f.Type == typeof(MySourceFormat))
             .ToArray();
 
@@ -110,7 +109,7 @@ public class ConvertersLocatorTests
             .FirstOrDefault(i => i.Type == typeof(MyConverter));
 
         Assert.That(result, Is.Not.Null);
-        Assert.That(result.InterfaceImplemented, Is.EqualTo(typeof(IConverter<MySourceFormat, MyDestFormat>)));
+        Assert.That(result.GenericBaseType, Is.EqualTo(typeof(IConverter<MySourceFormat, MyDestFormat>)));
         Assert.That(result.Name, Is.EqualTo(typeof(MyConverter).FullName));
         Assert.That(result.SourceType, Is.EqualTo(typeof(MySourceFormat)));
         Assert.That(result.DestinationType, Is.EqualTo(typeof(MyDestFormat)));

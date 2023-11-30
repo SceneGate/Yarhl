@@ -31,7 +31,7 @@ public sealed class ConverterLocator
     private static ConverterLocator? singleInstance;
 
     private readonly TypeLocator locator;
-    private readonly List<InterfaceImplementationInfo> formatsMetadata;
+    private readonly List<TypeImplementationInfo> formatsMetadata;
     private readonly List<ConverterTypeInfo> convertersMetadata;
 
     /// <summary>
@@ -42,7 +42,7 @@ public sealed class ConverterLocator
     {
         this.locator = locator;
 
-        formatsMetadata = new List<InterfaceImplementationInfo>();
+        formatsMetadata = new List<TypeImplementationInfo>();
         Formats = formatsMetadata;
 
         convertersMetadata = new List<ConverterTypeInfo>();
@@ -78,7 +78,7 @@ public sealed class ConverterLocator
     /// <summary>
     /// Gets the list of Yarhl formats information from loaded assemblies.
     /// </summary>
-    public IReadOnlyList<InterfaceImplementationInfo> Formats { get; }
+    public IReadOnlyList<TypeImplementationInfo> Formats { get; }
 
     /// <summary>
     /// Gets the list of Yarhl converters information from loaded assemblies.
