@@ -49,5 +49,5 @@
   href: ../plugins/overview.md
 - name: Loading assemblies
   href: ../plugins/load-assembly.md
-- name: Locating converter types
+- name: Find converters
   href: ../plugins/locate-types.md

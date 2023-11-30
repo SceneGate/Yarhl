@@ -13,17 +13,14 @@ The _plugins_ are regular .NET libraries or executable that contains
 implementations of _converters_ and _formats_. They don't need to implement any
 additional interface or fullfil other requirements.
 
-> [!WARNING]  
-> Loading a .NET assembly will load also its dependencies. You may run into
-> dependency issues if they use different versions of a base library such as
-> Yarhl or Newtonsoft.Json.
-
 The main APIs are:
 
-- `AssemblyLoadContextExtensions`: extension methods for `AssemblyLoadContext`
-  to load .NET assemblies from disk.
-- `TypeLocator`: find types that implement a specific interface.
-- `ConverterLocator`: find _converter_ and _format_ types.
+- [`AssemblyLoadContextExtensions`](./load-assembly.md): extension methods for
+  `AssemblyLoadContext` to load .NET assemblies from disk.
+- [`TypeLocator`](./locate-types.md#typelocator): find types that implement a
+  specific interface.
+- [`ConverterLocator`](./locate-types.md#converterlocator): find _converter_ and
+  _format_ types.
 
 ```mermaid
 flowchart TB
