@@ -10,8 +10,8 @@
     <ProjectReference Include="..\Yarhl.Plugins\Yarhl.Plugins.csproj" />
     <ProjectReference Include="..\Yarhl\Yarhl.csproj" />
     <ProjectReference Include="..\Yarhl.Media.Text\Yarhl.Media.Text.csproj" />
-    <PackageReference Include="FluentAssertions" />
 
+    <PackageReference Include="FluentAssertions" />
     <PackageReference Include="NUnit" />
     <PackageReference Include="NUnit3TestAdapter" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />

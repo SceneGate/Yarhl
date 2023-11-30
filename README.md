@@ -43,6 +43,7 @@ featured binary IO and plugin support to support common formats. It's built in
   - Table text replacements
   - **Common encodings**: euc-jp, token-escaped encoding
   - **API for simple encoding implementations**
+- 🔌**Plugin** API to load and find types in .NET assemblies.
 
 ## Get started
 

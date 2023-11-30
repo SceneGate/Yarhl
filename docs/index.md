@@ -11,6 +11,7 @@ formats** It empowers you with...
   serialization.
 - 📃 ... **standard formats** implementation like **PO** for translations.
 - 📂 ... virtual **file system** to unpack and pack containers efficiently.
+- 🔌... **plugin** API to find formats and converters in .NET assemblies.
 
 ## Usage
 
@@ -25,7 +26,9 @@ libraries only support .NET LTS versions: **.NET 6.0** and **.NET 8.0**.
   - `Yarhl.Media.Text`: translation formats and converters (Po), table replacer.
   - `Yarhl.Media.Text.Encoding`: _euc-jp_ and token-escaped encodings.
 - [![Yarhl.Plugins](https://img.shields.io/nuget/v/Yarhl.Plugins?label=Yarhl.Plugins&logo=nuget)](https://www.nuget.org/packages/Yarhl.Plugins)
-  - `Yarhl.Plugins`: discover formats and converters from .NET assemblies.
+  - `Yarhl.Plugins`: load nearby .NET assemblies and find type implementations.
+  - `Yarhl.Plugins.FileFormat`: find formats and converters from loaded
+    assemblies.
 
 > [!NOTE]  
 > _Are you planning to try a preview version?_  

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2019 SceneGate
+﻿// Copyright (c) 2023 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -17,36 +17,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
-namespace Yarhl.Plugins.FileFormat
-{
-    using System;
+namespace Yarhl.Plugins;
 
-    /// <summary>
-    /// Metadata associated to a Format class.
-    /// </summary>
-    public class FormatMetadata : IExportMetadata
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FormatMetadata" /> class.
-        /// </summary>
-        public FormatMetadata()
-        {
-            // MEF should always set these properties, so they won't be null.
-            // We set some initial values to ensure later they are not set to null.
-            Name = "<invalid>";
-            Type = typeof(FormatMetadata);
-        }
-
-        /// <summary>
-        /// Gets or sets the type full name. Shortcut of Type.FullName.
-        /// </summary>
-        /// <value>The full name of the type.</value>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of the format.
-        /// </summary>
-        /// <value>The type of the format.</value>
-        public Type Type { get; set; }
-    }
-}
+/// <summary>
+/// Provides information about a type that implements a generic base type.
+/// </summary>
+/// <param name="Name">The name of the implementation type. Shortcut for Type.FullName.</param>
+/// <param name="Type">The implementation type.</param>
+/// <param name="GenericBaseType">The actual generic base type with type parameters implemented.</param>
+/// <param name="GenericTypeParameters">
+/// The collection of the type parameters in the generic base type implemented.
+/// </param>
+public record GenericTypeImplementationInfo(
+    string Name,
+    Type Type,
+    Type GenericBaseType,
+    IReadOnlyList<Type> GenericTypeParameters)
+    : TypeImplementationInfo(Name, Type);

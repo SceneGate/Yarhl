@@ -7,6 +7,12 @@ method [`TDst Convert(TSrc)`](<xref:Yarhl.FileFormat.IConverter`2.Convert(`0)>).
 This method creates a new object in the target type _converting_ the data from
 the input.
 
+```mermaid
+flowchart LR
+  po(Po) --> converter["Binary2Po.Convert()\nIConverter#60;Po, BinaryFormat#62;"]
+  converter --> binary(Binary)
+```
+
 For instance the converter [`Po2Binary`](xref:Yarhl.Media.Text.Po2Binary)
 implements `IConverter<Po, BinaryFormat>`. It allows to convert a
 [`Po`](xref:Yarhl.Media.Text.Po) model format into a

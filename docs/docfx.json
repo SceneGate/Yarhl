@@ -5,7 +5,8 @@
         {
           "files": [
             "Yarhl/*.csproj",
-            "Yarhl.Media.Text/*.csproj"
+            "Yarhl.Media.Text/*.csproj",
+            "Yarhl.Plugins/*.csproj",
           ],
           "src": "../src"
         }
