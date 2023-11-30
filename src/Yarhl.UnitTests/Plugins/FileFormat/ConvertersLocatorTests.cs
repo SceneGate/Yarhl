@@ -21,6 +21,7 @@ namespace Yarhl.UnitTests.Plugins.FileFormat;
 
 using System;
 using System.Linq;
+using System.Runtime.Loader;
 using NUnit.Framework;
 using Yarhl.FileFormat;
 using Yarhl.FileSystem;
@@ -34,8 +35,8 @@ public class ConvertersLocatorTests
     [Test]
     public void InstanceIsSingleton()
     {
-        ConverterLocator instance1 = ConverterLocator.Instance;
-        ConverterLocator instance2 = ConverterLocator.Instance;
+        ConverterLocator instance1 = ConverterLocator.Default;
+        ConverterLocator instance2 = ConverterLocator.Default;
 
         Assert.That(instance1, Is.SameAs(instance2));
     }
@@ -43,16 +44,36 @@ public class ConvertersLocatorTests
     [Test]
     public void InstanceIsInitialized()
     {
-        ConverterLocator instance = ConverterLocator.Instance;
+        ConverterLocator instance = ConverterLocator.Default;
 
         Assert.That(instance.Formats, Is.Not.Null);
         Assert.That(instance.Converters, Is.Not.Null);
     }
 
     [Test]
+    public void InstancePerformsAssemblyScanningOnInitialization()
+    {
+        // At least the formats defined in this assembly for testing should be there.
+        Assert.That(ConverterLocator.Default.Formats, Is.Not.Empty);
+
+        Assert.That(new ConverterLocator(TypeLocator.Default).Formats, Is.Not.Null);
+    }
+
+    [Test]
+    public void InitializeWithCustomLoadContextProvidesIsolation()
+    {
+        var loadContext = new AssemblyLoadContext(nameof(InitializeWithCustomLoadContextProvidesIsolation));
+        TypeLocator isolatedLocator = new TypeLocator(loadContext);
+        ConverterLocator converterLocator = new ConverterLocator(isolatedLocator);
+
+        Assert.That(converterLocator.Formats, Is.Empty);
+        Assert.That(converterLocator.Converters, Is.Empty);
+    }
+
+    [Test]
     public void LocateFormatsWithTypeInfo()
     {
-        InterfaceImplementationInfo myFormat = ConverterLocator.Instance.Formats
+        InterfaceImplementationInfo myFormat = ConverterLocator.Default.Formats
             .FirstOrDefault(i => i.Type == typeof(DerivedSourceFormat));
 
         Assert.That(myFormat, Is.Not.Null);
@@ -63,7 +84,7 @@ public class ConvertersLocatorTests
     [Test]
     public void FormatsAreNotDuplicated()
     {
-        InterfaceImplementationInfo[] formats = ConverterLocator.Instance.Formats
+        InterfaceImplementationInfo[] formats = ConverterLocator.Default.Formats
             .Where(f => f.Type == typeof(MySourceFormat))
             .ToArray();
 
@@ -74,18 +95,18 @@ public class ConvertersLocatorTests
     public void LocateFormatsFindYarhlBaseFormats()
     {
         Assert.That(
-            ConverterLocator.Instance.Formats.Select(f => f.Type),
+            ConverterLocator.Default.Formats.Select(f => f.Type),
             Does.Contain(typeof(BinaryFormat)));
 
         Assert.That(
-            ConverterLocator.Instance.Formats.Select(f => f.Type),
+            ConverterLocator.Default.Formats.Select(f => f.Type),
             Does.Contain(typeof(NodeContainerFormat)));
     }
 
     [Test]
     public void LocateConvertersWithTypeInfo()
     {
-        ConverterTypeInfo result = ConverterLocator.Instance.Converters
+        ConverterTypeInfo result = ConverterLocator.Default.Converters
             .FirstOrDefault(i => i.Type == typeof(MyConverter));
 
         Assert.That(result, Is.Not.Null);
@@ -98,7 +119,7 @@ public class ConvertersLocatorTests
     [Test]
     public void ConvertersAreNotDuplicated()
     {
-        ConverterTypeInfo[] results = ConverterLocator.Instance.Converters
+        ConverterTypeInfo[] results = ConverterLocator.Default.Converters
             .Where(f => f.Type == typeof(MyConverter))
             .ToArray();
 
@@ -108,7 +129,7 @@ public class ConvertersLocatorTests
     [Test]
     public void ScanAssembliesDoesNotDuplicateFindings()
     {
-        ConverterLocator.Instance.ScanAssemblies();
+        ConverterLocator.Default.ScanAssemblies();
 
         FormatsAreNotDuplicated();
         ConvertersAreNotDuplicated();
@@ -117,7 +138,7 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateConverterWithParameters()
     {
-        ConverterTypeInfo[] results = ConverterLocator.Instance.Converters
+        ConverterTypeInfo[] results = ConverterLocator.Default.Converters
             .Where(f => f.Type == typeof(MyConverterParametrized))
             .ToArray();
 
@@ -127,7 +148,7 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateSingleInnerConverter()
     {
-        ConverterTypeInfo converter = ConverterLocator.Instance.Converters
+        ConverterTypeInfo converter = ConverterLocator.Default.Converters
                 .FirstOrDefault(c => c.Type == typeof(SingleOuterConverter.SingleInnerConverter));
 
         Assert.That(converter, Is.Not.Null);
@@ -136,7 +157,7 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateSingleOuterConverter()
     {
-        ConverterTypeInfo converter = ConverterLocator.Instance.Converters
+        ConverterTypeInfo converter = ConverterLocator.Default.Converters
                 .FirstOrDefault(c => c.Type == typeof(SingleOuterConverter));
 
         Assert.That(converter, Is.Not.Null);
@@ -145,7 +166,7 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateTwoConvertersInSameClass()
     {
-        ConverterTypeInfo[] converters = ConverterLocator.Instance.Converters
+        ConverterTypeInfo[] converters = ConverterLocator.Default.Converters
             .Where(c => c.Type == typeof(TwoConverters))
             .ToArray();
 
@@ -176,7 +197,7 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateDerivedConverter()
     {
-        ConverterTypeInfo[] converters = ConverterLocator.Instance.Converters
+        ConverterTypeInfo[] converters = ConverterLocator.Default.Converters
             .Where(c => c.Type == typeof(DerivedConverter))
             .ToArray();
 
@@ -186,7 +207,7 @@ public class ConvertersLocatorTests
     [Test]
     public void LocateConvertsWithOtherInterfaces()
     {
-        ConverterTypeInfo[] converters = ConverterLocator.Instance.Converters
+        ConverterTypeInfo[] converters = ConverterLocator.Default.Converters
             .Where(c => c.Type == typeof(ConverterAndOtherInterface))
             .ToArray();
 

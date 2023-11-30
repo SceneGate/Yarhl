@@ -32,7 +32,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatIsFoundAndIsUnique()
         {
-            var formats = ConverterLocator.Instance.Formats
+            var formats = ConverterLocator.Default.Formats
                 .Select(f => f.Type);
             Assert.That(formats, Does.Contain(typeof(T)));
             Assert.That(formats, Is.Unique);
@@ -41,7 +41,7 @@ namespace Yarhl.UnitTests.FileFormat
         [Test]
         public void FormatNameMatchAndIsUnique()
         {
-            var names = ConverterLocator.Instance.Formats
+            var names = ConverterLocator.Default.Formats
                 .Select(f => f.Name);
             Assert.That(names, Does.Contain(Name));
             Assert.That(names, Is.Unique);

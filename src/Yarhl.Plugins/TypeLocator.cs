@@ -36,18 +36,27 @@ public sealed class TypeLocator
     /// <summary>
     /// Initializes a new instance of the <see cref="TypeLocator"/> class.
     /// </summary>
+    /// <param name="loadContext">The load context to search assemblies.</param>
+    public TypeLocator(AssemblyLoadContext loadContext)
+    {
+        LoadContext = loadContext;
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TypeLocator"/> class.
+    /// </summary>
     private TypeLocator()
     {
         LoadContext = AssemblyLoadContext.Default;
     }
 
     /// <summary>
-    /// Gets the singleton instance.
+    /// Gets a singleton instance that use the default AssemblyLoadContext.
     /// </summary>
     /// <remarks>
     /// <para>It initializes the type if needed on the first call.</para>
     /// </remarks>
-    public static TypeLocator Instance {
+    public static TypeLocator Default {
         get {
             if (singleInstance == null) {
                 lock (LockObj) {

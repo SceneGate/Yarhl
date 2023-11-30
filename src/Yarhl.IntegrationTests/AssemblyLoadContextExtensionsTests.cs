@@ -49,13 +49,13 @@ public class AssemblyLoadContextExtensionsTests
     public void LoadingYarhlMediaFromPath()
     {
         string assemblyPath = Path.Combine(GetPluginsDirectory(), "Yarhl.Media.Text.dll");
-        Assembly? loaded = TypeLocator.Instance.LoadContext.TryLoadFromAssemblyPath(assemblyPath);
+        Assembly? loaded = TypeLocator.Default.LoadContext.TryLoadFromAssemblyPath(assemblyPath);
 
         Assert.That(loaded, Is.Not.Null);
         Assert.That(loaded!.GetName().Name, Is.EqualTo("Yarhl.Media.Text"));
 
         Assert.That(
-            TypeLocator.Instance.LoadContext.Assemblies.Select(a => a.GetName().Name),
+            TypeLocator.Default.LoadContext.Assemblies.Select(a => a.GetName().Name),
             Does.Contain("Yarhl.Media.Text"));
     }
 
@@ -63,7 +63,7 @@ public class AssemblyLoadContextExtensionsTests
     public void LoadingInvalidAssemblyReturnsNull()
     {
         string assemblyPath = Path.Combine(GetPluginsDirectory(), "MyBadPlugin.dll");
-        Assembly? loaded = TypeLocator.Instance.LoadContext.TryLoadFromAssemblyPath(assemblyPath);
+        Assembly? loaded = TypeLocator.Default.LoadContext.TryLoadFromAssemblyPath(assemblyPath);
 
         Assert.That(loaded, Is.Null);
     }
@@ -71,7 +71,7 @@ public class AssemblyLoadContextExtensionsTests
     [Test]
     public void LoadingIgnoreSystemLibraries()
     {
-        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext.TryLoadFromBaseLoadDirectory();
+        IEnumerable<Assembly> loaded = TypeLocator.Default.LoadContext.TryLoadFromBaseLoadDirectory();
 
         Assert.That(loaded.Select(a => a.GetName().Name), Does.Not.Contain("testhost"));
     }
@@ -80,12 +80,12 @@ public class AssemblyLoadContextExtensionsTests
     public void LoadingExecutingDirGetsYarhl()
     {
         // We cannot use ConverterLocator as it will load Yarhl as it uses some of its types.
-        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext.TryLoadFromBaseLoadDirectory();
+        IEnumerable<Assembly> loaded = TypeLocator.Default.LoadContext.TryLoadFromBaseLoadDirectory();
 
         Assert.That(loaded.Select(a => a.GetName().Name), Does.Contain("Yarhl"));
 
         Assert.That(
-            TypeLocator.Instance.LoadContext.Assemblies.Select(a => a.GetName().Name),
+            TypeLocator.Default.LoadContext.Assemblies.Select(a => a.GetName().Name),
             Does.Contain("Yarhl"));
     }
 
@@ -93,13 +93,13 @@ public class AssemblyLoadContextExtensionsTests
     public void LoadingPluginsDirGetsYarhlMedia()
     {
         string pluginDir = GetPluginsDirectory();
-        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext
+        IEnumerable<Assembly> loaded = TypeLocator.Default.LoadContext
             .TryLoadFromDirectory(pluginDir, false);
 
         Assert.That(loaded.Select(a => a.GetName().Name), Does.Contain("Yarhl.Media.Text"));
 
         Assert.That(
-            TypeLocator.Instance.LoadContext.Assemblies.Select(a => a.GetName().Name),
+            TypeLocator.Default.LoadContext.Assemblies.Select(a => a.GetName().Name),
             Does.Contain("Yarhl.Media.Text"));
     }
 
@@ -107,13 +107,13 @@ public class AssemblyLoadContextExtensionsTests
     public void LoadingPluginsDirRecursiveGetsYarhlMedia()
     {
         string programDir = GetProgramDirectory();
-        IEnumerable<Assembly> loaded = TypeLocator.Instance.LoadContext
+        IEnumerable<Assembly> loaded = TypeLocator.Default.LoadContext
             .TryLoadFromDirectory(programDir, true);
 
         Assert.That(loaded.Select(a => a.GetName().Name), Does.Contain("Yarhl.Media.Text"));
 
         Assert.That(
-            TypeLocator.Instance.LoadContext.Assemblies.Select(a => a.GetName().Name),
+            TypeLocator.Default.LoadContext.Assemblies.Select(a => a.GetName().Name),
             Does.Contain("Yarhl.Media.Text"));
     }
 
@@ -121,9 +121,9 @@ public class AssemblyLoadContextExtensionsTests
     public void FindFormatFromPluginsDir()
     {
         string pluginDir = GetPluginsDirectory();
-        TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
+        TypeLocator.Default.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
-        var formats = ConverterLocator.Instance.Formats;
+        var formats = ConverterLocator.Default.Formats;
         Assert.That(formats, Is.Not.Empty);
         Assert.That(
             formats.Select(t => t.Name),
@@ -134,13 +134,13 @@ public class AssemblyLoadContextExtensionsTests
     public void FindConverterFromPluginsDir()
     {
         string pluginDir = GetPluginsDirectory();
-        TypeLocator.Instance.LoadContext.TryLoadFromDirectory(pluginDir, false);
+        TypeLocator.Default.LoadContext.TryLoadFromDirectory(pluginDir, false);
 
-        Type poType = ConverterLocator.Instance.Formats
+        Type poType = ConverterLocator.Default.Formats
             .Single(f => f.Name == "Yarhl.Media.Text.Po")
             .Type;
 
-        var converters = ConverterLocator.Instance.Converters
+        var converters = ConverterLocator.Default.Converters
             .Where(f => f.CanConvert(poType));
         Assert.That(converters, Is.Not.Empty);
         Assert.That(

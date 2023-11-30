@@ -30,14 +30,18 @@ public sealed class ConverterLocator
     private static readonly object LockObj = new();
     private static ConverterLocator? singleInstance;
 
+    private readonly TypeLocator locator;
     private readonly List<InterfaceImplementationInfo> formatsMetadata;
     private readonly List<ConverterTypeInfo> convertersMetadata;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="ConverterLocator"/> class.
     /// </summary>
-    private ConverterLocator()
+    /// <param name="locator">The type locator to use internally.</param>
+    public ConverterLocator(TypeLocator locator)
     {
+        this.locator = locator;
+
         formatsMetadata = new List<InterfaceImplementationInfo>();
         Formats = formatsMetadata;
 
@@ -48,10 +52,18 @@ public sealed class ConverterLocator
     }
 
     /// <summary>
-    /// Gets the plugin manager instance.
+    /// Initializes a new instance of the <see cref="ConverterLocator"/> class.
+    /// </summary>
+    private ConverterLocator()
+        : this(TypeLocator.Default)
+    {
+    }
+
+    /// <summary>
+    /// Gets the singleton instance using the default TypeLocator.
     /// </summary>
     /// <remarks><para>It initializes the manager if needed.</para></remarks>
-    public static ConverterLocator Instance {
+    public static ConverterLocator Default {
         get {
             if (singleInstance == null) {
                 lock (LockObj) {
@@ -83,13 +95,13 @@ public sealed class ConverterLocator
     public void ScanAssemblies()
     {
         formatsMetadata.Clear();
-        formatsMetadata.AddRange(
-            TypeLocator.Instance.FindImplementationsOf(typeof(IFormat)));
-
         convertersMetadata.Clear();
+
+        formatsMetadata.AddRange(
+            locator.FindImplementationsOf(typeof(IFormat)));
+
         convertersMetadata.AddRange(
-            TypeLocator.Instance
-                .FindImplementationsOfGeneric(typeof(IConverter<,>))
+            locator.FindImplementationsOfGeneric(typeof(IConverter<,>))
                 .Select(x => new ConverterTypeInfo(x)));
     }
 }

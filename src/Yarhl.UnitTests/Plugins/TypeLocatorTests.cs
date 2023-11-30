@@ -20,7 +20,9 @@
 namespace Yarhl.UnitTests.Plugins;
 
 using System.Linq;
+using System.Runtime.Loader;
 using NUnit.Framework;
+using Yarhl.FileFormat;
 using Yarhl.IO;
 using Yarhl.Plugins;
 
@@ -30,7 +32,7 @@ public class TypeLocatorTests
     [Test]
     public void InstanceInitializePluginManager()
     {
-        TypeLocator instance = TypeLocator.Instance;
+        TypeLocator instance = TypeLocator.Default;
         Assert.That(instance, Is.Not.Null);
         Assert.That(instance.LoadContext, Is.Not.Null);
     }
@@ -38,15 +40,26 @@ public class TypeLocatorTests
     [Test]
     public void InstanceIsCreatedOnce()
     {
-        TypeLocator instance1 = TypeLocator.Instance;
-        TypeLocator instance2 = TypeLocator.Instance;
+        TypeLocator instance1 = TypeLocator.Default;
+        TypeLocator instance2 = TypeLocator.Default;
         Assert.That(instance1, Is.SameAs(instance2));
+    }
+
+    [Test]
+    public void InitializeWithCustomLoadContextProvidesIsolation()
+    {
+        var loadContext = new AssemblyLoadContext(nameof(InitializeWithCustomLoadContextProvidesIsolation));
+        TypeLocator isolatedLocator = new TypeLocator(loadContext);
+
+        Assert.That(
+            isolatedLocator.FindImplementationsOf(typeof(IFormat)).ToArray(),
+            Is.Empty);
     }
 
     [Test]
     public void FindImplementationOfInterface()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOf(typeof(IExistsInterface))
             .ToList();
 
@@ -62,7 +75,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfInterfaceWithAssembly()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOf(typeof(IExistsInterface), typeof(IExistsInterface).Assembly)
             .ToList();
 
@@ -78,7 +91,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfClass()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOf(typeof(ExistsClass))
             .ToList();
 
@@ -93,7 +106,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfInterfaceDifferentAssemblyReturnsEmpty()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOf(typeof(IExistsInterface), typeof(IBinary).Assembly)
             .ToList();
 
@@ -104,13 +117,13 @@ public class TypeLocatorTests
     public void FindImplementationWithNullTypeThrowsException()
     {
         Assert.That(
-            () => TypeLocator.Instance.FindImplementationsOf(null),
+            () => TypeLocator.Default.FindImplementationsOf(null),
             Throws.ArgumentNullException);
         Assert.That(
-            () => TypeLocator.Instance.FindImplementationsOf(null, typeof(IExistsInterface).Assembly),
+            () => TypeLocator.Default.FindImplementationsOf(null, typeof(IExistsInterface).Assembly),
             Throws.ArgumentNullException);
         Assert.That(
-            () => TypeLocator.Instance.FindImplementationsOf(typeof(IExistsInterface), null),
+            () => TypeLocator.Default.FindImplementationsOf(typeof(IExistsInterface), null),
             Throws.ArgumentNullException);
     }
 
@@ -118,12 +131,12 @@ public class TypeLocatorTests
     public void FindImplementationThrowsWithGenericTypeDefinitions()
     {
         Assert.That(
-            () => TypeLocator.Instance
+            () => TypeLocator.Default
                 .FindImplementationsOf(typeof(IGenericInterface<,>))
                 .ToArray(),
             Throws.ArgumentException);
         Assert.That(
-            () => TypeLocator.Instance
+            () => TypeLocator.Default
                 .FindImplementationsOf(typeof(IGenericInterface<,>), typeof(IGenericInterface<,>).Assembly)
                 .ToArray(),
             Throws.ArgumentException);
@@ -132,7 +145,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationIgnoresAbstractClasses()
     {
-        var results = TypeLocator.Instance
+        var results = TypeLocator.Default
             .FindImplementationsOf(typeof(IExistsInterface))
             .ToList();
 
@@ -142,7 +155,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationIgnoresInterfaces()
     {
-        var results = TypeLocator.Instance
+        var results = TypeLocator.Default
             .FindImplementationsOf(typeof(IExistsInterface))
             .ToList();
 
@@ -152,7 +165,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationCanFindConstructorWithException()
     {
-        var results = TypeLocator.Instance
+        var results = TypeLocator.Default
             .FindImplementationsOf(typeof(ConstructorWithException))
             .ToList();
 
@@ -167,7 +180,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfGenericInterface1()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOfGeneric(typeof(IGenericInterface<>))
             .ToList();
 
@@ -189,7 +202,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfGenericInterface2()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
             .ToList();
 
@@ -208,7 +221,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfGenericClass()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOf(typeof(Generic2Class))
             .ToList();
 
@@ -224,7 +237,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfMultipleGenericInterfaces()
     {
-        var extensions = TypeLocator.Instance
+        var extensions = TypeLocator.Default
             .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
             .Where(i => i.Type == typeof(GenericMultipleClass))
             .ToList();
@@ -258,7 +271,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfGenericIgnoresInterfaces()
     {
-        var results = TypeLocator.Instance
+        var results = TypeLocator.Default
             .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
             .ToList();
 
@@ -268,7 +281,7 @@ public class TypeLocatorTests
     [Test]
     public void FindImplementationOfGenericIgnoresAbstractClasses()
     {
-        var results = TypeLocator.Instance
+        var results = TypeLocator.Default
             .FindImplementationsOfGeneric(typeof(IGenericInterface<,>))
             .ToList();
 
