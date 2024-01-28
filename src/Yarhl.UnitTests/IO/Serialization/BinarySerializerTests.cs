@@ -258,7 +258,7 @@ public class BinarySerializerTests
             EnumValue = Enum1.Value2,
         };
 
-        byte[] expected = { 0x01 };
+        byte[] expected = { 0x01, 0x00 };
 
         AssertSerialization(obj, expected);
     }
@@ -275,195 +275,15 @@ public class BinarySerializerTests
 
     private static void AssertBinary(DataStream actual, byte[] expected)
     {
-        Assert.That(expected.Length, Is.EqualTo(actual.Length));
+        Assert.That(actual.Length, Is.EqualTo(expected.Length), "Stream size mismatch");
 
         byte[] actualData = new byte[expected.Length];
         Assert.Multiple(() => {
             actual.Position = 0;
             int read = actual.Read(actualData);
 
-            Assert.That(read, Is.EqualTo(expected.Length));
-            Assert.That(actualData, Is.EquivalentTo(actualData));
+            Assert.That(read, Is.EqualTo(expected.Length), "Read mismatch");
+            Assert.That(actualData, Is.EquivalentTo(expected));
         });
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ComplexObject
-    {
-        public int IntegerValue { get; set; }
-
-        public long LongValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class NestedObject
-    {
-        public int IntegerValue { get; set; }
-
-        public ComplexObject ComplexValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithDefaultBooleanAttribute
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryBoolean]
-        public bool BooleanValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithoutBooleanAttribute
-    {
-        public int IntegerValue { get; set; }
-
-        public bool BooleanValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithCustomBooleanAttribute
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryBoolean(WriteAs = typeof(string), TrueValue = "true", FalseValue = "false")]
-        public bool BooleanValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithDefaultStringAttribute
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryString]
-        public string StringValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithoutStringAttribute
-    {
-        public int IntegerValue { get; set; }
-
-        public string StringValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithCustomStringAttributeSizeUshort
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryString(SizeType = typeof(ushort), Terminator = "")]
-        public string StringValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithCustomStringAttributeFixedSize
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryString(FixedSize = 3, Terminator = "")]
-        public string StringValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithCustomStringAttributeCustomEncoding
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryString(CodePage = 932)]
-        public string StringValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithCustomStringAttributeUnknownEncoding
-    {
-        public int IntegerValue { get; set; }
-
-        [BinaryString(CodePage = 666)]
-        public string StringValue { get; set; }
-
-        [BinaryIgnore]
-        public int IgnoredIntegerValue { get; set; }
-
-        public int AnotherIntegerValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithForcedEndianness
-    {
-        [BinaryForceEndianness(EndiannessMode.LittleEndian)]
-        public int LittleEndianInteger { get; set; }
-
-        [BinaryForceEndianness(EndiannessMode.BigEndian)]
-        public int BigEndianInteger { get; set; }
-
-        public int DefaultEndianInteger { get; set; }
-    }
-
-    private enum Enum1
-    {
-        Value1,
-        Value2,
-        Value3,
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithEnum
-    {
-        [BinaryEnum(WriteAs = typeof(byte))]
-        public Enum1 EnumValue { get; set; }
-    }
-
-    [Yarhl.IO.Serialization.Attributes.Serializable]
-    private class ObjectWithInt24
-    {
-        [BinaryInt24]
-        public int Int24Value { get; set; }
     }
 }
