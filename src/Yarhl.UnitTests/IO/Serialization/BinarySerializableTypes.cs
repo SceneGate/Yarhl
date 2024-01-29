@@ -6,33 +6,16 @@ using Yarhl.IO.Serialization.Attributes;
 // Disable file may only contain a single class since we aren't going
 // to create a file per test converter.
 #pragma warning disable SA1649 // File name match type name
+#pragma warning disable SA1124 // do not use regions - I would agree but too many types
 
-public class ClassTypeWithIntegerProperties
+public class SimpleType
 {
-    public char CharValue { get; set; }
-
-    public byte ByteValue { get; set; }
-
-    public sbyte SByteValue { get; set; }
-
-    public ushort UShortValue { get; set; }
-
-    public short ShortValue { get; set; }
-
-    public uint UIntValue { get; set; }
-
-    public int IntegerValue { get; set; }
-
-    public ulong ULongValue { get; set; }
-
-    public long LongValue { get; set; }
+    public int Value { get; set; }
 }
 
-public class ClassTypeWithDecimalProperties
+public class InheritedType : SimpleType
 {
-    public float SingleValue { get; set; }
-
-    public double DoubleValue { get; set; }
+    public ushort NewValue { get; set; }
 }
 
 public struct MultiPropertyStruct
@@ -66,6 +49,59 @@ public class TypeWithNestedObject
     }
 }
 
+public class TypeWithEndiannessChanges
+{
+    [BinaryForceEndianness(EndiannessMode.LittleEndian)]
+    public int LittleEndianInteger { get; set; }
+
+    [BinaryForceEndianness(EndiannessMode.BigEndian)]
+    public int BigEndianInteger { get; set; }
+
+    public int DefaultEndianInteger { get; set; }
+}
+
+public class TypeWithNullable
+{
+    public int? NullValue { get; set; }
+}
+
+#region Integer types
+public class TypeWithIntegers
+{
+    public char CharValue { get; set; }
+
+    public byte ByteValue { get; set; }
+
+    public sbyte SByteValue { get; set; }
+
+    public ushort UShortValue { get; set; }
+
+    public short ShortValue { get; set; }
+
+    public uint UIntValue { get; set; }
+
+    public int IntegerValue { get; set; }
+
+    public ulong ULongValue { get; set; }
+
+    public long LongValue { get; set; }
+}
+
+public class TypeWithDecimals
+{
+    public float SingleValue { get; set; }
+
+    public double DoubleValue { get; set; }
+}
+
+public class TypeWithInt24
+{
+    [BinaryInt24]
+    public int Int24Value { get; set; }
+}
+#endregion
+
+#region Boolean types
 public class TypeWithBooleanDefaultAttribute
 {
     public int BeforeValue { get; set; }
@@ -104,95 +140,70 @@ public class TypeWithBooleanTextValue
 
     public int AfterValue { get; set; }
 }
+#endregion
 
-public class ObjectWithDefaultStringAttribute
+#region String types
+public class TypeWithStringDefaultAttribute
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     [BinaryString]
     public string StringValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithoutStringAttribute
+public class TypeWithStringWithoutAttribute
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     public string StringValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithCustomStringAttributeSizeUshort
+public class TypeWithStringVariableSize
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     [BinaryString(SizeType = typeof(ushort), Terminator = "")]
     public string StringValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithCustomStringAttributeFixedSize
+public class TypeWithStringFixedSize
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     [BinaryString(FixedSize = 3, Terminator = "")]
     public string StringValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithCustomStringAttributeCustomEncoding
+public class TypeWithStringDefinedEncoding
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     [BinaryString(CodePage = 932)]
     public string StringValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithCustomStringAttributeUnknownEncoding
+public class TypeWithStringInvalidEncoding
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     [BinaryString(CodePage = 666)]
     public string StringValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
+#endregion
 
-public class ObjectWithForcedEndianness
-{
-    [BinaryForceEndianness(EndiannessMode.LittleEndian)]
-    public int LittleEndianInteger { get; set; }
-
-    [BinaryForceEndianness(EndiannessMode.BigEndian)]
-    public int BigEndianInteger { get; set; }
-
-    public int DefaultEndianInteger { get; set; }
-}
-
+#region Enum types
 public class TypeWithEnumNoAttribute
 {
     public SerializableEnum EnumValue { get; set; }
@@ -210,20 +221,10 @@ public class TypeWithEnumWithOverwrittenType
     public SerializableEnum EnumValue { get; set; }
 }
 
-public class ObjectWithInt24
-{
-    [BinaryInt24]
-    public int Int24Value { get; set; }
-}
-
-public class ObjectWithNullable
-{
-    public int? NullValue { get; set; }
-}
-
 [System.Diagnostics.CodeAnalysis.SuppressMessage("", "S2344", Justification = "Test type")]
 public enum SerializableEnum : short
 {
     None = 1,
     Value42 = 42,
 }
+#endregion

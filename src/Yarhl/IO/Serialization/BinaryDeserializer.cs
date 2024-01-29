@@ -73,7 +73,6 @@ public class BinaryDeserializer
         object obj = Activator.CreateInstance(objType)!;
 
         PropertyInfo[] properties = objType.GetProperties(
-            BindingFlags.DeclaredOnly |
             BindingFlags.Public |
             BindingFlags.Instance);
 

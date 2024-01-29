@@ -31,10 +31,10 @@ public class BinarySerializer
     /// <summary>
     /// Serialize the public properties of the object in binary data in the stream.
     /// </summary>
-    /// <param name="obj">The object to serialize into the stream.</param>
     /// <param name="stream">The stream to write the binary data.</param>
+    /// <param name="obj">The object to serialize into the stream.</param>
     /// <typeparam name="T">The type of the object.</typeparam>
-    public static void Serialize<T>(T obj, Stream stream)
+    public static void Serialize<T>(Stream stream, T obj)
     {
         new BinarySerializer(stream).Serialize(obj);
     }
@@ -42,10 +42,10 @@ public class BinarySerializer
     /// <summary>
     /// Serialize the public properties of the object in binary data in the stream.
     /// </summary>
+    /// <param name="stream">The stream to write the binary data.</param>
     /// <param name="objType">The type of object to serialize.</param>
     /// <param name="obj">The object to serialize into the stream.</param>
-    /// <param name="stream">The stream to write the binary data.</param>
-    public static void Serialize(Type objType, object obj, Stream stream)
+    public static void Serialize(Stream stream, Type objType, object obj)
     {
         new BinarySerializer(stream).Serialize(objType, obj);
     }
@@ -70,7 +70,6 @@ public class BinarySerializer
     public void Serialize(Type type, object obj)
     {
         PropertyInfo[] properties = type.GetProperties(
-            BindingFlags.DeclaredOnly |
             BindingFlags.Public |
             BindingFlags.Instance);
 

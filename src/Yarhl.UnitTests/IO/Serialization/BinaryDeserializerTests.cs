@@ -10,6 +10,73 @@ using Yarhl.IO.Serialization;
 public class BinaryDeserializerTests
 {
     [Test]
+    public void DeserializeByGenericType()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var expected = new SimpleType { Value = 10 };
+        using var stream = new DataStream();
+        stream.Write(data);
+
+        stream.Position = 0;
+        var deserializer = new BinaryDeserializer(stream);
+        SimpleType obj = deserializer.Deserialize<SimpleType>();
+
+        _ = obj.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void DeserializeByTypeArg()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var expected = new SimpleType { Value = 10 };
+        using var stream = new DataStream();
+        stream.Write(data);
+
+        stream.Position = 0;
+        var deserializer = new BinaryDeserializer(stream);
+        object obj = deserializer.Deserialize(typeof(SimpleType));
+
+        _ = obj.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void DeserializeStaticByGenericType()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var expected = new SimpleType { Value = 10 };
+        using var stream = new DataStream();
+        stream.Write(data);
+
+        stream.Position = 0;
+        SimpleType obj = BinaryDeserializer.Deserialize<SimpleType>(stream);
+
+        _ = obj.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void DeserializeStaticByTypeArg()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var expected = new SimpleType { Value = 10 };
+        using var stream = new DataStream();
+        stream.Write(data);
+
+        stream.Position = 0;
+        object obj = BinaryDeserializer.Deserialize(stream, typeof(SimpleType));
+
+        _ = obj.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void DeserializeIncludesInheritedFields()
+    {
+        byte[] data = { 0xFE, 0xCA, 0x0A, 0x00, 0x00, 0x00 };
+        var obj = new InheritedType { Value = 0x0A, NewValue = 0xCAFE };
+
+        AssertDeserialization(data, obj);
+    }
+
+    [Test]
     public void DeserializeIntegerTypes()
     {
         byte[] data = {
@@ -23,7 +90,7 @@ public class BinaryDeserializerTests
             0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
             0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
         };
-        var expected = new ClassTypeWithIntegerProperties {
+        var expected = new TypeWithIntegers {
             CharValue = 'Ω',
             ByteValue = 0x84,
             SByteValue = -12,
@@ -45,7 +112,7 @@ public class BinaryDeserializerTests
             0xC3, 0xF5, 0x48, 0x40,
             0x1F, 0x85, 0xEB, 0x51, 0xB8, 0x1E, 0x09, 0xC0,
         };
-        var obj = new ClassTypeWithDecimalProperties {
+        var obj = new TypeWithDecimals {
             SingleValue = 3.14f,
             DoubleValue = -3.14d,
         };
@@ -209,7 +276,7 @@ public class BinaryDeserializerTests
             0x01, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithInt24 {
+        var expected = new TypeWithInt24 {
             Int24Value = 1,
         };
 
@@ -225,11 +292,10 @@ public class BinaryDeserializerTests
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithoutStringAttribute {
-            IntegerValue = 1,
+        var expected = new TypeWithStringWithoutAttribute {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
         AssertDeserialization(data, expected);
@@ -244,11 +310,10 @@ public class BinaryDeserializerTests
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithDefaultStringAttribute {
-            IntegerValue = 1,
+        var expected = new TypeWithStringDefaultAttribute {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
         AssertDeserialization(data, expected);
@@ -263,11 +328,10 @@ public class BinaryDeserializerTests
             0x04, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithCustomStringAttributeSizeUshort {
-            IntegerValue = 1,
+        var expected = new TypeWithStringVariableSize {
+            BeforeValue = 1,
             StringValue = "あ",
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 4,
+            AfterValue = 4,
         };
 
         AssertDeserialization(data, expected);
@@ -282,11 +346,10 @@ public class BinaryDeserializerTests
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithCustomStringAttributeFixedSize {
-            IntegerValue = 1,
+        var expected = new TypeWithStringFixedSize {
+            BeforeValue = 1,
             StringValue = "あ",
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
         AssertDeserialization(data, expected);
@@ -301,11 +364,10 @@ public class BinaryDeserializerTests
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithCustomStringAttributeCustomEncoding {
-            IntegerValue = 1,
+        var expected = new TypeWithStringDefinedEncoding {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
         AssertDeserialization(data, expected);
@@ -327,7 +389,7 @@ public class BinaryDeserializerTests
         var deserializer = new BinaryDeserializer(stream);
 
         Assert.That(
-            () => deserializer.Deserialize<ObjectWithCustomStringAttributeUnknownEncoding>(),
+            () => deserializer.Deserialize<TypeWithStringInvalidEncoding>(),
             Throws.InstanceOf<NotSupportedException>());
     }
 
@@ -340,7 +402,7 @@ public class BinaryDeserializerTests
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithForcedEndianness {
+        var expected = new TypeWithEndiannessChanges {
             LittleEndianInteger = 1,
             BigEndianInteger = 2,
             DefaultEndianInteger = 3,
@@ -395,13 +457,13 @@ public class BinaryDeserializerTests
         var deserializer = new BinaryDeserializer(stream);
 
         Assert.That(
-            () => deserializer.Deserialize<ObjectWithNullable>(),
+            () => deserializer.Deserialize<TypeWithNullable>(),
             Throws.InstanceOf<FormatException>());
     }
 
     private static void AssertDeserialization<T>(byte[] data, T expected)
     {
-        var stream = new DataStream();
+        using var stream = new DataStream();
         stream.Write(data);
 
         stream.Position = 0;

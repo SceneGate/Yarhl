@@ -9,9 +9,80 @@ using Yarhl.IO.Serialization;
 public class BinarySerializerTests
 {
     [Test]
+    public void SerializeByGenericType()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var obj = new SimpleType { Value = 0x0A, };
+
+        using var stream = new DataStream();
+        var serializer = new BinarySerializer(stream);
+        serializer.Serialize<SimpleType>(obj);
+
+        AssertBinary(stream, data);
+    }
+
+    [Test]
+    public void SerializeByTypeArg()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var obj = new SimpleType { Value = 0x0A, };
+
+        using var stream = new DataStream();
+        var serializer = new BinarySerializer(stream);
+        serializer.Serialize(typeof(SimpleType), obj);
+
+        AssertBinary(stream, data);
+    }
+
+    [Test]
+    public void SerializeByStaticGenericType()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var obj = new SimpleType { Value = 0x0A, };
+
+        using var stream = new DataStream();
+        BinarySerializer.Serialize<SimpleType>(stream, obj);
+
+        AssertBinary(stream, data);
+    }
+
+    [Test]
+    public void SerializeByStaticTypeArg()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var obj = new SimpleType { Value = 0x0A, };
+
+        using var stream = new DataStream();
+        BinarySerializer.Serialize(stream, typeof(SimpleType), obj);
+
+        AssertBinary(stream, data);
+    }
+
+    [Test]
+    public void SerializeIncludesInheritedFields()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00, 0xFE, 0xCA };
+        var obj = new InheritedType { Value = 0x0A, NewValue = 0xCAFE };
+
+        AssertSerialization(obj, data);
+    }
+
+    [Test]
+    public void SerializeBaseType()
+    {
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00 };
+        var obj = new InheritedType { Value = 0x0A, NewValue = 0xCAFE };
+
+        using var stream = new DataStream();
+        BinarySerializer.Serialize(stream, typeof(SimpleType), obj);
+
+        AssertBinary(stream, data);
+    }
+
+    [Test]
     public void SerializeIntegerTypes()
     {
-        var obj = new ClassTypeWithIntegerProperties {
+        var obj = new TypeWithIntegers {
             CharValue = 'Ω',
             ByteValue = 0x84,
             SByteValue = -12,
@@ -45,7 +116,7 @@ public class BinarySerializerTests
             0xC3, 0xF5, 0x48, 0x40,
             0x1F, 0x85, 0xEB, 0x51, 0xB8, 0x1E, 0x09, 0xC0,
         };
-        var obj = new ClassTypeWithDecimalProperties {
+        var obj = new TypeWithDecimals {
             SingleValue = 3.14f,
             DoubleValue = -3.14d,
         };
@@ -204,7 +275,7 @@ public class BinarySerializerTests
     [Test]
     public void SerializeInt24()
     {
-        var obj = new ObjectWithInt24 {
+        var obj = new TypeWithInt24 {
             Int24Value = 0x7F_FC0FFE,
         };
 
@@ -218,11 +289,10 @@ public class BinarySerializerTests
     [Test]
     public void SerializeStringWithoutAttributeUsesDefaultWriterSettings()
     {
-        var obj = new ObjectWithoutStringAttribute {
-            IntegerValue = 1,
+        var obj = new TypeWithStringWithoutAttribute {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 2,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
         byte[] expected = {
@@ -237,11 +307,10 @@ public class BinarySerializerTests
     [Test]
     public void SerializeStringWithDefaultAttributeUsesDefaultWriterSettings()
     {
-        var obj = new ObjectWithDefaultStringAttribute() {
-            IntegerValue = 1,
+        var obj = new TypeWithStringDefaultAttribute() {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 2,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
         byte[] expected = {
@@ -256,11 +325,10 @@ public class BinarySerializerTests
     [Test]
     public void SerializeStringWithSizeType()
     {
-        var obj = new ObjectWithCustomStringAttributeSizeUshort() {
-            IntegerValue = 1,
+        var obj = new TypeWithStringVariableSize() {
+            BeforeValue = 1,
             StringValue = "あ",
-            IgnoredIntegerValue = 2,
-            AnotherIntegerValue = 4,
+            AfterValue = 4,
         };
 
         byte[] expected = {
@@ -275,11 +343,10 @@ public class BinarySerializerTests
     [Test]
     public void SerializeStringWithFixedSize()
     {
-        var obj = new ObjectWithCustomStringAttributeFixedSize() {
-            IntegerValue = 1,
+        var obj = new TypeWithStringFixedSize() {
+            BeforeValue = 1,
             StringValue = "あ",
-            IgnoredIntegerValue = 2,
-            AnotherIntegerValue = 4,
+            AfterValue = 4,
         };
 
         byte[] expected = {
@@ -294,11 +361,10 @@ public class BinarySerializerTests
     [Test]
     public void SerializeStringWithDifferentEncoding()
     {
-        var obj = new ObjectWithCustomStringAttributeCustomEncoding() {
-            IntegerValue = 1,
+        var obj = new TypeWithStringDefinedEncoding() {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 2,
-            AnotherIntegerValue = 4,
+            AfterValue = 4,
         };
 
         byte[] expected = {
@@ -313,11 +379,10 @@ public class BinarySerializerTests
     [Test]
     public void TrySerializeStringWithUnknownEncodingThrowsException()
     {
-        var obj = new ObjectWithCustomStringAttributeUnknownEncoding() {
-            IntegerValue = 1,
+        var obj = new TypeWithStringInvalidEncoding() {
+            BeforeValue = 1,
             StringValue = "あア",
-            IgnoredIntegerValue = 2,
-            AnotherIntegerValue = 4,
+            AfterValue = 4,
         };
 
         using var stream = new DataStream();
@@ -329,7 +394,7 @@ public class BinarySerializerTests
     [Test]
     public void SerializeObjectWithSpecificEndianness()
     {
-        var obj = new ObjectWithForcedEndianness() {
+        var obj = new TypeWithEndiannessChanges() {
             LittleEndianInteger = 1,
             BigEndianInteger = 2,
             DefaultEndianInteger = 3,
@@ -343,7 +408,6 @@ public class BinarySerializerTests
 
         AssertSerialization(obj, expected);
     }
-
 
     [Test]
     public void SerializeEnumNoAttribute()
