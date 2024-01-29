@@ -92,7 +92,7 @@ public class BinaryDeserializer
     private object DeserializePropertyValue(PropertyInfo property)
     {
         reader.Endianness = DefaultEndianness;
-        var endiannessAttr = property.GetCustomAttribute<BinaryForceEndiannessAttribute>();
+        var endiannessAttr = property.GetCustomAttribute<BinaryEndiannessAttribute>();
         if (endiannessAttr is not null) {
             reader.Endianness = endiannessAttr.Mode;
         }

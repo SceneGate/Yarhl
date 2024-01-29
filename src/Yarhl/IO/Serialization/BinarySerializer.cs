@@ -87,7 +87,7 @@ public class BinarySerializer
     private void SerializeProperty(PropertyInfo property, object obj)
     {
         writer.Endianness = DefaultEndianness;
-        var endiannessAttr = property.GetCustomAttribute<BinaryForceEndiannessAttribute>();
+        var endiannessAttr = property.GetCustomAttribute<BinaryEndiannessAttribute>();
         if (endiannessAttr is not null) {
             writer.Endianness = endiannessAttr.Mode;
         }

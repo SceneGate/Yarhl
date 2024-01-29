@@ -51,10 +51,10 @@ public class TypeWithNestedObject
 
 public class TypeWithEndiannessChanges
 {
-    [BinaryForceEndianness(EndiannessMode.LittleEndian)]
+    [BinaryEndianness(EndiannessMode.LittleEndian)]
     public int LittleEndianInteger { get; set; }
 
-    [BinaryForceEndianness(EndiannessMode.BigEndian)]
+    [BinaryEndianness(EndiannessMode.BigEndian)]
     public int BigEndianInteger { get; set; }
 
     public int DefaultEndianInteger { get; set; }
