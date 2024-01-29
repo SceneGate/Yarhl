@@ -344,16 +344,41 @@ public class BinarySerializerTests
         AssertSerialization(obj, expected);
     }
 
+
     [Test]
-    public void SerializeEnum()
+    public void SerializeEnumNoAttribute()
     {
-        var obj = new ObjectWithEnum() {
-            EnumValue = Enum1.Value2,
+        byte[] data = { 0x2A, 0x00, };
+
+        var obj = new TypeWithEnumNoAttribute {
+            EnumValue = SerializableEnum.Value42,
         };
 
-        byte[] expected = { 0x01, 0x00 };
+        AssertSerialization(obj, data);
+    }
 
-        AssertSerialization(obj, expected);
+    [Test]
+    public void SerializeEnumDefaultAttribute()
+    {
+        byte[] data = { 0x2A, 0x00, };
+
+        var obj = new TypeWithEnumDefaultAttribute {
+            EnumValue = SerializableEnum.Value42,
+        };
+
+        AssertSerialization(obj, data);
+    }
+
+    [Test]
+    public void SerializeEnumOverwritingType()
+    {
+        byte[] data = { 0x01, 0x00, 0x00, 0x00 };
+
+        var obj = new TypeWithEnumWithOverwrittenType {
+            EnumValue = SerializableEnum.None,
+        };
+
+        AssertSerialization(obj, data);
     }
 
     private static void AssertSerialization<T>(T obj, byte[] expected)

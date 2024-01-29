@@ -193,10 +193,21 @@ public class ObjectWithForcedEndianness
     public int DefaultEndianInteger { get; set; }
 }
 
-public class ObjectWithEnum
+public class TypeWithEnumNoAttribute
 {
-    [BinaryEnum(ReadAs = typeof(byte), WriteAs = typeof(short))]
-    public Enum1 EnumValue { get; set; }
+    public SerializableEnum EnumValue { get; set; }
+}
+
+public class TypeWithEnumDefaultAttribute
+{
+    [BinaryEnum]
+    public SerializableEnum EnumValue { get; set; }
+}
+
+public class TypeWithEnumWithOverwrittenType
+{
+    [BinaryEnum(UnderlyingType = typeof(uint))]
+    public SerializableEnum EnumValue { get; set; }
 }
 
 public class ObjectWithInt24
@@ -210,9 +221,9 @@ public class ObjectWithNullable
     public int? NullValue { get; set; }
 }
 
-public enum Enum1
+[System.Diagnostics.CodeAnalysis.SuppressMessage("", "S2344", Justification = "Test type")]
+public enum SerializableEnum : short
 {
-    Value1,
-    Value2,
-    Value3,
+    None = 1,
+    Value42 = 42,
 }

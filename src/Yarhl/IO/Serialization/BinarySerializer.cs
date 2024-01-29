@@ -99,11 +99,11 @@ public class BinarySerializer
         if (property.PropertyType.IsPrimitive) {
             SerializePrimitiveField(property, value);
         } else if (property.PropertyType.IsEnum) {
-            if (property.GetCustomAttribute<BinaryEnumAttribute>() is not { } enumAttr) {
-                throw new FormatException("Missing BinaryEnum attribute in property");
-            }
+            var enumAttr = property.GetCustomAttribute<BinaryEnumAttribute>();
+            Type underlyingType = enumAttr?.UnderlyingType
+                ?? Enum.GetUnderlyingType(property.PropertyType);
 
-            writer.WriteOfType(enumAttr.WriteAs, value);
+            writer.WriteOfType(underlyingType, value);
         } else if (property.PropertyType == typeof(string)) {
             SerializeString(property, value);
         } else {

@@ -267,6 +267,7 @@ dotnet_diagnostic.SA0001.severity = none # Disable documentation
 dotnet_diagnostic.SA1402.severity = none # Multiple types in the same file
 dotnet_diagnostic.SA1600.severity = none # Disable documentation
 dotnet_diagnostic.SA1601.severity = none # Disable documentation
+dotnet_diagnostic.SA1602.severity = none # Disable documentation
 dotnet_diagnostic.SA1201.severity = none # Allow enums inside classes
 dotnet_diagnostic.S1144.severity = none # Remove unused setter
 dotnet_diagnostic.S2094.severity = none # Remove empty class

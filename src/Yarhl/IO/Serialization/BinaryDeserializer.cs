@@ -129,11 +129,11 @@ public class BinaryDeserializer
 
     private object DeserializeEnumField(PropertyInfo property)
     {
-        if (property.GetCustomAttribute<BinaryEnumAttribute>() is not { } enumAttr) {
-            throw new FormatException("Missing BinaryEnum attribute in property");
-        }
+        var enumAttr = property.GetCustomAttribute<BinaryEnumAttribute>();
+        Type underlyingType = enumAttr?.UnderlyingType
+            ?? Enum.GetUnderlyingType(property.PropertyType);
 
-        object value = reader.ReadByType(enumAttr!.ReadAs);
+        object value = reader.ReadByType(underlyingType);
         return Enum.ToObject(property.PropertyType, value);
     }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 SceneGate
+﻿// Copyright (c) 2020 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@ namespace Yarhl.IO.Serialization.Attributes
 
     /// <summary>
     /// Define how to read and write a Enum value.
-    /// <remarks>Default type is <see cref="int"/></remarks>
+    /// <remarks>Default type is defined in the enum type</remarks>
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public sealed class BinaryEnumAttribute : Attribute
@@ -33,22 +33,17 @@ namespace Yarhl.IO.Serialization.Attributes
         /// </summary>
         public BinaryEnumAttribute()
         {
-            ReadAs = typeof(int);
-            WriteAs = typeof(int);
+            UnderlyingType = null;
         }
 
         /// <summary>
-        /// Gets or sets the equivalent type for reading.
+        /// Gets or sets the underlying type to use to serialize and deserialize.
         /// </summary>
-        public Type ReadAs {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the equivalent type for writing.
-        /// </summary>
-        public Type WriteAs {
+        /// <remarks>
+        /// If set to null (default), it will use the defined underlying type
+        /// in the enumaration type.
+        /// </remarks>
+        public Type? UnderlyingType {
             get;
             set;
         }

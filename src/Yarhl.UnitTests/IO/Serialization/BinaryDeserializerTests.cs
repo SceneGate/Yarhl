@@ -350,11 +350,37 @@ public class BinaryDeserializerTests
     }
 
     [Test]
-    public void DeserializeEnum()
+    public void DeserializeEnumNoAttribute()
     {
-        byte[] data = { 0x01 };
+        byte[] data = { 0x2A, 0x00, };
 
-        var expected = new ObjectWithEnum { EnumValue = Enum1.Value2 };
+        var expected = new TypeWithEnumNoAttribute {
+            EnumValue = SerializableEnum.Value42,
+        };
+
+        AssertDeserialization(data, expected);
+    }
+
+    [Test]
+    public void DeserializeEnumDefaultAttribute()
+    {
+        byte[] data = { 0x2A, 0x00, };
+
+        var expected = new TypeWithEnumDefaultAttribute {
+            EnumValue = SerializableEnum.Value42,
+        };
+
+        AssertDeserialization(data, expected);
+    }
+
+    [Test]
+    public void DeserializeEnumOverwritingType()
+    {
+        byte[] data = { 0x01, 0x00, 0x00, 0x00 };
+
+        var expected = new TypeWithEnumWithOverwrittenType {
+            EnumValue = SerializableEnum.None,
+        };
 
         AssertDeserialization(data, expected);
     }
