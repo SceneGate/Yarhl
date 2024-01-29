@@ -5,24 +5,66 @@ using FluentAssertions;
 using NUnit.Framework;
 using Yarhl.IO;
 using Yarhl.IO.Serialization;
-using Yarhl.IO.Serialization.Attributes;
 
 [TestFixture]
 public class BinaryDeserializerTests
 {
     [Test]
-    public void DeserializeFullObject()
+    public void DeserializeIntegerTypes()
+    {
+        byte[] data = {
+            0xCE, 0xA9, // char un UTF-8 (default encoding)
+            0x84,
+            0xF4,
+            0x7F, 0x80,
+            0xF0, 0xFF,
+            0x78, 0x56, 0x34, 0x12,
+            0xD6, 0xFF, 0xFF, 0xFF,
+            0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
+            0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+        };
+        var expected = new ClassTypeWithIntegerProperties {
+            CharValue = 'Ω',
+            ByteValue = 0x84,
+            SByteValue = -12,
+            UShortValue = 0x807F,
+            ShortValue = -16,
+            UIntValue = 0x12345678,
+            IntegerValue = -42,
+            ULongValue = 0x800000000000002A,
+            LongValue = -2L,
+        };
+
+        AssertDeserialization(data, expected);
+    }
+
+    [Test]
+    public void DeserializeDecimalTypes()
+    {
+        byte[] data = {
+            0xC3, 0xF5, 0x48, 0x40,
+            0x1F, 0x85, 0xEB, 0x51, 0xB8, 0x1E, 0x09, 0xC0,
+        };
+        var obj = new ClassTypeWithDecimalProperties {
+            SingleValue = 3.14f,
+            DoubleValue = -3.14d,
+        };
+
+        AssertDeserialization(data, obj);
+    }
+
+    [Test]
+    public void DeserializeMultiPropertyStruct()
     {
         byte[] data = {
             0x01, 0x00, 0x00, 0x00,
             0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x03, 0x00, 0x00, 0x00,
+            (byte)'y', (byte)'a', (byte)'r', (byte)'h', (byte)'l', (byte)'\0',
         };
-        var expected = new ComplexObject {
+        var expected = new MultiPropertyStruct {
             IntegerValue = 1,
             LongValue = 2L,
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            TextValue = "yarhl",
         };
 
         AssertDeserialization(data, expected);
@@ -34,17 +76,12 @@ public class BinaryDeserializerTests
         byte[] data = {
             0x0A, 0x00, 0x00, 0x00,
             0x01, 0x00, 0x00, 0x00,
-            0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x03, 0x00, 0x00, 0x00,
             0x14, 0x00, 0x00, 0x00,
         };
-        var expected = new NestedObject {
+        var expected = new TypeWithNestedObject {
             IntegerValue = 10,
-            ComplexValue = new ComplexObject {
-                IntegerValue = 1,
-                LongValue = 2L,
-                IgnoredIntegerValue = 0,
-                AnotherIntegerValue = 3,
+            ComplexValue = new TypeWithNestedObject.NestedType {
+                NestedValue = 1,
             },
             AnotherIntegerValue = 20,
         };
@@ -53,7 +90,21 @@ public class BinaryDeserializerTests
     }
 
     [Test]
-    public void DeserializeBoolean()
+    public void DeserializeIgnorePropertiesViaAttribute()
+    {
+        byte[] data = {
+            0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+        };
+        var expected = new TypeWithIgnoredProperties {
+            LongValue = 2L,
+            IgnoredIntegerValue = 0,
+        };
+
+        AssertDeserialization(data, expected);
+    }
+
+    [Test]
+    public void DeserializeBooleanType()
     {
         byte[] data = {
             0x01, 0x00, 0x00, 0x00,
@@ -61,33 +112,75 @@ public class BinaryDeserializerTests
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithDefaultBooleanAttribute {
-            IntegerValue = 1,
+        var expected = new TypeWithBooleanDefaultAttribute {
+            BeforeValue = 1,
             BooleanValue = false,
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
         };
 
+        AssertDeserialization(data, expected);
+
+        data[4] = 0x01;
+        expected.BooleanValue = true;
         AssertDeserialization(data, expected);
     }
 
     [Test]
-    public void DeserializeBooleanWithCustomTrueValue()
+    public void DeserializeBooleanWithDefinedValues()
     {
-        byte[] data = {
+        var falseObj = new TypeWithBooleanDefinedValue() {
+            BeforeValue = 1,
+            BooleanValue = false,
+            AfterValue = 3,
+        };
+        byte[] serializedFalse = {
             0x01, 0x00, 0x00, 0x00,
-            0x74, 0x72, 0x75, 0x65, 0x00, // "true"
+            0xD6, 0xFF,
             0x03, 0x00, 0x00, 0x00,
         };
 
-        var expected = new ObjectWithCustomBooleanAttribute {
-            IntegerValue = 1,
+        var trueObj = new TypeWithBooleanDefinedValue() {
+            BeforeValue = 1,
             BooleanValue = true,
-            IgnoredIntegerValue = 0,
-            AnotherIntegerValue = 3,
+            AfterValue = 3,
+        };
+        byte[] serializedTrue = {
+            0x01, 0x00, 0x00, 0x00,
+            0x2A, 0x00,
+            0x03, 0x00, 0x00, 0x00,
         };
 
-        AssertDeserialization(data, expected);
+        AssertDeserialization(serializedFalse, falseObj);
+        AssertDeserialization(serializedTrue, trueObj);
+    }
+
+    [Test]
+    public void DeserializeBooleanWithTextValues()
+    {
+        var falseObj = new TypeWithBooleanTextValue() {
+            BeforeValue = 1,
+            BooleanValue = false,
+            AfterValue = 3,
+        };
+        byte[] serializedFalse = {
+            0x01, 0x00, 0x00, 0x00,
+            (byte)'f', (byte)'a', (byte)'l', (byte)'s', (byte)'e', (byte)'\0',
+            0x03, 0x00, 0x00, 0x00,
+        };
+
+        var trueObj = new TypeWithBooleanTextValue() {
+            BeforeValue = 1,
+            BooleanValue = true,
+            AfterValue = 3,
+        };
+        byte[] serializedTrue = {
+            0x01, 0x00, 0x00, 0x00,
+            (byte)'t', (byte)'r', (byte)'u', (byte)'e', (byte)'\0',
+            0x03, 0x00, 0x00, 0x00,
+        };
+
+        AssertDeserialization(serializedFalse, falseObj);
+        AssertDeserialization(serializedTrue, trueObj);
     }
 
     [Test]
@@ -105,7 +198,7 @@ public class BinaryDeserializerTests
         stream.Position = 0;
         var deserializer = new BinaryDeserializer(stream);
         Assert.That(
-            () => deserializer.Deserialize<ObjectWithoutBooleanAttribute>(),
+            () => deserializer.Deserialize<TypeWithBooleanWithoutAttribute>(),
             Throws.InstanceOf<FormatException>());
     }
 

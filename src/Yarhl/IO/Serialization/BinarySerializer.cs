@@ -120,7 +120,7 @@ public class BinarySerializer
             }
 
             object typeValue = (bool)value ? boolAttr.TrueValue : boolAttr.FalseValue;
-            writer.WriteOfType(boolAttr.WriteAs, typeValue);
+            writer.WriteOfType(boolAttr.UnderlyingType, typeValue);
             return;
         }
 

@@ -116,7 +116,7 @@ public class BinaryDeserializer
                 throw new FormatException("Properties of type 'bool' must have the attribute BinaryBoolean");
             }
 
-            object value = reader.ReadByType(boolAttr!.ReadAs);
+            object value = reader.ReadByType(boolAttr.UnderlyingType);
             return value.Equals(boolAttr.TrueValue);
         }
 

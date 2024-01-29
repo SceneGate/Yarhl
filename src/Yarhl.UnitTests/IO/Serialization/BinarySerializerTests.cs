@@ -1,29 +1,71 @@
 ﻿namespace Yarhl.UnitTests.IO.Serialization;
 
 using System;
-using System.Linq;
 using NUnit.Framework;
 using Yarhl.IO;
 using Yarhl.IO.Serialization;
-using Yarhl.IO.Serialization.Attributes;
 
 [TestFixture]
 public class BinarySerializerTests
 {
     [Test]
-    public void SerializeMultipleProperties()
+    public void SerializeIntegerTypes()
     {
-        var obj = new ComplexObject {
+        var obj = new ClassTypeWithIntegerProperties {
+            CharValue = 'Ω',
+            ByteValue = 0x84,
+            SByteValue = -12,
+            UShortValue = 0x807F,
+            ShortValue = -16,
+            UIntValue = 0x12345678,
+            IntegerValue = -42,
+            ULongValue = 0x8000000000002A,
+            LongValue = -2L,
+        };
+
+        byte[] data = {
+            0xCE, 0xA9, // char un UTF-8 (default encoding)
+            0x84,
+            0xF4,
+            0x7F, 0x80,
+            0xF0, 0xFF,
+            0x78, 0x56, 0x34, 0x12,
+            0xD6, 0xFF, 0xFF, 0xFF,
+            0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x80,
+            0xFE, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+        };
+
+        AssertSerialization(obj, data);
+    }
+
+    [Test]
+    public void SerializeDecimalTypes()
+    {
+        byte[] data = {
+            0xC3, 0xF5, 0x48, 0x40,
+            0x1F, 0x85, 0xEB, 0x51, 0xB8, 0x1E, 0x09, 0xC0,
+        };
+        var obj = new ClassTypeWithDecimalProperties {
+            SingleValue = 3.14f,
+            DoubleValue = -3.14d,
+        };
+
+        AssertSerialization(obj, data);
+    }
+
+    [Test]
+    public void SerializeStruct()
+    {
+        var obj = new MultiPropertyStruct {
             IntegerValue = 1,
             LongValue = 2,
-            IgnoredIntegerValue = 3,
-            AnotherIntegerValue = 4,
+            TextValue = "yarhl",
         };
 
         byte[] expected = {
             0x01, 0x00, 0x00, 0x00,
             0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x04, 0x00, 0x00, 0x00,
+            (byte)'y', (byte)'a', (byte)'r', (byte)'h', (byte)'l', (byte)'\0',
         };
 
         AssertSerialization(obj, expected);
@@ -32,13 +74,10 @@ public class BinarySerializerTests
     [Test]
     public void SerializeNestedObject()
     {
-        var obj = new NestedObject() {
+        var obj = new TypeWithNestedObject() {
             IntegerValue = 10,
-            ComplexValue = new ComplexObject {
-                IntegerValue = 1,
-                LongValue = 2,
-                IgnoredIntegerValue = 3,
-                AnotherIntegerValue = 4,
+            ComplexValue = new TypeWithNestedObject.NestedType {
+                NestedValue = 1,
             },
             AnotherIntegerValue = 20,
         };
@@ -46,9 +85,22 @@ public class BinarySerializerTests
         byte[] expected = {
             0x0A, 0x00, 0x00, 0x00,
             0x01, 0x00, 0x00, 0x00,
-            0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x04, 0x00, 0x00, 0x00,
             0x14, 0x00, 0x00, 0x00,
+        };
+
+        AssertSerialization(obj, expected);
+    }
+
+    [Test]
+    public void SerializeIgnorePropertiesViaAttribute()
+    {
+        var obj = new TypeWithIgnoredProperties {
+            LongValue = 2,
+            IgnoredIntegerValue = 42,
+        };
+
+        byte[] expected = {
+            0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
         };
 
         AssertSerialization(obj, expected);
@@ -57,49 +109,90 @@ public class BinarySerializerTests
     [Test]
     public void SerializeBooleanType()
     {
-        var obj = new ObjectWithDefaultBooleanAttribute() {
-            IntegerValue = 1,
+        var obj = new TypeWithBooleanDefaultAttribute() {
+            BeforeValue = 1,
             BooleanValue = false,
-            IgnoredIntegerValue = 3,
-            AnotherIntegerValue = 4,
+            AfterValue = 3,
         };
 
         byte[] expected = {
             0x01, 0x00, 0x00, 0x00,
             0x00, 0x00, 0x00, 0x00,
-            0x04, 0x00, 0x00, 0x00,
+            0x03, 0x00, 0x00, 0x00,
         };
 
+        AssertSerialization(obj, expected);
+
+        obj.BooleanValue = true;
+        expected[4] = 0x01;
         AssertSerialization(obj, expected);
     }
 
     [Test]
-    public void SerializeBooleanWithCustomFalseValue()
+    public void SerializeBooleanWithDefinedValues()
     {
-        var obj = new ObjectWithCustomBooleanAttribute() {
-            IntegerValue = 1,
+        var falseObj = new TypeWithBooleanDefinedValue() {
+            BeforeValue = 1,
             BooleanValue = false,
-            IgnoredIntegerValue = 5,
-            AnotherIntegerValue = 4,
+            AfterValue = 3,
         };
-
-        byte[] expected = {
+        byte[] expectedFalse = {
             0x01, 0x00, 0x00, 0x00,
-            0x66, 0x61, 0x6C, 0x73, 0x65, 0x00, // "false"
-            0x04, 0x00, 0x00, 0x00,
+            0xD6, 0xFF,
+            0x03, 0x00, 0x00, 0x00,
         };
 
-        AssertSerialization(obj, expected);
+        var trueObj = new TypeWithBooleanDefinedValue() {
+            BeforeValue = 1,
+            BooleanValue = true,
+            AfterValue = 3,
+        };
+        byte[] expectedTrue = {
+            0x01, 0x00, 0x00, 0x00,
+            0x2A, 0x00,
+            0x03, 0x00, 0x00, 0x00,
+        };
+
+        AssertSerialization(falseObj, expectedFalse);
+        AssertSerialization(trueObj, expectedTrue);
+    }
+
+    [Test]
+    public void SerializeBooleanWithTextValues()
+    {
+        var falseObj = new TypeWithBooleanTextValue() {
+            BeforeValue = 1,
+            BooleanValue = false,
+            AfterValue = 3,
+        };
+        byte[] expectedFalse = {
+            0x01, 0x00, 0x00, 0x00,
+            (byte)'f', (byte)'a', (byte)'l', (byte)'s', (byte)'e', (byte)'\0',
+            0x03, 0x00, 0x00, 0x00,
+        };
+
+        var trueObj = new TypeWithBooleanTextValue() {
+            BeforeValue = 1,
+            BooleanValue = true,
+            AfterValue = 3,
+        };
+        byte[] expectedTrue = {
+            0x01, 0x00, 0x00, 0x00,
+            (byte)'t', (byte)'r', (byte)'u', (byte)'e', (byte)'\0',
+            0x03, 0x00, 0x00, 0x00,
+        };
+
+        AssertSerialization(falseObj, expectedFalse);
+        AssertSerialization(trueObj, expectedTrue);
     }
 
     [Test]
     public void TrySerializeBooleanWithoutAttributeThrowsException()
     {
-        var obj = new ObjectWithoutBooleanAttribute() {
-            IntegerValue = 1,
+        var obj = new TypeWithBooleanWithoutAttribute() {
+            BeforeValue = 1,
             BooleanValue = true,
-            IgnoredIntegerValue = 3,
-            AnotherIntegerValue = 4,
+            AfterValue = 3,
         };
 
         using var stream = new DataStream();

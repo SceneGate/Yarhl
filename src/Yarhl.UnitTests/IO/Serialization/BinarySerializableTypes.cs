@@ -7,63 +7,102 @@ using Yarhl.IO.Serialization.Attributes;
 // to create a file per test converter.
 #pragma warning disable SA1649 // File name match type name
 
-public class ComplexObject
+public class ClassTypeWithIntegerProperties
+{
+    public char CharValue { get; set; }
+
+    public byte ByteValue { get; set; }
+
+    public sbyte SByteValue { get; set; }
+
+    public ushort UShortValue { get; set; }
+
+    public short ShortValue { get; set; }
+
+    public uint UIntValue { get; set; }
+
+    public int IntegerValue { get; set; }
+
+    public ulong ULongValue { get; set; }
+
+    public long LongValue { get; set; }
+}
+
+public class ClassTypeWithDecimalProperties
+{
+    public float SingleValue { get; set; }
+
+    public double DoubleValue { get; set; }
+}
+
+public struct MultiPropertyStruct
 {
     public int IntegerValue { get; set; }
 
     public long LongValue { get; set; }
 
+    public string TextValue { get; set; }
+}
+
+public class TypeWithIgnoredProperties
+{
+    public long LongValue { get; set; }
+
     [BinaryIgnore]
     public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
 }
 
-public class NestedObject
+public class TypeWithNestedObject
 {
     public int IntegerValue { get; set; }
 
-    public ComplexObject ComplexValue { get; set; }
+    public NestedType ComplexValue { get; set; }
 
     public int AnotherIntegerValue { get; set; }
+
+    public sealed class NestedType
+    {
+        public int NestedValue { get; set; }
+    }
 }
 
-public class ObjectWithDefaultBooleanAttribute
+public class TypeWithBooleanDefaultAttribute
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     [BinaryBoolean]
     public bool BooleanValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithoutBooleanAttribute
+public class TypeWithBooleanWithoutAttribute
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
     public bool BooleanValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
-
-    public int AnotherIntegerValue { get; set; }
+    public int AfterValue { get; set; }
 }
 
-public class ObjectWithCustomBooleanAttribute
+public class TypeWithBooleanDefinedValue
 {
-    public int IntegerValue { get; set; }
+    public int BeforeValue { get; set; }
 
-    [BinaryBoolean(ReadAs = typeof(string), WriteAs = typeof(string), TrueValue = "true", FalseValue = "false")]
+    [BinaryBoolean(UnderlyingType = typeof(short), TrueValue = (short)42, FalseValue = (short)-42)]
     public bool BooleanValue { get; set; }
 
-    [BinaryIgnore]
-    public int IgnoredIntegerValue { get; set; }
+    public int AfterValue { get; set; }
+}
 
-    public int AnotherIntegerValue { get; set; }
+public class TypeWithBooleanTextValue
+{
+    public int BeforeValue { get; set; }
+
+    [BinaryBoolean(UnderlyingType = typeof(string), TrueValue = "true", FalseValue = "false")]
+    public bool BooleanValue { get; set; }
+
+    public int AfterValue { get; set; }
 }
 
 public class ObjectWithDefaultStringAttribute
