@@ -20,12 +20,14 @@
 namespace Yarhl.FileSystem
 {
     using System;
+    using System.Diagnostics;
     using System.Linq;
     using Yarhl.FileFormat;
 
     /// <summary>
     /// Node container format for unpack / pack files.
     /// </summary>
+    [DebuggerDisplay("Container: count={Root.Children.Count}")]
     public class NodeContainerFormat : IDisposable, ICloneableFormat
     {
         bool manageRoot;

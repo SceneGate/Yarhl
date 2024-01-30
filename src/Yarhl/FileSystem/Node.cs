@@ -21,12 +21,14 @@ namespace Yarhl.FileSystem
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Yarhl.FileFormat;
     using Yarhl.IO;
 
     /// <summary>
     /// Node in the FileSystem with an associated format.
     /// </summary>
+    [DebuggerDisplay("{Name} [{Format}]")]
     public partial class Node : NavigableNode<Node>
     {
         /// <summary>
