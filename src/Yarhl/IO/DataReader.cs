@@ -403,12 +403,13 @@ namespace Yarhl.IO
         /// <param name="encoding">Optional encoding to use.</param>
         public string ReadString(Type sizeType, Encoding? encoding = null)
         {
-            if (encoding == null)
+            if (encoding is null) {
                 encoding = DefaultEncoding;
+            }
 
-            dynamic size = ReadByType(sizeType);
+            object size = ReadByType(sizeType);
             size = Convert.ChangeType(size, typeof(int), CultureInfo.InvariantCulture);
-            return ReadString(size, encoding);
+            return ReadString((int)size, encoding);
         }
 
         /// <summary>
@@ -417,39 +418,35 @@ namespace Yarhl.IO
         /// <returns>The field.</returns>
         /// <remarks>Nullable types are not supported.</remarks>
         /// <param name="type">Type of the field.</param>
-        public dynamic ReadByType(Type type)
+        public object ReadByType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
-            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
-            if (serializable)
-                return ReadUsingReflection(type);
-
-            if (type == typeof(long))
+            if (type == typeof(long)) {
                 return ReadInt64();
-            if (type == typeof(ulong))
+            } else if (type == typeof(ulong)) {
                 return ReadUInt64();
-            if (type == typeof(int))
+            } else if (type == typeof(int)) {
                 return ReadInt32();
-            if (type == typeof(uint))
+            } else if (type == typeof(uint)) {
                 return ReadUInt32();
-            if (type == typeof(short))
+            } else if (type == typeof(short)) {
                 return ReadInt16();
-            if (type == typeof(ushort))
+            } else if (type == typeof(ushort)) {
                 return ReadUInt16();
-            if (type == typeof(byte))
+            } else if (type == typeof(byte)) {
                 return ReadByte();
-            if (type == typeof(sbyte))
+            } else if (type == typeof(sbyte)) {
                 return ReadSByte();
-            if (type == typeof(char))
+            } else if (type == typeof(char)) {
                 return ReadChar();
-            if (type == typeof(string))
+            } else if (type == typeof(string)) {
                 return ReadString();
-            if (type == typeof(float))
+            } else if (type == typeof(float)) {
                 return ReadSingle();
-            if (type == typeof(double))
+            } else if (type == typeof(double)) {
                 return ReadDouble();
+            }
 
             throw new FormatException("Unsupported type");
         }
@@ -459,7 +456,7 @@ namespace Yarhl.IO
         /// </summary>
         /// <returns>The field.</returns>
         /// <typeparam name="T">The type of the field.</typeparam>
-        public dynamic Read<T>()
+        public object Read<T>()
         {
             return ReadByType(typeof(T));
         }
@@ -470,8 +467,9 @@ namespace Yarhl.IO
         /// <param name="padding">Padding value.</param>
         public void SkipPadding(int padding)
         {
-            if (padding < 0)
+            if (padding < 0) {
                 throw new ArgumentOutOfRangeException(nameof(padding));
+            }
 
             if (padding <= 1) {
                 return;
@@ -481,74 +479,6 @@ namespace Yarhl.IO
             if (remainingBytes > 0) {
                 _ = Stream.Seek(remainingBytes, SeekOrigin.Current);
             }
-        }
-
-        dynamic ReadUsingReflection(Type type)
-        {
-            // It returns null for Nullable<T>, but as that is a class and
-            // it won't have the serializable attribute, it will throw an
-            // unsupported exception before. So this can't be null at this point.
-            #pragma warning disable SA1009 // False positive
-            object obj = Activator.CreateInstance(type)!;
-            #pragma warning restore SA1009
-
-            PropertyInfo[] properties = type.GetProperties(
-                BindingFlags.DeclaredOnly |
-                BindingFlags.Public |
-                BindingFlags.Instance);
-
-            foreach (PropertyInfo property in properties) {
-                bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
-                if (ignore) {
-                    continue;
-                }
-
-                EndiannessMode currentEndianness = Endianness;
-                bool forceEndianness = Attribute.IsDefined(property, typeof(BinaryForceEndiannessAttribute));
-                if (forceEndianness) {
-                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryForceEndiannessAttribute)) as BinaryForceEndiannessAttribute;
-                    Endianness = attr!.Mode;
-                }
-
-                if (property.PropertyType == typeof(bool) && Attribute.IsDefined(property, typeof(BinaryBooleanAttribute))) {
-                    // booleans can only be read if they have the attribute.
-                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryBooleanAttribute)) as BinaryBooleanAttribute;
-                    dynamic value = ReadByType(attr!.ReadAs);
-                    property.SetValue(obj, value == (dynamic)attr.TrueValue);
-                } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
-                    // read the number as int24.
-                    int value = ReadInt24();
-                    property.SetValue(obj, value);
-                } else if (property.PropertyType.IsEnum && Attribute.IsDefined(property, typeof(BinaryEnumAttribute))) {
-                    // enums can only be read if they have the attribute.
-                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryEnumAttribute)) as BinaryEnumAttribute;
-                    dynamic value = ReadByType(attr!.ReadAs);
-                    property.SetValue(obj, Enum.ToObject(property.PropertyType, value));
-                } else if (property.PropertyType == typeof(string) && Attribute.IsDefined(property, typeof(BinaryStringAttribute))) {
-                    var attr = Attribute.GetCustomAttribute(property, typeof(BinaryStringAttribute)) as BinaryStringAttribute;
-                    Encoding? encoding = null;
-                    if (attr!.CodePage != -1) {
-                        encoding = Encoding.GetEncoding(attr.CodePage);
-                    }
-
-                    dynamic value;
-                    if (attr.SizeType == null) {
-                        value = attr.FixedSize == -1 ? this.ReadString(encoding) : this.ReadString(attr.FixedSize, encoding);
-                    } else {
-                        value = ReadString(attr.SizeType, encoding);
-                    }
-
-                    property.SetValue(obj, value);
-                } else {
-                    dynamic value = ReadByType(property.PropertyType);
-                    property.SetValue(obj, value);
-                }
-
-                // Restore previous endianness
-                Endianness = currentEndianness;
-            }
-
-            return obj;
         }
     }
 }

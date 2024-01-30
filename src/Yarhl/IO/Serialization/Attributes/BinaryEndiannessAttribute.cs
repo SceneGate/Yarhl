@@ -1,4 +1,4 @@
-// Copyright (c) 2020 SceneGate
+﻿// Copyright (c) 2020 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -22,16 +22,16 @@ namespace Yarhl.IO.Serialization.Attributes
     using System;
 
     /// <summary>
-    /// Set to force the endianness in automatic serialization.
+    /// Specify the endianness to serialize or deserialize a field.
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
-    public sealed class BinaryForceEndiannessAttribute : Attribute
+    public sealed class BinaryEndiannessAttribute : Attribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="BinaryForceEndiannessAttribute"/> class.
+        /// Initializes a new instance of the <see cref="BinaryEndiannessAttribute"/> class.
         /// </summary>
         /// <param name="mode">Endianness mode for the property.</param>
-        public BinaryForceEndiannessAttribute(EndiannessMode mode)
+        public BinaryEndiannessAttribute(EndiannessMode mode)
         {
             Mode = mode;
         }

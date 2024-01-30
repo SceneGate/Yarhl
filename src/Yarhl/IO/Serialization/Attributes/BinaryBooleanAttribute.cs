@@ -1,4 +1,4 @@
-// Copyright (c) 2020 SceneGate
+﻿// Copyright (c) 2020 SceneGate
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,24 +33,15 @@ namespace Yarhl.IO.Serialization.Attributes
         /// </summary>
         public BinaryBooleanAttribute()
         {
-            ReadAs = typeof(int);
-            WriteAs = typeof(int);
+            UnderlyingType = typeof(int);
             TrueValue = 1;
             FalseValue = 0;
         }
 
         /// <summary>
-        /// Gets or sets the equivalent type for reading.
+        /// Gets or sets the underlying type to use to serialize and deserialize.
         /// </summary>
-        public Type ReadAs {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the equivalent type for writing.
-        /// </summary>
-        public Type WriteAs {
+        public Type UnderlyingType {
             get;
             set;
         }

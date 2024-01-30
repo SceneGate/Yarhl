@@ -420,6 +420,15 @@ namespace Yarhl.IO
         }
 
         /// <summary>
+        /// Write the specified 24-bits value.
+        /// </summary>
+        /// <param name="val">24-bits value.</param>
+        public void WriteInt24(int val)
+        {
+            WriteNumber((uint)val, 24);
+        }
+
+        /// <summary>
         /// Write the specified value converting to any supported type.
         /// </summary>
         /// <param name="type">Type of the value.</param>
@@ -428,66 +437,59 @@ namespace Yarhl.IO
         /// <para>The supported types are: long, ulong, int, uint, short,
         /// ushort, byte, sbyte, char and string.</para>
         /// </remarks>
-        public void WriteOfType(Type type, dynamic val)
+        public void WriteOfType(Type type, object val)
         {
-            if (val == null)
-                throw new ArgumentNullException(nameof(val));
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(val);
 
-            val = Convert.ChangeType(val, type, CultureInfo.InvariantCulture);
+            object converted = Convert.ChangeType(val, type, CultureInfo.InvariantCulture)!;
 
-            bool serializable = Attribute.IsDefined(type, typeof(Serialization.Attributes.SerializableAttribute));
-            if (serializable) {
-                WriteUsingReflection(type, val);
-            } else {
-                switch (val) {
-                    case long l:
-                        Write(l);
-                        break;
-                    case ulong ul:
-                        Write(ul);
-                        break;
+            switch (converted) {
+                case long l:
+                    Write(l);
+                    break;
+                case ulong ul:
+                    Write(ul);
+                    break;
 
-                    case int i:
-                        Write(i);
-                        break;
-                    case uint ui:
-                        Write(ui);
-                        break;
+                case int i:
+                    Write(i);
+                    break;
+                case uint ui:
+                    Write(ui);
+                    break;
 
-                    case short s:
-                        Write(s);
-                        break;
-                    case ushort us:
-                        Write(us);
-                        break;
+                case short s:
+                    Write(s);
+                    break;
+                case ushort us:
+                    Write(us);
+                    break;
 
-                    case byte b:
-                        Write(b);
-                        break;
-                    case sbyte sb:
-                        Write(sb);
-                        break;
+                case byte b:
+                    Write(b);
+                    break;
+                case sbyte sb:
+                    Write(sb);
+                    break;
 
-                    case char ch:
-                        Write(ch);
-                        break;
-                    case string str:
-                        Write(str);
-                        break;
+                case char ch:
+                    Write(ch);
+                    break;
+                case string str:
+                    Write(str);
+                    break;
 
-                    case float f:
-                        Write(f);
-                        break;
+                case float f:
+                    Write(f);
+                    break;
 
-                    case double d:
-                        Write(d);
-                        break;
+                case double d:
+                    Write(d);
+                    break;
 
-                    default:
-                        throw new FormatException("Unsupported type");
-                }
+                default:
+                    throw new FormatException("Unsupported type");
             }
         }
 
@@ -498,8 +500,7 @@ namespace Yarhl.IO
         /// <typeparam name="T">The type of the value.</typeparam>
         public void WriteOfType<T>(T val)
         {
-            if (val == null)
-                throw new ArgumentNullException(nameof(val));
+            ArgumentNullException.ThrowIfNull(val);
 
             WriteOfType(typeof(T), val);
         }
@@ -570,7 +571,7 @@ namespace Yarhl.IO
             WriteTimes(val, Stream.Position.Pad(padding) - Stream.Position);
         }
 
-        void WriteNumber(ulong number, byte numBits)
+        private void WriteNumber(ulong number, byte numBits)
         {
             byte start;
             byte end;
@@ -591,61 +592,6 @@ namespace Yarhl.IO
             for (byte i = start; i < end; i = (byte)(i + step)) {
                 byte val = (byte)((number >> i) & 0xFF);
                 Stream.WriteByte(val);
-            }
-        }
-
-        void WriteUsingReflection(Type type, dynamic obj)
-        {
-            PropertyInfo[] properties = type.GetProperties(
-                BindingFlags.DeclaredOnly |
-                BindingFlags.Public |
-                BindingFlags.Instance);
-
-            foreach (PropertyInfo property in properties) {
-                bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
-                if (ignore) {
-                    continue;
-                }
-
-                EndiannessMode currentEndianness = Endianness;
-                var endiannessAttr = property.GetCustomAttribute<BinaryForceEndiannessAttribute>();
-                if (endiannessAttr is not null) {
-                    Endianness = endiannessAttr.Mode;
-                }
-
-                dynamic value = property.GetValue(obj);
-
-                if (property.PropertyType == typeof(bool) && property.GetCustomAttribute<BinaryBooleanAttribute>() is { } boolAttr) {
-                    // booleans can only be written if they have the attribute.
-                    dynamic typeValue = value ? boolAttr.TrueValue : boolAttr.FalseValue;
-                    WriteOfType(boolAttr.WriteAs, typeValue);
-                } else if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
-                    // write the number as int24
-                    WriteNumber((uint)value, 24);
-                } else if (property.PropertyType.IsEnum && property.GetCustomAttribute<BinaryEnumAttribute>() is { } enumAttr) {
-                    // enums can only be written if they have the attribute.
-                    WriteOfType(enumAttr.WriteAs, value);
-                } else if (property.PropertyType == typeof(string) && property.GetCustomAttribute<BinaryStringAttribute>() is { } stringAttr) {
-                    Encoding? encoding = null;
-                    if (stringAttr.CodePage != -1) {
-                        encoding = Encoding.GetEncoding(stringAttr.CodePage);
-                    }
-
-                    if (stringAttr.SizeType is null) {
-                        if (stringAttr.FixedSize == -1) {
-                            Write((string)value, stringAttr.Terminator, encoding, stringAttr.MaxSize);
-                        } else {
-                            Write((string)value, stringAttr.FixedSize, stringAttr.Terminator, encoding);
-                        }
-                    } else {
-                        Write((string)value, stringAttr.SizeType, stringAttr.Terminator, encoding, stringAttr.MaxSize);
-                    }
-                } else {
-                    WriteOfType(property.PropertyType, value);
-                }
-
-                // Restore previous endianness
-                Endianness = currentEndianness;
             }
         }
     }
