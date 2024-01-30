@@ -2,7 +2,6 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using System.Text;
 using Yarhl.IO.Serialization.Attributes;
 
@@ -13,6 +12,7 @@ using Yarhl.IO.Serialization.Attributes;
 public class BinaryDeserializer
 {
     private readonly DataReader reader;
+    private readonly ITypeFieldNavigator fieldNavigator;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="BinaryDeserializer"/> class.
@@ -20,7 +20,24 @@ public class BinaryDeserializer
     /// <param name="stream">The stream to read from.</param>
     public BinaryDeserializer(Stream stream)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
         reader = new DataReader(stream);
+        fieldNavigator = new DefaultTypePropertyNavigator();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BinaryDeserializer"/> class.
+    /// </summary>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="fieldNavigator">The strategy to iterate the field's type.</param>
+    public BinaryDeserializer(Stream stream, ITypeFieldNavigator fieldNavigator)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentNullException.ThrowIfNull(fieldNavigator);
+
+        reader = new DataReader(stream);
+        this.fieldNavigator = fieldNavigator;
     }
 
     /// <summary>
@@ -67,51 +84,40 @@ public class BinaryDeserializer
     /// <returns>A new object deserialized.</returns>
     public object Deserialize(Type objType)
     {
-        // It returns null for Nullable<T>, but as that is a class and
-        // it won't have the serializable attribute, it will throw an
-        // unsupported exception before. So this can't be null at this point.
-        object obj = Activator.CreateInstance(objType)!;
+        object obj = Activator.CreateInstance(objType)
+            ?? throw new FormatException("Nullable types are not supported");
 
-        PropertyInfo[] properties = objType.GetProperties(
-            BindingFlags.Public |
-            BindingFlags.Instance);
-
-        foreach (PropertyInfo property in properties) {
-            bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
-            if (ignore) {
-                continue;
-            }
-
-            object propertyValue = DeserializePropertyValue(property);
-            property.SetValue(obj, propertyValue);
+        foreach (FieldInfo fieldInfo in fieldNavigator.IterateFields(objType)) {
+            object propertyValue = DeserializePropertyValue(fieldInfo);
+            fieldInfo.SetValueFunc(obj, propertyValue);
         }
 
         return obj;
     }
 
-    private object DeserializePropertyValue(PropertyInfo property)
+    private object DeserializePropertyValue(FieldInfo fieldInfo)
     {
         reader.Endianness = DefaultEndianness;
-        var endiannessAttr = property.GetCustomAttribute<BinaryEndiannessAttribute>();
+        var endiannessAttr = fieldInfo.GetAttribute<BinaryEndiannessAttribute>();
         if (endiannessAttr is not null) {
             reader.Endianness = endiannessAttr.Mode;
         }
 
-        if (property.PropertyType.IsPrimitive) {
-            return DeserializePrimitiveField(property);
-        } else if (property.PropertyType.IsEnum) {
-            return DeserializeEnumField(property);
-        } else if (property.PropertyType == typeof(string)) {
-            return DeserializeStringField(property);
+        if (fieldInfo.Type.IsPrimitive) {
+            return DeserializePrimitiveField(fieldInfo);
+        } else if (fieldInfo.Type.IsEnum) {
+            return DeserializeEnumField(fieldInfo);
+        } else if (fieldInfo.Type == typeof(string)) {
+            return DeserializeStringField(fieldInfo);
         } else {
-            return Deserialize(property.PropertyType);
+            return Deserialize(fieldInfo.Type);
         }
     }
 
-    private object DeserializePrimitiveField(PropertyInfo property)
+    private object DeserializePrimitiveField(FieldInfo fieldInfo)
     {
-        if (property.PropertyType == typeof(bool)) {
-            if (property.GetCustomAttribute<BinaryBooleanAttribute>() is not { } boolAttr) {
+        if (fieldInfo.Type == typeof(bool)) {
+            if (fieldInfo.GetAttribute<BinaryBooleanAttribute>() is not { } boolAttr) {
                 throw new FormatException("Properties of type 'bool' must have the attribute BinaryBoolean");
             }
 
@@ -119,26 +125,26 @@ public class BinaryDeserializer
             return value.Equals(boolAttr.TrueValue);
         }
 
-        if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
+        if (fieldInfo.Type == typeof(int) && fieldInfo.GetAttribute<BinaryInt24Attribute>() is not null) {
             return reader.ReadInt24();
         }
 
-        return reader.ReadByType(property.PropertyType);
+        return reader.ReadByType(fieldInfo.Type);
     }
 
-    private object DeserializeEnumField(PropertyInfo property)
+    private object DeserializeEnumField(FieldInfo fieldInfo)
     {
-        var enumAttr = property.GetCustomAttribute<BinaryEnumAttribute>();
+        var enumAttr = fieldInfo.GetAttribute<BinaryEnumAttribute>();
         Type underlyingType = enumAttr?.UnderlyingType
-            ?? Enum.GetUnderlyingType(property.PropertyType);
+            ?? Enum.GetUnderlyingType(fieldInfo.Type);
 
         object value = reader.ReadByType(underlyingType);
-        return Enum.ToObject(property.PropertyType, value);
+        return Enum.ToObject(fieldInfo.Type, value);
     }
 
-    private string DeserializeStringField(PropertyInfo property)
+    private string DeserializeStringField(FieldInfo fieldInfo)
     {
-        if (property.GetCustomAttribute<BinaryStringAttribute>() is not { } stringAttr) {
+        if (fieldInfo.GetAttribute<BinaryStringAttribute>() is not { } stringAttr) {
             // Use default settings if not specified.
             return reader.ReadString();
         }

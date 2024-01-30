@@ -2,7 +2,7 @@
 
 using System;
 using System.IO;
-using System.Reflection;
+using System.Linq;
 using System.Text;
 using Yarhl.IO.Serialization.Attributes;
 
@@ -12,6 +12,7 @@ using Yarhl.IO.Serialization.Attributes;
 /// </summary>
 public class BinarySerializer
 {
+    private readonly ITypeFieldNavigator fieldNavigator;
     private readonly DataWriter writer;
 
     /// <summary>
@@ -20,7 +21,24 @@ public class BinarySerializer
     /// <param name="stream">The stream to write the binary data.</param>
     public BinarySerializer(Stream stream)
     {
+        ArgumentNullException.ThrowIfNull(stream);
+
         writer = new DataWriter(stream);
+        fieldNavigator = new DefaultTypePropertyNavigator();
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="BinarySerializer"/> class.
+    /// </summary>
+    /// <param name="stream">The stream to write the binary data.</param>
+    /// <param name="fieldNavigator">Strategy to iterate over type fields.</param>
+    public BinarySerializer(Stream stream, ITypeFieldNavigator fieldNavigator)
+    {
+        ArgumentNullException.ThrowIfNull(stream);
+        ArgumentNullException.ThrowIfNull(fieldNavigator);
+
+        writer = new DataWriter(stream);
+        this.fieldNavigator = fieldNavigator;
     }
 
     /// <summary>
@@ -69,52 +87,38 @@ public class BinarySerializer
     /// <param name="obj">The object to serialize into the stream.</param>
     public void Serialize(Type type, object obj)
     {
-        PropertyInfo[] properties = type.GetProperties(
-            BindingFlags.Public |
-            BindingFlags.Instance);
-
-        // TODO: Introduce property to sort
-        foreach (PropertyInfo property in properties) {
-            bool ignore = Attribute.IsDefined(property, typeof(BinaryIgnoreAttribute));
-            if (ignore) {
-                continue;
-            }
-
+        foreach (FieldInfo property in fieldNavigator.IterateFields(type)) {
             SerializeProperty(property, obj);
         }
     }
 
-    private void SerializeProperty(PropertyInfo property, object obj)
+    private void SerializeProperty(FieldInfo fieldInfo, object obj)
     {
         writer.Endianness = DefaultEndianness;
-        var endiannessAttr = property.GetCustomAttribute<BinaryEndiannessAttribute>();
+        var endiannessAttr = fieldInfo.GetAttribute<BinaryEndiannessAttribute>();
         if (endiannessAttr is not null) {
             writer.Endianness = endiannessAttr.Mode;
         }
 
-        object value = property.GetValue(obj)
+        object value = fieldInfo.GetValueFunc(obj)
             ?? throw new FormatException("Cannot serialize nullable values");
 
-        if (property.PropertyType.IsPrimitive) {
-            SerializePrimitiveField(property, value);
-        } else if (property.PropertyType.IsEnum) {
-            var enumAttr = property.GetCustomAttribute<BinaryEnumAttribute>();
-            Type underlyingType = enumAttr?.UnderlyingType
-                ?? Enum.GetUnderlyingType(property.PropertyType);
-
-            writer.WriteOfType(underlyingType, value);
-        } else if (property.PropertyType == typeof(string)) {
-            SerializeString(property, value);
+        if (fieldInfo.Type.IsPrimitive) {
+            SerializePrimitiveField(fieldInfo, value);
+        } else if (fieldInfo.Type.IsEnum) {
+            SerializeEnumField(fieldInfo, value);
+        } else if (fieldInfo.Type == typeof(string)) {
+            SerializeString(fieldInfo, value);
         } else {
-            Serialize(property.PropertyType, value);
+            Serialize(fieldInfo.Type, value);
         }
     }
 
-    private void SerializePrimitiveField(PropertyInfo property, object value)
+    private void SerializePrimitiveField(FieldInfo fieldInfo, object value)
     {
         // Handle first the special cases
-        if (property.PropertyType == typeof(bool)) {
-            if (property.GetCustomAttribute<BinaryBooleanAttribute>() is not { } boolAttr) {
+        if (fieldInfo.Type == typeof(bool)) {
+            if (fieldInfo.GetAttribute<BinaryBooleanAttribute>() is not { } boolAttr) {
                 throw new FormatException("Properties of type 'bool' must have the attribute BinaryBoolean");
             }
 
@@ -123,18 +127,27 @@ public class BinarySerializer
             return;
         }
 
-        if (property.PropertyType == typeof(int) && Attribute.IsDefined(property, typeof(BinaryInt24Attribute))) {
+        if (fieldInfo.Type == typeof(int) && fieldInfo.Attributes.Any(a => a is BinaryInt24Attribute)) {
             writer.WriteInt24((int)value);
             return;
         }
 
         // Fallback to DataWriter primitive write
-        writer.WriteOfType(property.PropertyType, value);
+        writer.WriteOfType(fieldInfo.Type, value);
     }
 
-    private void SerializeString(PropertyInfo property, object value)
+    private void SerializeEnumField(FieldInfo fieldInfo, object value)
     {
-        if (property.GetCustomAttribute<BinaryStringAttribute>() is not { } stringAttr) {
+        var enumAttr = fieldInfo.GetAttribute<BinaryEnumAttribute>();
+        Type underlyingType = enumAttr?.UnderlyingType
+            ?? Enum.GetUnderlyingType(fieldInfo.Type);
+
+        writer.WriteOfType(underlyingType, value);
+    }
+
+    private void SerializeString(FieldInfo fieldInfo, object value)
+    {
+        if (fieldInfo.GetAttribute<BinaryStringAttribute>() is not { } stringAttr) {
             // Use default settings if not specified.
             writer.Write((string)value);
             return;

@@ -15,7 +15,7 @@ public class BinarySerializerTests
         var obj = new SimpleType { Value = 0x0A, };
 
         using var stream = new DataStream();
-        var serializer = new BinarySerializer(stream);
+        var serializer = new BinarySerializer(stream, new DefaultTypePropertyNavigator());
         serializer.Serialize<SimpleType>(obj);
 
         AssertBinary(stream, data);

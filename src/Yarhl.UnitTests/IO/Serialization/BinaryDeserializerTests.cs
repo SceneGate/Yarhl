@@ -18,7 +18,7 @@ public class BinaryDeserializerTests
         stream.Write(data);
 
         stream.Position = 0;
-        var deserializer = new BinaryDeserializer(stream);
+        var deserializer = new BinaryDeserializer(stream, new DefaultTypePropertyNavigator());
         SimpleType obj = deserializer.Deserialize<SimpleType>();
 
         _ = obj.Should().BeEquivalentTo(expected);
@@ -70,7 +70,7 @@ public class BinaryDeserializerTests
     [Test]
     public void DeserializeIncludesInheritedFields()
     {
-        byte[] data = { 0xFE, 0xCA, 0x0A, 0x00, 0x00, 0x00 };
+        byte[] data = { 0x0A, 0x00, 0x00, 0x00, 0xFE, 0xCA };
         var obj = new InheritedType { Value = 0x0A, NewValue = 0xCAFE };
 
         AssertDeserialization(data, obj);

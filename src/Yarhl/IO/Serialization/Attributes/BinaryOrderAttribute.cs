@@ -6,19 +6,14 @@ using System;
 /// Specify the order to serialize or deserialize the fields in binary format.
 /// </summary>
 [AttributeUsage(AttributeTargets.Property)]
-public class BinaryFieldOrderAttribute : Attribute
+public class BinaryOrderAttribute : Attribute
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="BinaryFieldOrderAttribute"/> class.
+    /// Initializes a new instance of the <see cref="BinaryOrderAttribute"/> class.
     /// </summary>
     /// <param name="order">The order of the field in the binary serialization.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The order is less than 0.</exception>
-    public BinaryFieldOrderAttribute(int order)
+    public BinaryOrderAttribute(int order)
     {
-        if (order < 0) {
-            throw new ArgumentOutOfRangeException(nameof(order));
-        }
-
         Order = order;
     }
 
