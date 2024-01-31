@@ -23,10 +23,10 @@ namespace Yarhl.IO
     using System.Buffers;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-    using Yarhl.FileFormat;
     using Yarhl.IO.StreamFormat;
 
     /// <summary>
@@ -43,6 +43,10 @@ namespace Yarhl.IO
         "",
         "S3881",
         Justification = "Historical reasons: https://docs.microsoft.com/en-us/dotnet/api/system.io.stream.dispose")]
+    [DebuggerDisplay(
+        "pos={\"0x\" + Position.ToString(\"X\")}, " +
+        "len={\"0x\" + Length.ToString(\"X\")}, " +
+        "offset={\"0x\" + Offset.ToString(\"X\")}")]
     public partial class DataStream : Stream
     {
         static readonly ConcurrentDictionary<Stream, StreamInfo> Instances = new ConcurrentDictionary<Stream, StreamInfo>();

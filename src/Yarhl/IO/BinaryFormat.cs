@@ -20,12 +20,14 @@
 namespace Yarhl.IO
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using Yarhl.FileFormat;
 
     /// <summary>
     /// Binary format.
     /// </summary>
+    [DebuggerDisplay("Binary: {Stream}")]
     public class BinaryFormat : IBinary, IDisposable, ICloneableFormat
     {
         /// <summary>
