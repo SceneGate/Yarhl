@@ -239,6 +239,7 @@ dotnet_naming_symbols.non_field_members.required_modifiers =
 ### .NET SDK
 dotnet_diagnostic.CA1303.severity = none # We don't translate exception and log messages from English
 dotnet_diagnostic.SA1025.severity = none # Allow spaces in comments to structure info
+dotnet_diagnostic.IDE0028.severity = suggestion # Simplify collection initialization
 dotnet_diagnostic.IDE0045.severity = suggestion # Simplify ifs
 dotnet_diagnostic.IDE0046.severity = suggestion # Simplify ifs
 
