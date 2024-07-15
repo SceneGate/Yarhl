@@ -29,6 +29,11 @@ jobs:
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
+      - name: "Setup .NET 6.0 SDK"
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.0.424'
+
       - name: "Build and test"
         run: dotnet run --project build/orchestrator -- --target=Default --dotnet-configuration=Release
         env:
