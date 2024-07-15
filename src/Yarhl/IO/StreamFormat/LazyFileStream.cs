@@ -62,7 +62,7 @@ namespace Yarhl.IO.StreamFormat
         /// <inheritdoc/>
         public override long Position
         {
-            get => BaseStream?.Position ?? 0;
+            get => BaseStream?.Position ?? initialPosition;
             set
             {
                 if (BaseStream is null) {

@@ -69,10 +69,29 @@ namespace Yarhl.UnitTests.IO.StreamFormat
         }
 
         [Test]
-        public void GetPositionWithoutInitializeReturnsZero()
+        public void GetPositionWithoutInitializeReturnsSameAsSet()
         {
             using var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
             Assert.That(stream.Position, Is.EqualTo(0));
+
+            stream.Position = 0x42;
+            Assert.That(stream.BaseStream, Is.Null);
+            Assert.That(stream.Position, Is.EqualTo(0x42));
+        }
+
+        [Test]
+        public void FileOpenedWithInitialPosition()
+        {
+            byte[] fileContent = { 0xFF, 0x42 };
+            File.WriteAllBytes(tempFile, fileContent);
+            using var stream = new LazyFileStream(tempFile, FileOpenMode.ReadWrite);
+            stream.Position = 1;
+
+            Assert.That(stream.BaseStream, Is.Null);
+            byte actual = (byte)stream.ReadByte();
+
+            Assert.That(actual, Is.EqualTo(fileContent[1]));
+            Assert.That(stream.Position, Is.EqualTo(2));
         }
 
         [Test]
