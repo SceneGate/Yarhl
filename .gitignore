@@ -10,6 +10,8 @@ build/temp/
 *.userprefs
 *.user
 *.vs
+*.DotSettings.user
+launchSettings.json
 
 # Benchmarks
 BenchmarkDotNet.Artifacts/

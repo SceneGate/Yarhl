@@ -15,7 +15,7 @@ jobs:
     name: "Build"
     uses: ./.github/workflows/build.yml
     with:
-      dotnet_version: '8.0.303'
+      dotnet_version: '8.0.401'
 
   # Preview release on push to main only
   # Stable release on version tag push only
@@ -25,7 +25,7 @@ jobs:
     needs: build
     uses: ./.github/workflows/deploy.yml
     with:
-      dotnet_version: '8.0.303'
+      dotnet_version: '8.0.401'
       azure_nuget_feed: 'https://pkgs.dev.azure.com/SceneGate/SceneGate/_packaging/SceneGate-Preview/nuget/v3/index.json'
     secrets:
       nuget_preview_token: "az" # Dummy values as we use Azure DevOps only

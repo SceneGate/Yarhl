@@ -6,31 +6,36 @@
       "version": "5.12.0",
       "commands": [
         "dotnet-gitversion"
-      ]
+      ],
+      "rollForward": false
     },
     "thirdlicense": {
       "version": "1.3.1",
       "commands": [
         "thirdlicense"
-      ]
+      ],
+      "rollForward": false
     },
     "dotnet-reportgenerator-globaltool": {
       "version": "5.2.0",
       "commands": [
         "reportgenerator"
-      ]
+      ],
+      "rollForward": false
     },
     "docfx": {
-      "version": "2.73.2",
+      "version": "2.77.0",
       "commands": [
         "docfx"
-      ]
+      ],
+      "rollForward": false
     },
     "gitreleasemanager.tool": {
       "version": "0.16.0",
       "commands": [
         "dotnet-gitreleasemanager"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }

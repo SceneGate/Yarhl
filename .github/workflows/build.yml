@@ -25,12 +25,12 @@ jobs:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
       - name: "Setup .NET 6.0 SDK"
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '6.0.424'
 
@@ -47,7 +47,7 @@ jobs:
 
       - name: "Publish artifacts to CI"
         if: ${{ matrix.is_main_build }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "Artifacts"
           retention-days: 7
@@ -57,6 +57,6 @@ jobs:
 
       - name: Publish docs artifact to CI
         if: ${{ matrix.is_main_build }}
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3
         with:
           path: build/artifacts/docs
