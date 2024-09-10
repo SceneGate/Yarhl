@@ -242,6 +242,7 @@ dotnet_diagnostic.SA1025.severity = none # Allow spaces in comments to structure
 dotnet_diagnostic.IDE0028.severity = suggestion # Simplify collection initialization
 dotnet_diagnostic.IDE0045.severity = suggestion # Simplify ifs
 dotnet_diagnostic.IDE0046.severity = suggestion # Simplify ifs
+dotnet_diagnostic.IDE0057.severity = suggestion # Slice can be simplified
 
 ### StyleCop
 dotnet_diagnostic.SA1101.severity = none # Do not force to prefix local calls with 'this'

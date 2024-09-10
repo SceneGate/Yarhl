@@ -32,7 +32,7 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4
 
   push_artifacts:
     name: "Artifacts"
@@ -44,13 +44,13 @@ jobs:
           fetch-depth: 0 # We need full history for version number
 
       - name: "Download artifacts"
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: "Artifacts"
           path: "./build/artifacts/"
 
       - name: "Setup .NET SDK"
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ inputs.dotnet_version }}
 
